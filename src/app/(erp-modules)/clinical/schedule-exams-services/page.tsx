@@ -1,0 +1,79 @@
+import Header from "@/components/header";
+import Table from "@/components/table";
+import tableFormater from "@/lib/table-formater";
+import Alert from "@/components/alert";
+import { ScheduleExam } from "@/lib/table-formater";
+import { getSchedulePatientExams } from "@/app/backend/api/clinical/scheduling-api";
+import Link from "next/link";
+import Button from "@/components/ui/button";
+import Search from "@/components/ui/search";
+import WsUpdate from "@/components/ws-update";
+import { TiInputChecked } from "react-icons/ti";
+import { PiArchiveDuotone } from "react-icons/pi";
+
+export const dynamic = "force-dynamic";
+
+export default async function Page({
+  searchParams
+}:{
+  searchParams: Promise<{
+    name:string;
+  }>
+}){
+  const { name } = await searchParams;
+  const scheduleds =  await getSchedulePatientExams({ name });
+  const rows = tableFormater(scheduleds.scheduleExams as ScheduleExam[]);
+ 
+  return (
+    <main className="space-y-3">
+      <WsUpdate target="schedule-exams" />
+      
+      <div className="mt-6">
+        <Header title="Exames/Serviços Agendados"/>
+      </div>
+
+      <div className="flex gap-x-3">
+        <Link href="/clinical/schedule-exams-services/serveds">
+          <Button className="flex gap-3">
+            <TiInputChecked className="size-5" />
+            Atendidos
+          </Button>
+        </Link>
+
+        <Link href="/clinical/schedule-exams-services/archiveds">
+          <Button className="flex gap-3 bg-slate-700">
+            <PiArchiveDuotone className="size-5" />
+            Arquivados
+          </Button>
+        </Link>
+      </div>
+
+      <div className="flex justify-between lg:flex-row items-center">
+        <Alert 
+          type="info" 
+          message="Faça duplo click sobre o exame agendado para seguir com o atendimento!" 
+        />
+
+        <Search
+          className="flex items-center gapx--3"
+          filterKey="name"
+          label="Filtar por nome"
+          placeholder="Buscar pelo nome do utente..."
+        />
+      </div>
+  
+      <Table
+        baseRowLink="/clinical/schedule-exams-services"
+        columns={[
+          "Data e Hora", 
+          "Nome do Utente", 
+          "Local",
+          "Qtd de Exames",
+          "Responsavel",
+          "Estado"
+        ]} 
+        rows={rows}
+      />
+    </main>
+  );
+}

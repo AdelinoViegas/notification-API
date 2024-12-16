@@ -1,0 +1,282 @@
+"use client";
+
+import { 
+  useState, 
+  useEffect, 
+  useRef, 
+  useCallback,
+  useActionState 
+} from "react";
+import { useRouter } from "next/navigation";
+import Modal from "@/components/modal";
+import InputField from "@/components/ui/input-field";
+import Button from "@/components/ui/button";
+import Selection, { SimpleSelectionType } from "@/components/ui/selection";
+import Alert from "@/components/alert";
+import { PlusIcon } from "@heroicons/react/24/outline";
+import { 
+  signExam, 
+  signCCG,
+  getCCGs,
+} from "@/app/backend/api/clinical/scheduling-api";
+import { getSpecialties } from "@/app/backend/api/clinical/api";
+
+export default function SignExam(){
+  const [ state, action ] = useActionState(signExam, { message: "", status: false });
+  const [ ccgState, ccgAction ] = useActionState(signCCG, { message: "", status: false });
+  const [ groupModal, setGroupModal ] = useState(false);
+  const toggleGroupModal = ()=>setGroupModal(!groupModal);
+  // modal states
+  const [ modalState, setModalState ] = useState(false);
+  const closeModal = ()=> setModalState(false);
+  const openModal = ()=> setModalState(true);
+  const [ categoryState, setCategoryState ] = useState(false);
+  const toggleCategory = ()=>setCategoryState(!categoryState);
+  const [ classificationState, setClassificationState ] = useState(false);
+  const toggleClassification = ()=>setClassificationState(!classificationState);
+  // end of modal states
+  const [ messageState, setMessageState ] = useState(false);
+  const [ ccgMessageState, setCCGMessageState ] = useState(false);
+  const [ groups, setGroups ] = useState<SimpleSelectionType[]>([]);
+  const [ categories, setCategories ] = useState<SimpleSelectionType[]>([]);
+  const [ classifications, setClassifications ] = useState<SimpleSelectionType[]>([]);
+  const [ specialties, setSpecialties ] = useState<SimpleSelectionType[]>([]);
+  const router = useRouter();
+  const signFormRef = useRef<HTMLFormElement>(null);
+
+  const handleSelect = useCallback(async ()=>{
+    const categories = await getCCGs("category") as SimpleSelectionType[];
+    const groups = await getCCGs("group") as SimpleSelectionType[];
+    const classifications = await getCCGs("classification") as SimpleSelectionType[];
+    const specialties = await getSpecialties() as SimpleSelectionType[];
+
+    setGroups(groups);
+    setCategories(categories);
+    setClassifications(classifications);
+    setSpecialties(specialties);
+  }, []);
+
+  useEffect(()=>{
+    if(state.message){
+      setMessageState(true);
+
+      setTimeout(()=>{
+        if(state.status){
+          router.refresh();
+          signFormRef.current?.reset();
+        }
+        setMessageState(false);
+      }, 2000);
+    }
+  }, [state, router]);
+
+  useEffect(()=>{
+    if(ccgState.message){
+      setCCGMessageState(true);
+
+      setTimeout(()=>{
+        if(ccgState.status){
+          router.refresh();
+          setCategoryState(false);
+          setClassificationState(false);
+          setGroupModal(false);
+        }
+        setCCGMessageState(false);
+      }, 2000);
+    }
+  }, [ccgState, router]);
+
+  useEffect(()=>{
+    handleSelect()
+  }, [handleSelect]);
+
+  return(
+    <div>
+      <Button onClick={openModal} className="flex gap-3">
+        <PlusIcon className="w-5" />
+        Cadastrar
+      </Button>
+
+      <Modal 
+        title="Novo Grupo de Exames"
+        open={groupModal}
+        onClose={closeModal}>
+        <form action={ccgAction}>
+          <input type="hidden" name="type" value="group" />
+          <InputField
+            textLabel="Nome do Grupo" 
+            placeholder="Descrição do nome do exame"
+            required
+            name="name"
+          />
+
+          <div className="flex gap-3 justify-end">
+            <Button
+              onClick={toggleGroupModal} 
+              type="button" 
+              cancel>Cancelar</Button>
+            <Button>Salvar</Button>
+          </div>
+        </form>
+        
+        { ccgMessageState &&
+          <div className="mt-3">
+            <Alert
+              message={ccgState.message}
+              type={ccgState.status?"success":"error"} 
+            /> 
+          </div>
+        }
+      </Modal>
+
+      <Modal 
+        title="Nova Categoria de Exames"
+        open={categoryState}
+        onClose={toggleCategory}>
+        <form action={ccgAction}>
+          <input type="hidden" name="type" value="category" />
+          <InputField
+            textLabel="Nome da Categoria" 
+            placeholder="Descrição da categoria do exame"
+            required
+            name="name"
+          />
+
+          <div className="flex gap-3 justify-end">
+            <Button
+              onClick={toggleCategory} 
+              type="button" 
+              cancel>Cancelar</Button>
+            <Button>Salvar</Button>
+          </div>
+        </form>
+
+        { ccgMessageState &&
+          <div className="mt-3">
+            <Alert
+              message={ccgState.message}
+              type={ccgState.status?"success":"error"} 
+            /> 
+          </div>
+        }
+      </Modal>
+
+      <Modal 
+        title="Nova Classificação de Exames"
+        open={classificationState}
+        onClose={toggleClassification}>
+        <form action={ccgAction}>
+          <input type="hidden" name="type" value="classification" />
+          <InputField
+            textLabel="Nome da Classificação" 
+            placeholder="Descrição da classificação do exame"
+            required
+            name="name"
+          />
+
+          <div className="flex gap-3 justify-end">
+            <Button
+              onClick={toggleClassification} 
+              type="button" 
+              cancel>Cancelar</Button>
+            <Button>Salvar</Button>
+          </div>
+        </form>
+        { ccgMessageState &&
+          <div className="mt-3">
+            <Alert
+              message={ccgState.message}
+              type={ccgState.status?"success":"error"} 
+            /> 
+          </div>
+        }
+      </Modal>
+
+      <Modal 
+        title="Cadastrar Exame/Serviço"
+        open={modalState}
+        onClose={closeModal}>
+        <form ref={signFormRef} {...{action}}>
+          <InputField
+            textLabel="Descrição" 
+            placeholder="Descrição do nome do exame"
+            required
+            name="name"
+          />
+
+          <div className="flex gap-3 items-center">
+            <Selection
+              options={categories}
+              label="Categoria"
+              required
+              name="categoryId"
+              className="grow"
+              onClick={handleSelect}
+            />
+            <Button type="button" onClick={toggleCategory}>Novo</Button>
+          </div>
+
+          <div className="flex gap-3 items-center">
+            <Selection
+              options={classifications}
+              label="Classificação"
+              required
+              name="classificationId"
+              className="grow"
+              onClick={handleSelect}
+            />
+            <Button type="button" onClick={toggleClassification}>Novo</Button>
+          </div>
+
+          <div className="flex gap-3 items-center">
+            <Selection
+              options={groups}
+              label="Grupo"
+              required
+              name="groupId"
+              className="grow"
+              onClick={handleSelect}
+            />
+            <Button type="button" onClick={toggleGroupModal}>Novo</Button>
+          </div>
+
+          <div className="flex gap-3 items-center">
+            <Selection
+              options={specialties}
+              label="Especialidade"
+              name="specialtyId"
+              className="grow"
+              onClick={handleSelect}
+            />
+            <Button type="button">Novo</Button>
+          </div>
+          
+          <InputField
+            textLabel="Preço"
+            type="number"
+            min={0}
+            placeholder="Descreva o preço do exame"
+            name="price"
+          />
+
+          <div className="flex gap-3 justify-end">
+            <Button
+              onClick={closeModal} 
+              type="button" 
+              cancel>Sair</Button>
+            <Button>Salvar</Button>
+          </div>
+        </form>
+
+        { messageState &&
+          <div className="mt-3">
+            <Alert
+              message={state.message}
+              type={state.status?"success":"error"} 
+            /> 
+          </div>
+        }
+      </Modal>
+    </div>
+  )
+}

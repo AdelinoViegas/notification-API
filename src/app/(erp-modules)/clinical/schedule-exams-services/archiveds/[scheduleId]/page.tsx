@@ -1,0 +1,125 @@
+import Header from "@/components/header";
+import Card from "@/components/card";
+import { 
+  getExamCancel, 
+  getSchedulePatientExam 
+} from "@/app/backend/api/clinical/scheduling-api";
+import React from "react";
+import SubTitle from "@/components/ui/subtitle";
+import RescheduleExam from "@/components/reschedule-exam";
+import { SimpleSelectionType } from "@/components/ui/selection";
+import { getUnits } from "@/app/backend/api/clinical/urgency-bank-api";
+
+function TitleAndSubtitle({
+  label,
+  value,
+}:{
+  label: string;
+  value: string | React.ReactNode;
+}){
+  return(
+    <div className="mt-3">
+      <p className="font-medium text-gray-500">{label}</p>
+      <div className="ml-3">{value}</div>
+    </div>
+  )
+}
+
+export default async function Page({
+  params
+}: {
+  params: Promise<{
+    scheduleId: string;
+  }>
+}){ 
+  const { scheduleId } = await params; 
+  const schedule = await getSchedulePatientExam(scheduleId);
+  const cancelation = await getExamCancel(scheduleId);
+  const laboratories = await getUnits(['laboratory', 'imaging'], true) as SimpleSelectionType[];
+  
+  return (
+    <main className="space-y-3">
+      <div className="mt-6">
+        <Header title="Informações do exame arquivado"/>
+      </div>
+
+      <div className="block overflow-auto h-[80vh] scroll overflow-auto">
+        <Card className="grid lg:grid-cols-2">
+          <div>
+            <SubTitle className="inline-flex mt-3">Informações do Agendamento</SubTitle>
+            
+            <TitleAndSubtitle
+              label="Nome Completo do Utente"
+              value={schedule?.patient as string} 
+            />
+
+            <TitleAndSubtitle
+              label="Responsável pelo agendamento"
+              value={schedule?.user as string}
+            />
+
+            <TitleAndSubtitle
+              label="Responsável pelo arquivamento"
+              value={cancelation?.user as string}
+            />
+
+            <TitleAndSubtitle
+              label="Laboratório"
+              value={schedule?.laboratory as string} 
+            />
+
+            <TitleAndSubtitle
+              label="Data e Hora da Marcação"
+              value={schedule?.createdAt as string} 
+            />
+
+            <TitleAndSubtitle
+              label="Data e Hora do arquivamento"
+              value={cancelation?.createdAt as string} 
+            />
+
+            <TitleAndSubtitle
+              label="Observação"
+              value={schedule?.detail as string} 
+            />
+          </div>
+
+          <div>
+          <SubTitle className="inline-flex mt-3">Exames solicitados</SubTitle>
+            <TitleAndSubtitle
+              label="Exames Selecionados"
+              value={
+                <details className="my-3">
+                  <summary>Ver os exames</summary>
+                  <div className="mt-3">
+                    <ul>
+                      {schedule?.exams.map((props, i)=>(
+                        <li key={i}>{i+1}. {props.name}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </details>
+              }
+            />   
+
+            <TitleAndSubtitle
+              label="Movito do arquivamento"
+              value={cancelation?.reason as string} 
+            /> 
+
+            <RescheduleExam 
+              detail={schedule?.detail as string} 
+              date={schedule?._createdAt as Date}
+              laboratories={{
+                list: laboratories,
+                current: schedule?.laboratoryId as string,
+              }}
+              scheduleId={scheduleId}
+              isArchived
+            /> 
+          </div>
+        </Card>
+      </div>
+    </main>
+  );
+}
