@@ -41,7 +41,7 @@ export default function RescheduleAppointment({
   const [ doctors, setDoctors ] = useState<SimpleSelectionType[]>([]);
   const [ doctorDays, setDoctorDays ] = useState<SimpleSelectionType[]>([]);
   const [ doctorTime, setDoctorTime ] = useState<DoctorDayAndTime>();
-  const doctorDayRef = useRef<DoctorCalendarReference[]>();
+  const doctorDayRef = useRef<DoctorCalendarReference[]>(null);
 
   const handleSelectDoctor = useCallback(async(e?: unknown)=>{
     const doctorId = (e as { target: { value: string } }).target.value;

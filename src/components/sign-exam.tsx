@@ -20,6 +20,7 @@ import {
   getCCGs,
 } from "@/app/backend/api/clinical/scheduling-api";
 import { getSpecialties } from "@/app/backend/api/clinical/api";
+import SpecialtyModal from "@/components/specialty-modal";
 
 export default function SignExam(){
   const [ state, action ] = useActionState(signExam, { message: "", status: false });
@@ -248,7 +249,8 @@ export default function SignExam(){
               className="grow"
               onClick={handleSelect}
             />
-            <Button type="button">Novo</Button>
+            
+            <SpecialtyModal />
           </div>
           
           <InputField

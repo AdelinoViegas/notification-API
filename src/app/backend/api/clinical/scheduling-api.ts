@@ -162,8 +162,9 @@ async function getExam(examId: string){
     groupId: exam?.groupId?.toString() as string,
     categoryId: exam?.categoryId?.toString() as string,
     classificationId: exam?.classificationId?.toString() as string,
-    price: exam?.price as number | string,
-    examCode: exam?.examCode as number | string,
+    price: exam?.price as number,
+    examCode: exam?.examCode as number,
+    specialtyId: exam?.specialtyId?.toString()
   }
 }
 

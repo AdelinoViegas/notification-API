@@ -387,6 +387,25 @@ async function getConsult(officeId: string){
   }
 }
 
+async function uploadExternalExamFile(prev: unknown, formData: FormData){
+  try{
+    console.log(formData);
+    return {
+      message: 'Arquivo salvo com sucesso!',
+      status: true,
+    }
+  }catch(err: unknown){
+    const error = err as Error;
+
+    return {
+      message: error.cause?error.message:error.message,
+      status: false,
+    }
+  }
+}
+
+// async function readExternalExamFile(){}
+
 export {
   sendPatientToOffice,
   getPatient,
@@ -395,5 +414,6 @@ export {
   signConsutation,
   getConsult,
   finishConsultation,
-  requestReschedule
+  requestReschedule,
+  uploadExternalExamFile
 };

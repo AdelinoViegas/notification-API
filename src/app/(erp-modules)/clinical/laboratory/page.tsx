@@ -8,6 +8,7 @@ import { TiInputChecked } from "react-icons/ti";
 import WsUpdate from "@/components/ws-update";
 import { getPatients } from "@/app/backend/api/clinical/unit-api";
 import { Services, tableLaboratory } from "@/lib/table-formater";
+export const dynamic = "force-dynamic";
 
 export default async function Page({
   searchParams

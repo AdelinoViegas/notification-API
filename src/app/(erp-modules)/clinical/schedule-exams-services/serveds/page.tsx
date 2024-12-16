@@ -4,6 +4,7 @@ import { tableLaboratory } from "@/lib/table-formater";
 import Search from "@/components/ui/search";
 import WsUpdate from "@/components/ws-update";
 import { getPatients } from "@/app/backend/api/clinical/unit-api";
+export const dynamic = "force-dynamic";
 
 export default async function Page({
   searchParams

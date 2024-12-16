@@ -42,7 +42,7 @@ export default function Page(){
   const doctorsRef = useRef<Array<DoctorRole>>([]);
   const formRef = useRef<HTMLFormElement>(null);
   const params = useParams();
-  const doctorDayRef = useRef<DoctorCalendarReference[]>();
+  const doctorDayRef = useRef<DoctorCalendarReference[]>(null);
  
   const filterDoctors = useCallback(async (e: unknown)=>{
     const specialtyId = (e as { target: { value?: string } }).target?.value;

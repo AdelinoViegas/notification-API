@@ -1098,18 +1098,16 @@ async function getTriedPatient(patientId: string){
 
 async function signSpecialty(prev: unknown, formData: FormData){
   try{
-    const name = formData.get('name') as string;
-
-    const specialty = new specialtyModel({name});
-    specialty.save();
-    
+    const name = (formData.get('name') as string).toUpperCase();
     if(!name)
       throw new Error("Preencha o nome!", { cause: "empty" });
     
+    await specialtyModel.create({ name });
+
     return {
       message: "Especialidade registrada com sucesso!",
       status: true,
-    }; 
+    }
   }catch(e: unknown){
     const err = e as Error;
     

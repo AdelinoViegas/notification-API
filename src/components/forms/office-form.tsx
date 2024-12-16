@@ -3,13 +3,14 @@
 import { 
   useEffect,
   useState,
-  useActionState
+  useActionState,
+  useRef
 } from "react";
 import InputField from "@/components/ui/input-field";
 import InputDetails from "@/components/ui/input-details";
 import Button from "@/components/ui/button";
 import Alert from "@/components/alert";
-import { signConsutation } from "@/app/backend/api/clinical/office-api";
+import { signConsutation, uploadExternalExamFile } from "@/app/backend/api/clinical/office-api";
 import { useRouter } from "next/navigation";
 import { triggerUpdate } from "@/lib/ws-trigger";
 import { resultsConsult } from "@/app/backend/api/clinical/types";
@@ -249,17 +250,21 @@ function CurrentDataInOffice({
 import 'react-toastify/dist/ReactToastify.css';
 
 function FileUpload(){
+  const [ , action ] = useActionState(uploadExternalExamFile, { message: "", status: false });
+  const formRef = useRef<HTMLFormElement>(null);
+
   const handleFileUpload = (e: unknown)=>{
     const file = (e as { target: { files: File[] } }).target.files[0];
     
     if(!FileSize.validdateFileType(file))
       toast.warn("Formato do arquivo inválido!", { 
         theme: "light",
+        onOpen: ()=> formRef.current?.reset()
       });
   }
 
   return(
-    <form>
+    <form ref={formRef} {...{action}}>
       <ToastContainer
         theme="colored" 
       />
@@ -267,6 +272,7 @@ function FileUpload(){
       <InputField
         type="file"
         name="file"
+        required
         onChange={handleFileUpload}
         accept=".jpg, .jpeg, .png, .pdf"
       />

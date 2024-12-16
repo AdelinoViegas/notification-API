@@ -11,6 +11,7 @@ import Selection, { SimpleSelectionType } from "@/components/ui/selection";
 import Button from "@/components/ui/button";
 import { updateExamService } from "@/app/backend/api/clinical/scheduling-api";
 import Alert from "@/components/alert";
+import SpecialtyModal from "@/components/specialty-modal";
 
 type Exam = {
   _id: string;
@@ -20,6 +21,7 @@ type Exam = {
   classificationId: string;
   price: number;
   examCode: number;
+  specialtyId?: string;
 };
 
 type ExamFormProps = {
@@ -107,8 +109,9 @@ export default function ExamForm({
             label="Especialidade"
             name="specialtyId"
             className="grow"
+            defaultValue={currentExam?.specialtyId}
           />
-          <Button type="button">Novo</Button>
+          <SpecialtyModal />
         </div>
         <InputField
           textLabel="Preço" 

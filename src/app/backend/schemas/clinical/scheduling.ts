@@ -249,6 +249,12 @@ const officeSchema = new Schema({
   deleted: {
     type: Boolean,
     default: false
+  },
+  externalFileExam: {
+    name: String,
+    size: Number,
+    mimeType: String,
+    binaryData: Buffer
   }
 }, {
   timestamps: true,
