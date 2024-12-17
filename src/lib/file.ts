@@ -1,11 +1,12 @@
 // https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Image_types
+
 const fileTypes = [
   "image/jpeg",
   "image/png",
   "application/pdf"
 ];
 
-class FileSize{
+export class FileSize{
   static validdateFileType(file: File){
     return fileTypes.includes(file.type);
   }
@@ -35,8 +36,8 @@ class FileSize{
       return name.slice(0, 10) + '...' + name.slice(name.length - 10, name.length);
     return name;
   }
-}
 
-export {
-  FileSize
+  static async isEmpty(file: File){
+    return (!file.size && !(await file.arrayBuffer()).byteLength);
+  }
 }

@@ -2,7 +2,7 @@ import Header from "@/components/header";
 import Card from "@/components/card";
 import TitleAndSubtitle from "@/components/title-subtitle";
 import { CurrentDataInOffice, FileUpload, VitalSignalsInOffice } from "@/components/forms/office-form";
-import { getConsult, getPatient } from "@/app/backend/api/clinical/office-api";
+import { getConsult, getPatient, readExternalExamFile } from "@/app/backend/api/clinical/office-api";
 import Accordium from "@/components/accordium";
 import { civilState, gender } from "@/app/backend/api/clinical/translator";
 import FinishConsultation from "@/components/finish-consulation";
@@ -21,6 +21,7 @@ export default async function Page({
   const patient = await getPatient(officeId);
   const consult = await getConsult(officeId);
   const { detail } = await getScheduleAppointment(patient.scheduleAppointmentId);
+  const externalFile = await readExternalExamFile({ officeId, patientId: patient.personal._id });
   
   return(
     <main className="space-y-3">
@@ -81,7 +82,11 @@ export default async function Page({
           <Accordium title="Exames">
             <div className="grid lg:grid-cols-2 lg:space-x-8">
               <RequestExams patientId={patient.personal._id} />
-              <FileUpload />
+              <FileUpload 
+                {...{officeId}} 
+                patientId={patient.personal._id}  
+                {...{externalFile}}
+              />
             </div>
           </Accordium>      
 

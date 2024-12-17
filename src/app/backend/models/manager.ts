@@ -15,7 +15,6 @@ export {
   userModel,
   userGroupModel,
   accessLimitModel,
-  permissionSchema,
   accessPermissionModel,
   permissionModel,
   loginAccessTokensModel,

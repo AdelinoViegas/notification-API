@@ -168,7 +168,7 @@ export default function RequestExams({
         </div>
 
         <SubTitle className="inline-flex my-3">Exames escolhidos</SubTitle>
-        {!!examCart.length && <ul className="max-h-48 border rounded-md p-3 px-5 overflow-auto grid gap-3">
+        {!!examCart.length && <ul className="max-h-48 border rounded-md p-3 px-5 scroll overflow-auto grid gap-3">
           {examCart.map((examId, i)=>(
             <li key={i}>
               <div className="flex items-center justify-between rounded-md gap-3 py-2 border bg-gray-100 px-3"> 

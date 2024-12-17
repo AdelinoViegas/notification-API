@@ -4,8 +4,8 @@ import Card from "@/components/card";
 import SubTitle from "@/components/ui/subtitle";
 import Accordium from "@/components/accordium";
 import { FileSize } from "@/lib/file";
-import { getExamResult, getPatientExams } from "@/app/backend/api/clinical/unit-api";
 import { FaRegFileImage, FaRegFilePdf } from "react-icons/fa6";
+import { getExamResult, getPatientExams } from "@/app/backend/api/clinical/unit-api";
 
 export default async function Page({
   params

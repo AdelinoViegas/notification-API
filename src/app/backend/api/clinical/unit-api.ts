@@ -296,7 +296,6 @@ async function readUploadedFile({
       
       return externalLInk;
     }
-    // throw new Error("[NÃO SE PREOCUPE] File not exist!");
     return "#";
   }catch(e:unknown){
     console.log(e); 

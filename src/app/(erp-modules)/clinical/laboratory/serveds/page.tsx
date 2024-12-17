@@ -32,20 +32,13 @@ export default async function Page({
         <Header title="Exames Atendidos"/>
       </div>
 
-      <div className="flex items-center justify-between lg:flex-row gap-3 items-center">
-        {/*<Alert 
-          type="info" 
-          message="Faça duplo click sobre a consulta agendado para seguir com o atendimento!" 
-        />*/}
-
-        <Search
-          className="flex items-center gap-3"
-          filterKey="name"
-          label="Filtar por Nome"
-          placeholder="Buscar pelo nome do utente..."
-        />
-      </div>
-
+      <Search
+        className="flex items-center gap-3"
+        filterKey="name"
+        label="Filtar por Nome"
+        placeholder="Buscar pelo nome do utente..."
+      />
+      
       <Table
         baseRowLink="/clinical/laboratory/serveds"
         columns={[

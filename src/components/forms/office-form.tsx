@@ -248,55 +248,107 @@ function CurrentDataInOffice({
 }
 
 import 'react-toastify/dist/ReactToastify.css';
+import { FaRegFileImage, FaRegFilePdf } from "react-icons/fa6";
+import Link from "next/link";
 
-function FileUpload(){
-  const [ , action ] = useActionState(uploadExternalExamFile, { message: "", status: false });
+function FileUpload({ 
+  patientId,
+  officeId,
+  externalFile
+}: { 
+  patientId: string;
+  officeId: string;
+  externalFile?: {
+    name: string;
+    size: number;
+    link: string;
+  }
+}){
+  const [ state, action ] = useActionState(uploadExternalExamFile, { message: "", status: false });
+  const [ messageState, setMessageState ] = useState(false);
+  const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
 
-  const handleFileUpload = (e: unknown)=>{
+  const handleFileUpload = async (e: unknown)=>{
     const file = (e as { target: { files: File[] } }).target.files[0];
     
     if(!FileSize.validdateFileType(file))
-      toast.warn("Formato do arquivo inválido!", { 
+      toast.error("Formato do arquivo inválido!", { 
+        theme: "light",
+        onOpen: ()=> formRef.current?.reset()
+      });
+
+    if(!FileSize.validMaxSize(file))
+      toast.warn("Tamanho máximo permitido é de 2MB!", { 
+        theme: "light",
+        onOpen: ()=> formRef.current?.reset()
+      });
+      
+    if(await FileSize.isEmpty(file))
+      toast.error("Arquivo vazios!", { 
         theme: "light",
         onOpen: ()=> formRef.current?.reset()
       });
   }
 
+  useEffect(()=>{
+    setMessageState(true);
+    if(state.message)
+      setTimeout(()=>{
+        if(state.status)
+          router.refresh();
+
+        setMessageState(false)
+      }, state.status?3000:5000);
+  }, [state, router]);
+
   return(
     <form ref={formRef} {...{action}}>
+      <input type="hidden" name="patientId" defaultValue={patientId} />
+      <input type="hidden" name="officeId" defaultValue={officeId} />
+
       <ToastContainer
         theme="colored" 
       />
       <SubTitle className="inline-flex mt-3">Enviar resultado por JPEG/PNG/PDF</SubTitle>
       <InputField
         type="file"
-        name="file"
+        name="externalFile"
         required
         onChange={handleFileUpload}
         accept=".jpg, .jpeg, .png, .pdf"
       />
 
-    {/* { !!savedResults?.find(i => i._id === item._id)?.file.size &&
-        <Link target="_blank" href={savedResults?.find(i => i._id === item._id)?.file.link as string}>
+    { !!externalFile &&
+        <Link target="_blank" href={externalFile.link}>
           <div className="w-96 hover:bg-gray-100 flex gap-2 border border-2 rounded-xl px-3 py-2">
             <div className="w-10">
               {
-                FileSize.getExtension(savedResults?.find(i => i._id === item._id)?.file.name as string) === "pdf"?
+                FileSize.getExtension(externalFile.name) === "pdf"?
                 <FaRegFilePdf className="text-red-500 size-10" />:
                 <FaRegFileImage className="text-green-500 size-10" />
               }
             </div>
             <div>
-              <h2 className="font-medium">{FileSize.handleFileName(savedResults?.find(i => i._id === item._id)?.file.name as string)}</h2>
-              <p className="text-sm">{FileSize.getFileSizeToString(savedResults?.find(i => i._id === item._id)?.file.size as number)}</p>
+              <h2 className="font-medium">{FileSize.handleFileName(externalFile.name)}</h2>
+              <p className="text-sm">{FileSize.getFileSizeToString(externalFile.size)}</p>
             </div>
           </div>
         </Link>
-      } */}
+      }
       <p className="text-sm text-red-500">Tamanho máximo do arquivo de 2MB</p>
       <p className="text-sm text-red-500">Apenas arquivos *.pdf, *.jpg, *.png são permitidos</p>
       <Button>Salvar</Button>
+
+      <div className='mt-3'>
+        {
+          state.message && messageState &&
+          <Alert 
+            type={state.status?'success': 'error'} 
+            message={state.message} 
+          />
+        }
+      </div>
     </form>
   )
 }

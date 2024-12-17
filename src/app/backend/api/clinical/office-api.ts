@@ -6,6 +6,7 @@ import {
   scheduleAppointmentModel,
   demographyModel,
   responsibleModel,
+  externalResultsModel,
 } from "@/app/backend/models/clinical";
 import { officeModel } from "@/app/backend/models/clinical";
 import { whoAreYou } from "@/lib/web-token";
@@ -13,6 +14,8 @@ import { findDoctorCalendar } from "@/app/backend/api/clinical/scheduling-api";
 import { getDateInSlashFormat } from "@/lib/date-formater";
 import { userModel } from "@/app/backend/models/manager";
 import { signNotification } from "./process-api";
+import { FileSize } from "@/lib/file";
+import { ServerFileHandler } from "@/lib/server-files";
 
 type ConsultationTypes = "vitalSignals" | "currentStates";
 
@@ -389,7 +392,31 @@ async function getConsult(officeId: string){
 
 async function uploadExternalExamFile(prev: unknown, formData: FormData){
   try{
-    console.log(formData);
+    const file = formData.get("externalFile") as File;
+    const officeId = formData.get("officeId");
+    const patientId = formData.get("patientId");
+
+    if(!file.size)
+      throw new Error("Resultados vazios não são permitidos!", { cause: "empty_fields"});
+
+    if(!FileSize.validdateFileType(file))
+      throw new Error("Formato do arquivo inválido!", { cause: "invalid_type_file"});
+
+    if(!FileSize.validMaxSize(file))
+      throw new Error("Tamanho do arquivo superior!", { cause: "max_file_size"});
+    
+    await externalResultsModel.create({
+      patientId,
+      officeId,
+      fileDocument: {
+        name: file.name,
+        size: file.size,
+        mimeType: file.type,
+        binaryData: Buffer.from(await file.arrayBuffer())
+      },
+      userId: await whoAreYou()
+    });
+
     return {
       message: 'Arquivo salvo com sucesso!',
       status: true,
@@ -404,7 +431,35 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
   }
 }
 
-// async function readExternalExamFile(){}
+async function readExternalExamFile({ 
+  officeId,
+  patientId
+}: {
+  officeId: string;
+  patientId: string;
+}){
+  try{
+    const fileDocuments = await externalResultsModel.find({ patientId, officeId });
+    const externalFileDocument = fileDocuments[fileDocuments.length - 1];
+
+    if(!externalFileDocument)
+      return;
+
+    const externalFileLink = await ServerFileHandler.writeFileInPublicDir({ 
+      name: externalFileDocument?.fileDocument?.name as string,
+      binaryData: externalFileDocument?.fileDocument?.binaryData as Buffer,
+    });
+
+    return {
+      name: externalFileDocument?.fileDocument?.name as string,
+      size: externalFileDocument?.fileDocument?.size as number,
+      link: externalFileLink
+    }
+  }catch(e){
+    console.log(e);
+    return;
+  }
+}
 
 export {
   sendPatientToOffice,
@@ -415,5 +470,6 @@ export {
   getConsult,
   finishConsultation,
   requestReschedule,
-  uploadExternalExamFile
+  uploadExternalExamFile,
+  readExternalExamFile
 };

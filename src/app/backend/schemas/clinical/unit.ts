@@ -104,16 +104,23 @@ const serviceResultSchema = new Schema({
 });  // para laboratorio e imagiologia (a principio)
 
 const externalResultSchema = new Schema({
-  patientId: Schema.Types.ObjectId,
+  patientId: {
+    type: Schema.Types.ObjectId,
+    required: true,
+  },
+  officeId: Schema.Types.ObjectId,
   fileDocument: {
     name: String,
     size: Number,
     mimeType: String,
-    binaryData: Buffer
+    binaryData: {
+      type: Buffer,
+      unique: true
+    }
   },
   userId: Schema.Types.ObjectId,
 }, {
-  collection: "results_from_lab_imaging",
+  collection: "results_external",
   timestamps: true
 })
 export {
