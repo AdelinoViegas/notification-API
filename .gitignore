@@ -1,4 +1,4 @@
 /node_modules/
 .next/
-/public/open-files/
+/public/open-files/*
 

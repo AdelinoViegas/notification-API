@@ -18,11 +18,12 @@ import {
   doctorCalendarModel,
   scheduleAppointmentModel,
   appointmentCancelModel,
+  scheduleServiceModel,
 } from "@/app/backend/models/clinical";
 import { userModel } from "@/app/backend/models/manager";
 import { getUser } from "@/app/backend/api/clinical/api";
 import { redirect } from "next/navigation";
-
+import { getExamResult as getExamResutlFromUnit } from "./unit-api";
 export type CCGTypes = "category" | "classification" | "group";
 
 async function signExam(prev: unknown, formData: FormData){
@@ -305,7 +306,6 @@ async function getCCG({ type, id }:{ type?: CCGTypes, id: string }){
   }
 }
 
-// Agendamento de exames
 async function schedulePatientExam(prev: unknown, formData: FormData){
   try{
     const patientId = formData.get("patientId") as string;
@@ -962,6 +962,29 @@ async function findDoctorCalendar({
   return currentDoctorCalendar;
 }
 
+async function getPatientScheduledServices({ patientId }: {
+  patientId: string;
+}){
+  try{
+    const services = await scheduleServiceModel.find({ served: true });
+    const resultsList = [];
+
+    for(const service of services){
+      const scheduleService = await scheduleExamModel.findOne({ _id: service.scheduleId, patientId });
+      if(!scheduleService)
+        continue;
+      const results = await getExamResutlFromUnit({ serviceResultId: service._id.toString()});
+      for(const result of results){
+        const exam = await examModel.findById({ _id: result._id });
+        resultsList.push({
+          name: exam?.name as string,
+          ...result
+        });
+      }
+    }
+    return resultsList;
+  }finally{}
+}
 export {
   signExam,
   signExamResult,
@@ -987,5 +1010,6 @@ export {
   scheduleAppointment,
   rescheduleAppointment,
   findDoctorCalendar,
-  getNumberDoctorAppointment
+  getNumberDoctorAppointment,
+  getPatientScheduledServices
 };

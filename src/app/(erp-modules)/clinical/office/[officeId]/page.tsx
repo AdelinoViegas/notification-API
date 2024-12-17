@@ -7,7 +7,7 @@ import Accordium from "@/components/accordium";
 import { civilState, gender } from "@/app/backend/api/clinical/translator";
 import FinishConsultation from "@/components/finish-consulation";
 import RequestReschedule from "@/components/request-reschedule";
-import { getScheduleAppointment } from "@/app/backend/api/clinical/scheduling-api";
+import { getPatientScheduledServices, getScheduleAppointment } from "@/app/backend/api/clinical/scheduling-api";
 import RequestExams from "@/components/forms/request-exam";
 
 export default async function Page({
@@ -22,7 +22,8 @@ export default async function Page({
   const consult = await getConsult(officeId);
   const { detail } = await getScheduleAppointment(patient.scheduleAppointmentId);
   const externalFile = await readExternalExamFile({ officeId, patientId: patient.personal._id });
-  
+  const results = await getPatientScheduledServices({ patientId: patient.personal._id });
+
   return(
     <main className="space-y-3">
       <div className="mt-6">
@@ -93,6 +94,12 @@ export default async function Page({
           <div className="flex gap-3">
             <FinishConsultation />
             <RequestReschedule />
+            <div>
+              Resultados
+              <pre>
+                {JSON.stringify(results,null,2)}
+              </pre>
+            </div>
           </div>
         </Card>
       </div>
