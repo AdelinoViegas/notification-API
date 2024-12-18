@@ -1,6 +1,6 @@
 import Header from "@/components/header";
 import Card from "@/components/card";
-import { getExamResult, getPatientExams } from "@/app/backend/api/clinical/unit-api";
+import { getExamResult, getPatient, getPatientExams } from "@/app/backend/api/clinical/unit-api";
 import LaboratoryForm from "@/components/forms/laboratory-form";
 
 export default async function Page({
@@ -13,6 +13,7 @@ export default async function Page({
   const { laboratoryId } = await params;
   const exams = await getPatientExams(laboratoryId);
   const savedResults = await getExamResult({ serviceResultId: laboratoryId });
+  const patientName = await getPatient(laboratoryId);
 
   return(
     <main className="space-y-3">
@@ -21,7 +22,8 @@ export default async function Page({
       </div>
 
       <Card>
-        <LaboratoryForm 
+        <LaboratoryForm
+          {...{patientName}} 
           savedResults={savedResults}
           resultId={laboratoryId} 
           {...{exams}}

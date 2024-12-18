@@ -315,6 +315,7 @@ async function getExamResult({
     list.push({
       _id: item.serviceId?.toString() as string,
       plainText: item.results?.plainText  as string,
+      createdAt: item.createdAt as Date,
       file: {
         name: item.results?.file?.name as string,
         size: item.results?.file?.size as number,
@@ -361,9 +362,18 @@ async function finishExam(prev: unknown, formData: FormData){
   }
 }
 
+async function getPatient(_id: string){
+  try{
+    const scheduleId = (await scheduleServiceModel.findById({_id}))?.scheduleId;
+    const patientId = (await scheduleExamModel.findById({_id: scheduleId}))?.patientId;
+    return (await patientModel.findById({_id: patientId}))?.fullname as string;
+  }finally{}
+}
+
 export {
   updatePaymentData,
   sendPatientToUnit,
+  getPatient,
   getPatients,
   getPatientExams,
   signExamResult,

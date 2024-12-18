@@ -9,6 +9,7 @@ import FinishConsultation from "@/components/finish-consulation";
 import RequestReschedule from "@/components/request-reschedule";
 import { getPatientScheduledServices, getScheduleAppointment } from "@/app/backend/api/clinical/scheduling-api";
 import RequestExams from "@/components/forms/request-exam";
+import ExamResultViewer from "@/components/exam-result-viewer";
 
 export default async function Page({
   params
@@ -83,23 +84,22 @@ export default async function Page({
           <Accordium title="Exames">
             <div className="grid lg:grid-cols-2 lg:space-x-8">
               <RequestExams patientId={patient.personal._id} />
-              <FileUpload 
-                {...{officeId}} 
-                patientId={patient.personal._id}  
-                {...{externalFile}}
-              />
+              
+              <div>
+                <FileUpload 
+                  {...{officeId}} 
+                  patientId={patient.personal._id}  
+                  {...{externalFile}}
+                />
+                
+                <ExamResultViewer results={results} />
+              </div>
             </div>
           </Accordium>      
 
           <div className="flex gap-3">
             <FinishConsultation />
             <RequestReschedule />
-            <div>
-              Resultados
-              <pre>
-                {JSON.stringify(results,null,2)}
-              </pre>
-            </div>
           </div>
         </Card>
       </div>

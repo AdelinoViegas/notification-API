@@ -8,7 +8,7 @@ export type TriggerProps = {
   signal?: string;
   target: "screening" | "urgency-bank" | "patient" | "appointment" | "exams-services" | "schedule-exams" | "office"
   | "laboratory" | "imaging" | "schedule-exams-services" | "permissions" | "phisical-unit"
-  | "notification";
+  | "notification" | "office-exam-results";
   callback?: ()=>void;
 };
 

@@ -3,8 +3,7 @@
 import { 
   useState,
   useEffect,
-  useActionState, 
-  useCallback
+  useActionState
 } from "react";
 import { useRouter } from "next/navigation";
 import Modal from "@/components/modal";
@@ -32,7 +31,6 @@ export default function ValidateService({
   const [ modalState, setModalState ] = useState(false);
   const closeModal = ()=> setModalState(false);
   const openModal = ()=> setModalState(true);
-  const toggle = useCallback(()=> setModalState(!modalState), [modalState]);
   const [ messageState, setMessageState ] = useState(false);
   const router = useRouter();
 
@@ -42,7 +40,6 @@ export default function ValidateService({
 
       setTimeout(()=>{
         if(state.status){
-          toggle();
           triggerUpdate({ target: "laboratory"});
           triggerUpdate({ target: "schedule-exams-services"});
           router.replace('/clinical/schedule-exams-services');
@@ -50,7 +47,7 @@ export default function ValidateService({
         setMessageState(false);
       }, 2000);
     }
-  }, [state, router, toggle]);
+  }, [state, router]);
 
   return(
     <div>

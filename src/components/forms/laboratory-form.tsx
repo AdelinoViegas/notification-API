@@ -25,8 +25,10 @@ import FinishAnalysis from "@/components/finish-analysis";
 export default function LaboratoryForm({
   exams,
   resultId,
-  savedResults
+  savedResults,
+  patientName
 }:{ 
+  patientName: string;
   resultId: string;
   exams: { _id: string; name: string }[];
   savedResults?: { 
@@ -71,6 +73,8 @@ export default function LaboratoryForm({
       <ToastContainer
         theme="colored" 
       />
+      <p className="font-medium mb-5 uppercase">{patientName}</p>
+
       {exams.map((item, i)=>(
         <div className="flex flex-col gap-y-6 my-5" key={i}>
           <Accordium title={item.name}>         

@@ -1,7 +1,7 @@
 #!/usr/bin/node 
 import { createServer } from "http";
 import { Server } from "socket.io";
-import { ServerFileHandler } from './lib/ws-server-files.mjs';
+// import { ServerFileHandler } from './lib/ws-server-files.mjs';
 const server = createServer();
 const io = new Server(server, { cors: { origin: '*' } });
 const PORT = 3001;
