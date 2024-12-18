@@ -1,12 +1,8 @@
 import { io } from 'socket.io-client';
 
-const WS_URL='ws://192.168.1.16:3001';
+const WS_URL = process.env.NEXT_PUBLIC_WS_SERVER;
 
 const ws = io(WS_URL);
-
-// type NOTIFICATIONO_SIGNAL = {
-//   ""
-// }
 
 export type TriggerProps = {
   signal?: string;
