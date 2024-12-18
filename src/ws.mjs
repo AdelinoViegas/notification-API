@@ -14,5 +14,5 @@ io.on('connection', socket => {
 
 server.listen(PORT, async ()=> {
   console.log('[*] listen websocket server on', PORT);
-  await ServerFileHandler.clearPublicDir();
+  //await ServerFileHandler.clearPublicDir();
 });
