@@ -329,8 +329,8 @@ async function finishExam(prev: unknown, formData: FormData){
   try{
     const resultId = formData.get("resultId");
     const serviceResult = await serviceResultModel.findOne({ resultId });
-    const scheduleId = (await scheduleServiceModel.findOne({ _id: resultId }))?.scheduleId;
-    const totalScheduleServices = (await scheduleExamModel.findById({ _id: scheduleId }))?.exams;
+    const scheduleService = await scheduleServiceModel.findOne({ _id: resultId });
+    const totalScheduleServices = (await scheduleExamModel.findById({ _id: scheduleService?.scheduleId }))?.exams;
 
     if(totalScheduleServices?.length !== serviceResult?.exams.length)
       throw new Error("Termine de registrar todos os exames marcados!", { cause: "not_registered"});
@@ -348,7 +348,8 @@ async function finishExam(prev: unknown, formData: FormData){
 
     return {
       message: "Resultados dos exames concluídos com sucesso!",
-      status: true
+      status: true,
+      type: scheduleService?.Type
     }
   }catch(err: unknown){
     const error = err as Error;

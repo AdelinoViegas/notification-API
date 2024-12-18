@@ -39,7 +39,7 @@ export default function FinishAnalysis({
         setMessage("");
         if(state.status){
           closeModal();
-          router.replace("/clinical/laboratory");
+          router.replace(`/clinical/${state.type}`);
         }
       }, 2000);
     }
