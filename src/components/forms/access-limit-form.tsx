@@ -56,15 +56,13 @@ export default function AccessLimitForm({
       <input type="hidden" name="update" value={startAt && endAt?'true':'false'} />
       <input type="hidden" name="userId" value={userId} />
       
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid-cols-2 grid gap-3">
         <InputField
           textLabel="Data de Início" 
           type="date"
           defaultValue={new Date(startAt?startAt:Date.now()).toISOString().split('T')[0]}
           name="startAt"
           min={new Date().toISOString().split('T')[0]}
-          // max={new Date().toISOString().split('T')[0]}
-          // max={new Date(endAt?endAt:Date.now()).toISOString().split('T')[0]}
           required
           disabled={isAdmin}
         />

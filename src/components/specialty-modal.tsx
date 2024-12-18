@@ -39,7 +39,7 @@ export default function SpecialtyModal(){
 
   return(
     <div>
-      <Button type="button" onClick={openModal} className="flex gap-3">
+      <Button type="button" onClick={openModal} className="flex gap-x-1">
         <PlusIcon className="w-5" />
         Nova
       </Button>

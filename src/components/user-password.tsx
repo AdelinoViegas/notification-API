@@ -37,34 +37,35 @@ export default function UserPassword({userId}: {
   }, [state, router]);
 
   return(
-    <form action={formAction} className="bg-white px-3 py-2 rounded-xl border">
-      <SubTitle className="inline-flex">Repor senha da conta do usuário</SubTitle>
+    <form action={formAction} className="flex flex-col justify-between bg-white px-3 py-2 rounded-xl border">
+      <input type="hidden" name="userId" value={userId} />
       <div>
-        <InputField
-          textLabel="Nova Senha"
-          placeholder="Informe a nova senha do usuário"
-          className="flex-grow"
-          name="password"
-          required
-          disabled={!editState}
-          type={!editState?"password":"text"}
-          defaultValue={!editState?"Defina uma senha forte":undefined}
-        />
+        <SubTitle className="inline-flex">Repor senha da conta do usuário</SubTitle>
+        <div className="flex flex-col">
+          <InputField
+            textLabel="Nova"
+            placeholder="Informe a nova senha do usuário"
+            className="flex-grow"
+            type="password"
+            name="password"
+            required
+            disabled={!editState}
+            defaultValue={!editState?"Defina uma senha forte":undefined}
+          />
 
-        <InputField
-          textLabel="Confirme a senha"
-          placeholder="Confirme a senha do usuário"
-          type="password"
-          name="confirmPassword"
-          required
-          disabled={!editState}
-          defaultValue={!editState?"Defina uma senha forte":undefined}
-        />
+          <InputField
+            textLabel="Confirmação"
+            placeholder="Confirme a senha do usuário"
+            type="password"
+            name="confirmPassword"
+            required
+            disabled={!editState}
+            defaultValue={!editState?"Defina uma senha forte":undefined}
+          />
+        </div>
       </div>
 
-      <input type="hidden" name="userId" value={userId} />
-      
-      <div className="mb-3 flex gap-3">
+      <div className="flex gap-3">
         <Button 
           type="button" 
           cancel={editState}

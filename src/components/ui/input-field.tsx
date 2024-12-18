@@ -1,43 +1,47 @@
+"use client";
+
+import { useRef } from "react";
 import clsx from "clsx";
+import { IoEye } from "react-icons/io5";
 
 interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElement>{
   textLabel?: string;
-  isStrongPassword?: boolean;
-  password?: boolean;
   className?: string;
 }
 
 export default function InputField({
   textLabel,
-  isStrongPassword,
-  password,
   className,
   ...rest
 }: InputFieldProps){
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const changeVeiwPassword = ()=>{
+    inputRef.current?.setAttribute("type", inputRef.current?.type === "password"?"text":"password");
+  }
 
   return(
-    <div className={clsx("flex flex-col my-4", className)}>
-      <label className="text-xs font-medium">{textLabel}</label>
-      <input 
-        {...rest} 
-        autoComplete="off"
-        className={clsx("focus:invalid:border-red-500 disabled:text-gray-500 disabled:bg-gray-100 rounded-lg border-2 placeholder:text-sm outline-none transition focus:border-blue-500 py-1 px-2",
-          {
-            "focus:border-red-500": !isStrongPassword && password,
-            "focus:border-green-500": !!isStrongPassword && password
+    <div className={clsx(className, "my-3")}>
+      <label>
+        <span className="text-xs font-medium">{textLabel}</span>
+        <div className="flex gap-3 border px-3 py-1 rounded-md has-[:disabled]:bg-gray-100">
+          <input 
+            ref={inputRef} 
+            {...rest} 
+            className="disabled:bg-gray-100 w-full outline-none placeholder:text-sm placeholder:font-medium" 
+          />
+
+          {rest.type === "password" && !rest.disabled &&
+            <button 
+              className="z-50 hover:bg-gray-200 rounded-full px-1" 
+              type="button" 
+              onClick={changeVeiwPassword}
+            >
+              <IoEye className="size-5"/>
+            </button>
           }
-        )} />
-      <label className={clsx('text-sm font-medium',
-        {
-          "hidden": !password,
-          "text-green-600": isStrongPassword,
-          "text-red-500": !isStrongPassword
-        }
-        )}>
-        {
-          isStrongPassword?"Senha excelente!":"Senha muito fraca!"
-        }
+        </div>
       </label>
     </div>
-  )
+  );
 }

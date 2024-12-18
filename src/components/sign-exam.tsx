@@ -214,7 +214,14 @@ export default function SignExam(){
               className="grow"
               onClick={handleSelect}
             />
-            <Button type="button" onClick={toggleCategory}>Novo</Button>
+            <Button
+              className="flex gap-x-1"  
+              type="button" 
+              onClick={toggleCategory}
+            >
+              <PlusIcon className="w-5" />
+              Novo
+            </Button>
           </div>
 
           <div className="flex gap-3 items-center">
@@ -226,7 +233,14 @@ export default function SignExam(){
               className="grow"
               onClick={handleSelect}
             />
-            <Button type="button" onClick={toggleClassification}>Novo</Button>
+            <Button
+              className="flex gap-x-1"  
+              type="button" 
+              onClick={toggleClassification}
+            >
+              <PlusIcon className="w-5" />
+              Novo
+            </Button>
           </div>
 
           <div className="flex gap-3 items-center">
@@ -238,7 +252,14 @@ export default function SignExam(){
               className="grow"
               onClick={handleSelect}
             />
-            <Button type="button" onClick={toggleGroupModal}>Novo</Button>
+            <Button
+              className="flex gap-x-1" 
+              type="button" 
+              onClick={toggleGroupModal}
+            >
+             <PlusIcon className="w-5" />
+              Novo
+            </Button>
           </div>
 
           <div className="flex gap-3 items-center">

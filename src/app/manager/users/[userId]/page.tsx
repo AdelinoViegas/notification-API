@@ -89,7 +89,7 @@ export default async function Page({ params }: { params: Promise<{ userId: strin
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-3">
+        <div className="grid lg:grid-cols-3 gap-3">
           <UserPassword {...{userId}} />
           <AccessLimitContainer {...{userId}} />
         </div>

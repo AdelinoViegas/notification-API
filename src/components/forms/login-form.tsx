@@ -33,7 +33,7 @@ export default function LoginForm(){
   }, [state, router]);
 
   return(
-    <form action={action} className="rounded-xl px-10 py-6 md:bg-white/90 md:shadow-md md:w-96">
+    <form action={action} className="rounded-xl px-10 py-6 md:bg-white/90 md:border md:w-96">
       <div className="flex flex-col">
         <div className='flex justify-center mb-6'>
           <Image 
