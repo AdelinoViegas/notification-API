@@ -1,7 +1,7 @@
 import Header from "@/components/header";
 import Card from "@/components/card";
 import { getExamResult, getPatient, getPatientExams } from "@/app/backend/api/clinical/unit-api";
-import LaboratoryForm from "@/components/forms/laboratory-form";
+import LaboratoryForm from "@/components/forms/laboratory-imaging-form";
 
 export default async function Page({
   params

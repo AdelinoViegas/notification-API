@@ -184,7 +184,7 @@ async function signExamResult(prev:unknown, formData:FormData){
   // const sourceType = formData.get("sourceType");
   const file = formData.get("file") as File;
   const plainText = formData.get("plainText") as string;
-  
+
   try{
     const resultService = await serviceResultModel.findOne({ resultId });
 

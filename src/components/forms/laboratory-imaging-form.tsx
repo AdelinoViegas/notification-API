@@ -22,13 +22,15 @@ import { FaRegFileImage } from "react-icons/fa";
 import Link from "next/link";
 import FinishAnalysis from "@/components/finish-analysis";
 
-export default function LaboratoryForm({
+export default function LaboratoryImagingForm({
   exams,
   resultId,
   savedResults,
-  patientName
+  patientName,
+  type
 }:{ 
   patientName: string;
+  type?: "laboratory" | "imaging";
   resultId: string;
   exams: { _id: string; name: string }[];
   savedResults?: { 
@@ -105,13 +107,15 @@ export default function LaboratoryForm({
                 />
                 
                 <div ref={fileRef} className="my-5 px-4 flex flex-col gap-y-2">
-                  <SubTitle className="inline-flex mt-3">Resultado por JPEG/PNG/PDF</SubTitle>
+                  <SubTitle className="inline-flex mt-3">
+                    {type === "imaging"?"Resultado por JPEG/PNG/PDF/VIDEO":"Resultado por JPEG/PNG/PDF"}
+                  </SubTitle>
                   <InputField
                     className="w-96"
                     type="file"
                     name="file"
                     onChange={handleFileUpload}
-                    accept=".jpg, .jpeg, .png, .pdf"
+                    accept={type === "imaging"?".jpg, .jpeg, .png, .pdf, .mp4":".jpg, .jpeg, .png, .pdf"}
                   />
 
                  { !!savedResults?.find(i => i._id === item._id)?.file.size &&

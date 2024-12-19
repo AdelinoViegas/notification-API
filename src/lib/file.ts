@@ -3,7 +3,8 @@
 const fileTypes = [
   "image/jpeg",
   "image/png",
-  "application/pdf"
+  "application/pdf",
+  "video/mp4"
 ];
 
 export class FileSize{
