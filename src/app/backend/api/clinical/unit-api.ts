@@ -364,8 +364,8 @@ async function finishExam(prev: unknown, formData: FormData){
 
 async function getPatient(_id: string){
   try{
-    const service = (await scheduleServiceModel.findById({_id}));
-    const patientId = (await scheduleExamModel.findById({_id: service?.scheduleId}))?.patientId;
+    const scheduleId = (await scheduleServiceModel.findById({_id}))?.scheduleId;
+    const patientId = (await scheduleExamModel.findById({_id: scheduleId}))?.patientId;
     return (await patientModel.findById({_id: patientId}))?.fullname as string
   }finally{}
 }

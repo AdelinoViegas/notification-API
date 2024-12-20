@@ -3,7 +3,6 @@
 import { useEffect, useState, useRef } from "react";
 import Modal from "@/components/modal";
 import Button from "@/components/ui/button";
-import { FcSms } from "react-icons/fc";
 import WsUpdate from "@/components/ws-update";
 import { 
   deleteNotificaion, 
@@ -17,7 +16,7 @@ import { IoMdOpen } from "react-icons/io";
 import clsx from "clsx";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
 import { whoAreYou } from "@/lib/web-token";
-
+import { TbMessage2 } from "react-icons/tb";
 type Notification = {
   _id: string;
   title: string;
@@ -98,7 +97,7 @@ export default function Notification(){
         callback={websocketCallback} 
       />
       <button onClick={toggle} className="relative hover:bg-gray-100 px-3 py-2 rounded-xl">
-        <FcSms className="size-8 animate" />
+        <TbMessage2 className="size-8 animate" />
        { NotReadedNotifications() !== 0 && <span className="animate-ping absolute font-medium right-1 top-0 text-xs bg-red-500 text-white rounded-full px-1">
           {NotReadedNotifications()}
         </span>}

@@ -119,7 +119,7 @@ export default function LaboratoryImagingForm({
                 
                 <div className="my-5 px-4 flex flex-col gap-y-2">
                   <SubTitle className="inline-flex mt-3">
-                    {`Resultado por JPEG/PNG/PDF/${imaging?'VIDEO':''}`}
+                    {`Resultado por JPEG/PNG/PDF${imaging?'/VIDEO':''}`}
                   </SubTitle>
 
                   <InputField
@@ -127,7 +127,7 @@ export default function LaboratoryImagingForm({
                     type="file"
                     name="file"
                     onChange={handleFileUpload}
-                    accept={`.jpg, .jpeg, .png, .pdf, ${imaging?'.mp4':''}`}
+                    accept={`.jpg, .jpeg, .png, .pdf ${imaging?', .mp4':''}`}
                   />
 
                  { !!savedResults?.find(i => i._id === item._id)?.file.size &&
@@ -149,7 +149,7 @@ export default function LaboratoryImagingForm({
                   }
                   <p className="text-sm text-red-500">Tamanho máximo do arquivo de {FileHandler.getMaxFileSize()}</p>
                   <p className="text-sm text-red-500">
-                    {`Apenas arquivos *.pdf, *.jpg, *.png ${imaging?'*.mp4':''} são permitidos`}
+                    {`Apenas arquivos *.pdf, *.jpg, *.png ${imaging?', *.mp4':''} são permitidos`}
                   </p>
                 </div>
     
