@@ -1,7 +1,7 @@
 "use server";
 
 import { writeFileSync } from "fs";
-import { FileSize } from "@/lib/file";
+import { FileHandler } from "@/lib/client-files";
 
 type WritedFile = {
   name: string;
@@ -10,7 +10,7 @@ type WritedFile = {
 
 const externalPublicDir = process.cwd()+'/public/open-files'; 
 
-class ServerFileHandler extends FileSize {
+class ServerFileHandler extends FileHandler {
   static async writeFileInPublicDir(file: WritedFile){
     try{
       const filePathLocation = `${externalPublicDir}/${file.name}`;

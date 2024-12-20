@@ -27,7 +27,7 @@ export default async function Page({
           savedResults={savedResults}
           resultId={imagingId} 
           {...{exams}}
-          type="imaging"
+          imaging
         />
       </Card>
     </main>

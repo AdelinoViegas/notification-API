@@ -3,8 +3,7 @@
 import { 
   useActionState, 
   useEffect, 
-  useState, 
-  useRef
+  useState
 } from "react";
 import { useRouter } from "next/navigation";
 import Button from "@/components/ui/button";
@@ -14,7 +13,7 @@ import InputDetails from "@/components/ui/input-details";
 import Accordium from "@/components/accordium";
 import Alert from "@/components/alert";
 import { signExamResult } from "@/app/backend/api/clinical/unit-api";
-import { FileSize } from "@/lib/file";
+import { FileHandler } from "@/lib/client-files";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FaRegFilePdf } from "react-icons/fa6";
@@ -27,10 +26,10 @@ export default function LaboratoryImagingForm({
   resultId,
   savedResults,
   patientName,
-  type
+  imaging
 }:{ 
   patientName: string;
-  type?: "laboratory" | "imaging";
+  imaging?: boolean;
   resultId: string;
   exams: { _id: string; name: string }[];
   savedResults?: { 
@@ -46,14 +45,26 @@ export default function LaboratoryImagingForm({
   const [ state, action ] = useActionState(signExamResult, { message: "", status: false, serviceId: "" });
   const [ msgState, setMsgState ] = useState(false);
   const router = useRouter();
-  const fileRef = useRef<HTMLDivElement>(null);
-  
-  const handleFileUpload = (e: unknown)=>{
-    const file = (e as { target: { files: File[] } }).target.files[0];
-    
-    if(!FileSize.validdateFileType(file))
-      toast.warn("Formato do arquivo inválido!", { 
+
+  const handleFileUpload = async (e: unknown)=>{
+    const target = (e as { target: { files: File[]; value: string; } }).target;
+
+    if(target.files.length && !FileHandler.validdateFileType(target.files[0]))
+      toast.error("Formato do arquivo inválido!", { 
         theme: "light",
+        onOpen: ()=> target.value = ""
+      });
+
+    if(target.files.length && !FileHandler.validMaxSize(target.files[0]))
+      toast.warn(`Tamanho máximo permitido de apenas ${FileHandler.getMaxFileSize()}`, { 
+        theme: "light",
+        onOpen: ()=> target.value = ""
+      });
+      
+    if(target.files.length && (await FileHandler.isEmpty(target.files[0])))
+      toast.error("Este arquivo está vazio!", { 
+        theme: "light",
+        onOpen: ()=> target.value = ""
       });
   }
 
@@ -106,16 +117,17 @@ export default function LaboratoryImagingForm({
                   defaultValue={item.name}
                 />
                 
-                <div ref={fileRef} className="my-5 px-4 flex flex-col gap-y-2">
+                <div className="my-5 px-4 flex flex-col gap-y-2">
                   <SubTitle className="inline-flex mt-3">
-                    {type === "imaging"?"Resultado por JPEG/PNG/PDF/VIDEO":"Resultado por JPEG/PNG/PDF"}
+                    {`Resultado por JPEG/PNG/PDF/${imaging?'VIDEO':''}`}
                   </SubTitle>
+
                   <InputField
                     className="w-96"
                     type="file"
                     name="file"
                     onChange={handleFileUpload}
-                    accept={type === "imaging"?".jpg, .jpeg, .png, .pdf, .mp4":".jpg, .jpeg, .png, .pdf"}
+                    accept={`.jpg, .jpeg, .png, .pdf, ${imaging?'.mp4':''}`}
                   />
 
                  { !!savedResults?.find(i => i._id === item._id)?.file.size &&
@@ -123,20 +135,22 @@ export default function LaboratoryImagingForm({
                       <div className="w-96 hover:bg-gray-100 flex gap-2 border border-2 rounded-xl px-3 py-2">
                         <div className="w-10">
                           {
-                            FileSize.getExtension(savedResults?.find(i => i._id === item._id)?.file.name as string) === "pdf"?
+                            FileHandler.getExtension(savedResults?.find(i => i._id === item._id)?.file.name as string) === "pdf"?
                             <FaRegFilePdf className="text-red-500 size-10" />:
                             <FaRegFileImage className="text-green-500 size-10" />
                           }
                         </div>
                         <div>
-                          <h2 className="font-medium">{FileSize.handleFileName(savedResults?.find(i => i._id === item._id)?.file.name as string)}</h2>
-                          <p className="text-sm">{FileSize.getFileSizeToString(savedResults?.find(i => i._id === item._id)?.file.size as number)}</p>
+                          <h2 className="font-medium">{FileHandler.handleFileName(savedResults?.find(i => i._id === item._id)?.file.name as string)}</h2>
+                          <p className="text-sm">{FileHandler.getFileHandlerToString(savedResults?.find(i => i._id === item._id)?.file.size as number)}</p>
                         </div>
                       </div>
                     </Link>
                   }
-                  <p className="text-sm text-red-500">Tamanho máximo do arquivo de 2MB</p>
-                  <p className="text-sm text-red-500">Apenas arquivos *.pdf, *.jpg, *.png são permitidos</p>
+                  <p className="text-sm text-red-500">Tamanho máximo do arquivo de {FileHandler.getMaxFileSize()}</p>
+                  <p className="text-sm text-red-500">
+                    {`Apenas arquivos *.pdf, *.jpg, *.png ${imaging?'*.mp4':''} são permitidos`}
+                  </p>
                 </div>
     
                 <div className="my-5 px-4 flex flex-col gap-y-2">

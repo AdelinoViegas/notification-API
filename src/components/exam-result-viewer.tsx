@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import Card from "./card";
-import { FileSize } from "@/lib/file";
+import { FileHandler } from "@/lib/client-files";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
 import Link from "next/link";
 import WsUpdate from "./ws-update";
@@ -24,9 +24,9 @@ export default function ExamResultViewer({
       <WsUpdate target="office-exam-results" />
 
       <h2 className="text-primary font-medium text-lg">Histórico de Exames realizados</h2>
-      <div className="h-96 overflow-auto">
+      <div className="h-96 overflow-auto px-3">
         { results.reverse().map((item, i)=>(
-          <div key={i} className={clsx(!(results.length - 1 === i) &&"border-b", "px-3 py-2 my-3")}>
+          <div key={i} className={clsx(!(results.length - 1 === i) &&"border-b", "my-3")}>
             <p><span className="font-medium">Tipo de exame:</span> {item.name}</p>
             <p><span className="font-medium">Feito em:</span> { getDataAndHoursFormat(item.createdAt)}</p>
             {!!item.plainText && <p><span className="font-medium text-red-500">Resultado Descritivo: </span> {item.plainText}</p>}
@@ -40,7 +40,7 @@ export default function ExamResultViewer({
                   {item.file?.name}
                 </Link>
               </p>
-              <p><span className="font-medium">Tamanho do Ficheiro:</span> {FileSize.getFileSizeToString(item.file.size)}</p>
+              <p><span className="font-medium">Tamanho do Ficheiro:</span> {FileHandler.getFileHandlerToString(item.file.size)}</p>
             </>}
           </div>
         ))}

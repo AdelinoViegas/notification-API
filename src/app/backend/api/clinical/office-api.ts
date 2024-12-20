@@ -14,7 +14,7 @@ import { findDoctorCalendar } from "@/app/backend/api/clinical/scheduling-api";
 import { getDateInSlashFormat } from "@/lib/date-formater";
 import { userModel } from "@/app/backend/models/manager";
 import { signNotification } from "./process-api";
-import { FileSize } from "@/lib/file";
+import { FileHandler } from "@/lib/client-files";
 import { ServerFileHandler } from "@/lib/server-files";
 
 type ConsultationTypes = "vitalSignals" | "currentStates";
@@ -399,10 +399,10 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
     if(!file.size)
       throw new Error("Resultados vazios não são permitidos!", { cause: "empty_fields"});
 
-    if(!FileSize.validdateFileType(file))
+    if(!FileHandler.validdateFileType(file))
       throw new Error("Formato do arquivo inválido!", { cause: "invalid_type_file"});
 
-    if(!FileSize.validMaxSize(file))
+    if(!FileHandler.validMaxSize(file))
       throw new Error("Tamanho do arquivo superior!", { cause: "max_file_size"});
     
     await externalResultsModel.create({
@@ -422,10 +422,10 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
       status: true,
     }
   }catch(err: unknown){
-    const error = err as Error;
+    const error = err as Error & { code: number };
 
     return {
-      message: error.cause?error.message:error.message,
+      message: error?.code?"Este arquivo já foi carregado!":error.cause?error.message:error.message,
       status: false,
     }
   }

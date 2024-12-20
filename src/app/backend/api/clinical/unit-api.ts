@@ -12,7 +12,7 @@ import { whoAreYou } from "@/lib/web-token";
 import { userModel } from "@/app/backend/models/manager";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
 import { Types } from "mongoose";
-import { FileSize } from "@/lib/file";
+import { FileHandler } from "@/lib/client-files";
 import { writeFileSync } from "fs";
 
 async function updatePaymentData(prev: unknown, formData: FormData){
@@ -191,10 +191,10 @@ async function signExamResult(prev:unknown, formData:FormData){
     if(!plainText && !file.size)
       throw new Error("Resultados vazios não são permitidos!", { cause: "empty_fields"});
 
-    if(file.size && !FileSize.validdateFileType(file))
+    if(file.size && !FileHandler.validdateFileType(file))
       throw new Error("Formato do arquivo inválido!", { cause: "invalid_type_file"});
 
-    if(file.size && !FileSize.validMaxSize(file))
+    if(file.size && !FileHandler.validMaxSize(file))
       throw new Error("Tamanho do arquivo superior!", { cause: "max_file_size"});
     
     await readUploadedFile({ serviceId, resultId });
@@ -287,7 +287,7 @@ async function readUploadedFile({
     const resultService = await serviceResultModel.findOne({ resultId });
     const resultFile = resultService?.exams.find(item => item.serviceId?.toString() === serviceId)?.results?.file;
     if(resultFile?.size && resultFile?.binaryData){
-      // const temporaryFile = randomUUID().concat('.'+FileSize.getExtension(resultFile.name as string));
+      // const temporaryFile = randomUUID().concat('.'+FileHandler.getExtension(resultFile.name as string));
       // console.log(temporaryFile);
       const filename = resultFile?.name as string;
       const filePathLocation = `${process.cwd()}/public/open-files/${filename}`;
@@ -364,9 +364,9 @@ async function finishExam(prev: unknown, formData: FormData){
 
 async function getPatient(_id: string){
   try{
-    const scheduleId = (await scheduleServiceModel.findById({_id}))?.scheduleId;
-    const patientId = (await scheduleExamModel.findById({_id: scheduleId}))?.patientId;
-    return (await patientModel.findById({_id: patientId}))?.fullname as string;
+    const service = (await scheduleServiceModel.findById({_id}));
+    const patientId = (await scheduleExamModel.findById({_id: service?.scheduleId}))?.patientId;
+    return (await patientModel.findById({_id: patientId}))?.fullname as string
   }finally{}
 }
 

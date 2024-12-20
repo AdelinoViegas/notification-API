@@ -14,7 +14,7 @@ import { signConsutation, uploadExternalExamFile } from "@/app/backend/api/clini
 import { useRouter } from "next/navigation";
 import { triggerUpdate } from "@/lib/ws-trigger";
 import { resultsConsult } from "@/app/backend/api/clinical/types";
-import { FileSize } from "@/lib/file";
+import { FileHandler } from "@/lib/client-files";
 import { toast, ToastContainer } from "react-toastify";
 import SubTitle from "@/components/ui/subtitle";
 
@@ -272,19 +272,19 @@ function FileUpload({
   const handleFileUpload = async (e: unknown)=>{
     const file = (e as { target: { files: File[] } }).target.files[0];
     
-    if(!FileSize.validdateFileType(file))
+    if(!FileHandler.validdateFileType(file))
       toast.error("Formato do arquivo inválido!", { 
         theme: "light",
         onOpen: ()=> formRef.current?.reset()
       });
 
-    if(!FileSize.validMaxSize(file))
+    if(!FileHandler.validMaxSize(file))
       toast.warn("Tamanho máximo permitido é de 2MB!", { 
         theme: "light",
         onOpen: ()=> formRef.current?.reset()
       });
       
-    if(await FileSize.isEmpty(file))
+    if(await FileHandler.isEmpty(file))
       toast.error("Arquivo vazios!", { 
         theme: "light",
         onOpen: ()=> formRef.current?.reset()
@@ -324,14 +324,14 @@ function FileUpload({
           <div className="w-96 hover:bg-gray-100 flex gap-2 border border-2 rounded-xl px-3 py-2">
             <div className="w-10">
               {
-                FileSize.getExtension(externalFile.name) === "pdf"?
+                FileHandler.getExtension(externalFile.name) === "pdf"?
                 <FaRegFilePdf className="text-red-500 size-10" />:
                 <FaRegFileImage className="text-green-500 size-10" />
               }
             </div>
             <div>
-              <h2 className="font-medium">{FileSize.handleFileName(externalFile.name)}</h2>
-              <p className="text-sm">{FileSize.getFileSizeToString(externalFile.size)}</p>
+              <h2 className="font-medium">{FileHandler.handleFileName(externalFile.name)}</h2>
+              <p className="text-sm">{FileHandler.getFileHandlerToString(externalFile.size)}</p>
             </div>
           </div>
         </Link>

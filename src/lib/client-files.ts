@@ -7,25 +7,31 @@ const fileTypes = [
   "video/mp4"
 ];
 
-export class FileSize{
+const MAX_FILE_SIZE = Math.pow(1024, 2); // 1MB
+
+export class FileHandler{
   static validdateFileType(file: File){
     return fileTypes.includes(file.type);
   }
 
-  static getFileSizeToString(fileSize: number){
-    if (fileSize < 1e3) {
-      return `${fileSize} bytes`;
-    } else if (fileSize >= 1e3 && fileSize < 1e6) {
-      return `${(fileSize / 1e3).toFixed(1)} KB`;
+  static getFileHandlerToString(FileHandler: number){
+    if (FileHandler < 1e3) {
+      return `${FileHandler} bytes`;
+    } else if (FileHandler >= 1e3 && FileHandler < 1e6) {
+      return `${(FileHandler / 1e3).toFixed(1)} KB`;
     } else {
-      return `${(fileSize / 1e6).toFixed(1)} MB`;
+      return `${(FileHandler / 1e6).toFixed(1)} MB`;
     }
   }
 
   static validMaxSize(file: File){
-    if(file.size > 2*Math.pow(1024, 2))
+    if(file.size > MAX_FILE_SIZE)
       return false;
     return true;
+  }
+
+  static getMaxFileSize(){
+    return this.getFileHandlerToString(MAX_FILE_SIZE);
   }
 
   static getExtension(name: string){

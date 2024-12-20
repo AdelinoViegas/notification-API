@@ -3,9 +3,9 @@ import Header from "@/components/header";
 import Card from "@/components/card";
 import SubTitle from "@/components/ui/subtitle";
 import Accordium from "@/components/accordium";
-import { FileSize } from "@/lib/file";
+import { FileHandler } from "@/lib/client-files";
 import { FaRegFileImage, FaRegFilePdf } from "react-icons/fa6";
-import { getExamResult, getPatientExams } from "@/app/backend/api/clinical/unit-api";
+import { getExamResult, getPatient, getPatientExams } from "@/app/backend/api/clinical/unit-api";
 
 export default async function Page({
   params
@@ -17,6 +17,7 @@ export default async function Page({
   const { laboratoryId } = await params;
   const exams = await getPatientExams(laboratoryId);
   const savedResults = await getExamResult({ serviceResultId: laboratoryId });
+  const patientName = await getPatient(laboratoryId);
 
   return(
     <main className="space-y-3">
@@ -25,6 +26,8 @@ export default async function Page({
       </div>
 
       <Card>
+        <p className="font-medium mb-5 uppercase">{patientName}</p>
+
         {exams.map((item, i)=>(
           <div className="flex flex-col gap-y-6 my-5" key={i}>
             <Accordium title={item.name}>         
@@ -36,14 +39,14 @@ export default async function Page({
                         <div className="w-96 hover:bg-gray-100 flex gap-2 border border-2 rounded-xl px-3 py-2">
                           <div className="w-10">
                             {
-                              FileSize.getExtension(savedResults?.find(i => i._id === item._id)?.file.name as string) === "pdf"?
+                              FileHandler.getExtension(savedResults?.find(i => i._id === item._id)?.file.name as string) === "pdf"?
                               <FaRegFilePdf className="text-red-500 size-10" />:
                               <FaRegFileImage className="text-green-500 size-10" />
                             }
                           </div>
                           <div>
-                            <h2 className="font-medium">{FileSize.handleFileName(savedResults?.find(i => i._id === item._id)?.file.name as string)}</h2>
-                            <p className="text-sm">{FileSize.getFileSizeToString(savedResults?.find(i => i._id === item._id)?.file.size as number)}</p>
+                            <h2 className="font-medium">{FileHandler.handleFileName(savedResults?.find(i => i._id === item._id)?.file.name as string)}</h2>
+                            <p className="text-sm">{FileHandler.getFileHandlerToString(savedResults?.find(i => i._id === item._id)?.file.size as number)}</p>
                           </div>
                         </div>
                       </Link>
