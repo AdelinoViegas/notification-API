@@ -3,7 +3,8 @@
 import { 
   useEffect,
   useState,
-  useRef 
+  useRef, 
+  ChangeEvent
 } from "react";
 import { 
   useRouter, 
@@ -25,7 +26,6 @@ type SelectFilterProps = {
 export default function SelectFilter({
   unitType,
   label,
-  doctor,
   filterKey,
   defaultOptionLabel
 }:SelectFilterProps){
@@ -36,8 +36,8 @@ export default function SelectFilter({
   const router = useRouter();
   const pathname = usePathname();
 
-  const onChangeHandler = (e: unknown)=>{
-    const optionId = (e as { target: { value: string }}).target.value;
+  const onChangeHandler = (e: ChangeEvent<HTMLSelectElement>)=>{
+    const optionId = e.target.value;
     
     if(!optionId)
       search.delete(filterKey);

@@ -16,16 +16,17 @@ export default async function Page({
   searchParams
 }:{
   searchParams: Promise<{
-    name: string;
+    patient: string;
     unitId: string;    
   }>
 }){
-  const { name, unitId } = await searchParams;
+  const { patient, unitId } = await searchParams;
   const patientsData = await getPatients({
     served: false, 
     type: "laboratory",
     filters: {
-      fullname: name,
+      fullname: patient,
+      unitId
     } 
   });
   
@@ -63,7 +64,7 @@ export default async function Page({
 
         <Search
           className="flex items-center gap-3"
-          filterKey="name"
+          filterKey="patient"
           label="Filtrar por Nome"
           placeholder="Buscar pelo nome do utente"
         />

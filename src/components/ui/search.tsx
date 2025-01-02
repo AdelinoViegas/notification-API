@@ -32,21 +32,20 @@ export default function Search({
   
   const onChangeText = debounce((e)=>{
     const value = e.target.value;
-    console.log(value);
-    
+
     if(!value)
       search.delete(filterKey);
     else
       search.set(filterKey, value);
 
-    router.push(`${pathname}?${searchParams.toString()}`);
+    router.push(`${pathname}?${search.toString()}`);
   }, 1000);
 
   const handleClear = ()=>{
     const inputElement = divRef.current?.getElementsByTagName("input")[0] as HTMLInputElement;
     inputElement.value = "";
     search.delete(filterKey);
-    router.push(`${pathname}?${searchParams.toString()}`);
+    router.push(`${pathname}?${search.toString()}`);
   }
 
   return(

@@ -123,7 +123,7 @@ async function getPatients({
   type: "laboratory" | "imaging";
   filters?: {
     fullname?: string;
-    location?: string; // lab ou img
+    unitId?: string; // lab ou img
   }
 }){
   try{
