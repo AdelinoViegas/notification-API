@@ -14,7 +14,6 @@ import { getDataAndHoursFormat } from "@/lib/date-formater";
 import { Types } from "mongoose";
 import { FileHandler } from "@/lib/client-files";
 import { writeFileSync } from "fs";
-import { MdStayCurrentPortrait } from "react-icons/md";
 
 async function updatePaymentData(prev: unknown, formData: FormData){
   try{

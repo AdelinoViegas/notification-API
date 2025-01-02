@@ -1,15 +1,13 @@
-import Link from "next/link";
 import Header from "@/components/header";
 import Table from "@/components/table";
 import Alert from "@/components/alert";
-import Button from "@/components/ui/button";
 import Search from "@/components/ui/search";
 import SelectFilter from "@/components/select-filter";
-import { TiInputChecked } from "react-icons/ti";
 import WsUpdate from "@/components/ws-update";
 import { getPatients } from "@/app/backend/api/clinical/unit-api";
 import { Services, tableLaboratory } from "@/lib/table-formater";
 import Pagination from "@/components/pagination";
+
 export const dynamic = "force-dynamic";
 
 export default async function Page({

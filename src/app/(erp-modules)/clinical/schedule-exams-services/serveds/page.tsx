@@ -16,6 +16,7 @@ export default async function Page({
   const { name } = await searchParams;
   const patientsData = await getPatients({
     served: true, 
+    page: 1,
     type: "laboratory",
     filters: {
       fullname: name,
