@@ -134,7 +134,7 @@ async function getPatients({
     });
     
     for(const service of services){
-      const scheduledService = await scheduleExamModel.findById({ _id: service.scheduleId })    
+      const scheduledService = await scheduleExamModel.findById({ _id: service.scheduleId });
       const patient = await patientModel.findById({_id: scheduledService?.patientId }).select({ fullname: 1});
     
       patients.push({
@@ -142,13 +142,17 @@ async function getPatients({
         patient: patient?.fullname as string,
         markedDatatime: getDataAndHoursFormat(scheduledService?.dateTime as Date),
         user: (await userModel.findById({ _id: service?.userId }).select({ fullname: 1 }))?.fullname as string,
-        nameLaboratory: (await unitModel.findById({ _id: scheduledService?.laboratoryId}))?.name as string,
+        nameLaboratory: (await unitModel.findById({ _id: scheduledService?.laboratoryId }))?.name as string,
+        unitId: scheduledService?.laboratoryId?.toString() as string
       });
     }
+    
+    let filteredPatients = filters?.fullname?patients.filter((props)=>props.patient.match(new RegExp(`^${filters.fullname}`, 'i'))):patients;
+    filteredPatients = filters?.unitId?filteredPatients.filter((props)=>props.unitId === filters.unitId):filteredPatients;
 
     return {
-      patients: filters?.fullname?patients.filter((props)=>props.patient.match(new RegExp(`^${filters.fullname}`, 'i'))):patients,
-      total: patients.length
+      patients: filteredPatients,
+      total: filteredPatients.length
     }
   }catch(err: unknown){
     return {
