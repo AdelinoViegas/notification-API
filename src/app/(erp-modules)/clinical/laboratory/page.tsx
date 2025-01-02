@@ -4,20 +4,23 @@ import Table from "@/components/table";
 import Alert from "@/components/alert";
 import Button from "@/components/ui/button";
 import Search from "@/components/ui/search";
+import SelectFilter from "@/components/select-filter";
 import { TiInputChecked } from "react-icons/ti";
 import WsUpdate from "@/components/ws-update";
 import { getPatients } from "@/app/backend/api/clinical/unit-api";
 import { Services, tableLaboratory } from "@/lib/table-formater";
+
 export const dynamic = "force-dynamic";
 
 export default async function Page({
   searchParams
 }:{
   searchParams: Promise<{
-    name: string;    
+    name: string;
+    unitId: string;    
   }>
 }){
-  const { name } = await searchParams;
+  const { name, unitId } = await searchParams;
   const patientsData = await getPatients({
     served: false, 
     type: "laboratory",
@@ -25,6 +28,7 @@ export default async function Page({
       fullname: name,
     } 
   });
+  
   const patientRows = tableLaboratory(patientsData.patients as Services[]); 
   return (
     <main className="space-y-3">
@@ -41,25 +45,26 @@ export default async function Page({
             Atendidos
           </Button>
         </Link>
-
-        {/*<Link href="/clinical/appointment/archiveds">
-          <Button className="flex gap-3 bg-slate-700">
-            <PiArchiveDuotone className="size-5" />
-            Arquivados
-          </Button>
-        </Link>*/}
       </div>
-
-      <div className="lg:flex lg:items-center lg:justify-between gap-3 items-center">
+      <div className="lg:flex justify-between items-center">
         <Alert 
           type="info" 
           message="Faça duplo click sobre o utente para seguir com o atendimento!" 
+        />
+      </div>
+
+
+      <div className="lg:flex lg:items-center lg:justify-between gap-3 items-center">
+        <SelectFilter
+          label="Filtrar pelo laboratório"
+          unitType="laboratory"
+          filterKey="unitId"
         />
 
         <Search
           className="flex items-center gap-3"
           filterKey="name"
-          label="Filtar por Nome"
+          label="Filtrar por Nome"
           placeholder="Buscar pelo nome do utente"
         />
       </div>

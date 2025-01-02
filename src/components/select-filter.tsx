@@ -1,83 +1,70 @@
-// "use client";
+"use client";
 
-// import { 
-//   useEffect,
-//   useState,
-//   useRef 
-// } from "react";
-// import { 
-//   useRouter, 
-//   usePathname, 
-// } from "next/navigation";
-// import Selection, { SimpleSelectionType } from "@/components/ui/selection";
-// import { getUnits } from "@/app/backend/api/clinical/urgency-bank-api";
-// import { getDoctors } from "@/app/backend/api/clinical/api";
+import { 
+  useEffect,
+  useState,
+  useRef 
+} from "react";
+import { 
+  useRouter, 
+  usePathname, 
+  useSearchParams
+} from "next/navigation";
+import Selection, { SimpleSelectionType } from "@/components/ui/selection";
+import { getUnits } from "@/app/backend/api/clinical/urgency-bank-api";
+import { getDoctors } from "@/app/backend/api/clinical/api";
 
-// type SelectFilterProps = {
-//   unitType?: "laboratory" | "workplace" | "internment";
-//   label: string;
-//   doctor?:string;
-// };
-// export default function SelectFilter({
-//   unitType,
-//   label,
-//   doctor
-// }:SelectFilterProps){
-//   const [ units, setUnits ] = useState<SimpleSelectionType[]>([]);
-//   const [ doctors, setDoctors ] = useState<SimpleSelectionType[]>([]);
-//   const formRef = useRef<HTMLFormElement>(null);
-//   const router = useRouter();
-//   const pathname = usePathname();
+type SelectFilterProps = {
+  unitType?: "laboratory" | "workplace" | "internment";
+  label: string;
+  doctor?:string;
+  filterKey: string;
+  defaultOptionLabel?: string;
+};
 
-//   const handler = async()=>{
-//     if(unitType){
-//       const units = await getUnits(unitType, true) as SimpleSelectionType[];
-//       setUnits(units);
-//     }else{
-//       const doctors = await getDoctors() as SimpleSelectionType[];
-//       setDoctors(doctors);
-//     }
-//   }
+export default function SelectFilter({
+  unitType,
+  label,
+  doctor,
+  filterKey,
+  defaultOptionLabel
+}:SelectFilterProps){
+  const searchParams = useSearchParams();
+  const search = new URLSearchParams(searchParams);
+  const [ optionData, setOptionData ] = useState<SimpleSelectionType[]>([]);
+  const formRef = useRef<HTMLFormElement>(null);
+  const router = useRouter();
+  const pathname = usePathname();
 
-//   const action = ()=>{
-//     const selectElement = formRef.current?.elements?.item(0) as HTMLSelectElement;
+  const onChangeHandler = (e: unknown)=>{
+    const optionId = (e as { target: { value: string }}).target.value;
+    
+    if(!optionId)
+      search.delete(filterKey);
+    else 
+      search.set(filterKey, optionId);
+
+    router.push(`${pathname}?${search.toString()}`);
+  }
   
-//     if(!selectElement.value){
-//       return router.push(pathname);
-//     }
-//     const params = new URLSearchParams();
-//     params.set("unitId", selectElement.value);
-//     const url = `${pathname}?${params.toString()}`;
-//     router.push(url);
-//   }
-
-//   useEffect(()=>{
-//     handler();
-//   }, []);
+  useEffect(()=>{
+    if(unitType)
+      getUnits(unitType, true)
+      .then((data: unknown[]) => setOptionData(data as SimpleSelectionType[]));
+    else 
+      getDoctors()
+      .then((data: unknown[]) => setOptionData(data as SimpleSelectionType[]))
+  }, []);
   
-//   if(doctor){
-//     return(
-//       <form ref={formRef} className="flex items-center gap-3">
-//         <Selection
-//           options={doctors}
-//           label={label}
-//           defaultOptionLabel="Todas"
-//           onChange={action}
-//           className="w-96"
-//         />
-//       </form>
-//     )
-//   }else{
-//     return(
-//       <form ref={formRef} className="flex items-center gap-3">
-//         <Selection
-//           options={units}
-//           label={label}
-//           defaultOptionLabel="Todas"
-//           onChange={action}
-//           className="w-96"
-//         />
-//       </form>
-//     )
-//   }
-// }
+  return (
+    <form ref={formRef} className="flex items-center gap-3">
+      <Selection
+        options={optionData}
+        label={label}
+        defaultOptionLabel={defaultOptionLabel?defaultOptionLabel:"Todas"}
+        onChange={onChangeHandler}
+        className="w-96"
+      />
+    </form>
+  );
+}
