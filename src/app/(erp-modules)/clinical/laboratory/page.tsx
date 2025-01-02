@@ -9,6 +9,7 @@ import { TiInputChecked } from "react-icons/ti";
 import WsUpdate from "@/components/ws-update";
 import { getPatients } from "@/app/backend/api/clinical/unit-api";
 import { Services, tableLaboratory } from "@/lib/table-formater";
+import Pagination from "@/components/pagination";
 
 export const dynamic = "force-dynamic";
 
@@ -17,12 +18,14 @@ export default async function Page({
 }:{
   searchParams: Promise<{
     patient: string;
-    unitId: string;    
+    unitId: string;
+    page: number;
   }>
 }){
-  const { patient, unitId } = await searchParams;
+  const { patient, unitId, page } = await searchParams;
   const patientsData = await getPatients({
     served: false, 
+    page,
     type: "laboratory",
     filters: {
       fullname: patient,
@@ -47,13 +50,13 @@ export default async function Page({
           </Button>
         </Link>
       </div>
+
       <div className="lg:flex justify-between items-center">
         <Alert 
           type="info" 
           message="Faça duplo click sobre o utente para seguir com o atendimento!" 
         />
       </div>
-
 
       <div className="lg:flex lg:items-center lg:justify-between gap-3 items-center">
         <SelectFilter
@@ -80,6 +83,11 @@ export default async function Page({
           "Laboratório"
         ]} 
         rows={patientRows}
+      />
+
+      <Pagination 
+        totalItems={patientsData.total} 
+        availablePages={patientsData.availablePages} 
       />
     </main>
   );

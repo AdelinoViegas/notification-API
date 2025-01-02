@@ -16,7 +16,7 @@ import { getUnits } from "@/app/backend/api/clinical/urgency-bank-api";
 import { getDoctors } from "@/app/backend/api/clinical/api";
 
 type SelectFilterProps = {
-  unitType?: "laboratory" | "workplace" | "internment";
+  unitType?: "laboratory" | "workplace" | "internment" | "imaging";
   label: string;
   doctor?:string;
   filterKey: string;
@@ -53,7 +53,7 @@ export default function SelectFilter({
       .then((data: unknown[]) => setOptionData(data as SimpleSelectionType[]));
     else 
       getDoctors()
-      .then((data: unknown[]) => setOptionData(data as SimpleSelectionType[]))
+      .then((data: unknown[]) => setOptionData(data as SimpleSelectionType[]));
   }, []);
   
   return (

@@ -14,6 +14,7 @@ import { getDataAndHoursFormat } from "@/lib/date-formater";
 import { Types } from "mongoose";
 import { FileHandler } from "@/lib/client-files";
 import { writeFileSync } from "fs";
+import { MdStayCurrentPortrait } from "react-icons/md";
 
 async function updatePaymentData(prev: unknown, formData: FormData){
   try{
@@ -118,13 +119,15 @@ async function getPatients({
   served,
   type,
   filters, 
+  page
 }:{
   served: boolean;
   type: "laboratory" | "imaging";
   filters?: {
     fullname?: string;
     unitId?: string; // lab ou img
-  }
+  },
+  page: number;
 }){
   try{
     const patients = [];
@@ -132,8 +135,11 @@ async function getPatients({
       served: served,
       Type: type, 
     });
+
+    let numberOfItems = 10;
+    numberOfItems *= page;
     
-    for(const service of services){
+    for(const service of services.slice(numberOfItems - 10, numberOfItems)){
       const scheduledService = await scheduleExamModel.findById({ _id: service.scheduleId });
       const patient = await patientModel.findById({_id: scheduledService?.patientId }).select({ fullname: 1});
     
@@ -152,13 +158,17 @@ async function getPatients({
 
     return {
       patients: filteredPatients,
-      total: filteredPatients.length
+      total: filteredPatients.length,
+      availablePages: Math.ceil(filteredPatients.length / 10),
+      currentPage: page
     }
   }catch(err: unknown){
     return {
       patients: [],
       total: 0,
-      detail: err
+      detail: err,
+      availablePages: 0,
+      currentPage: page
     }
   }
 }

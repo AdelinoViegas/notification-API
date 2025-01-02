@@ -8,21 +8,27 @@ import { TiInputChecked } from "react-icons/ti";
 import WsUpdate from "@/components/ws-update";
 import { getPatients } from "@/app/backend/api/clinical/unit-api";
 import { Services, tableLaboratory } from "@/lib/table-formater";
+import SelectFilter from "@/components/select-filter";
+import Pagination from "@/components/pagination";
 export const dynamic = "force-dynamic";
 
 export default async function Page({
   searchParams
 }:{
   searchParams: Promise<{
-    name: string;    
+     patient: string;
+     unitId: string;   
+     page: number;
   }>
 }){
-  const { name } = await searchParams;
+  const { patient, unitId, page } = await searchParams;
   const patientsData = await getPatients({
     served: false, 
+    page,
     type: "imaging",
     filters: {
-      fullname: name,
+      fullname: patient,
+      unitId
     } 
   });
   const patientRows = tableLaboratory(patientsData.patients as Services[]); 
@@ -41,16 +47,24 @@ export default async function Page({
         </Button>
       </Link>
 
-      <div className="lg:flex lg:items-center lg:justify-between gap-3 items-center">
+      <div className="lg:flex justify-between items-center">
         <Alert 
           type="info" 
           message="Faça duplo click sobre o utente para seguir com o atendimento!" 
         />
+      </div>
+
+      <div className="lg:flex lg:items-center lg:justify-between gap-3 items-center">
+        <SelectFilter
+          label="Filtrar pelo laboratório"
+          unitType="imaging"
+          filterKey="unitId"
+        />
 
         <Search
           className="flex items-center gap-3"
-          filterKey="name"
-          label="Filtar por Nome"
+          filterKey="patient"
+          label="Filtrar por Nome"
           placeholder="Buscar pelo nome do utente"
         />
       </div>
@@ -65,6 +79,11 @@ export default async function Page({
           "Laboratório"
         ]} 
         rows={patientRows}
+      />
+
+      <Pagination 
+        totalItems={patientsData.total} 
+        availablePages={patientsData.availablePages} 
       />
     </main>
   );
