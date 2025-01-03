@@ -1,6 +1,6 @@
-import { SimpleSelectionType } from "@/components/ui/selection";
+import { SelectionOption } from "@/components/ui/selection";
 
-const patientGroup:SimpleSelectionType[] = [
+const patientGroup:SelectionOption[] = [
   {
     _id:'personal',
     label:"Particular",
@@ -19,7 +19,7 @@ const patientGroup:SimpleSelectionType[] = [
   }
 ]
 
-const civilState:SimpleSelectionType[] = [
+const civilState:SelectionOption[] = [
   {
    _id:'single',
    label:'Solteiro/a',
@@ -38,7 +38,7 @@ const civilState:SimpleSelectionType[] = [
   }
 ];
 
-const gender:SimpleSelectionType[] = [
+const gender:SelectionOption[] = [
   {
    _id:'masculine',
    label:'Maculino',
@@ -49,7 +49,7 @@ const gender:SimpleSelectionType[] = [
   },
 ];
 
-const emergencyService:SimpleSelectionType[] = [
+const emergencyService:SelectionOption[] = [
   {
    _id:'masculine',
    label:'Pediatria',
@@ -64,7 +64,7 @@ const emergencyService:SimpleSelectionType[] = [
   }
 ];
 
-const kinshipDegree:SimpleSelectionType[] = [
+const kinshipDegree:SelectionOption[] = [
 	{
 		_id:"father",
 		label:"Pai",
@@ -103,7 +103,7 @@ const kinshipDegree:SimpleSelectionType[] = [
   }
 ];
 
-const patientAccess:SimpleSelectionType[] = [
+const patientAccess:SelectionOption[] = [
   {
     _id:'direct',
     label:"Directo",
@@ -114,7 +114,7 @@ const patientAccess:SimpleSelectionType[] = [
   },
 ]
 
-const hospitalUnit:SimpleSelectionType[] = [
+const hospitalUnit:SelectionOption[] = [
   {
     _id:'HJM',
     label:"Hospital Josina Machel",
@@ -141,7 +141,7 @@ const hospitalUnit:SimpleSelectionType[] = [
   },
 ];
 
-const priorityToComponent:SimpleSelectionType[] = [
+const priorityToComponent:SelectionOption[] = [
   { 
     _id: "red", 
     label: "Emergência",
@@ -207,7 +207,7 @@ const priority = [
   },
 ];
 
-const urgencyServices: SimpleSelectionType[] = [
+const urgencyServices: SelectionOption[] = [
   { 
     _id: "paediatrics", 
     label: "Pediatria"
@@ -256,7 +256,7 @@ const unitTypes = [
   },
 ];
 
-const querysStatus:SimpleSelectionType[] = [
+const querysStatus:SelectionOption[] = [
   { 
     _id: "Confirmed", 
     label: "Confirmado",

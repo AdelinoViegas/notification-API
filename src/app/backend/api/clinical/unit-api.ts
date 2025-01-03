@@ -379,7 +379,11 @@ async function getPatient(_id: string){
   try{
     const scheduleId = (await scheduleServiceModel.findById({_id}))?.scheduleId;
     const patientId = (await scheduleExamModel.findById({_id: scheduleId}))?.patientId;
-    return (await patientModel.findById({_id: patientId}))?.fullname as string
+    const patient =  await patientModel.findById({_id: patientId});
+    return {
+      patientId: patient?._id.toString() as string,
+      patientName: patient?.fullname as string,
+    }
   }finally{}
 }
 

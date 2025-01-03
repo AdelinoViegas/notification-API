@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 import Button from '@/components/ui/button';
 import Alert from '@/components/alert';
 import SubTitle from '@/components/ui/subtitle';
-import Selection, { SimpleSelectionType } from '@/components/ui/selection';
+import Selection, { SelectionOption } from '@/components/ui/selection';
 import { 
   getPermissions,
   grantPermission,
@@ -28,10 +28,10 @@ export default function AddUserPermissionForm({
   const [ messageState, setMessageState ] = useState(false);
   const [ state, action ] = useActionState(grantPermission, { message: '',status: false});
   const router = useRouter();
-  const [ permissions, setPermissions ] = useState<SimpleSelectionType[]>([]);
+  const [ permissions, setPermissions ] = useState<SelectionOption[]>([]);
 
   const handlePermission = useCallback(async ()=>{
-    const perms = await getPermissions(userGroupId, undefined, true) as SimpleSelectionType[];
+    const perms = await getPermissions(userGroupId, undefined, true) as SelectionOption[];
     setPermissions(perms);
   }, [userGroupId]);
 

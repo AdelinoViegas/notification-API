@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 import Modal from "@/components/modal";
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
-import Selection, { SimpleSelectionType } from "@/components/ui/selection";
+import Selection, { SelectionOption } from "@/components/ui/selection";
 import Alert from "@/components/alert";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { 
@@ -38,18 +38,18 @@ export default function SignExam(){
   // end of modal states
   const [ messageState, setMessageState ] = useState(false);
   const [ ccgMessageState, setCCGMessageState ] = useState(false);
-  const [ groups, setGroups ] = useState<SimpleSelectionType[]>([]);
-  const [ categories, setCategories ] = useState<SimpleSelectionType[]>([]);
-  const [ classifications, setClassifications ] = useState<SimpleSelectionType[]>([]);
-  const [ specialties, setSpecialties ] = useState<SimpleSelectionType[]>([]);
+  const [ groups, setGroups ] = useState<SelectionOption[]>([]);
+  const [ categories, setCategories ] = useState<SelectionOption[]>([]);
+  const [ classifications, setClassifications ] = useState<SelectionOption[]>([]);
+  const [ specialties, setSpecialties ] = useState<SelectionOption[]>([]);
   const router = useRouter();
   const signFormRef = useRef<HTMLFormElement>(null);
 
   const handleSelect = useCallback(async ()=>{
-    const categories = await getCCGs("category") as SimpleSelectionType[];
-    const groups = await getCCGs("group") as SimpleSelectionType[];
-    const classifications = await getCCGs("classification") as SimpleSelectionType[];
-    const specialties = await getSpecialties() as SimpleSelectionType[];
+    const categories = await getCCGs("category") as SelectionOption[];
+    const groups = await getCCGs("group") as SelectionOption[];
+    const classifications = await getCCGs("classification") as SelectionOption[];
+    const specialties = await getSpecialties() as SelectionOption[];
 
     setGroups(groups);
     setCategories(categories);

@@ -1,7 +1,7 @@
 import Header from "@/components/header";
 import Card from "@/components/card";
 import SubTitle from "@/components/ui/subtitle";
-import Selection, { SimpleSelectionType } from "@/components/ui/selection";
+import Selection, { SelectionOption } from "@/components/ui/selection";
 import Button from "@/components/ui/button";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { 
@@ -21,7 +21,7 @@ export default async function Page({
     }> 
   }) {
   const { userId } = await params;
-  const workplaces = await getUnits("workplace", true) as SimpleSelectionType[];
+  const workplaces = await getUnits("workplace", true) as SelectionOption[];
   const grantedAccess = await getGrantedUnitAccess(userId);
   const { fullname } = await getUser(userId); 
 

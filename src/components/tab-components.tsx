@@ -11,7 +11,7 @@ import {
   patientAccess 
 } from "@/app/backend/api/clinical/translator";
 import InputField from "@/components/ui/input-field";
-import Selection, { SimpleSelectionType } from "@/components/ui/selection";
+import Selection, { SelectionOption } from "@/components/ui/selection";
 import PatientGroups from "@/components/forms/patient-groups";
 import { SimpleTooltip } from "@/components/tooltip";
 import { TbHelp } from "react-icons/tb";
@@ -20,9 +20,9 @@ import ExternalUnitForm from "@/components/forms/external-unit-form";
 
 function AccesTypeForm(){
   const [ type, setType ] = useState("");
-  const [ externalUnits, setExternalUnits ] = useState<SimpleSelectionType[]>([]);
+  const [ externalUnits, setExternalUnits ] = useState<SelectionOption[]>([]);
   const loadExternalUnits = useCallback(async()=>{
-    const externalUnits = await getExternalUnits({}) as SimpleSelectionType[];
+    const externalUnits = await getExternalUnits({}) as SelectionOption[];
     setExternalUnits(externalUnits);
   }, []);
 

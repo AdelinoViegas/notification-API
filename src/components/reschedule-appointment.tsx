@@ -13,7 +13,7 @@ import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
 import Alert from "@/components/alert";
 import { rescheduleAppointment } from "@/app/backend/api/clinical/scheduling-api";
-import Selection,{ SimpleSelectionType } from "@/components/ui/selection";
+import Selection,{ SelectionOption } from "@/components/ui/selection";
 import { findDoctorCalendar } from "@/app/backend/api/clinical/scheduling-api";
 import { getDateInDashFormat } from "@/lib/date-formater";
 import { getDoctors } from "@/app/backend/api/clinical/api";
@@ -38,8 +38,8 @@ export default function RescheduleAppointment({
   const openModal = ()=> setModalState(true);
   const [ messageState, setMessageState ] = useState(false);
   const router = useRouter();
-  const [ doctors, setDoctors ] = useState<SimpleSelectionType[]>([]);
-  const [ doctorDays, setDoctorDays ] = useState<SimpleSelectionType[]>([]);
+  const [ doctors, setDoctors ] = useState<SelectionOption[]>([]);
+  const [ doctorDays, setDoctorDays ] = useState<SelectionOption[]>([]);
   const [ doctorTime, setDoctorTime ] = useState<DoctorDayAndTime>();
   const doctorDayRef = useRef<DoctorCalendarReference[]>(null);
 
@@ -97,7 +97,7 @@ export default function RescheduleAppointment({
 
   useEffect(()=>{
     const loadData = async ()=>{
-      const doctors = await getDoctors() as SimpleSelectionType[];
+      const doctors = await getDoctors() as SelectionOption[];
       handleSelectDoctor({ target: { value: doctorId } });
       setDoctors(doctors);
     }

@@ -28,7 +28,7 @@ export default function InputField({
           <input 
             ref={inputRef} 
             {...rest} 
-            className="disabled:bg-gray-100 w-full outline-none placeholder:text-sm placeholder:font-medium" 
+            className="disabled:bg-gray-100 disabled:cursor-not-allowed disabled:text-gray-500 w-full outline-none placeholder:text-sm placeholder:font-medium" 
           />
 
           {rest.type === "password" && !rest.disabled &&

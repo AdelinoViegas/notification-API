@@ -3,7 +3,7 @@ import Card from "@/components/card";
 import { getSchedulePatientExam } from "@/app/backend/api/clinical/scheduling-api";
 import RescheduleExam from "@/components/reschedule-exam";
 import { getUnits } from "@/app/backend/api/clinical/urgency-bank-api";
-import { SimpleSelectionType } from "@/components/ui/selection";
+import { SelectionOption } from "@/components/ui/selection";
 import SubTitle from "@/components/ui/subtitle";
 import Button from "@/components/ui/button";
 import ArchivingScheduleExam from "@/components/archiving-schedule-exam";
@@ -21,7 +21,7 @@ export default async function Page({
 }){ 
   const { scheduleId } = await params;
   const schedule = await getSchedulePatientExam(scheduleId);
-  const laboratories = await getUnits(['laboratory', 'imaging'], true) as SimpleSelectionType[];
+  const laboratories = await getUnits(['laboratory', 'imaging'], true) as SelectionOption[];
 
   return (
     <main className="space-y-3">

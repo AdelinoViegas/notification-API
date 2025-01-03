@@ -6,7 +6,7 @@ import React, {
   useActionState
 } from 'react';
 import InputField from "@/components/ui/input-field";
-import Selection, { SimpleSelectionType } from "@/components/ui/selection";
+import Selection, { SelectionOption } from "@/components/ui/selection";
 import Button from "@/components/ui/button";
 import { useRouter } from 'next/navigation';
 import { 
@@ -23,7 +23,7 @@ type Permission = {
   userGroupId: string;
 };
 
-export default function PermissionForm({ jsonData,  userGroups }:{ jsonData?: string, userGroups: SimpleSelectionType[] }){
+export default function PermissionForm({ jsonData,  userGroups }:{ jsonData?: string, userGroups: SelectionOption[] }){
   const currentData = jsonData?JSON.parse(jsonData) as Permission:undefined; 
   const [ state, action ] = useActionState(!!jsonData?updatePermission:signPermission,{
     message: '',

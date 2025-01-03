@@ -18,7 +18,7 @@ async function openPatientProcess(patientId: string, location: string){
       patientId, 
       location,  
     });
-
+     
     if(!existProcess){
       const process = new processStateModel({
         patientId,
@@ -34,15 +34,15 @@ async function openPatientProcess(patientId: string, location: string){
         status: true,
       }
     }
-   
+
     if(!existProcess?.isInUse){
       await processStateModel.updateOne({ patientId, location}, {
         isInUse: true,
         userId: await whoAreYou(),
       });
-    }
+    } 
 
-    if(existProcess?.isInUse && existProcess.userId?.toString() !== (await whoAreYou()))
+    if(existProcess?.isInUse && existProcess.userId?.toString() !== await whoAreYou())
       throw new Error("Este processo está em uso!", { cause: "busy" }); 
   }catch(err: unknown){
     const error = err as Error;

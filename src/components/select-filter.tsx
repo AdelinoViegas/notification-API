@@ -11,7 +11,7 @@ import {
   usePathname, 
   useSearchParams
 } from "next/navigation";
-import Selection, { SimpleSelectionType } from "@/components/ui/selection";
+import Selection, { SelectionOption } from "@/components/ui/selection";
 import { getUnits } from "@/app/backend/api/clinical/urgency-bank-api";
 import { getDoctors } from "@/app/backend/api/clinical/api";
 
@@ -31,7 +31,7 @@ export default function SelectFilter({
 }:SelectFilterProps){
   const searchParams = useSearchParams();
   const search = new URLSearchParams(searchParams);
-  const [ optionData, setOptionData ] = useState<SimpleSelectionType[]>([]);
+  const [ optionData, setOptionData ] = useState<SelectionOption[]>([]);
   const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
   const pathname = usePathname();
@@ -50,10 +50,10 @@ export default function SelectFilter({
   useEffect(()=>{
     if(unitType)
       getUnits(unitType, true)
-      .then((data: unknown[]) => setOptionData(data as SimpleSelectionType[]));
+      .then((data: unknown[]) => setOptionData(data as SelectionOption[]));
     else 
       getDoctors()
-      .then((data: unknown[]) => setOptionData(data as SimpleSelectionType[]));
+      .then((data: unknown[]) => setOptionData(data as SelectionOption[]));
   }, []);
   
   return (

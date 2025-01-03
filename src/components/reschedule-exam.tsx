@@ -12,7 +12,7 @@ import Button from "@/components/ui/button";
 import InputDetails from "@/components/ui/input-details";
 import Alert from "@/components/alert";
 import { reschedulePatientExam } from "@/app/backend/api/clinical/scheduling-api";
-import Selection, { SimpleSelectionType } from "@/components/ui/selection";
+import Selection, { SelectionOption } from "@/components/ui/selection";
 
 export default function RescheduleExam({
   detail, 
@@ -25,7 +25,7 @@ export default function RescheduleExam({
   date: Date;
   laboratories: {
     current: string;
-    list: SimpleSelectionType[];
+    list: SelectionOption[];
   }
   scheduleId: string;
   isArchived?: boolean;

@@ -1,8 +1,8 @@
 "use client";
 import { useCallback, useState } from "react";
-import { SimpleSelectionType } from "@/components/ui/selection";
+import { SelectionOption } from "@/components/ui/selection";
 
-type Item = SimpleSelectionType;
+type Item = SelectionOption;
 
 type CheckBoxProps = {
   label: string;

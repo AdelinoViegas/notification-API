@@ -4,13 +4,17 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Modal from '@/components/modal';
 
-export default function ProcessAlert(){
+export default function ProcessAlert({
+  path
+}:{
+  path: string;
+}){
   const [ state, setState ] = useState(true);
   const { replace } = useRouter();
 
   const handlerClose = ()=>{
     setState(false);
-    replace('/clinical/screening');
+    replace(path);
   }
 
   return(

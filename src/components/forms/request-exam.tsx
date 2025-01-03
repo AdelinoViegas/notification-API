@@ -10,7 +10,7 @@ import {
 import Button from "@/components/ui/button";
 import Selection from "@/components/ui/selection";
 import { getUnits } from "@/app/backend/api/clinical/urgency-bank-api";
-import { SimpleSelectionType } from "@/components/ui/selection";
+import { SelectionOption } from "@/components/ui/selection";
 import { 
   getExams, 
   schedulePatientExam,
@@ -40,13 +40,13 @@ export default function RequestExams({
   const [ state, action ] = useActionState(schedulePatientExam, { message: "", status: false });
   const [ messageState, setMessageState ] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
-  const [ units, setUnits ] = useState<SimpleSelectionType[]>([]);
-  const [ exams, setExams ] = useState<SimpleSelectionType[]>([]);
-  const [ ccgs, setCCGS ] = useState<SimpleSelectionType[]>([]);
+  const [ units, setUnits ] = useState<SelectionOption[]>([]);
+  const [ exams, setExams ] = useState<SelectionOption[]>([]);
+  const [ ccgs, setCCGS ] = useState<SelectionOption[]>([]);
   const [ examCart, setExamCart ] = useState<string[]>([]);
   const [ item, setItem ] = useState("");
   const [ renderAux, setRenderAux ] = useState(false);
-  const [ examCache, setExamCache ] = useState<SimpleSelectionType[]>([]);
+  const [ examCache, setExamCache ] = useState<SelectionOption[]>([]);
 
   const onSelectCCG = useCallback(async (e: unknown)=>{
     const list = [];
@@ -65,7 +65,7 @@ export default function RequestExams({
   }, [ccgs]);
 
   const handleUnits = useCallback(async ()=>{
-    const units = await getUnits(["laboratory", "imaging"], true) as SimpleSelectionType[];
+    const units = await getUnits(["laboratory", "imaging"], true) as SelectionOption[];
     setUnits(units);
   }, []);
   
@@ -104,8 +104,8 @@ export default function RequestExams({
 
   useEffect(()=>{
     const loadData = async ()=>{
-      const ccgs = await getCCGs('category') as SimpleSelectionType[];
-      const exams = await getExams({ options: true }) as SimpleSelectionType[];
+      const ccgs = await getCCGs('category') as SelectionOption[];
+      const exams = await getExams({ options: true }) as SelectionOption[];
       setExamCache(exams);
       setExams(exams);
       setCCGS(ccgs);

@@ -9,7 +9,7 @@ import {
   useRouter, 
   usePathname, 
 } from "next/navigation";
-import Selection, { SimpleSelectionType } from "@/components/ui/selection";
+import Selection, { SelectionOption } from "@/components/ui/selection";
 
 type SelectFilterProps = {
   label: string;
@@ -18,13 +18,13 @@ type SelectFilterProps = {
 export default function StatusFilter({
   label,
 }:SelectFilterProps){
-  const [ options, setOptions ] = useState<SimpleSelectionType[]>([]);
+  const [ options, setOptions ] = useState<SelectionOption[]>([]);
   const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
   const pathname = usePathname();
 
   const handler = async()=>{ 
-      const options:SimpleSelectionType[] = [];
+      const options:SelectionOption[] = [];
       options.push(
         {_id:"Confirmed",label:"Confirmado"},
         {_id:"Pending",label:"Pendente"}

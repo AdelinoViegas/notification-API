@@ -8,7 +8,7 @@ import {
 } from "react";
 import Button from "@/components/ui/button";
 import Alert from '@/components/alert';
-import Selection, { SimpleSelectionType } from "@/components/ui/selection";
+import Selection, { SelectionOption } from "@/components/ui/selection";
 import forceRefreshPage from "@/lib/force-refresh";
 import { updateAccessType } from "@/app/backend/api/clinical/api";
 import { patientAccess as accessType } from "@/app/backend/api/clinical/translator";
@@ -23,14 +23,14 @@ type AccessType = {
 
 export default function AcessForm({ data, eUnitsJson }: { data?: string; eUnitsJson: string }){
   const currentData = data?JSON.parse(data) as AccessType:undefined;
-  const eUnits = JSON.parse(eUnitsJson) as SimpleSelectionType[];
+  const eUnits = JSON.parse(eUnitsJson) as SelectionOption[];
   const [ state, action] = useActionState(updateAccessType, { message:"", status:false })
   const [ isEdit, setIsEdit ] = useState(false);
   const [ messageState, setMessageState ] = useState(false);
   const [ acessType, setAcessType ] = useState(currentData?.type);
-  const [ externalUnits, setExternalUnits ] = useState<SimpleSelectionType[]>(eUnits);
+  const [ externalUnits, setExternalUnits ] = useState<SelectionOption[]>(eUnits);
   const loadExternalUnits = useCallback(async()=>{
-    const externalUnits = await getExternalUnits({}) as SimpleSelectionType[];
+    const externalUnits = await getExternalUnits({}) as SelectionOption[];
     setExternalUnits(externalUnits);
   }, []);
   const disableEdit = ()=>setIsEdit(false);

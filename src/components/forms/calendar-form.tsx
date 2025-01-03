@@ -8,7 +8,7 @@ import {
 } from "react";
 import Button from "@/components/ui/button";
 import InputField from "@/components/ui/input-field";
-import Selection, { SimpleSelectionType } from "@/components/ui/selection";
+import Selection, { SelectionOption } from "@/components/ui/selection";
 import Alert from "@/components/alert";
 import SubTitle from "@/components/ui/subtitle";
 import { getFirstAndLastName } from "@/components/status-bar";
@@ -35,7 +35,7 @@ export default function CalendarForm({
   doctors,
   calendar,
 }: {
-  doctors: SimpleSelectionType[];
+  doctors: SelectionOption[];
   calendar?: string;
 }){
   const currentCalendar = calendar?JSON.parse(calendar) as Calendar:undefined; 

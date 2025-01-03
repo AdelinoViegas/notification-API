@@ -8,7 +8,7 @@ import React, {
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
 import Card from '@/components/card';
-import Selection, { SimpleSelectionType } from '@/components/ui/selection';
+import Selection, { SelectionOption } from '@/components/ui/selection';
 import { 
   signUser, 
   getUserGroups, 
@@ -32,7 +32,7 @@ export default function UserForm({
 }){
   const [ state, action ] = useActionState(jsonData?updateUser:signUser, { message: "", status: false})
   const user = jsonData?JSON.parse(jsonData) as User:undefined;
-  const [ userGroups, setUserGroups ] = useState<SimpleSelectionType[]>([]);
+  const [ userGroups, setUserGroups ] = useState<SelectionOption[]>([]);
   const [ messageState, setMessageState ] = useState(false);
   const router = useRouter();
   const params = useParams();

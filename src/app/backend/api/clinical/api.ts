@@ -319,7 +319,7 @@ async function getPatients({
 }){
   try{
     const formated = [];
-    const patients = await patientModel.find({ 
+    let patients = await patientModel.find({ 
       served: !!served, 
       fullname: fullname?new RegExp(`^${fullname}`, 'i'):/\w*/ig, 
     }).select({
@@ -329,6 +329,7 @@ async function getPatients({
     });
     let numberOfItems = 10;
     numberOfItems *= page;
+    patients = served?patients.reverse():patients;
     
     for(const patient of patients.slice(numberOfItems - 10, numberOfItems)){
       const patientGroup = await groupModel.findOne({patientId: patient._id});

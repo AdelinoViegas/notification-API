@@ -17,7 +17,7 @@ export default async function Page({
   const { imagingId } = await params;
   const exams = await getPatientExams(imagingId);
   const savedResults = await getExamResult({ serviceResultId: imagingId });
-  const patientName = await getPatient(imagingId);
+  const { patientName } = await getPatient(imagingId);
 
   return(
     <main className="space-y-3">

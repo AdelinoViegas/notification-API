@@ -29,7 +29,12 @@ export default async function Layout({
 			</div>
 
       <div className="flex gap-3">
-        <CloseProcess />
+        <CloseProcess
+          {...{patientId}}
+          location="screening"
+          path="/clinical/screening"
+        />
+        
         <ArchiveButton />
       </div>
       
@@ -41,7 +46,7 @@ export default async function Layout({
       </div>
       {
         (processState && !processState?.status) &&
-        <ProcessAlert />
+        <ProcessAlert path="/clinical/screening"/>
       }
     </div>
   )

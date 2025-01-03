@@ -11,7 +11,7 @@ import { useParams } from "next/navigation";
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
 import Selection from "@/components/ui/selection";
-import { SimpleSelectionType } from "@/components/ui/selection";
+import { SelectionOption } from "@/components/ui/selection";
 import { 
   scheduleAppointment, 
   findDoctorCalendar,
@@ -33,10 +33,10 @@ type DoctorRole = {
 export default function Page(){
   const [ state, action ] = useActionState(scheduleAppointment, { message: "", status: false });
   const [ closeAlert, setCloseAlert ] = useState(true);
-  const [ doctors, setDoctors ] = useState<SimpleSelectionType[]>([]);
-  const [ doctorDays, setDoctorDays ] = useState<SimpleSelectionType[]>([]);
-  const [ specialties, setSpecialties ] = useState<SimpleSelectionType[]>([]);
-  const [ consults, setConsults ] = useState<SimpleSelectionType[]>([]);
+  const [ doctors, setDoctors ] = useState<SelectionOption[]>([]);
+  const [ doctorDays, setDoctorDays ] = useState<SelectionOption[]>([]);
+  const [ specialties, setSpecialties ] = useState<SelectionOption[]>([]);
+  const [ consults, setConsults ] = useState<SelectionOption[]>([]);
   const [ doctorTime, setDoctorTime ] = useState<DoctorDayAndTime>();
   const [ messageState, setMessageState ] = useState(false);
   const doctorsRef = useRef<Array<DoctorRole>>([]);
@@ -47,11 +47,11 @@ export default function Page(){
   const filterDoctors = useCallback(async (e: unknown)=>{
     const specialtyId = (e as { target: { value?: string } }).target?.value;
     if(!specialtyId){
-      setDoctors(doctorsRef.current as unknown as SimpleSelectionType[]);
+      setDoctors(doctorsRef.current as unknown as SelectionOption[]);
       return;
     }
-    const newDoctorsList = doctorsRef.current.filter(doctor => doctor?.roleId === specialtyId) as unknown as SimpleSelectionType[];
-    const consults = await getExams({ options: true, specialtyId }) as SimpleSelectionType[];
+    const newDoctorsList = doctorsRef.current.filter(doctor => doctor?.roleId === specialtyId) as unknown as SelectionOption[];
+    const consults = await getExams({ options: true, specialtyId }) as SelectionOption[];
     setConsults(consults);
     setDoctors(newDoctorsList);
   }, []);
@@ -132,7 +132,7 @@ export default function Page(){
 
   useEffect(()=>{
     const loadData = async ()=>{  
-      const doctors = await getDoctors() as SimpleSelectionType[];
+      const doctors = await getDoctors() as SelectionOption[];
       doctorsRef.current = await getDoctors() as unknown as DoctorRole[];
       const tmpSpecialties = await getSpecialties();
   

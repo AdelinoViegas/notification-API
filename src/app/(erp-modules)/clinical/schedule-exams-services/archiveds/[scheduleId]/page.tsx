@@ -7,7 +7,7 @@ import {
 import React from "react";
 import SubTitle from "@/components/ui/subtitle";
 import RescheduleExam from "@/components/reschedule-exam";
-import { SimpleSelectionType } from "@/components/ui/selection";
+import { SelectionOption } from "@/components/ui/selection";
 import { getUnits } from "@/app/backend/api/clinical/urgency-bank-api";
 
 function TitleAndSubtitle({
@@ -35,7 +35,7 @@ export default async function Page({
   const { scheduleId } = await params; 
   const schedule = await getSchedulePatientExam(scheduleId);
   const cancelation = await getExamCancel(scheduleId);
-  const laboratories = await getUnits(['laboratory', 'imaging'], true) as SimpleSelectionType[];
+  const laboratories = await getUnits(['laboratory', 'imaging'], true) as SelectionOption[];
   
   return (
     <main className="space-y-3">

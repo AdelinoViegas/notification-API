@@ -1,6 +1,6 @@
 import clsx from "clsx";
 
-export type SimpleSelectionType = {
+export type SelectionOption = {
   _id: string;
   label: string;
 };
@@ -9,8 +9,8 @@ interface SelectProps extends React.InputHTMLAttributes<HTMLSelectElement>{
   label: string;
   className?: string;
   defaultOptionLabel?: string;
-  options: SimpleSelectionType[];
-}
+  options: SelectionOption[];
+};
 
 export default function Selection({
   label,
@@ -22,7 +22,7 @@ export default function Selection({
   return(
     <div className={clsx("flex flex-col my-4 ", className)}>
       <label className="text-xs font-medium">{label}</label>
-      <select {...rest} className={clsx('disabled:bg-gray-100 disabled:text-gray-500 bg-white focus:border-blue-500 px-3 py-[6px] border rounded-md border-2 hover:bg-gray-100',
+      <select {...rest} className={clsx('disabled:bg-gray-100 disabled:cursor-not-allowed disabled:text-gray-500 bg-white focus:border-blue-500 px-3 py-[6px] border rounded-md border-2 hover:bg-gray-100',
         { 
           'w-auto': !className,
         }

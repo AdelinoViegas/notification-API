@@ -2,10 +2,10 @@
 
 import clsx from "clsx";
 import InputField from "@/components/ui/input-field";
-import Selection,{ SimpleSelectionType } from "@/components/ui/selection";
+import Selection,{ SelectionOption } from "@/components/ui/selection";
 import Button from "@/components/ui/button";
 
-const user:SimpleSelectionType[] = [
+const user:SelectionOption[] = [
   {
    _id:'GF',
    label:'Gildo Francisco',
@@ -20,7 +20,7 @@ const user:SimpleSelectionType[] = [
   },
 ];
 
-const medicalUser:SimpleSelectionType[] = [
+const medicalUser:SelectionOption[] = [
   {
    _id:'GF',
    label:'Dr.Gildo Francisco',
@@ -35,7 +35,7 @@ const medicalUser:SimpleSelectionType[] = [
   },
 ];
 
-const specialty:SimpleSelectionType[] = [
+const specialty:SelectionOption[] = [
   {
    _id:'masculine',
    label:'Cardiologia',

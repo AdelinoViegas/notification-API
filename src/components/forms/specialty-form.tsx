@@ -2,14 +2,14 @@
 
 import InputField from "@/components/ui/input-field"
 import Button from "@/components/ui/button"
-import Selection, { SimpleSelectionType } from "@/components/ui/selection"
+import Selection, { SelectionOption } from "@/components/ui/selection"
 //import { useState } from "react";
 
 export default function SpecialtyForm({
   role
-}:{role:SimpleSelectionType[]}){
+}:{role:SelectionOption[]}){
   //const [nameSpecialty, setNameSpecialty] = useState("");
-  //const [nameDoctors, setNameDoctors] = useState<SimpleSelectionType[]>();
+  //const [nameDoctors, setNameDoctors] = useState<SelectionOption[]>();
 
   return(
     <form>

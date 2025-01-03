@@ -7,7 +7,7 @@ import {
 } from "react";
 import { useRouter, useParams } from "next/navigation";
 import InputField from "@/components/ui/input-field";
-import Selection, { SimpleSelectionType } from "@/components/ui/selection";
+import Selection, { SelectionOption } from "@/components/ui/selection";
 import Button from "@/components/ui/button";
 import { updateExamService } from "@/app/backend/api/clinical/scheduling-api";
 import Alert from "@/components/alert";
@@ -41,10 +41,10 @@ export default function ExamForm({
 }: ExamFormProps){
   const [ state, action ] = useActionState(updateExamService, { message: "", status: false });
   const currentExam = JSON.parse(exam) as Exam;
-  const _groups = JSON.parse(groups) as SimpleSelectionType[];
-  const _categories = JSON.parse(categories) as SimpleSelectionType[];
-  const _classifications = JSON.parse(classifications) as SimpleSelectionType[];
-  const _specialties = JSON.parse(specialties) as SimpleSelectionType[];
+  const _groups = JSON.parse(groups) as SelectionOption[];
+  const _categories = JSON.parse(categories) as SelectionOption[];
+  const _classifications = JSON.parse(classifications) as SelectionOption[];
+  const _specialties = JSON.parse(specialties) as SelectionOption[];
   const [ messageState, setMessageState ] = useState(false);
   const router = useRouter();
   const params = useParams();
