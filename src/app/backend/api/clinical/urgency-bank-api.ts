@@ -51,17 +51,20 @@ async function getPatients({
   
       const patientGroup = await groupModel.findOne({patientId: patientData._id});
       const accessType = await accessTypeModel.findOne({patientId: patientData._id});
-      const accessTypeLabel = patientAccess.find((props)=>props._id === accessType?.type)?.label;
-      const groupLabel = patientGroups.find((props)=>(props._id === patientGroup?.type))?.label;
+      let accessTypeLabel = patientAccess.find((props)=>props._id === accessType?.type)?.label;
+      let groupLabel = patientGroups.find((props)=>(props._id === patientGroup?.type))?.label;
       const priority = await priorityModel.findOne({patientId: patient.patientId})
       
+      accessTypeLabel = accessTypeLabel?accessTypeLabel:"Indefinido";
+      groupLabel = groupLabel?groupLabel:"Indefinido";
+
       patientList.push({
         id: patientData._id.toString(),
         fullname: patientData.fullname,
         registerNumber: patientData.registerNumber,
-        accessType: (accessTypeLabel as string).toUpperCase(),
+        accessType: accessTypeLabel.toUpperCase(),
         createdAt: patientData.createdAt,
-        group: (groupLabel as string).toUpperCase(),
+        group: groupLabel.toUpperCase(),
         priorityType: priorityToComponent.find((props)=>props._id == priority?.priority)?.label,
       });
     }

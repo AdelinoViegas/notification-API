@@ -1,7 +1,6 @@
 import Header from "@/components/header";
 import Table from "@/components/table";
 import { ScheduleAppointment, tableAppointments } from "@/lib/table-formater";
-// import Alert from "@/components/alert";
 import Search from "@/components/ui/search";
 import WsUpdate from "@/components/ws-update";
 import { getPatients } from "@/app/backend/api/clinical/office-api";
@@ -32,23 +31,16 @@ export default async function Page({
         <Header title="Consultas Atendidas"/>
       </div>
 
-      <div className="flex items-center justify-between lg:flex-row gap-3 items-center">
-        {/* <Alert 
-          type="info" 
-          message="Faça duplo click sobre a consulta agendado para seguir com o atendimento!" 
-        /> */}
-
       <Search
         className="flex items-center gap-3"
         filterKey="name"
         label="Filtar por Nome"
         placeholder="Buscar pelo nome do utente..."
       />
-      </div>
 
       <Table
         columns={[
-          "Data/Hora da Marcação", 
+          "Data e Hora", 
           "Nome do Utente", 
           "Nome do Médico",
           "Responsável",

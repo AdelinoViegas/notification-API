@@ -81,12 +81,14 @@ async function signNotification({
   title,
   sinopse,
   type,
-  target
+  target,
+  dataId
 }:{
   title: string;
   sinopse: string;
   type: string;
   target: "appointment" | "laboratory";
+  dataId?: string;
 }){
   await notificationModel.create({
     title,
@@ -94,6 +96,7 @@ async function signNotification({
     type,
     target,
     creator: await whoAreYou(),
+    targetDataId: dataId
   });
 
   triggerUpdate({target: "notification"});
@@ -163,11 +166,18 @@ async function readNotification({ notifyId }: { notifyId: string }){
   })
   triggerUpdate({ target: "notification" });
 }
-
-async function goToNotification({ notifyId }: { notifyId: string }){
+/**
+ * @params {dataId} ObjecId da informação que deve fazer parte de uma rota onde tem tabela 
+ */
+async function goToNotification({ 
+  notifyId
+}: { 
+  notifyId: string; 
+}){
   const notification = await notificationModel.findById({ _id: notifyId });
   await readNotification({ notifyId });
-  redirect('/clinical/'+notification?.target as string);    
+  // redirect('/clinical/'+notification?.target as string);
+  redirect(`/clinical/${notification?.target}/${notification?.targetDataId?.toString()}`);    
 }
 
 async function deleteNotificaion({ notifyId }: { notifyId: string }){

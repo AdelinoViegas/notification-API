@@ -54,7 +54,8 @@ const notificationSchema = new Schema({
   deletedBy: {
     userId: Schema.Types.ObjectId,
     deletedAt: Date
-  }
+  },
+  targetDataId: Schema.Types.ObjectId
 }, {
   collection: "notifications",
   timestamps: true

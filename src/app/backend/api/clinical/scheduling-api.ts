@@ -985,6 +985,7 @@ async function getPatientScheduledServices({ patientId }: {
     return resultsList;
   }finally{}
 }
+
 export {
   signExam,
   signExamResult,

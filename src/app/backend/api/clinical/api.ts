@@ -330,7 +330,7 @@ async function getPatients({
     let numberOfItems = 10;
     numberOfItems *= page;
     patients = served?patients.reverse():patients;
-    
+
     for(const patient of patients.slice(numberOfItems - 10, numberOfItems)){
       const patientGroup = await groupModel.findOne({patientId: patient._id});
       const accessType = await accessTypeModel.findOne({patientId: patient._id});
@@ -364,7 +364,6 @@ async function getPatients({
     }
   }
 }
-
 
 async function getPatient(patientId: string){
   try{

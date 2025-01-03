@@ -61,7 +61,7 @@ export default async function Page({
 
       <Table
         status
-        baseRowLink="/clinical/imaging"
+        baseRowLink="/clinical/imaging/serveds"
         columns={[
           "Data e Hora", 
           "Nome do Utente", 

@@ -303,10 +303,10 @@ async function finishConsultation(prev: unknown, formData: FormData){
       throw new Error("Falha no regestro!", { cause: "log_not_found"});
 
     if(!patientConsult?.results?.status?.vitalSignal)
-      throw new Error("Preencha os sinais vitais!", { cause: "not_fill"});
+      throw new Error("Preencha os Sinais Vitais!", { cause: "not_fill"});
 
     if(!patientConsult?.results?.status?.currentStates)
-      throw new Error("Preencha a Queixa!", { cause: "not_fill"});
+      throw new Error("Preencha os Dados Actuais!", { cause: "not_fill"});
 
     patientConsult.served = {
       status: true,
@@ -349,7 +349,8 @@ async function requestReschedule(prev: unknown, formData: FormData){
       title: "Pedido de remarcação",
       sinopse: `O Dr.${userDoctor?.fullname} pediu um reagendamento para o utente Sr(a).${patient?.fullname}`,
       target: "appointment",
-      type: ""
+      type: "",
+      dataId: scheduleAppoint?._id.toString(),
     });
 
     return {

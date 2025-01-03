@@ -23,11 +23,9 @@ export default function FinishConsultation(){
   const [ message, setMessage ] = useState("");
   const router = useRouter();
   const params:{ officeId: string } = useParams();
-
+  
   const closeModal = ()=> setModalState(false);
-  const handleConfirm = ()=>{
-    formRef.current?.requestSubmit();
-  }
+  const handleConfirm = ()=> formRef.current?.requestSubmit();
 
   useEffect(()=>{
     if(state.message){
