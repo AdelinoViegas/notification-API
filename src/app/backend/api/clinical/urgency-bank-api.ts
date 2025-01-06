@@ -13,6 +13,7 @@ import {
   workplaceModel,
   doctorCalendarModel,
   externalUnitModel,
+  anamnesisModel,
 } from "@/app/backend/models/clinical";
 import { 
   patientAccess,
@@ -524,6 +525,38 @@ async function updateExternalUnit(prev: unknown, formData: FormData){
   }
 }
 
+async function signAnamnesis(prev: unknown, formData:FormData){
+  try{
+    const state = formData.get("state") as string;
+    const mainComplaint = formData.get("mainComplaint") as string;
+    const symptoms = formData.get("symptoms") as string;
+    const complementaryExams = formData.get("complementaryExams") as string;
+  
+    await anamnesisModel.create({
+      generalClinic: {
+        mainComplaint,
+        symptoms,
+        complementaryExams,
+      }
+    });
+    
+    return {
+      message:"sucesso",
+      status: true,
+      state
+    }
+  }catch(e: unknown){
+    const err = e as Error;
+
+    return {
+      message: err.cause?err.message:"Falha na actualização!",
+      status: false,
+      detail: err.message,
+    }
+  }
+  
+}
+
 export {
   getPatients,
   signUnit,
@@ -540,5 +573,6 @@ export {
   signExternalUnit,
   getExternalUnits,
   getExternalUnit,
-  updateExternalUnit
+  updateExternalUnit,
+  signAnamnesis
 };

@@ -28,11 +28,13 @@ import Modal from "@/components/modal";
 export type FormProps = {
   jsonData?: string;
   hasData?: boolean;
+  screeningId?: string;
 };
 
 function ReasonForm({
   jsonData,
-  hasData
+  hasData,
+  screeningId
 }: FormProps){
   const [ state, action ] = useActionState(
     hasData?updatePatientScreening:signPatientScreening, 
@@ -65,6 +67,7 @@ function ReasonForm({
       <form {...{action}} className="py-3">
         <input type="hidden" name="typeData" value="reason" />
         <input type="hidden" name="patientId" value={patientId} />
+        <input type="hidden" name="screeningId" value={screeningId} />
         
         <InputDetails
           textLabel="Escreva na caixa de Texto"

@@ -32,6 +32,7 @@ import {
 import { closePatientProcess } from "@/app/backend/api/clinical/process-api";
 import { getGrantedUnitAccess } from "@/app/backend/api/clinical/urgency-bank-api";
 import { validatePatientDoc, validatePatientLocation } from "@/lib/regexp";
+import { TbRuler2Off } from "react-icons/tb";
 
 type ChoosedGroup = Assured | Employee | Enterprise | undefined;
 type TypeScreeningData = "reason" | "vital signal" | "priority" | "status" | "advice";
@@ -772,7 +773,7 @@ async function getPatientInScreening(patientId: string, isServed=false){
  * @remarks Zona de Triagem
  */
 async function signPatientScreening(prev: unknown, formData: FormData){
-  try{
+  try{console.log("entrou na triagem sign")
     const type = formData.get("typeData") as TypeScreeningData;
     const patientId = formData.get('patientId') as string;
     const inScreening = await screeningModel.findOne({ patientId, served: false });
@@ -942,7 +943,8 @@ async function updatePatientScreening(prev: unknown, formData: FormData){
   try{
     const type = formData.get("typeData") as TypeScreeningData;
     const patientId = formData.get('patientId') as string;
-    const inScreening = await screeningModel.findOne({ patientId, served: false });
+    const screeningId = formData.get('screeningId');
+    const inScreening = !!screeningId?await screeningModel.findById({_id: screeningId }):await screeningModel.findOne({ patientId, served: false });
 
     if(!inScreening)
       throw new Error("Não existe processo em triagem!", { cause: "not exist"});

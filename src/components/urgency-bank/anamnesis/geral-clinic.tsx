@@ -1,9 +1,14 @@
+"use client";
+
 import Accordium from "@/components/accordium";
 import InputDetails from "@/components/ui/input-details";
 import Button from "@/components/ui/button";
 import InputField from "@/components/ui/input-field";
 import { patientData } from "@/app/(erp-modules)/clinical/urgency-bank/[patientId]/anamnesis/page";
 import PersonalOfficeForm from "@/components/forms/signed-patient/personal-office-form";
+import { useActionState, useEffect, useState } from "react";
+import { signAnamnesis } from "@/app/backend/api/clinical/urgency-bank-api";
+import Alert from "@/components/alert";
 
 export default function GeralClinic({
   _id,
@@ -11,6 +16,19 @@ export default function GeralClinic({
   age,
   gender,
 }:patientData){
+  const [state, action ] = useActionState(signAnamnesis, {message: "", status: false, state:""});
+  const [msg, setMsg] = useState(false);
+
+  useEffect(()=>{
+    if(state.message){
+      setMsg(true)
+
+      setTimeout(()=>{
+        setMsg(false);
+      },3000)
+    }
+  },[state]);
+
   return (
     <Accordium className="hover:bg-primary/35 bg-primary/40" title="CLÍNICA GERAL">
     <div className="flex flex-col gap-y-3">
@@ -24,7 +42,13 @@ export default function GeralClinic({
       </Accordium>
     
       <Accordium title="Queixa Principal">
-        <div>
+        <form {...{action}}>
+          <input
+            className="hidden"
+            name="state"
+            defaultValue="mainComplaint"
+          />
+
           <InputDetails
             rows={3}
             textLabel="Queixa Principal"
@@ -32,14 +56,29 @@ export default function GeralClinic({
             name="mainComplaint"
             required
           />
-          <div>
-            <Button>Salvar</Button>
+
+          <Button>Salvar</Button>
+
+          <div className="w-96 mt-2">
+            {
+              msg && state.state === "mainComplaint" &&
+              <Alert
+                type="success"
+                message={state.message}
+              />
+            }
           </div>
-        </div>
+        </form>
       </Accordium>
     
       <Accordium title="História da Doênça Actual">
-        <div>
+        <form {...{action}}>
+          <input
+              className="hidden"
+              name="state"
+              defaultValue="symptoms"
+          />
+
           <InputDetails
             rows={3}
             textLabel="História da Doênça Actual"
@@ -48,12 +87,33 @@ export default function GeralClinic({
             required
           />
           
-          <Button>Salvar</Button>								
-        </div>
+          <Button>Salvar</Button>
+
+          <div className="w-96 mt-2">
+            {
+              msg && state.state === "symptoms" &&
+              <Alert
+                type="success"
+                message={state.message}
+              />
+            }
+          </div>					
+        </form>
       </Accordium>
     
       <Accordium title="Exames Complementares">
-        <div>
+        <form {...{action}}>
+          <input
+            className="hidden"
+            name="state"
+            defaultValue="complementaryExams"
+          />
+          <input
+            className="hidden"
+            name="state"
+            defaultValue="complementaryExams"
+          />
+
           <InputDetails
             rows={3}
             textLabel="Exames Complementares"
@@ -61,8 +121,19 @@ export default function GeralClinic({
             name="complementaryExams"
             required
           />
+
           <Button>Salvar</Button>
-        </div>
+
+          <div className="w-96 mt-2">
+            {
+              msg && state.state === "complementaryExams" &&
+              <Alert
+                type="success"
+                message={state.message}
+              />
+            }
+          </div>
+        </form>
       </Accordium>
     
       <Accordium title="Hipótese de Diagnóstico">
@@ -295,7 +366,7 @@ export default function GeralClinic({
                 <InputField
                   type="number"
                   placeholder="Digite o valor"
-                  name="amount"
+                  name="alcoholAmount"
                 />
               </div>
             </div>
@@ -336,7 +407,7 @@ export default function GeralClinic({
                 <label className="text-xs -mb-3">Quantidade</label>
                 <InputField
                   placeholder="descreva"
-                  name="amount"
+                  name="physicalAmount"
                 />
               </div>
     
@@ -344,7 +415,7 @@ export default function GeralClinic({
                 <label className="text-xs -mb-3">Tempo de actividade por secção</label>
                 <InputField
                   placeholder="descreva"
-                  name="alcohol"
+                  name="upTime"
                 />
               </div>
             </div>				
@@ -441,6 +512,16 @@ export default function GeralClinic({
         </div>
       </Accordium>
     </div>
+  
+      {
+        false &&
+        <Alert
+          type="success"
+          message={state.message}
+        />
+      }
+
+      <Button>Concluir</Button>
     </Accordium>
   );
 }

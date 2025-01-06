@@ -44,6 +44,7 @@ export default async function Page({
             <ReasonForm 
               hasData
               jsonData={JSON.stringify(reason?.detail)} 
+              screeningId={tried?.inScreeningId?.toString()}
             />
           }
 				</Accordium>
