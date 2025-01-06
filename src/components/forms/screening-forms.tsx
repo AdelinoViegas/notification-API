@@ -104,7 +104,8 @@ function ReasonForm({
 
 function VitalSignalsForm({
   jsonData,
-  hasData
+  hasData,
+  screeningId
 }:FormProps){
   const parsedData = jsonData?JSON.parse(jsonData as string) as VitalSignalType:undefined;
   const [ messageState, setMessageState ] = useState(false);
@@ -139,6 +140,8 @@ function VitalSignalsForm({
       <form {...{action}} className="py-3">
         <input type="hidden" name="typeData" value="vital signal" />
         <input type="hidden" name="patientId" value={patientId} />
+        <input type="hidden" name="screeningId" value={screeningId} />
+
         <div className="grid grid-cols-4 gap-4">
           <InputField
             type="number"
@@ -277,7 +280,8 @@ function VitalSignalsForm({
 
 function PriorityForm({
   jsonData,
-  hasData
+  hasData,
+  screeningId
 }:FormProps){
   const parsedData = hasData?JSON.parse(jsonData as string) as {
     priority: string;
@@ -313,6 +317,8 @@ function PriorityForm({
       <form {...{action}} className="py-3">
         <input type="hidden" name="typeData" value="priority" />
         <input type="hidden" name="patientId" value={patientId} />
+        <input type="hidden" name="screeningId" value={screeningId} />
+
         <div className="w-96">
           <Selection
             label="Prioridade"
@@ -350,7 +356,8 @@ function PriorityForm({
 
 function StatusForm({
   jsonData,
-  hasData
+  hasData,
+  screeningId
 }:FormProps){
   const parsedData = jsonData?JSON.parse(jsonData as string) as { detail: string }:undefined;
 
@@ -386,6 +393,7 @@ function StatusForm({
       <form {...{action}} className="py-3">
         <input type="hidden" name="typeData" value="status" />
         <input type="hidden" name="patientId" value={patientId} />
+        <input type="hidden" name="screeningId" value={screeningId} />
 
         <InputDetails
           textLabel="Estado Actual"
@@ -421,7 +429,8 @@ function StatusForm({
 
 function AdviceForm({  
   jsonData,
-  hasData
+  hasData,
+  screeningId
 }:FormProps){
   const parsedData = jsonData?JSON.parse(jsonData as string) as { detail: string }:undefined;
   const [ state, action ] = useActionState(
@@ -457,7 +466,8 @@ function AdviceForm({
           <form {...{action}}>
             <input type="hidden" name="typeData" value="advice"/>
             <input type="hidden" name="patientId" value={patientId} />
-            
+            <input type="hidden" name="screeningId" value={screeningId} />
+
             <InputDetails
               textLabel="Recomendação"
               placeholder="Descreva..."
@@ -548,7 +558,7 @@ function FinishScreening(){
         defaultValue={params.patientId} 
       />
 
-      <Selection
+      {/*<Selection
         label="Serviços de Urgências"
         options={urgencyServices}
         name="service"
@@ -560,7 +570,7 @@ function FinishScreening(){
         type="button" 
         onClick={openModal}>
           Seguir
-      </Button>
+      </Button>*/}
 
       <Modal 
         title="Concluir Triagem" 

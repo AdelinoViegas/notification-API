@@ -55,6 +55,7 @@ export default async function Page({
             <VitalSignalsForm 
               hasData
               jsonData={JSON.stringify(vitalSignals)}
+              screeningId={tried?.inScreeningId?.toString()}
             />:
             <VitalSignalsForm />
           }
@@ -66,6 +67,7 @@ export default async function Page({
             <PriorityForm
               jsonData={JSON.stringify(priority)}
               hasData
+              screeningId={tried?.inScreeningId?.toString()}
             />:
             <PriorityForm />
           }
@@ -76,6 +78,7 @@ export default async function Page({
             <StatusForm
               jsonData={JSON.stringify(actualStatus)}
               hasData 
+              screeningId={tried?.inScreeningId?.toString()}
             />:
             <StatusForm />
           }
@@ -86,6 +89,7 @@ export default async function Page({
             <AdviceForm
               jsonData={JSON.stringify(advice)}
               hasData 
+              screeningId={tried?.inScreeningId?.toString()}
             />:
             <AdviceForm />
           }

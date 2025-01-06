@@ -6,6 +6,7 @@ import ChildrenMedicine from "@/components/urgency-bank/anamnesis/childrens-medi
 import PediatricMedicine from "@/components/urgency-bank/anamnesis/pediatric-medicine";
 import PhisicalMedicine from "@/components/urgency-bank/anamnesis/phisical-medicine";
 import OphthalmologyService from "@/components/urgency-bank/anamnesis/ophthalmology-service";
+import GlobalComponent, { InternalComponent } from "@/components/global-component";
 
 export type patientData = {
 	_id:string;
@@ -31,12 +32,39 @@ export default async function Page({
 	const fullname = String(personal.fullname);
 	const age = Number(personal.age);
 	const gender = String(personal.gender);
-
+	
+	const components:InternalComponent[] = [{
+		title: "test",
+		className: "grid grid-cols-2",
+		childrens: [
+			{
+				type: "textarea",
+				elementProps: {
+					label: "test do rotulo",
+					name: "test",
+					placeholder: "hello world",
+				}
+			},
+			{
+				type: "input",
+				elementProps: {
+					label: "test input",
+					name: "test",
+					placeholder: "hello world",
+				}
+			}
+		]
+	}];
+	
   return(
 		<main>
 			<Button>Visualizar</Button>
 
-			<div className="flex flex-col gap-y-5 my-8"> 
+			<div className="flex flex-col gap-y-5 my-8">
+				<GlobalComponent
+					title="test"
+					components={components} 
+				/> 
 				<GeralClinic 
 					{...{_id}} 
 					{...{fullname}} 
