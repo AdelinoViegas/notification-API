@@ -8,6 +8,8 @@ import tableFormater from "@/lib/table-formater";
 import { getPatients } from "@/app/backend/api/clinical/api";
 import WsUpdate from "@/components/ws-update";
 import Pagination from "@/components/pagination";
+import { PiArchiveDuotone } from "react-icons/pi";
+import { PlusIcon } from "@heroicons/react/24/outline";
 
 export const dynamic = "force-dynamic";
 
@@ -37,10 +39,16 @@ export default async function Page({
       
       <div className="flex gap-x-2">
         <Link href="patient/sign" >
-          <Button>Novo Utente</Button>
+          <Button className="flex gap-x-2">
+            <PlusIcon className="w-5" />
+            Novo Utente
+          </Button>
         </Link>
         <Link href="patient/serveds">
-          <Button className="bg-slate-700">Utentes Atendidos</Button>
+          <Button className="flex gap-x-2 bg-slate-700">
+            <PiArchiveDuotone/>
+            Utentes Atendidos
+          </Button>
         </Link>
       </div>
 

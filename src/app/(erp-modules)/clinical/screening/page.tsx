@@ -8,6 +8,7 @@ import tableFormater from "@/lib/table-formater";
 import { getPatientsInScreening } from "@/app/backend/api/clinical/api";
 import WsUpdate from "@/components/ws-update";
 import Pagination from "@/components/pagination";
+import { PiArchiveDuotone } from "react-icons/pi";
 
 export const dynamic = "force-dynamic";
 
@@ -37,7 +38,10 @@ export default async function Page({
 
       <div className="flex gap-x-2">
         <Link href="screening/archived" >
-          <Button>Utentes Arquivados</Button>
+          <Button className="flex gap-x-2">
+            <PiArchiveDuotone className="size-5" />
+            Utentes Arquivados
+          </Button>
         </Link>
       </div>
 

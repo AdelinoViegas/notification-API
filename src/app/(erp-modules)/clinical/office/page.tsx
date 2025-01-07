@@ -32,7 +32,7 @@ export default async function Page({
 
       <div className="flex gap-3">
         <Link href="/clinical/office/serveds">
-          <Button className="flex gap-3">
+          <Button className="flex gap-x-2">
             <TiInputChecked className="size-5" />
             Atendidos
           </Button>

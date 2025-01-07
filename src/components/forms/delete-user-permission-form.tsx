@@ -26,7 +26,7 @@ export default function DeleteUserPermissionForm({
   }, [state, router]);
   
   return(
-    <form className="bg-gray-100 hover:bg-gray-200 my-1 rounded-md border-2 px-2 flex gap-3 items-center" action={action}>
+    <form className="bg-gray-100 hover:bg-gray-200 mt-2 mb-1 rounded-md border-2 px-2 flex gap-3 items-center" action={action}>
       <input type="hidden" name="permId" value={permId} />
       <div className="w-full capitalize font-medium">
         <p>{permLabel}</p>

@@ -13,6 +13,7 @@ import InputDetails from "@/components/ui/input-details";
 import Alert from "@/components/alert";
 import { reschedulePatientExam } from "@/app/backend/api/clinical/scheduling-api";
 import Selection, { SelectionOption } from "@/components/ui/selection";
+import { GrSchedulePlay } from "react-icons/gr"; 
 
 export default function RescheduleExam({
   detail, 
@@ -58,9 +59,11 @@ export default function RescheduleExam({
   return(
     <div>
       <Button
+        className="flex gap-x-2" 
         cancel={isArchived?true:false} 
         onClick={openModal}
       >
+        <GrSchedulePlay className="size-5"/>
         {isArchived?'Desarquivar':'Reagendar'}
       </Button>
 

@@ -34,14 +34,14 @@ export default async function Page({
 
       <div className="flex gap-x-3">
         <Link href="/clinical/schedule-exams-services/serveds">
-          <Button className="flex gap-3">
+          <Button className="flex gap-x-2">
             <TiInputChecked className="size-5" />
             Atendidos
           </Button>
         </Link>
 
         <Link href="/clinical/schedule-exams-services/archiveds">
-          <Button className="flex gap-3 bg-slate-700">
+          <Button className="flex gap-x-2 bg-slate-700">
             <PiArchiveDuotone className="size-5" />
             Arquivados
           </Button>

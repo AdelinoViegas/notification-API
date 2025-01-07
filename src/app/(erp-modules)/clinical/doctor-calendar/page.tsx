@@ -5,6 +5,7 @@ import Button from "@/components/ui/button";
 import Link from "next/link";
 import { getDoctorCalendars } from "@/app/backend/api/clinical/urgency-bank-api";
 import tableFormater, { Calendar } from "@/lib/table-formater";
+import { PlusIcon } from "@heroicons/react/24/outline";
 
 export const dynamic = "force-dynamic";
 
@@ -20,7 +21,10 @@ export default async function Page(){
 
       <div className="flex gap-3">
         <Link href="/clinical/doctor-calendar/sign">
-          <Button>Novo Calendário</Button>
+          <Button className="flex gap-x-2">
+            <PlusIcon className="w-5" />
+            Novo Calendário
+          </Button>
         </Link>
       </div>
 

@@ -21,7 +21,7 @@ export default function UserStatusButton({
   return(
     <Button
       disabled={isAdmin}
-      className="flex gap-2" 
+      className="flex gap-x-2" 
       cancel={status} 
       onClick={async()=>{
         await changeUserState(userId, !status); 

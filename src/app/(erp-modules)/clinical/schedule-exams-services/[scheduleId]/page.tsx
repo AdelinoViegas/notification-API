@@ -11,6 +11,7 @@ import { angolaCurrency } from "@/lib/table-formater";
 import TitleAndSubtitle from "@/components/title-subtitle";
 import SendScheduleExam from "@/components/send-schedule-exam";
 import ValidateService from "@/components/validate-services";
+import { FaFilePdf } from "react-icons/fa6";
 
 export default async function Page({
   params
@@ -111,7 +112,12 @@ export default async function Page({
             </div>
           </div>
           <div className="flex gap-x-3 my-4">
-            <Button>Visualizar</Button>
+            <Button 
+              className="flex gap-x-2" >
+              <FaFilePdf/>
+              Visualizar
+            </Button>
+            
             <RescheduleExam 
               detail={schedule?.detail as string} 
               date={schedule?._createdAt as Date}

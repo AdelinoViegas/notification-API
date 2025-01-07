@@ -42,7 +42,7 @@ export default function ExternalUnitForm(){
       <Button 
         type="button" 
         onClick={openModal} 
-        className="flex gap-3">
+        className="flex gap-x-2">
         <PlusIcon className="w-5" />
         Nova Unidade
       </Button>

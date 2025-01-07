@@ -6,15 +6,17 @@
  */
 
 import Accordium from "./accordium";
+import Button from "./ui/button";
 import InputDetails from "./ui/input-details";
 import InputField from "./ui/input-field";
+import Selection from "./ui/selection";
 
 type Props = {
   title: string;
   components: InternalComponent[];
 };
 
-type TypeUI = "input" | "button" | "select" | "checkbox" | "textarea";
+type TypeUI = "input" | "button" | "select" | "checkbox" | "textarea" | "radio";
 
 export type InternalComponent = {
   title: string;
@@ -23,29 +25,74 @@ export type InternalComponent = {
   sections?: string[];
 };
 
-type Children = {
+type UIComponent = {
   type: TypeUI;
-  elementProps: {
+  props: {
     label: string;
     name: string;
     placeholder?: string;
     defaultValue?: string;
   };
-}
+};
 
-export default function GlobalComponent({ components }: Props){
+type Children = {
+  className?: string;
+  sectionTitle?: string;
+  sectionElements: UIComponent[];
+};
+
+export default function GlobalComponent({ title, components }: Props){
   return(
-    <Accordium title="test">
+    <Accordium className="hover:bg-primary/35 bg-primary/40" title={title}>
       {components.map((item, key)=>(
-        <Accordium title="test" key={key}>
-          <div className={item.className}>
-            {item.childrens.map((item, key)=>{
-              switch(item.type){
-                case "textarea": return <InputDetails key={key} textLabel="test" />;
-                case "input": return <InputField textLabel="test" />;
-              }
-            })}
-          </div>
+        <Accordium title={item.title} key={key}>
+          <form>
+            <div className={item.className}>
+              {item.childrens.map((item, key)=>(
+                <div key={key} className={item.className}>
+                  {item.sectionElements.map((item, key)=>{
+                    switch(item.type){
+                      case "input":
+                        return(
+                          <InputField
+                            key={key}
+                            textLabel={item.props.label}
+                            {...item.props}
+                          />
+                        );
+                      case "textarea":
+                        return(
+                          <InputDetails
+                            key={key}
+                            textLabel={item.props.label}
+                            {...item.props}
+                          />
+                        );
+                      case "radio":
+                        return(
+                          <InputField
+                            key={key}
+                            type="radio"
+                            textLabel={item.props.label}
+                            {...item.props}
+                          />
+                        );
+                      case "select":
+                        return(
+                          <InputField
+                            key={key}
+                            type="radio"
+                            textLabel={item.props.label}
+                            {...item.props}
+                          />
+                        );
+                    }
+                  })}
+                </div>
+              ))}
+            </div>
+            <Button>Salvar</Button>
+          </form>
         </Accordium>
       ))}
     </Accordium>

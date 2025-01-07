@@ -12,7 +12,7 @@ export default async function UserPermissions({userId}: {userId: string}){
   return(
     <div>
         <SubTitle className="inline-flex">Permissões Atribuidas</SubTitle>
-        <ul className="h-60 overflow-y-auto">
+        <ul className="h-60 overflow-y-auto scroll">
           {userPerms.map(async(props, index)=>{
             const perm = await getPermission(`${props.permissionId}`);
             return <>

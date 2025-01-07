@@ -7,6 +7,9 @@ import Button from "@/components/ui/button";
 import { PhisicalUnit } from "@/lib/table-formater";
 import tableFormater from "@/lib/table-formater";
 import { getUnits } from "@/app/backend/api/clinical/urgency-bank-api";
+import { PlusIcon } from "@heroicons/react/24/outline";
+import { IoPerson } from "react-icons/io5";
+import { FaHospital } from "react-icons/fa";
 
 export const dynamic = "force-dynamic";
 
@@ -29,15 +32,24 @@ export default async function Page({
 
       <div className="flex gap-x-2">
         <Link href="/clinical/phisical-unit/sign" >
-          <Button>Nova Unidade</Button>
+          <Button className="flex gap-x-2">
+            <PlusIcon className="w-5" />
+            Nova Unidade
+          </Button>
         </Link>
 
         <Link href="/clinical/phisical-unit/external">
-          <Button>Unidades Externas</Button>
+          <Button className="flex gap-x-2">
+            <FaHospital/>
+            Unidades Externas
+          </Button>
         </Link>
         
         <Link href="/clinical/phisical-unit/user">
-          <Button className="bg-slate-500">Funcionários</Button>
+          <Button className="flex gap-x-2 bg-slate-500">
+            <IoPerson/>
+            Funcionários
+          </Button>
         </Link>
       </div>
 

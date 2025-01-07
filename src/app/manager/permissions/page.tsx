@@ -2,6 +2,8 @@ import Link from "next/link";
 import Button from "@/components/ui/button";
 import { getPermissions } from "@/app/backend/api/manager/api";
 import Header from "@/components/header";
+import { PlusIcon } from "@heroicons/react/24/outline";
+import { MdOutlineModeEdit  } from "react-icons/md";
 
 export const dynamic = "force-dynamic";
 
@@ -21,11 +23,14 @@ function Permission({
 }: PermissionsProps){
   return(
     <div className="bg-white h-auto w-full lg:w-60 px-4 py-3 rounded-xl border">
-      <h2 className="font-medium mb-3 text-primary text-lg">{label}</h2>
+      <h2 className="font-medium mb-4 text-primary text-lg">{label}</h2>
       <p className="inline-flex text-sm bg-gray-700 text-white px-2 py-1 rounded-xl">{group}</p>
-      <p className="line-clamp-1">{detail}</p>
+      <p className="text-sm line-clamp-1">{detail}</p>
       <Link href={`/manager/permissions/${_id}`}>
-        <Button>Editar</Button>
+        <Button className="flex gap-x-2">
+          <MdOutlineModeEdit/>
+          Editar
+        </Button>
       </Link>
     </div>
   );
@@ -38,7 +43,10 @@ export default async function Page(){
     <main className="px-2 pt-4 w-full">
       <Header title="Permissões" className="mb-3">
         <Link href="/manager/permissions/sign" className="-translate-y-2">
-          <Button>Nova Permissão</Button>
+          <Button className="flex gap-x-2">
+            <PlusIcon className="w-5"/>
+            Nova Permissão
+          </Button>
         </Link>
       </Header>
 

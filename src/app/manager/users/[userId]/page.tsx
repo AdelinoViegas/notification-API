@@ -11,7 +11,7 @@ import Button from "@/components/ui/button";
 import AccessLimitContainer from "@/components/access-limit-container";
 import Header from "@/components/header";
 import { redirect } from "next/navigation";
-
+import { MdOutlineModeEdit } from "react-icons/md";
 export const dynamic = 'force-dynamic';
 import TitleAndSubtitle from "@/components/title-subtitle";
 import Card from "@/components/card";
@@ -27,7 +27,7 @@ export default async function Page({ params }: { params: Promise<{ userId: strin
   return(
     <main className="px-2 pt-4 w-full">
       <Header title="Ajustes da conta de Usuário" />
-      <div className="mt-3 space-y-3 overflow-y-scroll max-h-[82vh]">
+      <div className="mt-3 space-y-3 overflow-y-auto max-h-[82vh]">
         <div className="grid lg:grid-cols-2 gap-3">
           <Card className="flex flex-col justify-between">
             <div className="grid lg:grid-cols-2">
@@ -64,7 +64,10 @@ export default async function Page({ params }: { params: Promise<{ userId: strin
 
             <div className="flex items-end gap-3">
               <Link href={`${userId}/edit`}>
-                <Button>Editar</Button>
+                <Button className="flex gap-x-2">
+                  <MdOutlineModeEdit/>
+                  Editar
+                </Button>
               </Link>
 
               <UserStatusButton

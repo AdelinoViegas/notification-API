@@ -34,24 +34,20 @@ export default async function Page({
 	const gender = String(personal.gender);
 	
 	const components:InternalComponent[] = [{
-		title: "test",
-		className: "grid grid-cols-2",
+		title: "Queixa Principal",
+		className: "grid grid-cols-3",
 		childrens: [
 			{
-				type: "textarea",
-				elementProps: {
-					label: "test do rotulo",
-					name: "test",
-					placeholder: "hello world",
-				}
-			},
-			{
-				type: "input",
-				elementProps: {
-					label: "test input",
-					name: "test",
-					placeholder: "hello world",
-				}
+				sectionElements: [
+					{ 
+						type: "input",
+						props: {
+							label: "test",
+							placeholder: "test",
+							name: "test"
+						}
+					}
+				]
 			}
 		]
 	}];
@@ -62,15 +58,15 @@ export default async function Page({
 
 			<div className="flex flex-col gap-y-5 my-8">
 				<GlobalComponent
-					title="test"
+					title="CLINICA GERAL"
 					components={components} 
 				/> 
-				<GeralClinic 
+				{/* <GeralClinic 
 					{...{_id}} 
 					{...{fullname}} 
 					{...{age}} 
 					{...{gender}}
-				/>
+				/> */}
 
       	<ChildrenMedicine 
 					{...{_id}} 
@@ -79,7 +75,7 @@ export default async function Page({
 					{...{gender}} 
 				/>
 
-        <PediatricMedicine 
+        {/* <PediatricMedicine 
 					{...{_id}} 
 					{...{fullname}} 
 					{...{age}} 
@@ -98,7 +94,7 @@ export default async function Page({
 					{...{fullname}} 
 					{...{age}} 
 					{...{gender}}
-				/> 
+				/>  */}
 			</div>
 		</main>
 	)
