@@ -8,6 +8,17 @@ import PhisicalMedicine from "@/components/urgency-bank/anamnesis/phisical-medic
 import OphthalmologyService from "@/components/urgency-bank/anamnesis/ophthalmology-service";
 import GlobalComponent, { InternalComponent } from "@/components/global-component";
 
+async function ExampleApi(prev:unknown, formData: FormData){
+	"use server";
+
+	console.log(formData);
+
+	return {
+		message: "hello world",
+		status: true,
+	}
+}
+
 export type patientData = {
 	_id:string;
 	fullname:string;
@@ -33,24 +44,63 @@ export default async function Page({
 	const age = Number(personal.age);
 	const gender = String(personal.gender);
 	
-	const components:InternalComponent[] = [{
-		title: "Queixa Principal",
-		className: "grid grid-cols-3",
-		childrens: [
-			{
-				sectionElements: [
-					{ 
-						type: "input",
-						props: {
-							label: "test",
-							placeholder: "test",
-							name: "test"
+	const components:InternalComponent[] = [
+		{
+			title: "Dados Pessoais",
+			apiFn: ExampleApi,
+			initialState: { message: "", status: false },
+			childrens: [
+				{
+					className: "grid lg:grid-cols-3 lg:gap-3",
+					sectionElements: [
+						{ 
+							type: "input",
+							props: {
+								label: "Nome completo",
+								placeholder: "Nome completo do Utente",
+								name: "fullname"
+							}
+						},
+						{ 
+							type: "input",
+							props: {
+								label: "Idade",
+								placeholder: "Idade do Utente",
+								name: "age"
+							}
+						},
+						{
+							type: "select",
+							props: {
+								label: "Gênero",
+								name: "gender"
+							}
 						}
-					}
-				]
-			}
-		]
-	}];
+					]
+				}
+			]
+		},
+		{
+			title: "Avaliação da Gestação Actual",
+			apiFn: ExampleApi,
+			initialState: { message: "", status: false },
+			childrens: [
+				{
+					className: "grid lg:grid-cols-3 lg:gap-3",
+					sectionElements: [
+						{ 
+							type: "date",
+							props: {
+								label: "Data",
+								placeholder: "Data",
+								name: "date"
+							}
+						}
+					]
+				}
+			]
+		}
+	];
 	
   return(
 		<main>

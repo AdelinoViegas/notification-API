@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * 1 - Title do Accordium
  * 2 - Conter components acordiums 
@@ -5,24 +7,38 @@
  * @returns 
  */
 
+import { 
+  HTMLInputTypeAttribute, 
+  useActionState, 
+  useEffect, 
+  useState 
+} from "react";
 import Accordium from "./accordium";
 import Button from "./ui/button";
 import InputDetails from "./ui/input-details";
 import InputField from "./ui/input-field";
 import Selection from "./ui/selection";
+import Alert from "./alert";
+
+type InitialValue = {
+  message?: string;
+  status: boolean;
+};
 
 type Props = {
   title: string;
   components: InternalComponent[];
 };
 
-type TypeUI = "input" | "button" | "select" | "checkbox" | "textarea" | "radio";
+type TypeUI = HTMLInputTypeAttribute | "select" | "textarea";
 
 export type InternalComponent = {
   title: string;
   childrens: Children[];
   className?: string;
   sections?: string[];
+  apiFn: (prev:unknown, formData:FormData)=>Promise<InitialValue>;
+  initialState: InitialValue;
 };
 
 type UIComponent = {
@@ -32,6 +48,7 @@ type UIComponent = {
     name: string;
     placeholder?: string;
     defaultValue?: string;
+    rows?: number;
   };
 };
 
@@ -41,60 +58,82 @@ type Children = {
   sectionElements: UIComponent[];
 };
 
-export default function GlobalComponent({ title, components }: Props){
+function Component({
+  title,
+  className,
+  childrens,
+  apiFn,
+  initialState
+}: InternalComponent){
+  const [ state, action ] = useActionState(apiFn, initialState);
+  const [ messageState, setMessageState ] = useState(false);
+  const closeMessage = ()=> setMessageState(false);
+
+  useEffect(()=>{
+    if(state.message){
+      setMessageState(true);
+      
+      setInterval(()=>setMessageState(false), 3000);
+    }
+  }, [state]);
+
+  return(
+    <Accordium title={title} extraClassName="mt-3">
+      <form>
+        <div className={className}>
+          {childrens.map((item, key)=>(
+            <div key={key} className={item.className}>
+              {item.sectionElements.map((item, key)=>{
+                if(item.type === "select")
+                  return(
+                    <Selection
+                      label={item.props.label}
+                      options={[]}
+                    />
+                  );
+                else if (item.type == "textarea")
+                  return(
+                    <InputDetails
+                      textLabel={item.props.label}
+                      {...item.props} 
+                    />
+                  )
+                else
+                  return(
+                    <InputField
+                      key={key}
+                      textLabel={item.props.label}
+                      type={item.type}
+                      {...item.props}
+                    />
+                  );
+              })}
+            </div>
+          ))}
+        </div>
+        <Button>Salvar</Button>
+
+        {
+          state.message && messageState &&
+          <div className="flex mt-3">
+            <Alert
+              type={state.status?'success':'error'}
+              message={state.message}
+            />
+          </div>
+        }
+      </form>
+    </Accordium>
+  )
+}
+
+export default function GlobalComponent({ 
+  title, 
+  components
+}: Props){
   return(
     <Accordium className="hover:bg-primary/35 bg-primary/40" title={title}>
-      {components.map((item, key)=>(
-        <Accordium title={item.title} key={key}>
-          <form>
-            <div className={item.className}>
-              {item.childrens.map((item, key)=>(
-                <div key={key} className={item.className}>
-                  {item.sectionElements.map((item, key)=>{
-                    switch(item.type){
-                      case "input":
-                        return(
-                          <InputField
-                            key={key}
-                            textLabel={item.props.label}
-                            {...item.props}
-                          />
-                        );
-                      case "textarea":
-                        return(
-                          <InputDetails
-                            key={key}
-                            textLabel={item.props.label}
-                            {...item.props}
-                          />
-                        );
-                      case "radio":
-                        return(
-                          <InputField
-                            key={key}
-                            type="radio"
-                            textLabel={item.props.label}
-                            {...item.props}
-                          />
-                        );
-                      case "select":
-                        return(
-                          <InputField
-                            key={key}
-                            type="radio"
-                            textLabel={item.props.label}
-                            {...item.props}
-                          />
-                        );
-                    }
-                  })}
-                </div>
-              ))}
-            </div>
-            <Button>Salvar</Button>
-          </form>
-        </Accordium>
-      ))}
+      {components.map((item, key)=> <Component {...item} key={key} />)}
     </Accordium>
   );
 }
