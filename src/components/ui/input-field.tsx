@@ -22,7 +22,7 @@ export default function InputField({
   
   return(
     <div className={clsx(className, "my-3")}>
-      <label>
+      <label className={clsx((rest.type === "radio" || rest.type === "checkbox") && "flex items-center gap-3 select-none")}>
         <span className="text-xs font-medium">{textLabel}</span>
         <div className="flex gap-3 border px-3 py-1 rounded-md has-[:disabled]:bg-gray-100">
           <input 

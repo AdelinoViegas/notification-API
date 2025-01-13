@@ -1,29 +1,28 @@
 "use client";
 
-/**
- * 1 - Title do Accordium
- * 2 - Conter components acordiums 
- * 3 - Conter os components de UI (buttons, inputs, textareas, selects, etc)
- * @returns 
- */
-
 import { 
   HTMLInputTypeAttribute, 
   useActionState, 
   useEffect, 
   useState 
 } from "react";
-import Accordium from "./accordium";
-import Button from "./ui/button";
-import InputDetails from "./ui/input-details";
-import InputField from "./ui/input-field";
-import Selection, { SelectionOption } from "./ui/selection";
-import Alert from "./alert";
+import Accordium from "@/components/accordium";
+import Button from "@/components/ui/button";
+import InputDetails from "@/components/ui/input-details";
+import InputField from "@/components/ui/input-field";
+import Selection, { SelectionOption } from "@/components/ui/selection";
+import Alert from "@/components/alert";
 
 type InitialValue = {
   message?: string;
   status: boolean;
 };
+
+type SeparatedElements = {
+  label: string;
+  className?: string;
+  elements: UIComponent[];
+}
 
 type Props = {
   title: string;
@@ -55,8 +54,8 @@ type UIComponent = {
 
 type Children = {
   className?: string;
-  sectionTitle?: string;
-  sectionElements: UIComponent[];
+  elements: UIComponent[];
+  separatedElements?: SeparatedElements;
 };
 
 function Component({
@@ -68,12 +67,10 @@ function Component({
 }: InternalComponent){
   const [ state, action ] = useActionState(apiFn?apiFn:FallbackFn, initialState);
   const [ messageState, setMessageState ] = useState(false);
-  const closeMessage = ()=> setMessageState(false);
 
   useEffect(()=>{
     if(state?.message){
       setMessageState(true);
-      
       setInterval(()=>setMessageState(false), 3000);
     }
   }, [state]);
@@ -84,18 +81,28 @@ function Component({
         <div className={className}>
           {childrens.map((item, i)=>(
             <div key={i} className={item.className}>
-              {item.sectionElements.map((item, key)=>{
+              {item.elements.map((item, key)=>{
                 if(item.type === "select")
                   return(
                     <Selection
+                      key={key}
                       label={item.props.label}
                       options={item.props.options?item.props.options:[]}
                       defaultValue={item.props.defaultValue}
                     />
                   );
+                if(item.type === "radio" || item.type == "checkbox")
+                  return(
+                    <InputField 
+                      type={item.type}
+                      textLabel={item.props.label}
+                      {...item.props} 
+                    />
+                  );
                 else if (item.type == "textarea")
                   return(
                     <InputDetails
+                      key={key}
                       textLabel={item.props.label}
                       {...item.props} 
                     />
@@ -126,7 +133,7 @@ function Component({
         }
       </form>
     </Accordium>
-  )
+  );
 }
 
 export default function GlobalComponent({ 
@@ -139,7 +146,7 @@ export default function GlobalComponent({
     </Accordium>
   );
 }
-
+// função de fundo dos components, caso ainda n tenha um função de backend para preencher
 async function FallbackFn(): Promise<InitialValue> {
   return {
     status: true,

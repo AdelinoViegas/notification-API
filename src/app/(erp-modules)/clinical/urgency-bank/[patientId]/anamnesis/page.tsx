@@ -43,7 +43,7 @@ export default async function Page({
 			childrens: [
 				{
 					className: "grid lg:grid-cols-3 lg:gap-3",
-					sectionElements: [
+					elements: [
 						{ 
 							type: "input",
 							props: {
@@ -80,12 +80,26 @@ export default async function Page({
 			childrens: [
 				{
 					className: "grid lg:grid-cols-3 lg:gap-3",
-					sectionElements: [
+					elements: [
 						{ 
 							type: "date",
 							props: {
 								label: "Data",
 								placeholder: "Data",
+								name: "date"
+							}
+						},
+						{ 
+							type: "radio",
+							props: {
+								label: "Sim",
+								name: "date"
+							}
+						},
+						{ 
+							type: "radio",
+							props: {
+								label: "Não",
 								name: "date"
 							}
 						}
