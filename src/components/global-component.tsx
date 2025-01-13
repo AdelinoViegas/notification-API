@@ -55,7 +55,7 @@ type UIComponent = {
 type Children = {
   className?: string;
   elements: UIComponent[];
-  separatedElements?: SeparatedElements;
+  separatedElements?: SeparatedElements[];
 };
 
 function Component({
@@ -81,42 +81,16 @@ function Component({
         <div className={className}>
           {childrens.map((item, i)=>(
             <div key={i} className={item.className}>
-              {item.elements.map((item, key)=>{
-                if(item.type === "select")
-                  return(
-                    <Selection
-                      key={key}
-                      label={item.props.label}
-                      options={item.props.options?item.props.options:[]}
-                      defaultValue={item.props.defaultValue}
-                    />
-                  );
-                if(item.type === "radio" || item.type == "checkbox")
-                  return(
-                    <InputField 
-                      type={item.type}
-                      textLabel={item.props.label}
-                      {...item.props} 
-                    />
-                  );
-                else if (item.type == "textarea")
-                  return(
-                    <InputDetails
-                      key={key}
-                      textLabel={item.props.label}
-                      {...item.props} 
-                    />
-                  )
-                else
-                  return(
-                    <InputField
-                      key={key}
-                      textLabel={item.props.label}
-                      type={item.type}
-                      {...item.props}
-                    />
-                  );
-              })}
+              <RenderUIElement items={item.elements} />
+
+              { !!item.separatedElements &&
+                item.separatedElements.map((item, index)=>(
+                  <div className={item.className} key={index}>
+                    <p className="font-medium text-sm">{item.label}: </p>
+                    <RenderUIElement items={item.elements} />
+                  </div> 
+                ))
+              }
             </div>
           ))}
         </div>
@@ -152,4 +126,43 @@ async function FallbackFn(): Promise<InitialValue> {
     status: true,
     message: "Isto é apenas um teste!"
   }
+}
+
+function RenderUIElement({ items }: { items: UIComponent[] }){
+  return items.map((item, key)=>{
+    if(item.type === "select")
+      return(
+        <Selection
+          key={key}
+          label={item.props.label}
+          options={item.props.options?item.props.options:[]}
+          defaultValue={item.props.defaultValue}
+        />
+      );
+    if(item.type === "radio" || item.type == "checkbox")
+      return(
+        <InputField 
+          type={item.type}
+          textLabel={item.props.label}
+          {...item.props} 
+        />
+      );
+    else if (item.type == "textarea")
+      return(
+        <InputDetails
+          key={key}
+          textLabel={item.props.label}
+          {...item.props} 
+        />
+      )
+    else
+      return(
+        <InputField
+          key={key}
+          textLabel={item.props.label}
+          type={item.type}
+          {...item.props}
+        />
+      );
+  })
 }

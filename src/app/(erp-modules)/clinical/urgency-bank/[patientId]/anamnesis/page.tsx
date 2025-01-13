@@ -43,6 +43,48 @@ export default async function Page({
 			childrens: [
 				{
 					className: "grid lg:grid-cols-3 lg:gap-3",
+					separatedElements: [
+						{
+							label: "Separados",
+							className: "flex gap-3 items-center",
+							elements: [
+								{ 
+									type: "radio",
+									props: {
+										label: "Sim",
+										name: "test"
+									}
+								},
+								{ 
+									type: "radio",
+									props: {
+										label: "Sim",
+										name: "test"
+									}
+								},
+							]
+						},
+						{
+							label: "Separados 2",
+							className: "flex gap-3 items-center",
+							elements: [
+								{ 
+									type: "radio",
+									props: {
+										label: "Sim",
+										name: "test"
+									}
+								},
+								{ 
+									type: "radio",
+									props: {
+										label: "Sim",
+										name: "test"
+									}
+								},
+							]
+						}
+					],
 					elements: [
 						{ 
 							type: "input",
