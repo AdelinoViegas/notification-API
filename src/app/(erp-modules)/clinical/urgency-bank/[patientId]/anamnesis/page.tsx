@@ -1,11 +1,11 @@
 import Button from "@/components/ui/button";
 import { getPatient } from "@/app/backend/api/clinical/api";
 import { redirect } from "next/navigation";
-import GeralClinic from "@/components/urgency-bank/anamnesis/geral-clinic";
+// import GeralClinic from "@/components/urgency-bank/anamnesis/geral-clinic";
 import ChildrenMedicine from "@/components/urgency-bank/anamnesis/childrens-medicine";
-import PediatricMedicine from "@/components/urgency-bank/anamnesis/pediatric-medicine";
-import PhisicalMedicine from "@/components/urgency-bank/anamnesis/phisical-medicine";
-import OphthalmologyService from "@/components/urgency-bank/anamnesis/ophthalmology-service";
+// import PediatricMedicine from "@/components/urgency-bank/anamnesis/pediatric-medicine";
+// import PhisicalMedicine from "@/components/urgency-bank/anamnesis/phisical-medicine";
+// import OphthalmologyService from "@/components/urgency-bank/anamnesis/ophthalmology-service";
 import GlobalComponent, { InternalComponent } from "@/components/global-component";
 import { gender as genderTemplate } from "@/app/backend/api/clinical/translator";
 import { updatePersonalInfo } from "@/app/backend/api/clinical/api";
@@ -69,14 +69,14 @@ export default async function Page({
 							className: "flex gap-3 items-center",
 							elements: [
 								{ 
-									type: "radio",
+									type: "checkbox",
 									props: {
 										label: "Sim",
 										name: "test"
 									}
 								},
 								{ 
-									type: "radio",
+									type: "checkbox",
 									props: {
 										label: "Sim",
 										name: "test"

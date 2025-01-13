@@ -14,7 +14,7 @@ import { useRouter, useParams } from 'next/navigation';
 import Alert from "@/components/alert";
 import Selection from "@/components/ui/selection";
 import InputField from "@/components/ui/input-field";
-import { priorityToComponent, urgencyServices } from "@/app/backend/api/clinical/translator";
+import { priorityToComponent } from "@/app/backend/api/clinical/translator";
 import { VitalSignalType } from "@/app/backend/api/clinical/types";
 import { 
   finishScreening,
@@ -508,7 +508,6 @@ function FinishScreening(){
   const [ state, action ] = useActionState(finishScreening, { message: "", status: false });
   const [ modalState, setModalState ] = useState(false);
   const closeModal = ()=>setModalState(false);
-  const openModal = ()=>setModalState(true);
   const formRef = useRef<HTMLFormElement>(null);
   const params = useParams();
   const router = useRouter();

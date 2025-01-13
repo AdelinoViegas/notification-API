@@ -32,7 +32,6 @@ import {
 import { closePatientProcess } from "@/app/backend/api/clinical/process-api";
 import { getGrantedUnitAccess } from "@/app/backend/api/clinical/urgency-bank-api";
 import { validatePatientDoc, validatePatientLocation } from "@/lib/regexp";
-import { TbRuler2Off } from "react-icons/tb";
 
 type ChoosedGroup = Assured | Employee | Enterprise | undefined;
 type TypeScreeningData = "reason" | "vital signal" | "priority" | "status" | "advice";

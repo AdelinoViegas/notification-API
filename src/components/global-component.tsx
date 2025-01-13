@@ -142,6 +142,7 @@ function RenderUIElement({ items }: { items: UIComponent[] }){
     if(item.type === "radio" || item.type == "checkbox")
       return(
         <InputField 
+          key={key}
           type={item.type}
           textLabel={item.props.label}
           {...item.props} 
