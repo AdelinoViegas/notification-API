@@ -13,8 +13,7 @@ import Alert from '@/components/alert';
 import forceRefreshPage from "@/lib/force-refresh";
 import { updatePersonalInfo } from "@/app/backend/api/clinical/api";
 
-import { gender as genderValues
-} from "@/app/backend/api/clinical/translator";
+import { gender as genderValues } from "@/app/backend/api/clinical/translator";
 
 type InfoProps = {
   _id: string;

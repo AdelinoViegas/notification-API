@@ -7,17 +7,8 @@ import PediatricMedicine from "@/components/urgency-bank/anamnesis/pediatric-med
 import PhisicalMedicine from "@/components/urgency-bank/anamnesis/phisical-medicine";
 import OphthalmologyService from "@/components/urgency-bank/anamnesis/ophthalmology-service";
 import GlobalComponent, { InternalComponent } from "@/components/global-component";
-
-async function ExampleApi(prev:unknown, formData: FormData){
-	"use server";
-
-	console.log(formData);
-
-	return {
-		message: "hello world",
-		status: true,
-	}
-}
+import { gender as genderTemplate } from "@/app/backend/api/clinical/translator";
+import { updatePersonalInfo } from "@/app/backend/api/clinical/api";
 
 export type patientData = {
 	_id:string;
@@ -47,7 +38,7 @@ export default async function Page({
 	const components:InternalComponent[] = [
 		{
 			title: "Dados Pessoais",
-			apiFn: ExampleApi,
+			apiFn: updatePersonalInfo,
 			initialState: { message: "", status: false },
 			childrens: [
 				{
@@ -58,22 +49,26 @@ export default async function Page({
 							props: {
 								label: "Nome completo",
 								placeholder: "Nome completo do Utente",
-								name: "fullname"
+								name: "fullname",
+								defaultValue: fullname
 							}
 						},
 						{ 
-							type: "input",
+							type: "number",
 							props: {
 								label: "Idade",
 								placeholder: "Idade do Utente",
-								name: "age"
+								name: "age",
+								defaultValue: age
 							}
 						},
 						{
 							type: "select",
 							props: {
 								label: "Gênero",
-								name: "gender"
+								name: "gender",
+								options: genderTemplate,
+								defaultValue: gender
 							}
 						}
 					]
@@ -82,8 +77,6 @@ export default async function Page({
 		},
 		{
 			title: "Avaliação da Gestação Actual",
-			apiFn: ExampleApi,
-			initialState: { message: "", status: false },
 			childrens: [
 				{
 					className: "grid lg:grid-cols-3 lg:gap-3",
@@ -124,27 +117,6 @@ export default async function Page({
 					{...{age}} 
 					{...{gender}} 
 				/>
-
-        {/* <PediatricMedicine 
-					{...{_id}} 
-					{...{fullname}} 
-					{...{age}} 
-					{...{gender}}
-				/>
-
-				<PhisicalMedicine 
-					{...{_id}} 
-					{...{fullname}} 
-					{...{age}} 
-					{...{gender}}
-				/>
-
-        <OphthalmologyService 
-					{...{_id}} 
-					{...{fullname}} 
-					{...{age}} 
-					{...{gender}}
-				/>  */}
 			</div>
 		</main>
 	)

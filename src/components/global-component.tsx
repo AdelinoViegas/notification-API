@@ -17,7 +17,7 @@ import Accordium from "./accordium";
 import Button from "./ui/button";
 import InputDetails from "./ui/input-details";
 import InputField from "./ui/input-field";
-import Selection from "./ui/selection";
+import Selection, { SelectionOption } from "./ui/selection";
 import Alert from "./alert";
 
 type InitialValue = {
@@ -37,8 +37,8 @@ export type InternalComponent = {
   childrens: Children[];
   className?: string;
   sections?: string[];
-  apiFn: (prev:unknown, formData:FormData)=>Promise<InitialValue>;
-  initialState: InitialValue;
+  apiFn?: (prev:unknown, formData:FormData)=>Promise<InitialValue>;
+  initialState?: InitialValue;
 };
 
 type UIComponent = {
@@ -47,8 +47,9 @@ type UIComponent = {
     label: string;
     name: string;
     placeholder?: string;
-    defaultValue?: string;
+    defaultValue?: string | number;
     rows?: number;
+    options?: SelectionOption[];
   };
 };
 
@@ -65,12 +66,12 @@ function Component({
   apiFn,
   initialState
 }: InternalComponent){
-  const [ state, action ] = useActionState(apiFn, initialState);
+  const [ state, action ] = useActionState(apiFn?apiFn:FallbackFn, initialState);
   const [ messageState, setMessageState ] = useState(false);
   const closeMessage = ()=> setMessageState(false);
 
   useEffect(()=>{
-    if(state.message){
+    if(state?.message){
       setMessageState(true);
       
       setInterval(()=>setMessageState(false), 3000);
@@ -79,16 +80,17 @@ function Component({
 
   return(
     <Accordium title={title} extraClassName="mt-3">
-      <form>
+      <form {...{action}}>
         <div className={className}>
-          {childrens.map((item, key)=>(
-            <div key={key} className={item.className}>
+          {childrens.map((item, i)=>(
+            <div key={i} className={item.className}>
               {item.sectionElements.map((item, key)=>{
                 if(item.type === "select")
                   return(
                     <Selection
                       label={item.props.label}
-                      options={[]}
+                      options={item.props.options?item.props.options:[]}
+                      defaultValue={item.props.defaultValue}
                     />
                   );
                 else if (item.type == "textarea")
@@ -114,11 +116,11 @@ function Component({
         <Button>Salvar</Button>
 
         {
-          state.message && messageState &&
+          state?.message && messageState &&
           <div className="flex mt-3">
             <Alert
-              type={state.status?'success':'error'}
-              message={state.message}
+              type={state?.status?'success':'error'}
+              message={state?.message}
             />
           </div>
         }
@@ -133,7 +135,14 @@ export default function GlobalComponent({
 }: Props){
   return(
     <Accordium className="hover:bg-primary/35 bg-primary/40" title={title}>
-      {components.map((item, key)=> <Component {...item} key={key} />)}
+      {components.map((item, i)=> <Component {...item} key={i} />)}
     </Accordium>
   );
+}
+
+async function FallbackFn(): Promise<InitialValue> {
+  return {
+    status: true,
+    message: "Isto é apenas um teste!"
+  }
 }
