@@ -9,6 +9,7 @@ import ChildrenMedicine from "@/components/urgency-bank/anamnesis/childrens-medi
 import GlobalComponent, { InternalComponent } from "@/components/global-component";
 import { gender as genderTemplate } from "@/app/backend/api/clinical/translator";
 import { updatePersonalInfo } from "@/app/backend/api/clinical/api";
+import GeralClinic from "@/components/urgency-bank/anamnesis/geral-clinic";
 
 export type patientData = {
 	_id:string;
@@ -42,49 +43,7 @@ export default async function Page({
 			initialState: { message: "", status: false },
 			childrens: [
 				{
-					className: "grid lg:grid-cols-3 lg:gap-3",
-					separatedElements: [
-						{
-							label: "Separados",
-							className: "flex gap-3 items-center",
-							elements: [
-								{ 
-									type: "radio",
-									props: {
-										label: "Sim",
-										name: "test"
-									}
-								},
-								{ 
-									type: "radio",
-									props: {
-										label: "Sim",
-										name: "test"
-									}
-								},
-							]
-						},
-						{
-							label: "Separados 2",
-							className: "flex gap-3 items-center",
-							elements: [
-								{ 
-									type: "checkbox",
-									props: {
-										label: "Sim",
-										name: "test"
-									}
-								},
-								{ 
-									type: "checkbox",
-									props: {
-										label: "Sim",
-										name: "test"
-									}
-								},
-							]
-						}
-					],
+					className: "flex justify-between",
 					elements: [
 						{ 
 							type: "input",
@@ -118,37 +77,447 @@ export default async function Page({
 			]
 		},
 		{
-			title: "Avaliação da Gestação Actual",
+			title: "Queixa Principal",
 			childrens: [
 				{
-					className: "grid lg:grid-cols-3 lg:gap-3",
 					elements: [
 						{ 
-							type: "date",
+							type: "textarea",
 							props: {
-								label: "Data",
-								placeholder: "Data",
-								name: "date"
-							}
-						},
-						{ 
-							type: "radio",
-							props: {
-								label: "Sim",
-								name: "date"
-							}
-						},
-						{ 
-							type: "radio",
-							props: {
-								label: "Não",
-								name: "date"
+								label: "Queixa Principal",
+								rows: 3,
+            		placeholder: "Descreva a principal queixa",
+								name: "mainComplaint"
 							}
 						}
 					]
 				}
 			]
-		}
+		},
+		{
+			title: "História da Doênça Actual",
+			childrens: [
+				{
+					elements: [
+						{ 
+							type: "textarea",
+							props: {
+								label: "História da Doênça Actual",
+								rows: 3,
+            		placeholder: "Descreva os sintomas actuais, duração, factores agravantes/aliviantes, entre outros",
+								name: "symptoms"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			title: "Exames Complementares",
+			childrens: [
+				{
+					elements: [
+						{ 
+							type: "textarea",
+							props: {
+								label: "Exames Complementares",
+								rows: 3,
+								placeholder: "Descrever os resultados dos exames, aspectos fundamentais observados",
+								name: "complementaryExams"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			title: "Hipótese de Diagnóstico",
+			childrens: [
+				{
+					elements: [
+						{ 
+							type: "textarea",
+							props: {
+								label: "Hipótese de Diagnóstico",
+								rows: 3,
+            		placeholder: "Descreva",
+								name: "diagnosticHypothesis"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			title: "Antecedentes Pessoais Patológicos(Doênças pré-existentes, hospitalizações, acidentes)",
+			childrens: [
+				{
+					separatedElements: [
+						{
+							label: "Diabete",
+							className: "flex gap-x-8 items-center",
+							elements: [
+								{ 
+									type: "radio",
+									props: {
+										label: "Sim",
+										name: "diabetes"
+									}
+								},
+								{ 
+									type: "radio",
+									props: {
+										label: "Não",
+										name: "diabetes"
+									}
+								},
+							]
+						},
+						{
+							label: "Hipertensão",
+							className: "flex gap-3 items-center",
+							elements: [
+								{ 
+									type: "radio",
+									props: {
+										label: "Sim",
+										name: "hypertension"
+									}
+								},
+								{ 
+									type: "radio",
+									props: {
+										label: "Não",
+										name: "hypertension"
+									}
+								},
+							]
+						},
+						{
+							label: "Doênças Respiratórias",
+							className: "flex gap-3 items-center",
+							elements: [
+								{ 
+									type: "radio",
+									props: {
+										label: "Sim",
+										name: "respiratoryDiseases"
+									}
+								},
+								{ 
+									type: "radio",
+									props: {
+										label: "Não",
+										name: "respiratoryDiseases"
+									}
+								},
+							]
+						},
+						{
+							label: "Tuberculose",
+							className: "flex gap-3 items-center",
+							elements: [
+								{ 
+									type: "radio",
+									props: {
+										label: "Sim",
+										name: "tuberculosis"
+									}
+								},
+								{ 
+									type: "radio",
+									props: {
+										label: "Não",
+										name: "tuberculosis"
+									}
+								},
+							]
+						},
+						{
+							label: "Malária",
+							className: "flex gap-3 items-center",
+							elements: [
+								{ 
+									type: "radio",
+									props: {
+										label: "Sim",
+										name: "malaria"
+									}
+								},
+								{ 
+									type: "radio",
+									props: {
+										label: "Não",
+										name: "malaria"
+									}
+								},
+							]
+						},
+					],
+					elements: []
+				}
+			]
+		},
+		{
+			title: "Outros",
+			childrens: [
+				{
+					elements: [
+						{ 
+							type: "textarea",
+							props: {
+								label: "Outros",
+								rows: 3,
+            		placeholder: "Descreva",
+								name: "others"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			title: "Avaliação dos Orgãos Vitais",
+			childrens: [
+				{
+					elements: [
+						{ 
+							type: "textarea",
+							props: {
+								label: "Avaliação dos Orgãos Vitais",
+								rows: 3,
+            		placeholder: "Descreva",
+								name: "signsOfVitalOrgans"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			title: "Estilo de Vida e Hábitos",
+			childrens: [
+				{
+					separatedElements: [
+						{
+							label: "Consumo de Tabaco",
+							className: "flex gap-3 items-center",
+							elements: [
+								{ 
+									type: "radio",
+									props: {
+										label: "Fumante",
+										name: "tobaccoConsumption"
+									}
+								},
+								{ 
+									type: "radio",
+									props: {
+										label: "Não fumante",
+										name: "tobaccoConsumption"
+									}
+								},
+								{ 
+									type: "radio",
+									props: {
+										label: "Ex-fumante",
+										name: "tobaccoConsumption"
+									}
+								},
+							]
+						},
+						{
+							label: "Consumo de Álcool",
+							className: "flex gap-x-3 items-center flex-wrap",
+							elements: [
+								{ 
+									type: "radio",
+									props: {
+										label: "Consome",
+										name: "alcohol"
+									}
+								},
+								{ 
+									type: "radio",
+									props: {
+										label: "Não consome",
+										name: "alcohol"
+									}
+								},
+								{ 
+									type: "radio",
+									props: {
+										label: "Ex-consumidor",
+										name: "alcohol"
+									}
+								},
+								{ 
+									type: "text",
+									props: {
+										label: "Frequência",
+										placeholder: "Descreva",
+										name: "frequency"
+									}
+								},
+								{ 
+									type: "number",
+									props: {
+										label: "Frequência",
+										placeholder: "Digite o valor",
+										name: "frequency"
+									}
+								},
+							]
+						},
+						{
+							label: "Actividade Física",
+							className: "flex gap-x-3 items-center flex-wrap",
+							elements: [
+								{ 
+									type: "radio",
+									props: {
+										label: "Praticante",
+										name: "physical"
+									}
+								},
+								{ 
+									type: "radio",
+									props: {
+										label: "Não praticante",
+										name: "physical"
+									}
+								},
+								{ 
+									type: "radio",
+									props: {
+										label: "Tipo de Actividade Física",
+										name: "physical"
+									}
+								},
+								{ 
+									type: "text",
+									props: {
+										label: "quantidade",
+										placeholder: "Descreva",
+										name: "physicalAmount"
+									}
+								},
+								{ 
+									type: "text",
+									props: {
+										label: "Tempo de actividade por secção",
+										placeholder: "Descreva",
+										name: "upTime"
+									}
+								},
+							]
+						},
+					],
+					elements: []
+				}
+			]
+		},
+		{
+			title: "Hábitos Alimentares",
+			childrens: [
+				{
+					className: "grid grid-cols-2 gap-x-4",
+					elements: [
+						{ 
+							type: "text",
+							props: {
+								label: "Nª de refeições/dia",
+            		placeholder: "Descreva",
+								name: "meals"
+							}
+						},
+						{ 
+							type: "text",
+							props: {
+								label: "Tipo de Alimento",
+            		placeholder: "Descreva",
+								name: "typeFood"
+							}
+						},
+						{ 
+							type: "text",
+							props: {
+								label: "Consumo de água/dia",
+            		placeholder: "Descreva",
+								name: "waterConsumption"
+							}
+						},
+						{ 
+							type: "text",
+							props: {
+								label: "Tipo/Modo de Tratamento da Água",
+            		placeholder: "Descreva",
+								name: "medicines"
+							}
+						},
+					]
+				}
+			]
+		},
+		{
+			title: "Antecedentes Familiares",
+			childrens: [
+				{
+					elements: [
+						{ 
+							type: "textarea",
+							props: {
+								label: "Antecedentes Familiares",
+								rows: 3,
+            		placeholder: "Doênças na família como diabetes, hipertensão, câncer, doênças genéticas",
+								name: "diseasesInTheFamily"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			title: "Internamento",
+			childrens: [
+				{
+					className: "flex flex-wrap",
+					elements: [
+						{ 
+							type: "textarea",
+							props: {
+								label: "Motivo do internamento",
+								rows: 3,
+            		placeholder: "Descreva",
+								name: "detail"
+							}
+						},
+						{ 
+							type: "date",
+							props: {
+								label: "Data do internamento",
+								name: "dateOfAdmission"
+							}
+						},
+						{ 
+							type: "time",
+							props: {
+								label: "Horas",
+								name: "hour"
+							}
+						},
+						{ 
+							type: "text",
+							props: {
+								label: "Estado ao Internar",
+            		placeholder: "Descreva",
+								name: "condition"
+							}
+						},
+					]
+				}
+			]
+		},
 	];
 	
   return(
@@ -159,13 +528,14 @@ export default async function Page({
 				<GlobalComponent
 					title="CLINICA GERAL"
 					components={components} 
-				/> 
-				{/* <GeralClinic 
+				/>
+				 
+				{<GeralClinic 
 					{...{_id}} 
 					{...{fullname}} 
 					{...{age}} 
 					{...{gender}}
-				/> */}
+				/> }
 
       	<ChildrenMedicine 
 					{...{_id}} 

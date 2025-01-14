@@ -64,7 +64,7 @@ function Component({
   childrens,
   apiFn,
   initialState
-}: InternalComponent){
+}: InternalComponent){ console.log('testando: '+className)
   const [ state, action ] = useActionState(apiFn?apiFn:FallbackFn, initialState);
   const [ messageState, setMessageState ] = useState(false);
 
@@ -139,7 +139,7 @@ function RenderUIElement({ items }: { items: UIComponent[] }){
           defaultValue={item.props.defaultValue}
         />
       );
-    if(item.type === "radio" || item.type == "checkbox")
+    if(item.type === "radio" || item.type === "checkbox")
       return(
         <InputField 
           key={key}
@@ -148,7 +148,7 @@ function RenderUIElement({ items }: { items: UIComponent[] }){
           {...item.props} 
         />
       );
-    else if (item.type == "textarea")
+    else if (item.type === "textarea")
       return(
         <InputDetails
           key={key}
