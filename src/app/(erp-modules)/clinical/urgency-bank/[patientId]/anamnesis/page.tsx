@@ -481,7 +481,7 @@ export default async function Page({
 			title: "Internamento",
 			childrens: [
 				{
-					className: "flex flex-wrap",
+					className: "grid grid-cols-3",
 					elements: [
 						{ 
 							type: "textarea",
@@ -518,6 +518,44 @@ export default async function Page({
 				}
 			]
 		},
+		{
+			title: "Internamento",
+			className: "grid",
+			childrens: [
+				{
+					elements: [
+						{
+							type: "textarea",
+							props: {
+								name: "description",
+								label: "Descrição",
+								rows: 3
+							}
+						}
+					]
+				},
+				{
+					className: "grid lg:grid-cols-2 gap-3",
+					elements: [
+						{
+							type: "datetime-local",
+							props: {
+								label: "Data e Hora",
+								name: "createAt"
+							}
+						},
+						{
+							type: "input",
+							props: {
+								label: "Estado ao Internar",
+								name: "currentState",
+								placeholder: "Estado antes do internamento"
+							}
+						}
+					]
+				}
+			]
+		}
 	];
 	
   return(
