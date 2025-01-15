@@ -31,7 +31,7 @@ type Props = {
 
 type TypeUI = HTMLInputTypeAttribute | "select" | "textarea";
 
-export type InternalComponent = {
+type InternalComponent = {
   title: string;
   childrens: Children[];
   className?: string;
@@ -167,3 +167,10 @@ function RenderUIElement({ items }: { items: UIComponent[] }){
       );
   })
 }
+
+export type {
+  InternalComponent,
+  Children,
+  UIComponent,
+  SeparatedElements
+};
