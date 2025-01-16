@@ -528,9 +528,9 @@ async function updateExternalUnit(prev: unknown, formData: FormData){
 async function signAnamnesis(prev: unknown, formData:FormData){
   try{
     const state = formData.get("state") as string;
-    const mainComplaint = formData.get("mainComplaint") as string;
-    const symptoms = formData.get("symptoms") as string;
-    const complementaryExams = formData.get("complementaryExams") as string;
+    // const mainComplaint = formData.get("mainComplaint") as string;
+    // const symptoms = formData.get("symptoms") as string;
+    // const complementaryExams = formData.get("complementaryExams") as string;
   
     // await anamnesisModel.create({
     //   generalClinic: {
