@@ -13,7 +13,7 @@ import {
   workplaceModel,
   doctorCalendarModel,
   externalUnitModel,
-  anamnesisModel,
+  // anamnesisModel,
 } from "@/app/backend/models/clinical";
 import { 
   patientAccess,
@@ -532,13 +532,13 @@ async function signAnamnesis(prev: unknown, formData:FormData){
     const symptoms = formData.get("symptoms") as string;
     const complementaryExams = formData.get("complementaryExams") as string;
   
-    await anamnesisModel.create({
-      generalClinic: {
-        mainComplaint,
-        symptoms,
-        complementaryExams,
-      }
-    });
+    // await anamnesisModel.create({
+    //   generalClinic: {
+    //     mainComplaint,
+    //     symptoms,
+    //     complementaryExams,
+    //   }
+    // });
     
     return {
       message:"sucesso",

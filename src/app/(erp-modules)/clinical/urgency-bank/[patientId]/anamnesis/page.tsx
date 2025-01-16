@@ -23,16 +23,7 @@ import {
 } from "@/lib/internal-components";
 import { getPatient } from "@/app/backend/api/clinical/api";
 
-export type patientData = {
-	_id:string;
-	fullname:string;
-	age:number;
-  gender:string;
-}
-
-export default async function Page({
-	params,
-}: {
+export default async function Page({ params }: {
 	params: Promise<{
 		patientId: string;
 	}>
@@ -43,16 +34,12 @@ export default async function Page({
 		redirect('/clinical?invalid-user');
 
 	const { personal } = patient;
-  const _id = String(personal._id);
-	const fullname = String(personal.fullname);
-	const age = Number(personal.age);
-	const gender = String(personal.gender);
 
   const personalData = personalInternalComponent({
 		elements: [
-			{ defaultValue: fullname },
-			{ defaultValue: age },
-			{ defaultValue: gender }
+			{ defaultValue: personal.fullname },
+			{ defaultValue: personal.age },
+			{ defaultValue: personal.gender }
 		]
 	});
 	
@@ -91,20 +78,6 @@ export default async function Page({
 				<GlobalComponent
 					title="CLINICA GERAL"
 					components={generalClinical} 
-				/>
-				 
-				{<GeralClinic 
-					{...{_id}} 
-					{...{fullname}} 
-					{...{age}} 
-					{...{gender}}
-				/> }
-
-      	<ChildrenMedicine 
-					{...{_id}} 
-					{...{fullname}} 
-					{...{age}} 
-					{...{gender}} 
 				/>
 			</div>
 		</main>

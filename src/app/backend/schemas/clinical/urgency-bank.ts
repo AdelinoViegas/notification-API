@@ -5,7 +5,7 @@ const anamnesis = new Schema({
     mainComplaint: String,
     symptoms: String,
     complementaryExams: String,
-    /*diagnosticHypothesis: String,
+    diagnosticHypothesis: String,
     diabetes: String,
     hypertension: String,
     respiratoryDiseases: String,
@@ -29,7 +29,7 @@ const anamnesis = new Schema({
     detail: String,
     dateOfAdmission: String,
     hour: String,
-    condition: String,*/
+    condition: String,
   },
  /* childrensMedicine: {
 
@@ -43,11 +43,15 @@ const anamnesis = new Schema({
   ophthalmologyDervices: {
 
   },*/
-},{
-  colletion:  "anamnese",
+});
+
+const urgencyBankSchema = new Schema({
+  anamnesis: anamnesis,
+}, {
+  collection: "patient_urgency_bank",
   timestamps: true,
-})
+});
 
 export {
-  anamnesis
+  urgencyBankSchema
 }
