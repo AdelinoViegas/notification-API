@@ -278,7 +278,7 @@ function diseasesInternalComponent(){
 	}
 }
 
-function othersInternalComponent(defaultValue: string){
+function othersInternalComponent(defaultValue?: string){
 	return {
 		title: "Outros",
 		apiFn:	signUrgencyBank,
@@ -302,7 +302,7 @@ function othersInternalComponent(defaultValue: string){
 	}
 }
 
-function evaluationInternalComponent(defaultValue: string){
+function evaluationInternalComponent(defaultValue?: string){
 	return {
 		title: "Avaliação dos Orgãos Vitais",
 		apiFn: signUrgencyBank,

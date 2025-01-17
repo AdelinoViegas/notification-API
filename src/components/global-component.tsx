@@ -70,7 +70,6 @@ function Component({
 }: InternalComponent & {patientId : string}){
   const [ state, action ] = useActionState(apiFn?apiFn:FallbackFn, initialState);
   const [ messageState, setMessageState ] = useState(false);
-  const [ isEdit, setIsEdit ] = useState(false)
   const router = useRouter();
 
   useEffect(()=>{

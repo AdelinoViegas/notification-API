@@ -29,7 +29,6 @@ import {
 import { userModel } from "@/app/backend/models/manager";
 import { getUser, patientFilters } from "@/app/backend/api/clinical/api";
 import { redirect } from "next/navigation";
-import { StyledString } from "next/dist/build/swc/types";
 
 type UnitType = "workplace" | "internment" | "laboratory" | "imaging";
 
