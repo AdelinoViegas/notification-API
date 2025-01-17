@@ -70,6 +70,7 @@ function Component({
 }: InternalComponent & {patientId : string}){
   const [ state, action ] = useActionState(apiFn?apiFn:FallbackFn, initialState);
   const [ messageState, setMessageState ] = useState(false);
+  const [ isEdit, setIsEdit ] = useState(false)
   const router = useRouter();
 
   useEffect(()=>{
@@ -106,7 +107,17 @@ function Component({
           ))}
         </div>
 
-        <Button>Salvar</Button>
+        {/*<Button>Salvar</Button>*/}
+        {/*<div className="flex gap-3">
+          { hasData && 
+          <Button 
+            cancel={!isEdit} 
+            type="button" 
+            onClick={!isEdit?disableEdit:()=>setIsEdit(false)}>
+            {!isEdit?"Cancelar":"Editar"}
+          </Button>}
+          <Button disabled={isEdit}>{hasData?"Actualizar":"Salvar"}</Button>
+        </div>*/}
 
         {
           state?.message && messageState &&
