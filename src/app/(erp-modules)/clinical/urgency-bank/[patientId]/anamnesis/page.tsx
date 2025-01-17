@@ -45,8 +45,8 @@ export default async function Page({ params }: {
 	const complementaryExams = examsInternalComponent(anamnesis?.generalClinic?.complementaryExams as string);
 	const diagnostic =	diagnosticInternalComponent(anamnesis?.generalClinic?.diagnosticHypothesis as string);
 	const diseases = diseasesInternalComponent();
-  const others = othersInternalComponent();
-	const evaluation = evaluationInternalComponent();
+  const others = othersInternalComponent(anamnesis?.generalClinic?.others as string);
+	const evaluation = evaluationInternalComponent(anamnesis?.generalClinic?.evaluation as string);
 	const lifeStyle = lifeStyleInternalComponent();
 	const eatingHabits = eatingHabitsInternalComponent();
   const familyHistory = familyInternalComponent();

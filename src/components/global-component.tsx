@@ -107,17 +107,7 @@ function Component({
           ))}
         </div>
 
-        {/*<Button>Salvar</Button>*/}
-        {/*<div className="flex gap-3">
-          { hasData && 
-          <Button 
-            cancel={!isEdit} 
-            type="button" 
-            onClick={!isEdit?disableEdit:()=>setIsEdit(false)}>
-            {!isEdit?"Cancelar":"Editar"}
-          </Button>}
-          <Button disabled={isEdit}>{hasData?"Actualizar":"Salvar"}</Button>
-        </div>*/}
+        <Button>Salvar</Button>
 
         {
           state?.message && messageState &&

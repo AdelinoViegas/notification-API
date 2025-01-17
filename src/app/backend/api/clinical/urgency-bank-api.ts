@@ -534,6 +534,9 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
     const diseaseData = formData.get("diseaseData") as string;
     const complementaryExams = formData.get("complementaryExams") as string;
     const diagnosticHypothesis = formData.get("diagnosticHypothesis") as string;
+    const others = formData.get("others") as string;
+    const evaluation = formData.get("evaluation") as string;
+    const diseasesInFamily = formData.get("diseasesInFamily") as string;
     const hasPatientUrgencyBank = await urgencyBankModel.findOne({ patientId })
     const generalClinic = hasPatientUrgencyBank?.anamnesis?.generalClinic;
     
@@ -542,7 +545,10 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
         symptoms: symptoms || generalClinic?.symptoms,
         diseaseData: diseaseData || generalClinic?.diseaseData,
         complementaryExams: complementaryExams || generalClinic?.complementaryExams,
-        diagnosticHypothesis: diagnosticHypothesis || generalClinic?.diagnosticHypothesis
+        diagnosticHypothesis: diagnosticHypothesis || generalClinic?.diagnosticHypothesis,
+        others: others || generalClinic?.others,
+        diseasesInFamily: diseasesInFamily || generalClinic?.diseasesInFamily,
+        evaluation: evaluation || generalClinic?.evaluation,
       }
     }
 

@@ -10,11 +10,11 @@ import {
 import Header from "@/components/header";
 import InputDetails from "@/components/ui/input-details";
 import Button from "@/components/ui/button";
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter, useParams, usePathname } from 'next/navigation';
 import Alert from "@/components/alert";
 import Selection from "@/components/ui/selection";
 import InputField from "@/components/ui/input-field";
-import { priorityToComponent } from "@/app/backend/api/clinical/translator";
+import { priorityToComponent, urgencyServices } from "@/app/backend/api/clinical/translator";
 import { VitalSignalType } from "@/app/backend/api/clinical/types";
 import { 
   finishScreening,
@@ -506,6 +506,7 @@ function AdviceForm({
 
 function FinishScreening(){
   const [ state, action ] = useActionState(finishScreening, { message: "", status: false });
+  const pathname = usePathname();
   const [ modalState, setModalState ] = useState(false);
   const closeModal = ()=>setModalState(false);
   const formRef = useRef<HTMLFormElement>(null);
@@ -550,14 +551,14 @@ function FinishScreening(){
   }, [state, router]);
 
   return(
-    <form ref={formRef} action={action}>
+    <form ref={formRef} action={action} hidden={pathname.includes("urgency-bank")}>
       <input 
         type="hidden" 
         name="patientId" 
         defaultValue={params.patientId} 
       />
 
-      {/*<Selection
+      <Selection
         label="Serviços de Urgências"
         options={urgencyServices}
         name="service"
@@ -567,9 +568,9 @@ function FinishScreening(){
       <Button 
         className="mb-3" 
         type="button" 
-        onClick={openModal}>
+        onClick={()=>setModalState(true)}>
           Seguir
-      </Button>*/}
+      </Button>
 
       <Modal 
         title="Concluir Triagem" 

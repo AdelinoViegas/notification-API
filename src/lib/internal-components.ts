@@ -52,7 +52,7 @@ function personalInternalComponent({ elements }: Personal){
 	}
 }
 
-function symptomsInternalComponent(defaultValue: string){
+function symptomsInternalComponent(defaultValue?: string){
   return {
 		title: "Queixa Principal",
 		apiFn: signUrgencyBank,
@@ -76,7 +76,7 @@ function symptomsInternalComponent(defaultValue: string){
 	}
 }
 
-function diseaseDataInternalComponent(defaultValue: string){
+function diseaseDataInternalComponent(defaultValue?: string){
   return {
 		title: "História da Doênça Actual",
 		apiFn: signUrgencyBank,
@@ -278,10 +278,10 @@ function diseasesInternalComponent(){
 	}
 }
 
-function othersInternalComponent(/*{ defaultValue }: { defaultValue: string}*/){
+function othersInternalComponent(defaultValue: string){
 	return {
 		title: "Outros",
-		apiFn: updatePersonalInfo,
+		apiFn:	signUrgencyBank,
 		initialState: { message: "", status: false },
 		childrens: [
 			{
@@ -292,7 +292,8 @@ function othersInternalComponent(/*{ defaultValue }: { defaultValue: string}*/){
 							label: "Outros",
 							rows: 3,
 							placeholder: "Descreva",
-							name: "others"
+							name: "others",
+							defaultValue: defaultValue
 						}
 					}
 				]
@@ -301,10 +302,10 @@ function othersInternalComponent(/*{ defaultValue }: { defaultValue: string}*/){
 	}
 }
 
-function evaluationInternalComponent(/*{ defaultValue }: { defaultValue: string}*/){
+function evaluationInternalComponent(defaultValue: string){
 	return {
 		title: "Avaliação dos Orgãos Vitais",
-		apiFn: updatePersonalInfo,
+		apiFn: signUrgencyBank,
 		initialState: { message: "", status: false },
 		childrens: [
 			{
@@ -315,7 +316,8 @@ function evaluationInternalComponent(/*{ defaultValue }: { defaultValue: string}
 							label: "Avaliação dos Orgãos Vitais",
 							rows: 3,
 							placeholder: "Descreva",
-							name: "signsOfVitalOrgans"
+							name: "signsOfVitalOrgans",
+							defaultValue: defaultValue
 						}
 					}
 				]
@@ -536,7 +538,7 @@ function familyInternalComponent(/*{ defaultValue }: { defaultValue: string}*/){
 							label: "Antecedentes Familiares",
 							rows: 3,
 							placeholder: "Doênças na família como diabetes, hipertensão, câncer, doênças genéticas",
-							name: "diseasesInTheFamily"
+							name: "famdiseasesInFamily"
 						}
 					}
 				]
