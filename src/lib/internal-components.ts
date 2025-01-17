@@ -1,5 +1,6 @@
 import { updatePersonalInfo } from "@/app/backend/api/clinical/api";
 import { gender as genderTemplate } from "@/app/backend/api/clinical/translator";
+import { signUrgencyBank } from "@/app/backend/api/clinical/urgency-bank-api";
 
 type Personal = {
   elements: [
@@ -51,10 +52,10 @@ function personalInternalComponent({ elements }: Personal){
 	}
 }
 
-function symptomsInternalComponent(/*{ defaultValue }: { defaultValue: string}*/){
+function symptomsInternalComponent(defaultValue: string){
   return {
 		title: "Queixa Principal",
-		apiFn: updatePersonalInfo,
+		apiFn: signUrgencyBank,
 		initialState: { message: "", status: false },
 		childrens: [
 			{
@@ -66,7 +67,7 @@ function symptomsInternalComponent(/*{ defaultValue }: { defaultValue: string}*/
 							rows: 3,
 							placeholder: "Descreva a principal queixa",
 							name: "symptoms",
-							defaultValue:""
+							defaultValue: defaultValue
 						}
 					}
 				]
@@ -75,10 +76,10 @@ function symptomsInternalComponent(/*{ defaultValue }: { defaultValue: string}*/
 	}
 }
 
-function diseaseDataInternalComponent(/*{ defaultValue }: { defaultValue: string}*/){
+function diseaseDataInternalComponent(defaultValue: string){
   return {
 		title: "História da Doênça Actual",
-		apiFn: updatePersonalInfo,
+		apiFn: signUrgencyBank,
 		initialState: { message: "", status: false },
 		childrens: [
 			{
@@ -89,7 +90,8 @@ function diseaseDataInternalComponent(/*{ defaultValue }: { defaultValue: string
 							label: "História da Doênça Actual",
 							rows: 3,
 							placeholder: "Descreva os sintomas actuais, duração, factores agravantes/aliviantes, entre outros",
-							name: "diseaseData"
+							name: "diseaseData",
+							defaultValue: defaultValue
 						}
 					}
 				]
@@ -98,10 +100,10 @@ function diseaseDataInternalComponent(/*{ defaultValue }: { defaultValue: string
 	}
 }
 
-function examsInternalComponent(/*{ defaultValue }: { defaultValue: string}*/){
+function examsInternalComponent(defaultValue: string){
   return {
 		title: "Exames Complementares",
-		apiFn: updatePersonalInfo,
+		apiFn: signUrgencyBank,
 		initialState: { message: "", status: false },
 		childrens: [
 			{
@@ -112,7 +114,8 @@ function examsInternalComponent(/*{ defaultValue }: { defaultValue: string}*/){
 							label: "Exames Complementares",
 							rows: 3,
 							placeholder: "Descrever os resultados dos exames, aspectos fundamentais observados",
-							name: "complementaryExams"
+							name: "complementaryExams",
+							defaultValue: defaultValue
 						}
 					}
 				]
@@ -121,10 +124,10 @@ function examsInternalComponent(/*{ defaultValue }: { defaultValue: string}*/){
 	}
 }
 
-function diagnosticInternalComponent(/*{ defaultValue }: { defaultValue: string}*/){
+function diagnosticInternalComponent(defaultValue: string){
   return {
 		title: "Hipótese de Diagnóstico",
-		apiFn: updatePersonalInfo,
+		apiFn: signUrgencyBank,
 		initialState: { message: "", status: false },
 		childrens: [
 			{
@@ -135,7 +138,8 @@ function diagnosticInternalComponent(/*{ defaultValue }: { defaultValue: string}
 							label: "Hipótese de Diagnóstico",
 							rows: 3,
 							placeholder: "Descreva",
-							name: "diagnosticHypothesis"
+							name: "diagnosticHypothesis",
+							defaultValue: defaultValue
 						}
 					}
 				]
@@ -147,7 +151,7 @@ function diagnosticInternalComponent(/*{ defaultValue }: { defaultValue: string}
 function diseasesInternalComponent(){
   return {
 		title: "Antecedentes Pessoais Patológicos(Doênças pré-existentes, hospitalizações, acidentes)",
-		apiFn: updatePersonalInfo,
+		apiFn: signUrgencyBank,
 		initialState: { message: "", status: false },
 		childrens: [
 			{

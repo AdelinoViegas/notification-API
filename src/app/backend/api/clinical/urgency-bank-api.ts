@@ -13,6 +13,7 @@ import {
   workplaceModel,
   doctorCalendarModel,
   externalUnitModel,
+  urgencyBankModel,
   // anamnesisModel,
 } from "@/app/backend/models/clinical";
 import { 
@@ -525,23 +526,34 @@ async function updateExternalUnit(prev: unknown, formData: FormData){
   }
 }
 
-async function signAnamnesis(prev: unknown, formData:FormData){
+async function signUrgencyBank(prev: unknown, formData:FormData){
   try{
+    const patientId = formData.get("patientId") as string;
     const state = formData.get("state") as string;
-    // const mainComplaint = formData.get("mainComplaint") as string;
-    // const symptoms = formData.get("symptoms") as string;
-    // const complementaryExams = formData.get("complementaryExams") as string;
-  
-    // await anamnesisModel.create({
-    //   generalClinic: {
-    //     mainComplaint,
-    //     symptoms,
-    //     complementaryExams,
-    //   }
-    // });
+    const symptoms = formData.get("symptoms") as string;
+    const diseaseData = formData.get("diseaseData") as string;
+    const complementaryExams = formData.get("complementaryExams") as string;
+    const diagnosticHypothesis = formData.get("diagnosticHypothesis") as string;
+    const hasPatientUrgencyBank = await urgencyBankModel.findOne({ patientId })
+    const generalClinic = hasPatientUrgencyBank?.anamnesis?.generalClinic;
+    
+    const anamnesis = {
+      generalClinic:{
+        symptoms: symptoms || generalClinic?.symptoms,
+        diseaseData: diseaseData || generalClinic?.diseaseData,
+        complementaryExams: complementaryExams || generalClinic?.complementaryExams,
+        diagnosticHypothesis: diagnosticHypothesis || generalClinic?.diagnosticHypothesis
+      }
+    }
+
+    if(!hasPatientUrgencyBank)
+      await urgencyBankModel.create({patientId, anamnesis})
+    else 
+      await urgencyBankModel.updateOne({ _id: hasPatientUrgencyBank._id },{ anamnesis })
+    
     
     return {
-      message:"sucesso",
+      message:"Dado foi cadastrado com sucesso",
       status: true,
       state
     }
@@ -555,6 +567,12 @@ async function signAnamnesis(prev: unknown, formData:FormData){
     }
   }
   
+}
+
+async function getPatientUrgencyBank(patientId: string){
+  try{ 
+    return (await urgencyBankModel.findOne({patientId}))?.anamnesis
+  }finally{}
 }
 
 export {
@@ -574,5 +592,6 @@ export {
   getExternalUnits,
   getExternalUnit,
   updateExternalUnit,
-  signAnamnesis
+  signUrgencyBank,
+  getPatientUrgencyBank,
 };

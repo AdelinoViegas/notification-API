@@ -12,6 +12,7 @@ import InputDetails from "@/components/ui/input-details";
 import InputField from "@/components/ui/input-field";
 import Selection, { SelectionOption } from "@/components/ui/selection";
 import Alert from "@/components/alert";
+import { useRouter } from "next/navigation";
 
 type InitialValue = {
   message?: string;
@@ -25,6 +26,7 @@ type SeparatedElements = {
 }
 
 type Props = {
+  patientId: string;
   title: string;
   components: InternalComponent[];
 };
@@ -59,25 +61,34 @@ type Children = {
 };
 
 function Component({
+  patientId,
   title,
   className,
   childrens,
   apiFn,
   initialState
-}: InternalComponent){ console.log('testando: '+className)
+}: InternalComponent & {patientId : string}){
   const [ state, action ] = useActionState(apiFn?apiFn:FallbackFn, initialState);
   const [ messageState, setMessageState ] = useState(false);
+  const router = useRouter();
 
   useEffect(()=>{
     if(state?.message){
       setMessageState(true);
-      setInterval(()=>setMessageState(false), 3000);
+      setTimeout(()=>setMessageState(false), 3000);
+      router.refresh();
     }
-  }, [state]);
+  }, [state, router]);
 
   return(
     <Accordium title={title} extraClassName="mt-3">
       <form {...{action}}>
+        <input
+          className="hidden"
+          name="patientId"
+          defaultValue={patientId}
+        />
+
         <div className={className}>
           {childrens.map((item, i)=>(
             <div key={i} className={item.className}>
@@ -94,6 +105,7 @@ function Component({
             </div>
           ))}
         </div>
+
         <Button>Salvar</Button>
 
         {
@@ -110,13 +122,14 @@ function Component({
   );
 }
 
-export default function GlobalComponent({ 
+export default function GlobalComponent({
+  patientId, 
   title, 
   components
 }: Props){
   return(
     <Accordium className="hover:bg-primary/35 bg-primary/40" title={title}>
-      {components.map((item, i)=> <Component {...item} key={i} />)}
+      {components.map((item, i)=> <Component {...{patientId}} {...item} key={i} />)}
     </Accordium>
   );
 }

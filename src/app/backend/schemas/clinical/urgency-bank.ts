@@ -2,11 +2,12 @@ import { Schema } from "mongoose";
 
 const anamnesis = new Schema({
   generalClinic: {
-    mainComplaint: String,
     symptoms: String,
+    diseaseData: String,
     complementaryExams: String,
     diagnosticHypothesis: String,
-    diabetes: String,
+    //pathology: 
+    /*diabetes: String,
     hypertension: String,
     respiratoryDiseases: String,
     tuberculosis: String,
@@ -29,7 +30,7 @@ const anamnesis = new Schema({
     detail: String,
     dateOfAdmission: String,
     hour: String,
-    condition: String,
+    condition: String,*/
   },
  /* childrensMedicine: {
 
@@ -43,9 +44,10 @@ const anamnesis = new Schema({
   ophthalmologyDervices: {
 
   },*/
-});
+},{ _id: false });
 
 const urgencyBankSchema = new Schema({
+  patientId: Schema.Types.ObjectId,
   anamnesis: anamnesis,
 }, {
   collection: "patient_urgency_bank",
