@@ -29,6 +29,7 @@ import {
 import { userModel } from "@/app/backend/models/manager";
 import { getUser, patientFilters } from "@/app/backend/api/clinical/api";
 import { redirect } from "next/navigation";
+import { StyledString } from "next/dist/build/swc/types";
 
 type UnitType = "workplace" | "internment" | "laboratory" | "imaging";
 
@@ -577,8 +578,22 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
 
 async function getPatientUrgencyBank(patientId: string){
   try{ 
-    return (await urgencyBankModel.findOne({patientId}))?.anamnesis
+
   }finally{}
+
+  const patientData = await urgencyBankModel.findOne({ patientId });
+
+  return {
+    generalClinic:{
+      symptoms: patientData?.anamnesis?.generalClinic?.symptoms as string,
+      diseaseData: patientData?.anamnesis?.generalClinic?.diseaseData as string,
+      complementaryExams: patientData?.anamnesis?.generalClinic?.complementaryExams as string,
+      diagnosticHypothesis: patientData?.anamnesis?.generalClinic?.diagnosticHypothesis as string,
+      others: patientData?.anamnesis?.generalClinic?.others as string,
+    },
+
+    //outras anamneses
+  }
 }
 
 export {

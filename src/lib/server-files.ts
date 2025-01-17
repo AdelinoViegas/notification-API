@@ -8,13 +8,14 @@ type WritedFile = {
   binaryData: Buffer;
 }
 
-const externalPublicDir = process.cwd()+'/public/open-files'; 
+const cache_dir = process.env.CACHE_DIR;
+const externalPublicDir = `${process.cwd()}/public/${cache_dir}`; 
 
 class ServerFileHandler extends FileHandler {
   static async writeFileInPublicDir(file: WritedFile){
     try{
       const filePathLocation = `${externalPublicDir}/${file.name}`;
-      const externalLInk = `/open-files/${file.name}`;
+      const externalLInk = `${cache_dir}/${file.name}`;
       writeFileSync(filePathLocation, file.binaryData);
       
       return externalLInk;

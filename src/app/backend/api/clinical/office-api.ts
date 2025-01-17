@@ -458,7 +458,6 @@ async function readExternalExamFile({
     }
   }catch(e){
     console.log(e);
-    return;
   }
 }
 
