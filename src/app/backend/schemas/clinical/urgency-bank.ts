@@ -9,6 +9,17 @@ const anamnesis = new Schema({
     others: String,
     evaluation: String,
     diseasesInFamily: String,
+    eatingHabits: {
+      meals: String,
+      typeFood: String,
+      waterConsumption: String,
+      typeWater: String,
+    },
+    hospitalization: {
+      description: String,
+      dateTime: Date,
+      currentState: String,
+    }
   },
  /* childrensMedicine: {
 

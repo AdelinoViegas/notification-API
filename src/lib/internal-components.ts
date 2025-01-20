@@ -1,6 +1,7 @@
 import { updatePersonalInfo } from "@/app/backend/api/clinical/api";
 import { gender as genderTemplate } from "@/app/backend/api/clinical/translator";
 import { signUrgencyBank } from "@/app/backend/api/clinical/urgency-bank-api";
+import { getDataToInputLocalTime } from "@/lib/date-formater";
 
 type Personal = {
   elements: [
@@ -9,6 +10,19 @@ type Personal = {
     { defaultValue: string },
   ];
 };
+
+type EatingHabits = {
+	meals?: string,
+	typeFood?: string,
+	waterConsumption?: string,
+	typeWater?: string,
+}
+
+type Hospitalization = {
+	description?: string,
+	dateTime?: Date,
+	currentState?: string,
+}
 
 function personalInternalComponent({ elements }: Personal){
   return {
@@ -316,7 +330,7 @@ function evaluationInternalComponent(defaultValue?: string){
 							label: "Avaliação dos Orgãos Vitais",
 							rows: 3,
 							placeholder: "Descreva",
-							name: "signsOfVitalOrgans",
+							name: "evaluation",
 							defaultValue: defaultValue
 						}
 					}
@@ -477,10 +491,10 @@ function lifeStyleInternalComponent(){
 	}
 }
 
-function eatingHabitsInternalComponent(){
+function eatingHabitsInternalComponent(eatingHabits: EatingHabits){
 	return {
 		title: "Hábitos Alimentares",
-		apiFn: updatePersonalInfo,
+		apiFn: signUrgencyBank,
 		initialState: { message: "", status: false },
 		childrens: [
 			{
@@ -491,7 +505,8 @@ function eatingHabitsInternalComponent(){
 						props: {
 							label: "Nª de refeições/dia",
 							placeholder: "Descreva",
-							name: "meals"
+							name: "meals",
+							defaultValue: eatingHabits.meals
 						}
 					},
 					{ 
@@ -499,7 +514,8 @@ function eatingHabitsInternalComponent(){
 						props: {
 							label: "Tipo de Alimento",
 							placeholder: "Descreva",
-							name: "typeFood"
+							name: "typeFood",
+							defaultValue: eatingHabits.typeFood
 						}
 					},
 					{ 
@@ -507,7 +523,8 @@ function eatingHabitsInternalComponent(){
 						props: {
 							label: "Consumo de água/dia",
 							placeholder: "Descreva",
-							name: "waterConsumption"
+							name: "waterConsumption",
+							defaultValue: eatingHabits.waterConsumption
 						}
 					},
 					{ 
@@ -515,7 +532,8 @@ function eatingHabitsInternalComponent(){
 						props: {
 							label: "Tipo/Modo de Tratamento da Água",
 							placeholder: "Descreva",
-							name: "medicines"
+							name: "typeWater",
+							defaultValue: eatingHabits.typeWater
 						}
 					},
 				]
@@ -524,10 +542,10 @@ function eatingHabitsInternalComponent(){
 	}
 }
 
-function familyInternalComponent(/*{ defaultValue }: { defaultValue: string}*/){
+function familyInternalComponent(defaultValue: string){
 	return {
 		title: "Antecedentes Familiares",
-		apiFn: updatePersonalInfo,
+		apiFn: signUrgencyBank,
 		initialState: { message: "", status: false },
 		childrens: [
 			{
@@ -538,7 +556,8 @@ function familyInternalComponent(/*{ defaultValue }: { defaultValue: string}*/){
 							label: "Antecedentes Familiares",
 							rows: 3,
 							placeholder: "Doênças na família como diabetes, hipertensão, câncer, doênças genéticas",
-							name: "famdiseasesInFamily"
+							name: "diseasesInFamily",
+							defaultValue: defaultValue
 						}
 					}
 				]
@@ -547,10 +566,10 @@ function familyInternalComponent(/*{ defaultValue }: { defaultValue: string}*/){
 	}
 }
 
-function hospitalizationInternalComponent(){
+function hospitalizationInternalComponent(hospitalization: Hospitalization){
 	return {
 		title: "Internamento",
-		apiFn: updatePersonalInfo,
+		apiFn: signUrgencyBank,
 		initialState: { message: "", status: false },
 		className: "grid",
 		childrens: [
@@ -561,7 +580,8 @@ function hospitalizationInternalComponent(){
 						props: {
 							name: "description",
 							label: "Descrição",
-							rows: 3
+							rows: 3,
+							defaultValue: hospitalization.description
 						}
 					}
 				]
@@ -573,7 +593,8 @@ function hospitalizationInternalComponent(){
 						type: "datetime-local",
 						props: {
 							label: "Data e Hora",
-							name: "createAt"
+							name: "createdAt",
+							defaultValue: hospitalization.dateTime?getDataToInputLocalTime(hospitalization.dateTime):undefined
 						}
 					},
 					{
@@ -581,7 +602,8 @@ function hospitalizationInternalComponent(){
 						props: {
 							label: "Estado ao Internar",
 							name: "currentState",
-							placeholder: "Estado antes do internamento"
+							placeholder: "Estado antes do internamento",
+							defaultValue: hospitalization.currentState
 						}
 					}
 				]

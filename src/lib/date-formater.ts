@@ -21,8 +21,15 @@ function getDataAndHoursFormat(date: Date){
   return `${timeDate} ${hours}`;
 }
 
+function getDataToInputLocalTime(date: Date | string){
+  if (typeof date === "object")
+    return date.toISOString().match(/[\d]{4}-[\d]{2}-[\d]{2}T[\d]{2}:[\d]{2}/ig)?.toString()
+  return date.match(/[\d]{4}-[\d]{2}-[\d]{2}T[\d]{2}:[\d]{2}/ig)?.toString()
+}
+
 export {
   getDateInSlashFormat,
   getDateInDashFormat,
-  getDataAndHoursFormat
+  getDataAndHoursFormat,
+  getDataToInputLocalTime
 }

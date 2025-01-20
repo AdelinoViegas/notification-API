@@ -536,7 +536,14 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
     const diagnosticHypothesis = formData.get("diagnosticHypothesis") as string;
     const others = formData.get("others") as string;
     const evaluation = formData.get("evaluation") as string;
+    const meals = formData.get("meals") as string;
+    const typeFood = formData.get("typeFood") as string;
+    const waterConsumption = formData.get("waterConsumption") as string;
+    const typeWater = formData.get("typeWater") as string;
     const diseasesInFamily = formData.get("diseasesInFamily") as string;
+    const description = formData.get("description") as string;
+    const datetime = formData.get("createdAt");
+    const currentState = formData.get("currentState") as string;
     const hasPatientUrgencyBank = await urgencyBankModel.findOne({ patientId })
     const generalClinic = hasPatientUrgencyBank?.anamnesis?.generalClinic;
     
@@ -549,17 +556,33 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
         others: others || generalClinic?.others,
         diseasesInFamily: diseasesInFamily || generalClinic?.diseasesInFamily,
         evaluation: evaluation || generalClinic?.evaluation,
+        eatingHabits: {
+          meals: meals || generalClinic?.eatingHabits?.meals,
+          typeFood: typeFood || generalClinic?.eatingHabits?.typeFood,
+          waterConsumption: waterConsumption || generalClinic?.eatingHabits?.waterConsumption,
+          typeWater: typeWater || generalClinic?.eatingHabits?.typeWater,
+        },
+        hospitalization: {
+          description: description || generalClinic?.hospitalization?.description,
+          dateTime: datetime || generalClinic?.hospitalization?.dateTime,
+          currentState: currentState || generalClinic?.hospitalization?.currentState,
+
+        }
       }
     }
 
-    if(!hasPatientUrgencyBank)
-      await urgencyBankModel.create({patientId, anamnesis})
-    else 
+    let message = "";
+
+    if(!hasPatientUrgencyBank){
+      await urgencyBankModel.create({ patientId, anamnesis });
+      message = "Informações registradas com sucesso!";
+    }else{
       await urgencyBankModel.updateOne({ _id: hasPatientUrgencyBank._id },{ anamnesis })
-    
-    
+      message = "Informações actualizadas com sucesso!";
+    } 
+
     return {
-      message:"Dado foi cadastrado com sucesso",
+      message,
       status: true,
       state
     }
@@ -576,10 +599,6 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
 }
 
 async function getPatientUrgencyBank(patientId: string){
-  try{ 
-
-  }finally{}
-
   const patientData = await urgencyBankModel.findOne({ patientId });
 
   return {
@@ -589,6 +608,19 @@ async function getPatientUrgencyBank(patientId: string){
       complementaryExams: patientData?.anamnesis?.generalClinic?.complementaryExams as string,
       diagnosticHypothesis: patientData?.anamnesis?.generalClinic?.diagnosticHypothesis as string,
       others: patientData?.anamnesis?.generalClinic?.others as string,
+      evaluation: patientData?.anamnesis?.generalClinic?.evaluation as string,
+      diseasesInFamily: patientData?.anamnesis?.generalClinic?.diseasesInFamily as string,
+      eatingHabits: {
+        meals: patientData?.anamnesis?.generalClinic?.eatingHabits?.meals as string,
+        typeFood: patientData?.anamnesis?.generalClinic?.eatingHabits?.typeFood as string,
+        waterConsumption: patientData?.anamnesis?.generalClinic?.eatingHabits?.waterConsumption as string,
+        typeWater: patientData?.anamnesis?.generalClinic?.eatingHabits?.typeWater as string,
+      },
+      hospitalization: {
+        description: patientData?.anamnesis?.generalClinic?.hospitalization?.description as string,
+        dateTime: patientData?.anamnesis?.generalClinic?.hospitalization?.dateTime as Date,
+        currentState: patientData?.anamnesis?.generalClinic?.hospitalization?.currentState as string,
+      } 
     },
 
     //outras anamneses

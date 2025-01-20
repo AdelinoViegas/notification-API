@@ -39,18 +39,17 @@ export default async function Page({ params }: {
 			{ defaultValue: personal.gender }
 		]
 	});
-
-	const symptoms = symptomsInternalComponent(anamnesis?.generalClinic?.symptoms as string);
-	const diseaseData = diseaseDataInternalComponent(anamnesis?.generalClinic?.diseaseData as string);
-	const complementaryExams = examsInternalComponent(anamnesis?.generalClinic?.complementaryExams as string);
-	const diagnostic =	diagnosticInternalComponent(anamnesis?.generalClinic?.diagnosticHypothesis as string);
+	const symptoms = symptomsInternalComponent(anamnesis.generalClinic.symptoms);
+	const diseaseData = diseaseDataInternalComponent(anamnesis.generalClinic?.diseaseData);
+	const complementaryExams = examsInternalComponent(anamnesis?.generalClinic?.complementaryExams);
+	const diagnostic =	diagnosticInternalComponent(anamnesis?.generalClinic?.diagnosticHypothesis);
 	const diseases = diseasesInternalComponent();
-  const others = othersInternalComponent(anamnesis?.generalClinic?.others as string);
-	const evaluation = evaluationInternalComponent();
+  const others = othersInternalComponent(anamnesis?.generalClinic?.others);
+	const evaluation = evaluationInternalComponent(anamnesis?.generalClinic.evaluation);
 	const lifeStyle = lifeStyleInternalComponent();
-	const eatingHabits = eatingHabitsInternalComponent();
-  const familyHistory = familyInternalComponent();
-	const hospitalization = hospitalizationInternalComponent();
+	const eatingHabits = eatingHabitsInternalComponent(anamnesis.generalClinic.eatingHabits);
+  const familyHistory = familyInternalComponent(anamnesis?.generalClinic.diseasesInFamily);
+	const hospitalization = hospitalizationInternalComponent(anamnesis?.generalClinic.hospitalization);
 
 	const generalClinical:InternalComponent[] = [
 		personalData,
