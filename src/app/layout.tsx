@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Rubik } from 'next/font/google';
 import './globals.css';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from "react-toastify";
+
 // import localFont from 'next/font/local';
 
 const onlineFont = Rubik({
@@ -40,6 +43,7 @@ export default function RootLayout({
   return (
     <html lang="pt-ao">
       <body className={`${onlineFont.className} antialiased`}>
+        <ToastContainer theme="colored" />
         {children}
       </body>
     </html>

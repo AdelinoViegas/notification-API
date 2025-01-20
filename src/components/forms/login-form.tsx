@@ -10,12 +10,14 @@ import Image from 'next/image';
 import Alert from '@/components/alert';
 import InputField from '@/components/ui/input-field';
 import { login } from '@/app/backend/api/manager/api';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { toast } from 'react-toastify';
 
 export default function LoginForm(){
   const [ state, action ] = useActionState(login, { message: '', status: false });
   const [ messageState, setMessageState ] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   useEffect(()=>{
     setMessageState(true);
@@ -23,14 +25,18 @@ export default function LoginForm(){
       setTimeout(()=>{
         if(state.status){
           if(state?.module === "/clinical"){
-            router.replace('/workplace');
-            return;
+            return router.replace('/workplace');
           }
           router.push(`${state?.module}`);
         }else
           setMessageState(false);
       }, state.status?3000:5000);
   }, [state, router]);
+
+  useEffect(()=>{
+    if(searchParams.has('danied'))
+      toast.warn("Sua sessão expirou, faça login novamente!", { theme: "light" });
+  }, []);
 
   return(
     <form action={action} className="rounded-xl px-10 py-6 md:bg-white/90 md:border md:w-96">

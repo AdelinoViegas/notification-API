@@ -43,7 +43,6 @@ export type DoctorOffice = {
   room: string;
 };
 
-
 export type PhisicalUnit = {
   id: string;
   createAt: Date;
@@ -316,3 +315,26 @@ export function tableOffice(data: DoctorOffice[]){
 
   return tableRows;
 }
+
+export class TableFormatter{
+  static tableRow:TableRow[];
+
+  static urgencyExamResults(data: UrgencyExamResult[]){
+    // for(const i in data)
+    //   this.tableRow.push({
+    //     id: i.
+    //   })
+  }
+}
+
+type TableBase<T> = {
+  id: string;
+  rows: T
+} 
+type UrgencyExamResult = TableBase<{
+  examType: string;
+  result: string;
+  document: string;
+}>;
+
+type LocalTest = TableBase<{ name: string; age: string }>

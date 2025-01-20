@@ -549,10 +549,10 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
     const tuberculosis = formData.get("tuberculosis") as string
     const respirationDiseases = formData.get("respiratoryDiseases") as string;
     const malaria = formData.get("malaria") as string;
-    console.log(typeof diabetes)
     const hasPatientUrgencyBank = await urgencyBankModel.findOne({ patientId })
     const generalClinic = hasPatientUrgencyBank?.anamnesis?.generalClinic;
-    /*const anamnesis = {
+    
+    const anamnesis = {
       generalClinic:{
         symptoms: symptoms || generalClinic?.symptoms,
         diseaseData: diseaseData || generalClinic?.diseaseData,
@@ -574,11 +574,11 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
 
         },
         diseases: {
-          diabetes: diabetes || generalClinic?.diseases?.diabetes
-          hypertension: patientData?.anamnesis?.generalClinic?.diseases?.hypertension as boolean,
-          respirationDiseases: patientData?.anamnesis?.generalClinic?.diseases?.respiratoryDiseases as boolean,
-          tuberculosis: patientData?.anamnesis?.generalClinic?.diseases?.tuberculosis as boolean,
-          malaria: patientData?.anamnesis?.generalClinic?.diseases?.malaria as boolean,
+          diabetes: diabetes === null?generalClinic?.diseases?.diabetes:diabetes === "true",
+          hypertension: hypertension === null?generalClinic?.diseases?.hypertension:hypertension === "true",
+          respirationDiseases: respirationDiseases === null?generalClinic?.diseases?.respirationDiseases:respirationDiseases === "true",
+          tuberculosis: tuberculosis === null?generalClinic?.diseases?.tuberculosis:tuberculosis === "true",
+          malaria: malaria === null?generalClinic?.diseases?.malaria:malaria === "true",
         }
       }
     }
@@ -591,10 +591,10 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
     }else{
       await urgencyBankModel.updateOne({ _id: hasPatientUrgencyBank._id },{ anamnesis })
       message = "Informações actualizadas com sucesso!";
-    } */
+    }
 
     return {
-      message:"sucesso",
+      message,
       status: true,
       state
     }
@@ -632,14 +632,7 @@ async function getPatientUrgencyBank(patientId: string){
         description: patientData?.anamnesis?.generalClinic?.hospitalization?.description as string,
         dateTime: patientData?.anamnesis?.generalClinic?.hospitalization?.dateTime as Date,
         currentState: patientData?.anamnesis?.generalClinic?.hospitalization?.currentState as string,
-      },
-      diseases: {
-        diabetes: patientData?.anamnesis?.generalClinic?.diseases?.diabetes as boolean,
-        hypertension: patientData?.anamnesis?.generalClinic?.diseases?.hypertension as boolean,
-        respirationDiseases: patientData?.anamnesis?.generalClinic?.diseases?.respiratoryDiseases as boolean,
-        tuberculosis: patientData?.anamnesis?.generalClinic?.diseases?.tuberculosis as boolean,
-        malaria: patientData?.anamnesis?.generalClinic?.diseases?.malaria as boolean,
-      } 
+      }
     },
 
     //outras anamneses

@@ -23,7 +23,7 @@ const anamnesis = new Schema({
     diseases: {
       diabetes: Boolean,
       hypertension: Boolean,
-      respiratoryDiseases: Boolean,
+      respirationDiseases: Boolean,
       tuberculosis: Boolean,
       malaria: Boolean,
     }

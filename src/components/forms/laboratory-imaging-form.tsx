@@ -15,7 +15,6 @@ import Alert from "@/components/alert";
 import { signExamResult } from "@/app/backend/api/clinical/unit-api";
 import { FileHandler } from "@/lib/client-files";
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { FaRegFilePdf } from "react-icons/fa6";
 import { FaRegFileImage } from "react-icons/fa";
 import Link from "next/link";
@@ -83,9 +82,9 @@ export default function LaboratoryImagingForm({
 
   return(
     <div className="overflow-auto max-h-[75vh] px-3">
-      <ToastContainer
+      {/* <ToastContainer
         theme="colored" 
-      />
+      /> */}
       <p className="font-medium mb-5 uppercase">{patientName}</p>
 
       {exams.map((item, i)=>(
