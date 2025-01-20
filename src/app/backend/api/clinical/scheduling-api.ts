@@ -962,9 +962,7 @@ async function findDoctorCalendar({
   return currentDoctorCalendar;
 }
 
-async function getPatientScheduledServices({ patientId }: {
-  patientId: string;
-}){
+async function getPatientScheduledServices({ patientId }: { patientId: string }){
   try{
     const services = await scheduleServiceModel.find({ served: true });
     const resultsList = [];

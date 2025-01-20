@@ -24,6 +24,14 @@ type Hospitalization = {
 	currentState?: string,
 }
 
+type Diseases = {
+	diabetes?: boolean,
+	hypertension?: boolean,
+	respiratoryDiseases?: boolean,
+	tuberculosis?: boolean,
+	malaria?: boolean,
+}
+
 function personalInternalComponent({ elements }: Personal){
   return {
 		title: "Dados Pessoais",
@@ -178,14 +186,16 @@ function diseasesInternalComponent(){
 								type: "radio",
 								props: {
 									label: "Sim",
-									name: "diabetes"
+									name: "diabetes",
+									value: true
 								}
 							},
 							{ 
 								type: "radio",
 								props: {
 									label: "Não",
-									name: "diabetes"
+									name: "diabetes",
+									value: false
 								}
 							},
 						]
@@ -202,14 +212,16 @@ function diseasesInternalComponent(){
 								type: "radio",
 								props: {
 									label: "Sim",
-									name: "hypertension"
+									name: "hypertension",
+									value: true
 								}
 							},
 							{ 
 								type: "radio",
 								props: {
 									label: "Não",
-									name: "hypertension"
+									name: "hypertension",
+									value: false
 								}
 							},
 						]
@@ -226,14 +238,16 @@ function diseasesInternalComponent(){
 								type: "radio",
 								props: {
 									label: "Sim",
-									name: "respiratoryDiseases"
+									name: "respiratoryDiseases",
+									value: true
 								}
 							},
 							{ 
 								type: "radio",
 								props: {
 									label: "Não",
-									name: "respiratoryDiseases"
+									name: "respiratoryDiseases",
+									value: false
 								}
 							},
 						]
@@ -250,14 +264,16 @@ function diseasesInternalComponent(){
 								type: "radio",
 								props: {
 									label: "Sim",
-									name: "tuberculosis"
+									name: "tuberculosis",
+									value: true
 								}
 							},
 							{ 
 								type: "radio",
 								props: {
 									label: "Não",
-									name: "tuberculosis"
+									name: "tuberculosis",
+									value: false
 								}
 							},
 						]
@@ -274,14 +290,16 @@ function diseasesInternalComponent(){
 								type: "radio",
 								props: {
 									label: "Sim",
-									name: "malaria"
+									name: "malaria",
+									value: true
 								}
 							},
 							{ 
 								type: "radio",
 								props: {
 									label: "Não",
-									name: "malaria"
+									name: "malaria",
+									value: false
 								}
 							},
 						]

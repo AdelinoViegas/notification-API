@@ -21,6 +21,7 @@ import Alert from "@/components/alert";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import SubTitle from "@/components/ui/subtitle";
 import { triggerUpdate } from "@/lib/ws-trigger";
+import clsx from "clsx";
 
 type Exam =  {
   id: string;
@@ -33,9 +34,11 @@ type Exam =  {
 };
 
 export default function RequestExams({
-  patientId
+  patientId,
+  isFullWindow
 }: { 
   patientId: string; 
+  isFullWindow?: boolean;
 }){
   const [ state, action ] = useActionState(schedulePatientExam, { message: "", status: false });
   const [ messageState, setMessageState ] = useState(false);
@@ -116,7 +119,11 @@ export default function RequestExams({
   return(
     <div>
       <SubTitle className="inline-flex mt-3">Solicitação de Exames</SubTitle>
-      <form {...{action}} ref={formRef}>
+      <form 
+        {...{action}} 
+        ref={formRef} 
+        className={clsx({ "": isFullWindow })}
+      >
         <input 
           type="hidden" 
           name="patientId" 
@@ -129,7 +136,7 @@ export default function RequestExams({
           defaultValue={!!examCart.length?JSON.stringify(examCart):undefined} 
         />
 
-        <div className="grid gap-3">
+        <div className={clsx('grid gap-3', { "lg:grid-cols-2": isFullWindow})}>
           <Selection
             label="Categoria"
             options={ccgs}
@@ -149,7 +156,7 @@ export default function RequestExams({
           </div>
         </div>
 
-        <div>
+        <div className={clsx({ "grid gap-3 lg:grid-cols-2": isFullWindow})}>
           <Selection
             label="Área do Exame"
             name="laboratoryId"
@@ -157,29 +164,22 @@ export default function RequestExams({
             required
             onClick={handleUnits}
           />
-{/* 
-          <InputField
-            textLabel="Data do Exame"
-            type="datetime-local" 
-            name="datetime"
-            min={new Date().toISOString().split('T')[0]}
-            required
-          /> */}
-        </div>
 
-        <SubTitle className="inline-flex my-3">Exames escolhidos</SubTitle>
-        {!!examCart.length && <ul className="max-h-48 border rounded-md p-3 px-5 scroll overflow-auto grid gap-3">
-          {examCart.map((examId, i)=>(
-            <li key={i}>
-              <div className="flex items-center justify-between rounded-md gap-3 py-2 border bg-gray-100 px-3"> 
-                <p title={examCache.find(props => props._id === examId)?.label} className="line-clamp-1">{examCache.find(props => props._id === examId)?.label}</p>
-                <button onClick={()=>removeCart(examId)} type="button" className="bg-red-500 text-white px-3 py-1 rounded-lg">
-                  <TrashIcon className="w-5" />
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>}
+        {/* <SubTitle className="inline-flex my-3">Exames escolhidos</SubTitle> */}
+          {!!examCart.length && <ul className="max-h-48 border rounded-md p-3 px-5 scroll overflow-auto grid gap-3">
+            {examCart.map((examId, i)=>(
+              <li key={i}>
+                <div className="flex items-center justify-between rounded-md gap-3 py-2 border bg-gray-100 px-3"> 
+                  <p title={examCache.find(props => props._id === examId)?.label} className="line-clamp-1">{examCache.find(props => props._id === examId)?.label}</p>
+                  <button onClick={()=>removeCart(examId)} type="button" className="bg-red-500 text-white px-3 py-1 rounded-lg">
+                    <TrashIcon className="w-5" />
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>}
+
+        </div>
 
         <InputDetails
           textLabel="Observação"

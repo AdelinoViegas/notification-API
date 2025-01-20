@@ -14,7 +14,9 @@ import { getDataAndHoursFormat } from "@/lib/date-formater";
 import { Types } from "mongoose";
 import { FileHandler } from "@/lib/client-files";
 import { writeFileSync } from "fs";
-
+import path from 'node:path';
+import { existsSync, mkdirSync } from "node:fs";
+import { ServerFileHandler } from "@/lib/server-files";
 async function updatePaymentData(prev: unknown, formData: FormData){
   try{
     const serviceId = formData.get("scheduleId");
@@ -299,15 +301,23 @@ async function readUploadedFile({
   try{
     const resultService = await serviceResultModel.findOne({ resultId });
     const resultFile = resultService?.exams.find(item => item.serviceId?.toString() === serviceId)?.results?.file;
+    
     if(resultFile?.size && resultFile?.binaryData){
-      // const temporaryFile = randomUUID().concat('.'+FileHandler.getExtension(resultFile.name as string));
-      // console.log(temporaryFile);
-      const filename = resultFile?.name as string;
-      const filePathLocation = `${process.cwd()}/public/open-files/${filename}`;
-      const externalLInk = `/open-files/${filename}`;
-      writeFileSync(filePathLocation, resultFile?.binaryData);
+      return await ServerFileHandler.writeFileInPublicDir({ 
+        name: resultFile?.name as string,
+        binaryData: resultFile?.binaryData as Buffer,
+      });
+  
+      // const filename = resultFile?.name as string;
+      // const cache_dir = path.join(process.cwd(), "public", process.env.CACHE_DIR as string);
       
-      return externalLInk;
+      // if(!existsSync(cache_dir))
+      //   mkdirSync(cache_dir);
+
+      // const externalLInk = path.join('/', process.env.CACHE_DIR as string, filename);
+      // writeFileSync(path.join(cache_dir, filename), resultFile?.binaryData);
+      
+      // return externalLInk;
     }
     return "#";
   }catch(e:unknown){
@@ -332,7 +342,10 @@ async function getExamResult({
       file: {
         name: item.results?.file?.name as string,
         size: item.results?.file?.size as number,
-        link: await readUploadedFile({ resultId: serviceResultId, serviceId: item?.serviceId?.toString() as string })
+        link: await readUploadedFile({ 
+          resultId: serviceResultId, 
+          serviceId: item?.serviceId?.toString() as string 
+        })
       }
     });
 

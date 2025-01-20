@@ -3,7 +3,7 @@ import Card from "./card";
 import { FileHandler } from "@/lib/client-files";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
 import Link from "next/link";
-import WsUpdate from "./ws-update";
+import WsUpdate from "@/components/ws-update";
 type ExamResult = {
   name: string;
   plainText?: string;

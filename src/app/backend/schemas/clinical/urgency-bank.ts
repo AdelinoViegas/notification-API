@@ -19,6 +19,13 @@ const anamnesis = new Schema({
       description: String,
       dateTime: Date,
       currentState: String,
+    },
+    diseases: {
+      diabetes: Boolean,
+      hypertension: Boolean,
+      respiratoryDiseases: Boolean,
+      tuberculosis: Boolean,
+      malaria: Boolean,
     }
   },
  /* childrensMedicine: {
