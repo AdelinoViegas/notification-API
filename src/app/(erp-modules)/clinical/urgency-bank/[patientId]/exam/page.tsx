@@ -2,19 +2,19 @@ import { getPatientScheduledServices } from "@/app/backend/api/clinical/scheduli
 import RequestExams from "@/components/forms/request-exam";
 import Accordium from "@/components/accordium";
 import Table from "@/components/table";
-import tableFormater from "@/lib/table-formater";
+import { TableFormatter } from "@/lib/table-formater";
+import WsUpdate from "@/components/ws-update";
 
 export default async function Page({ params }: {
   params: Promise<{ patientId: string }>
 }){
   const { patientId } = await params;
   const results = await getPatientScheduledServices({ patientId });
-
+  const rows = TableFormatter.urgencyExamResults(results);
+  
   return(
     <main>
-      <pre className="text-xs fixed bg-black right-0 bottom-0 h-96 text-green-300 font-medium overflow-auto">
-        {JSON.stringify(results, null, 2)}
-      </pre>
+      <WsUpdate target="laboratory" />
 
       <Accordium title="Solicitação de Exames">
         <RequestExams {...{patientId}} isFullWindow />
@@ -30,7 +30,7 @@ export default async function Page({ params }: {
             "Resultado Descritivo",
             "Documento"
           ]}
-          rows={[]}
+          rows={rows}
         />
       </div>
     </main>
