@@ -231,16 +231,30 @@ async function getUserById(userId: string){
 }
 
 async function getUser(userId: string){
-  const user = await userModel.findById({_id: userId}).select({ password: 0 });
-  const userGroup = await userGroupModel.findById({ _id: user?.userGroupId }).select({ label: 1 });
+  try{
+    const user = await userModel.findById({_id: userId}).select({ password: 0 });
+    if(!user)
+      throw new Error("Usuário inexistente!", { cause: "user_not_found"});
 
-  return {
-    fullname: user?.fullname,
-    username: user?.username,
-    email: user?.email,
-    tel: user?.tel,
-    userGroup: userGroup?.label,
-  };
+    const userGroup = await userGroupModel.findById({ _id: user?.userGroupId }).select({ label: 1 });
+
+    if(!userGroup)
+      throw new Error("Grupo de usuário inexistente!", { cause: "usergroup_not_found"});
+  
+    return {
+      fullname: user.fullname as string,
+      username: user.username as string,
+      email: user.email as string,
+      tel: user.tel as string,
+      userGroup: userGroup.label as string,
+    };
+  }catch(e: unknown){
+    const err = e as Error;
+    return {
+      message: err.message,
+      status: false
+    };
+  }
 }
 
 async function changeUserState(_id: string, state: boolean){
