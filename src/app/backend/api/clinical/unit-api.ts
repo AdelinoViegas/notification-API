@@ -13,10 +13,8 @@ import { userModel } from "@/app/backend/models/manager";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
 import { Types } from "mongoose";
 import { FileHandler } from "@/lib/client-files";
-import { writeFileSync } from "fs";
-import path from 'node:path';
-import { existsSync, mkdirSync } from "node:fs";
 import { ServerFileHandler } from "@/lib/server-files";
+
 async function updatePaymentData(prev: unknown, formData: FormData){
   try{
     const serviceId = formData.get("scheduleId");
@@ -307,17 +305,6 @@ async function readUploadedFile({
         name: resultFile?.name as string,
         binaryData: resultFile?.binaryData as Buffer,
       });
-  
-      // const filename = resultFile?.name as string;
-      // const cache_dir = path.join(process.cwd(), "public", process.env.CACHE_DIR as string);
-      
-      // if(!existsSync(cache_dir))
-      //   mkdirSync(cache_dir);
-
-      // const externalLInk = path.join('/', process.env.CACHE_DIR as string, filename);
-      // writeFileSync(path.join(cache_dir, filename), resultFile?.binaryData);
-      
-      // return externalLInk;
     }
     return "#";
   }catch(e:unknown){

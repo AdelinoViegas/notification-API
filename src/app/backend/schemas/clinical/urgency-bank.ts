@@ -1,8 +1,5 @@
 import { Schema } from "mongoose";
 
-const lifeStyle = new Schema({
-  
-})
 const anamnesis = new Schema({
   generalClinic: {
     symptoms: String,
@@ -41,7 +38,7 @@ const anamnesis = new Schema({
         exercise: String,
         type: { type: String },
         amount: Number,
-        time: String,      
+        timeExercise: String,      
       },
     }
   },

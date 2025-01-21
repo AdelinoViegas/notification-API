@@ -6,5 +6,5 @@ export default async function Page({ params }: {
   const { patientId } = await params;
   return(
     <ScheduleAppointment {...{patientId}} />
-  );
+  )
 }

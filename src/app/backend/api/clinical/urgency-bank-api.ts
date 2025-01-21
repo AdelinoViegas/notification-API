@@ -552,10 +552,10 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
     const tabaccoConsumption = formData.get("tobaccoConsumption") as string;
     const alcohol = formData.get('alcoholConsumption') as string;
     const frequency = formData.get("frequency") as string;
-    const alcoholAmount = formData.get("alcoholAmount");
+    const alcoholAmount = Number(formData.get("alcoholAmount"));
     const exercise = formData.get("exercise") as string;
     const type = formData.get("type") as string;
-    const physicalAmount = formData.get("physicalAmount");
+    const physicalAmount = Number(formData.get("physicalAmount"));
     const timeExercise = formData.get("time") as string;
     const hasPatientUrgencyBank = await urgencyBankModel.findOne({ patientId })
     const generalClinic = hasPatientUrgencyBank?.anamnesis?.generalClinic;
@@ -596,9 +596,10 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
             amount: alcoholAmount || generalClinic?.lifeStyle?.alcoholConsumption?.amount,
           },
           physicalActivity: {
-            exercise: exercise === null?generalClinic?.lifeStyle?.physicalActivity?.exercise:exercise,
-            frequency: frequency || generalClinic?.lifeStyle?.alcoholConsumption?.frequency,
-            amount: alcoholAmount || generalClinic?.lifeStyle?.alcoholConsumption?.amount,
+            exercise: exercise === null?generalClinic?.lifeStyle?.physicalActivity?.exercise?generalClinic?.lifeStyle?.physicalActivity?.exercise:"":exercise,
+            type: type || generalClinic?.lifeStyle?.physicalActivity?.type,
+            amount: physicalAmount || generalClinic?.lifeStyle?.physicalActivity?.amount,
+            timeExercise: timeExercise || generalClinic?.lifeStyle?.physicalActivity?.timeExercise,
           }
         }
       }

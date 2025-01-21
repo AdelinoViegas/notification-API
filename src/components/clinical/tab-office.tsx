@@ -42,7 +42,7 @@ export default function Taboffice() {
       label: "Altas", 
     },
     {
-      href: `/clinical/urgency-bank/${userId}/consult`,
+      href: `/clinical/urgency-bank/${userId}/office`,
       label: "Consultas", 
     },
     {

@@ -24,13 +24,13 @@ type Hospitalization = {
 	currentState?: string,
 }
 
-type Diseases = {
-	diabetes?: boolean,
-	hypertension?: boolean,
-	respiratoryDiseases?: boolean,
-	tuberculosis?: boolean,
-	malaria?: boolean,
-}
+// type Diseases = {
+// 	diabetes?: boolean,
+// 	hypertension?: boolean,
+// 	respiratoryDiseases?: boolean,
+// 	tuberculosis?: boolean,
+// 	malaria?: boolean,
+// }
 
 function personalInternalComponent({ elements }: Personal){
   return {
@@ -376,7 +376,7 @@ function lifeStyleInternalComponent(){
 								props: {
 									label: "Fumante",
 									name: "tobaccoConsumption",
-									value: "Fumante"
+									value: "smoker"
 								}
 							},
 							{ 
@@ -384,7 +384,7 @@ function lifeStyleInternalComponent(){
 								props: {
 									label: "Não fumante",
 									name: "tobaccoConsumption",
-									value: "Não fumante"
+									value: "non-smoker"
 								}
 							},
 							{ 
@@ -392,7 +392,7 @@ function lifeStyleInternalComponent(){
 								props: {
 									label: "Ex-fumante",
 									name: "tobaccoConsumption",
-									value: "Ex-fumante"
+									value: "Ex-smoker"
 								}
 							},
 						]
@@ -412,7 +412,7 @@ function lifeStyleInternalComponent(){
 								props: {
 									label: "Consome",
 									name: "alcoholConsumption",
-									value: "Consome"
+									value: "Consume"
 								}
 							},
 							{ 
@@ -420,7 +420,7 @@ function lifeStyleInternalComponent(){
 								props: {
 									label: "Não consome",
 									name: "alcoholConsumption",
-									value: "Não consome"
+									value: "doesn't-consume"
 								}
 							},
 							{ 
@@ -428,7 +428,7 @@ function lifeStyleInternalComponent(){
 								props: {
 									label: "Ex-consumidor",
 									name: "alcoholConsumption",
-									value: "Ex-consumidor"
+									value: "ex-consumer"
 								}
 							},
 						]
@@ -469,7 +469,7 @@ function lifeStyleInternalComponent(){
 								props: {
 									label: "Praticante",
 									name: "exercise",
-									value: "Praticante"
+									value: "practitioner"
 								}
 							},
 							{ 
@@ -477,7 +477,7 @@ function lifeStyleInternalComponent(){
 								props: {
 									label: "Não praticante",
 									name: "exercise",
-									value: "Não praticante"
+									value: "non-practitioner"
 								}
 							},
 						]

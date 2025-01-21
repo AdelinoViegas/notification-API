@@ -316,25 +316,34 @@ export function tableOffice(data: DoctorOffice[]){
   return tableRows;
 }
 
-export class TableFormatter{
-  static tableRow:TableRow[];
+type TempResult = {
+  _id: string;
+  plainText: string;
+  createdAt: Date;
+  file: {
+    name: string;
+    size: number;
+    link: string;
+  };
+  name: string;
+};
 
-  static urgencyExamResults(data: UrgencyExamResult[]){
-    // for(const i in data)
-    //   this.tableRow.push({
-    //     id: i.
-    //   })
+export class TableFormatter{
+  static tableRow:TableRow[] = [];
+
+  static urgencyExamResults(data: TempResult[]){
+
+    for(const props of data)
+      this.tableRow.push({
+        id: props._id,
+        row: [
+          getDataAndHoursFormat(props.createdAt),
+          props.name,
+          props.plainText?props.plainText:"Sem Descrição",
+          props.file.size?props.file.name:"Sem Arquivo"
+        ]
+      });
+
+    return this.tableRow;
   }
 }
-
-type TableBase<T> = {
-  id: string;
-  rows: T
-} 
-type UrgencyExamResult = TableBase<{
-  examType: string;
-  result: string;
-  document: string;
-}>;
-
-type LocalTest = TableBase<{ name: string; age: string }>

@@ -14,7 +14,7 @@ import Accordium from "@/components/accordium";
 import Alert from "@/components/alert";
 import { signExamResult } from "@/app/backend/api/clinical/unit-api";
 import { FileHandler } from "@/lib/client-files";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { FaRegFilePdf } from "react-icons/fa6";
 import { FaRegFileImage } from "react-icons/fa";
 import Link from "next/link";
