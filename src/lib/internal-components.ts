@@ -361,7 +361,7 @@ function evaluationInternalComponent(defaultValue?: string){
 function lifeStyleInternalComponent(){
 	return {
 		title: "Estilo de Vida e Hábitos",
-		apiFn: updatePersonalInfo,
+		apiFn: signUrgencyBank,
 		initialState: { message: "", status: false },
 		childrens: [
 			{ 
@@ -375,21 +375,24 @@ function lifeStyleInternalComponent(){
 								type: "radio",
 								props: {
 									label: "Fumante",
-									name: "tobaccoConsumption"
+									name: "tobaccoConsumption",
+									value: "Fumante"
 								}
 							},
 							{ 
 								type: "radio",
 								props: {
 									label: "Não fumante",
-									name: "tobaccoConsumption"
+									name: "tobaccoConsumption",
+									value: "Não fumante"
 								}
 							},
 							{ 
 								type: "radio",
 								props: {
 									label: "Ex-fumante",
-									name: "tobaccoConsumption"
+									name: "tobaccoConsumption",
+									value: "Ex-fumante"
 								}
 							},
 						]
@@ -408,21 +411,24 @@ function lifeStyleInternalComponent(){
 								type: "radio",
 								props: {
 									label: "Consome",
-									name: "alcohol"
+									name: "alcoholConsumption",
+									value: "Consome"
 								}
 							},
 							{ 
 								type: "radio",
 								props: {
 									label: "Não consome",
-									name: "alcohol"
+									name: "alcoholConsumption",
+									value: "Não consome"
 								}
 							},
 							{ 
 								type: "radio",
 								props: {
 									label: "Ex-consumidor",
-									name: "alcohol"
+									name: "alcoholConsumption",
+									value: "Ex-consumidor"
 								}
 							},
 						]
@@ -462,14 +468,16 @@ function lifeStyleInternalComponent(){
 								type: "radio",
 								props: {
 									label: "Praticante",
-									name: "physical"
+									name: "exercise",
+									value: "Praticante"
 								}
 							},
 							{ 
 								type: "radio",
 								props: {
 									label: "Não praticante",
-									name: "physical"
+									name: "exercise",
+									value: "Não praticante"
 								}
 							},
 						]
@@ -484,7 +492,7 @@ function lifeStyleInternalComponent(){
 						props: {
 							label: "Tipo de Actividade Física",
 							placeholder: "Descreva",
-							name: "activity"
+							name: "type"
 						}
 					},
 					{ 
@@ -500,7 +508,7 @@ function lifeStyleInternalComponent(){
 						props: {
 							label: "Tempo de actividade por secção",
 							placeholder: "Descreva",
-							name: "upTime"
+							name: "time"
 						}
 					},
 				]

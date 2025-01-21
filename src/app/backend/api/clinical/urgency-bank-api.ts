@@ -544,14 +544,22 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
     const description = formData.get("description") as string;
     const datetime = formData.get("createdAt");
     const currentState = formData.get("currentState") as string;
-    const diabetes  = formData.get("diabetes") as string;
-    const hypertension = formData.get("hypertension") as string;
-    const tuberculosis = formData.get("tuberculosis") as string
-    const respirationDiseases = formData.get("respiratoryDiseases") as string;
-    const malaria = formData.get("malaria") as string;
+    const diabetes  = formData.get("diabetes");
+    const hypertension = formData.get("hypertension");
+    const tuberculosis = formData.get("tuberculosis"); 
+    const respirationDiseases = formData.get("respiratoryDiseases");
+    const malaria = formData.get("malaria");
+    const tabaccoConsumption = formData.get("tobaccoConsumption") as string;
+    const alcohol = formData.get('alcoholConsumption') as string;
+    const frequency = formData.get("frequency") as string;
+    const alcoholAmount = formData.get("alcoholAmount");
+    const exercise = formData.get("exercise") as string;
+    const type = formData.get("type") as string;
+    const physicalAmount = formData.get("physicalAmount");
+    const timeExercise = formData.get("time") as string;
     const hasPatientUrgencyBank = await urgencyBankModel.findOne({ patientId })
     const generalClinic = hasPatientUrgencyBank?.anamnesis?.generalClinic;
-    
+
     const anamnesis = {
       generalClinic:{
         symptoms: symptoms || generalClinic?.symptoms,
@@ -574,15 +582,28 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
 
         },
         diseases: {
-          diabetes: diabetes === null?generalClinic?.diseases?.diabetes:diabetes === "true",
-          hypertension: hypertension === null?generalClinic?.diseases?.hypertension:hypertension === "true",
-          respirationDiseases: respirationDiseases === null?generalClinic?.diseases?.respirationDiseases:respirationDiseases === "true",
-          tuberculosis: tuberculosis === null?generalClinic?.diseases?.tuberculosis:tuberculosis === "true",
-          malaria: malaria === null?generalClinic?.diseases?.malaria:malaria === "true",
+          diabetes: diabetes === null?generalClinic?.diseases?.diabetes?generalClinic?.diseases?.diabetes:false:diabetes === "true",
+          hypertension: hypertension === null?generalClinic?.diseases?.hypertension?generalClinic?.diseases?.hypertension:false:hypertension === "true",
+          respirationDiseases: respirationDiseases === null?generalClinic?.diseases?.respirationDiseases?generalClinic?.diseases?.respirationDiseases:false:respirationDiseases === "true",
+          tuberculosis: tuberculosis === null?generalClinic?.diseases?.tuberculosis?generalClinic?.diseases?.tuberculosis:false:tuberculosis === "true",
+          malaria: malaria === null?generalClinic?.diseases?.malaria?generalClinic?.diseases?.malaria:false:malaria === "true",
+        },
+        lifeStyle: {   
+          tabaccoConsumption: tabaccoConsumption === null?generalClinic?.lifeStyle?.tabaccoConsumption?generalClinic?.lifeStyle?.tabaccoConsumption:"":tabaccoConsumption,
+          alcoholConsumption: {
+            alcohol: alcohol === null?generalClinic?.lifeStyle?.alcoholConsumption?.alcohol?generalClinic?.lifeStyle?.alcoholConsumption?.alcohol:"":alcohol,
+            frequency: frequency || generalClinic?.lifeStyle?.alcoholConsumption?.frequency,
+            amount: alcoholAmount || generalClinic?.lifeStyle?.alcoholConsumption?.amount,
+          },
+          physicalActivity: {
+            exercise: exercise === null?generalClinic?.lifeStyle?.physicalActivity?.exercise:exercise,
+            frequency: frequency || generalClinic?.lifeStyle?.alcoholConsumption?.frequency,
+            amount: alcoholAmount || generalClinic?.lifeStyle?.alcoholConsumption?.amount,
+          }
         }
       }
     }
-
+  
     let message = "";
 
     if(!hasPatientUrgencyBank){
