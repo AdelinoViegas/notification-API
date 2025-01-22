@@ -32,6 +32,21 @@ type Diseases = {
 		malaria: Boolean,
 }
 
+type LifeStyle = {
+	tabaccoConsumption: string,
+	alcoholConsumption: {
+		alcohol: string,
+		frequency: string,
+		amount: number,      
+	},
+	physicalActivity: {
+		exercise: string,
+		type: string,
+		amount: number,
+		timeExercise: string,      
+	},
+}
+
 function personalInternalComponent({ elements }: Personal){
   return {
 		title: "Dados Pessoais",
@@ -187,7 +202,8 @@ function diseasesInternalComponent(diseases: Diseases){
 								props: {
 									label: "Sim",
 									name: "diabetes",
-									defaultChecked: diseases.diabetes
+									defaultChecked: diseases.diabetes,
+									defaultValue: true
 								}
 							},
 							{ 
@@ -195,7 +211,8 @@ function diseasesInternalComponent(diseases: Diseases){
 								props: {
 									label: "Não",
 									name: "diabetes",
-									defaultChecked: !diseases.diabetes
+									defaultChecked: !diseases.diabetes,
+									defaultValue: false
 								}
 							},
 						]
@@ -213,7 +230,8 @@ function diseasesInternalComponent(diseases: Diseases){
 								props: {
 									label: "Sim",
 									name: "hypertension",
-									defaultChecked: diseases.hypertension
+									defaultChecked: diseases.hypertension,
+									defaultValue: true
 								}
 							},
 							{ 
@@ -221,7 +239,8 @@ function diseasesInternalComponent(diseases: Diseases){
 								props: {
 									label: "Não",
 									name: "hypertension",
-									defaultChecked: !diseases.hypertension
+									defaultChecked: !diseases.hypertension,
+									defaultValue: false
 								}
 							},
 						]
@@ -239,7 +258,8 @@ function diseasesInternalComponent(diseases: Diseases){
 								props: {
 									label: "Sim",
 									name: "respiratoryDiseases",
-									defaultChecked: diseases.respirationDiseases
+									defaultChecked: diseases.respirationDiseases,
+									defaultValue: true
 								}
 							},
 							{ 
@@ -247,7 +267,8 @@ function diseasesInternalComponent(diseases: Diseases){
 								props: {
 									label: "Não",
 									name: "respiratoryDiseases",
-									defaultChecked: !diseases.respirationDiseases							
+									defaultChecked: !diseases.respirationDiseases,
+									defaultValue: false							
 								}
 							},
 						]
@@ -265,7 +286,8 @@ function diseasesInternalComponent(diseases: Diseases){
 								props: {
 									label: "Sim",
 									name: "tuberculosis",
-									defaultChecked: diseases.tuberculosis
+									defaultChecked: diseases.tuberculosis,
+									defaultValue: true
 								}
 							},
 							{ 
@@ -273,7 +295,8 @@ function diseasesInternalComponent(diseases: Diseases){
 								props: {
 									label: "Não",
 									name: "tuberculosis",
-									defaultChecked: !diseases.tuberculosis
+									defaultChecked: !diseases.tuberculosis,
+									defaultValue: false
 								}
 							},
 						]
@@ -291,7 +314,8 @@ function diseasesInternalComponent(diseases: Diseases){
 								props: {
 									label: "Sim",
 									name: "malaria",
-									defaultChecked: diseases.malaria
+									defaultChecked: diseases.malaria,
+									defaultValue: true
 								}
 							},
 							{ 
@@ -299,7 +323,8 @@ function diseasesInternalComponent(diseases: Diseases){
 								props: {
 									label: "Não",
 									name: "malaria",
-									defaultChecked: !diseases.malaria
+									defaultChecked: !diseases.malaria,
+									defaultValue: false
 								}
 							},
 						]
@@ -358,7 +383,7 @@ function evaluationInternalComponent(defaultValue?: string){
 	}
 }
 
-function lifeStyleInternalComponent(){
+function lifeStyleInternalComponent(lifeStyle: LifeStyle){
 	return {
 		title: "Estilo de Vida e Hábitos",
 		apiFn: signUrgencyBank,
@@ -376,7 +401,8 @@ function lifeStyleInternalComponent(){
 								props: {
 									label: "Fumante",
 									name: "tobaccoConsumption",
-									value: "smoker"
+									defaultChecked: lifeStyle.tabaccoConsumption === "smoker",
+									defaultValue: "smoker"
 								}
 							},
 							{ 
@@ -384,7 +410,8 @@ function lifeStyleInternalComponent(){
 								props: {
 									label: "Não fumante",
 									name: "tobaccoConsumption",
-									value: "non-smoker"
+									defaultChecked: lifeStyle.tabaccoConsumption === "non-smoker",
+									defaultValue: "non-smoker"
 								}
 							},
 							{ 
@@ -392,7 +419,8 @@ function lifeStyleInternalComponent(){
 								props: {
 									label: "Ex-fumante",
 									name: "tobaccoConsumption",
-									value: "Ex-smoker"
+									defaultChecked: lifeStyle.tabaccoConsumption === "ex-smoker",
+									defaultValue: "ex-smoker"
 								}
 							},
 						]
@@ -412,7 +440,8 @@ function lifeStyleInternalComponent(){
 								props: {
 									label: "Consome",
 									name: "alcoholConsumption",
-									value: "Consume"
+									defaultChecked: lifeStyle.alcoholConsumption.alcohol === "consume",
+									defaultValue: "consume"
 								}
 							},
 							{ 
@@ -420,7 +449,8 @@ function lifeStyleInternalComponent(){
 								props: {
 									label: "Não consome",
 									name: "alcoholConsumption",
-									value: "doesn't-consume"
+									defaultChecked: lifeStyle.alcoholConsumption.alcohol === "doesn't-consume",
+									defaultValue: "doesn't-consume"
 								}
 							},
 							{ 
@@ -428,7 +458,8 @@ function lifeStyleInternalComponent(){
 								props: {
 									label: "Ex-consumidor",
 									name: "alcoholConsumption",
-									value: "ex-consumer"
+									defaultChecked: lifeStyle.alcoholConsumption.alcohol === "ex-consumer",
+									defaultValue: "ex-consumer"
 								}
 							},
 						]
@@ -444,7 +475,8 @@ function lifeStyleInternalComponent(){
 						props: {
 							label: "Frequência",
 							placeholder: "Descreva",
-							name: "frequency"
+							name: "frequency",
+							defaultValue: lifeStyle.alcoholConsumption.frequency
 						}
 					},
 					{ 
@@ -452,7 +484,8 @@ function lifeStyleInternalComponent(){
 						props: {
 							label: "Quantidade",
 							placeholder: "Digite o valor",
-							name: "alcoholAmount"
+							name: "alcoholAmount",
+							defaultValue: lifeStyle.alcoholConsumption.amount
 						}
 					},
 				]
@@ -469,7 +502,8 @@ function lifeStyleInternalComponent(){
 								props: {
 									label: "Praticante",
 									name: "exercise",
-									value: "practitioner"
+									defaultChecked: lifeStyle.physicalActivity.exercise === "practitioner",
+									defaultValue: "practitioner"
 								}
 							},
 							{ 
@@ -477,7 +511,8 @@ function lifeStyleInternalComponent(){
 								props: {
 									label: "Não praticante",
 									name: "exercise",
-									value: "non-practitioner"
+									defaultChecked: lifeStyle.physicalActivity.exercise === "non-practitioner",
+									defaultValue: "non-practitioner"
 								}
 							},
 						]
@@ -492,7 +527,8 @@ function lifeStyleInternalComponent(){
 						props: {
 							label: "Tipo de Actividade Física",
 							placeholder: "Descreva",
-							name: "type"
+							name: "type",
+							defaultValue: lifeStyle.physicalActivity.type
 						}
 					},
 					{ 
@@ -500,7 +536,8 @@ function lifeStyleInternalComponent(){
 						props: {
 							label: "Quantidade",
 							placeholder: "Digite o valor",
-							name: "physicalAmount"
+							name: "physicalAmount",
+							defaultValue: lifeStyle.physicalActivity.amount
 						}
 					},
 					{ 
@@ -508,7 +545,8 @@ function lifeStyleInternalComponent(){
 						props: {
 							label: "Tempo de actividade por secção",
 							placeholder: "Descreva",
-							name: "time"
+							name: "time",
+							defaultValue: lifeStyle.physicalActivity.timeExercise
 						}
 					},
 				]

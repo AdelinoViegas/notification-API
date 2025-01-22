@@ -34,10 +34,7 @@ async function enterIntoWorkplace(prev: unknown, form: FormData){
 }
 
 async function exitFromWorkplace(){
-  await currentLocationModel.findOneAndUpdate({ 
-    isActive: true,
-    userId: await whoAreYou(), 
-  }, { 
+  await currentLocationModel.findOneAndUpdate({ userId: await whoAreYou()}, { 
     isActive: false 
   });
 }

@@ -2,12 +2,10 @@
 
 import { 
   useEffect,
-  useState,
   useActionState 
 } from 'react';
 import Button from '@/components/ui/button';
 import Image from 'next/image';
-import Alert from '@/components/alert';
 import InputField from '@/components/ui/input-field';
 import { login } from '@/app/backend/api/manager/api';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -15,22 +13,20 @@ import { toast } from 'react-toastify';
 
 export default function LoginForm(){
   const [ state, action ] = useActionState(login, { message: '', status: false });
-  const [ messageState, setMessageState ] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
 
   useEffect(()=>{
-    setMessageState(true);
     if(state.message)
-      setTimeout(()=>{
-        if(state.status){
-          if(state?.module === "/clinical"){
-            return router.replace('/workplace');
-          }
-          router.push(`${state?.module}`);
-        }else
-          setMessageState(false);
-      }, state.status?3000:5000);
+      if(state.status)
+        toast.success(state.message, { 
+          onClose: ()=>{
+            router.replace(state?.module === "/clinica"?"/workplace":state?.module as string)
+        },
+        autoClose: 3000
+      });
+      else
+        toast.error(state.message);
   }, [state, router]);
 
   useEffect(()=>{
@@ -72,16 +68,6 @@ export default function LoginForm(){
           </div>
           <Button type='submit' className='w-full'>Entrar</Button>
         </div>
-      </div>
-
-      <div className='mt-3'>
-        {
-          state.message && messageState &&
-          <Alert 
-            type={state.status?'success': 'error'} 
-            message={state.message} 
-          />
-        }
       </div>
     </form>
   );

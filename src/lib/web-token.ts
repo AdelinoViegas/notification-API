@@ -14,7 +14,7 @@ async function authJWT({
   try{
     const alg = 'HS256';
     
-    const jwt = new SignJWT({userId, route})
+    const jwt = new SignJWT({ userId, route })
     .setProtectedHeader({alg})
     .setIssuedAt()
     .setIssuer('urn:socompser:issuer')

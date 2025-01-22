@@ -25,7 +25,8 @@ import { exitFromWorkplace } from "@/app/backend/api/clinical/workplace";
 import { 
   userModel as userClinicalModel, 
   unitModel, 
-  workplaceModel 
+  workplaceModel, 
+  currentLocationModel
 } from "@/app/backend/models/clinical";
 import { userCategory } from "@/app/backend/api/clinical/translator";
 
@@ -60,6 +61,11 @@ async function login(prev: unknown, formData: FormData){
         if(accessLimit.endAt < new Date())
           throw new Error(`Acesso expirado em ${accessLimit.endAt.toLocaleString('pt', {dateStyle: 'full'})}`)
       }
+    }else{
+      await currentLocationModel.create({
+        userId: user._id,
+        isActive: true
+      });
     }
 
     const token = await authJWT({
@@ -67,28 +73,29 @@ async function login(prev: unknown, formData: FormData){
       route: userGroupRoute?.route as string,
     });
     
-    const loginAccess = new loginAccessTokensModel({
+    const clientFingerPrint = await headers();
+
+    await loginAccessTokensModel.create({
       userId: user?._id,
       token,
       fingerPrint: {
-        browser: (await headers()).get("user-agent"),
-        ip: (await headers()).get('x-forwarded-for'),
+        browser: clientFingerPrint.get("user-agent"),
+        ip: clientFingerPrint.get('x-forwarded-for'),
       }
     });
-
-    await loginAccess.save();
     
     (await cookies()).set({
       name: process.env.MASTER_HEADER_AUTH as string,
       value: token,
       httpOnly: true,
-      priority: "high"
+      priority: "high",
+      sameSite: "strict"
     });
 
     return {
       message: 'Credencias verificadas!',
       status: true,
-      module: userGroupRoute?.route
+      module: userGroupRoute?.route as string
     }
   }catch(err: unknown){
     const e = err as { message: string };
@@ -240,13 +247,24 @@ async function getUser(userId: string){
 
     if(!userGroup)
       throw new Error("Grupo de usuário inexistente!", { cause: "usergroup_not_found"});
-  
+    
+    const userSession = await currentLocationModel.findOne({ userId: user.id, isActive: true });
+    
+    if(!userSession)
+      throw new Error("Sem sessão definida", { cause: "no_session"});
+
     return {
+      _id: user._id.toString(),
       fullname: user.fullname as string,
       username: user.username as string,
       email: user.email as string,
       tel: user.tel as string,
       userGroup: userGroup.label as string,
+      session: {
+        isActive: userSession.isActive as boolean,
+        locationId: userSession.locationId?.toString(),
+        createdAt: userSession.createdAt as Date
+      }
     };
   }catch(e: unknown){
     const err = e as Error;

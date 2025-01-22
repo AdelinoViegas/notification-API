@@ -559,7 +559,7 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
     const timeExercise = formData.get("time") as string;
     const hasPatientUrgencyBank = await urgencyBankModel.findOne({ patientId })
     const generalClinic = hasPatientUrgencyBank?.anamnesis?.generalClinic;
-
+    
     const anamnesis = {
       generalClinic:{
         symptoms: symptoms || generalClinic?.symptoms,
@@ -662,6 +662,20 @@ async function getPatientUrgencyBank(patientId: string){
         tuberculosis: patientData?.anamnesis?.generalClinic?.diseases?.tuberculosis as boolean,
         malaria: patientData?.anamnesis?.generalClinic?.diseases?.malaria as boolean,
       },
+      lifeStyle: {
+        tabaccoConsumption: patientData?.anamnesis?.generalClinic?.lifeStyle?.tabaccoConsumption as string,
+        alcoholConsumption: {
+          alcohol: patientData?.anamnesis?.generalClinic?.lifeStyle?.alcoholConsumption?.alcohol as string,
+          frequency: patientData?.anamnesis?.generalClinic?.lifeStyle?.alcoholConsumption?.frequency as string,
+          amount: patientData?.anamnesis?.generalClinic?.lifeStyle?.alcoholConsumption?.amount as number,      
+        },
+        physicalActivity: {
+          exercise: patientData?.anamnesis?.generalClinic?.lifeStyle?.physicalActivity?.exercise as string,
+          type: patientData?.anamnesis?.generalClinic?.lifeStyle?.physicalActivity?.type as string,
+          amount: patientData?.anamnesis?.generalClinic?.lifeStyle?.physicalActivity?.amount as number,
+          timeExercise: patientData?.anamnesis?.generalClinic?.lifeStyle?.physicalActivity?.timeExercise as string,     
+        },
+      }
     },
 
     //outras anamneses
