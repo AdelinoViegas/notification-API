@@ -582,21 +582,21 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
 
         },
         diseases: {
-          diabetes: diabetes === null?generalClinic?.diseases?.diabetes?generalClinic?.diseases?.diabetes:false:diabetes === "true",
-          hypertension: hypertension === null?generalClinic?.diseases?.hypertension?generalClinic?.diseases?.hypertension:false:hypertension === "true",
-          respirationDiseases: respirationDiseases === null?generalClinic?.diseases?.respirationDiseases?generalClinic?.diseases?.respirationDiseases:false:respirationDiseases === "true",
-          tuberculosis: tuberculosis === null?generalClinic?.diseases?.tuberculosis?generalClinic?.diseases?.tuberculosis:false:tuberculosis === "true",
-          malaria: malaria === null?generalClinic?.diseases?.malaria?generalClinic?.diseases?.malaria:false:malaria === "true",
+          diabetes: diabetes ?? generalClinic?.diseases?.diabetes ?? false,
+          hypertension: hypertension ?? generalClinic?.diseases?.hypertension ?? false,
+          respirationDiseases: respirationDiseases ?? generalClinic?.diseases?.respirationDiseases ?? false,
+          tuberculosis: tuberculosis ?? generalClinic?.diseases?.tuberculosis ?? false,
+          malaria: malaria ?? generalClinic?.diseases?.malaria ?? false,
         },
         lifeStyle: {   
-          tabaccoConsumption: tabaccoConsumption === null?generalClinic?.lifeStyle?.tabaccoConsumption?generalClinic?.lifeStyle?.tabaccoConsumption:"":tabaccoConsumption,
+          tabaccoConsumption: tabaccoConsumption ?? generalClinic?.lifeStyle?.tabaccoConsumption ?? "",
           alcoholConsumption: {
-            alcohol: alcohol === null?generalClinic?.lifeStyle?.alcoholConsumption?.alcohol?generalClinic?.lifeStyle?.alcoholConsumption?.alcohol:"":alcohol,
+            alcohol: alcohol ?? generalClinic?.lifeStyle?.alcoholConsumption?.alcohol ?? "",
             frequency: frequency || generalClinic?.lifeStyle?.alcoholConsumption?.frequency,
             amount: alcoholAmount || generalClinic?.lifeStyle?.alcoholConsumption?.amount,
           },
           physicalActivity: {
-            exercise: exercise === null?generalClinic?.lifeStyle?.physicalActivity?.exercise?generalClinic?.lifeStyle?.physicalActivity?.exercise:"":exercise,
+            exercise: exercise ?? generalClinic?.lifeStyle?.physicalActivity?.exercise ?? "",
             type: type || generalClinic?.lifeStyle?.physicalActivity?.type,
             amount: physicalAmount || generalClinic?.lifeStyle?.physicalActivity?.amount,
             timeExercise: timeExercise || generalClinic?.lifeStyle?.physicalActivity?.timeExercise,
@@ -654,7 +654,14 @@ async function getPatientUrgencyBank(patientId: string){
         description: patientData?.anamnesis?.generalClinic?.hospitalization?.description as string,
         dateTime: patientData?.anamnesis?.generalClinic?.hospitalization?.dateTime as Date,
         currentState: patientData?.anamnesis?.generalClinic?.hospitalization?.currentState as string,
-      }
+      },
+      diseases: {
+        diabetes: patientData?.anamnesis?.generalClinic?.diseases?.diabetes as boolean,
+        hypertension: patientData?.anamnesis?.generalClinic?.diseases?.hypertension as boolean,
+        respirationDiseases: patientData?.anamnesis?.generalClinic?.diseases?.respirationDiseases as boolean,
+        tuberculosis: patientData?.anamnesis?.generalClinic?.diseases?.tuberculosis as boolean,
+        malaria: patientData?.anamnesis?.generalClinic?.diseases?.malaria as boolean,
+      },
     },
 
     //outras anamneses

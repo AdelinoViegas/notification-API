@@ -24,13 +24,13 @@ type Hospitalization = {
 	currentState?: string,
 }
 
-// type Diseases = {
-// 	diabetes?: boolean,
-// 	hypertension?: boolean,
-// 	respiratoryDiseases?: boolean,
-// 	tuberculosis?: boolean,
-// 	malaria?: boolean,
-// }
+type Diseases = {
+		diabetes: Boolean,
+		hypertension: Boolean,
+		respirationDiseases: Boolean,
+		tuberculosis: Boolean,
+		malaria: Boolean,
+}
 
 function personalInternalComponent({ elements }: Personal){
   return {
@@ -170,7 +170,7 @@ function diagnosticInternalComponent(defaultValue: string){
 	}
 }
 
-function diseasesInternalComponent(){
+function diseasesInternalComponent(diseases: Diseases){
   return {
 		title: "Antecedentes Pessoais Patológicos(Doênças pré-existentes, hospitalizações, acidentes)",
 		apiFn: signUrgencyBank,
@@ -187,7 +187,7 @@ function diseasesInternalComponent(){
 								props: {
 									label: "Sim",
 									name: "diabetes",
-									value: true
+									defaultChecked: diseases.diabetes
 								}
 							},
 							{ 
@@ -195,7 +195,7 @@ function diseasesInternalComponent(){
 								props: {
 									label: "Não",
 									name: "diabetes",
-									value: false
+									defaultChecked: !diseases.diabetes
 								}
 							},
 						]
@@ -213,7 +213,7 @@ function diseasesInternalComponent(){
 								props: {
 									label: "Sim",
 									name: "hypertension",
-									value: true
+									defaultChecked: diseases.hypertension
 								}
 							},
 							{ 
@@ -221,7 +221,7 @@ function diseasesInternalComponent(){
 								props: {
 									label: "Não",
 									name: "hypertension",
-									value: false
+									defaultChecked: !diseases.hypertension
 								}
 							},
 						]
@@ -239,7 +239,7 @@ function diseasesInternalComponent(){
 								props: {
 									label: "Sim",
 									name: "respiratoryDiseases",
-									value: true
+									defaultChecked: diseases.respirationDiseases
 								}
 							},
 							{ 
@@ -247,7 +247,7 @@ function diseasesInternalComponent(){
 								props: {
 									label: "Não",
 									name: "respiratoryDiseases",
-									value: false
+									defaultChecked: !diseases.respirationDiseases							
 								}
 							},
 						]
@@ -265,7 +265,7 @@ function diseasesInternalComponent(){
 								props: {
 									label: "Sim",
 									name: "tuberculosis",
-									value: true
+									defaultChecked: diseases.tuberculosis
 								}
 							},
 							{ 
@@ -273,7 +273,7 @@ function diseasesInternalComponent(){
 								props: {
 									label: "Não",
 									name: "tuberculosis",
-									value: false
+									defaultChecked: !diseases.tuberculosis
 								}
 							},
 						]
@@ -291,7 +291,7 @@ function diseasesInternalComponent(){
 								props: {
 									label: "Sim",
 									name: "malaria",
-									value: true
+									defaultChecked: diseases.malaria
 								}
 							},
 							{ 
@@ -299,7 +299,7 @@ function diseasesInternalComponent(){
 								props: {
 									label: "Não",
 									name: "malaria",
-									value: false
+									defaultChecked: !diseases.malaria
 								}
 							},
 						]

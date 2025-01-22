@@ -4,7 +4,7 @@ import {
   HTMLInputTypeAttribute, 
   useActionState, 
   useEffect, 
-  useState 
+  useState
 } from "react";
 import Accordium from "@/components/accordium";
 import Button from "@/components/ui/button";
@@ -51,6 +51,7 @@ type UIComponent = {
     defaultValue?: string | number;
     rows?: number;
     options?: SelectionOption[];
+    defaultChecked?: boolean;
   };
 };
 
