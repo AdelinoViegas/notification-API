@@ -20,7 +20,7 @@ export default async function Page({ params }: {
         <RequestExams {...{patientId}} isFullWindow />
       </Accordium>
 
-      <div className="flex flex-col gap-3 my-3">
+      <div className="flex flex-col gap-x-3 mt-6 mb-3">
         <h2 className="text-lg font-medium text-primary">Histórico de exames</h2>
         
         <Table

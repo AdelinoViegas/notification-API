@@ -37,7 +37,7 @@ async function login(prev: unknown, formData: FormData){
     const username = formData.get('username');
     const password = formData.get('password');
     const user = await userModel.findOne({username});
-
+    
     if(!user)
       throw new Error("Usuário ou senha inválida!");
     

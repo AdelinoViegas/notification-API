@@ -36,10 +36,10 @@ export default function LoginForm(){
     }
       
     if(searchParams.has('exit')){
-      toast.warn("Sessão terminada!", { theme: "light" });
+      toast.warn("Sessão terminada!", { theme: "light", onClose: ()=> router.replace('/')});
       return;
     }
-  }, [searchParams]);
+  }, [searchParams, router]);
 
   return(
     <form action={action} className="rounded-xl px-10 py-6 md:bg-white/90 md:border md:w-96">

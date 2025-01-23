@@ -332,7 +332,7 @@ export class TableFormatter{
   static tableRow:TableRow[] = [];
 
   static urgencyExamResults(data: TempResult[]){
-
+    this.tableRow = [];
     for(const props of data)
       this.tableRow.push({
         id: props._id,
