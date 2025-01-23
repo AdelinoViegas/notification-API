@@ -21,17 +21,24 @@ export default function LoginForm(){
       if(state.status)
         toast.success(state.message, { 
           onClose: ()=>{
-            router.replace(state?.module === "/clinica"?"/workplace":state?.module as string)
+            router.replace(state?.module === "/clinical"?"/workplace":state?.module as string)
         },
-        autoClose: 3000
+        autoClose: 1500
       });
       else
         toast.error(state.message);
   }, [state, router]);
 
   useEffect(()=>{
-    if(searchParams.has('danied'))
+    if(searchParams.has('danied')){
       toast.warn("Sua sessão expirou, faça login novamente!", { theme: "light" });
+      return;
+    }
+      
+    if(searchParams.has('exit')){
+      toast.warn("Sessão terminada!", { theme: "light" });
+      return;
+    }
   }, [searchParams]);
 
   return(

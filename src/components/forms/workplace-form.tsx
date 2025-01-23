@@ -1,18 +1,16 @@
 "use client";
 
 import { 
-  useCallback,
   useEffect,
-  useState,
   useActionState 
 } from "react";
 import { useRouter } from "next/navigation";
 import Button from "@/components/ui/button";
 import Selection from "@/components/ui/selection";
-import Alert from "@/components/alert";
-import { enterIntoWorkplace } from "@/app/backend/api/clinical/workplace";
+import { enterIntoWorkplace } from "@/app/backend/api/clinical/workplace-api";
 import { endSession } from "@/app/backend/api/manager/api";
 import { ArrowUturnLeftIcon } from "@heroicons/react/24/outline";
+import { toast } from "react-toastify";
 
 export default function WorkplaceFrom({
   units
@@ -20,21 +18,16 @@ export default function WorkplaceFrom({
   units: { _id: string; label: string }[]
 }){
   const [ state, action ] = useActionState(enterIntoWorkplace, { message: "", status: false });
-  const [ msgState, setMsgState ] = useState(false);
-  const toggle = useCallback(()=> setMsgState(!msgState), [msgState]);
   const router = useRouter();
-  const handlaBackButton = useCallback(async()=>{
-    await endSession();
-  }, []);
+  const handlaBackButton = async()=>await endSession();
+
   useEffect(()=>{
-    if(state.status)
-      router.replace('/clinical');
-    
-    if(state.message && state.status === false){
-      toggle();
-      setTimeout(()=>setMsgState(false), 3000);
+    if(state.message){
+      if(state.status)
+        return router.replace('/clinical');
+      toast.error(state.message);
     }
-  }, [state, router, toggle]);
+  }, [state, router]);
 
   return(
     <div className="w-96 space-y-3">
@@ -57,14 +50,6 @@ export default function WorkplaceFrom({
           <Button className="w-32">Continuar</Button>
         </div>
       </form>
-
-      {
-        msgState &&
-        <Alert 
-          type={"warn"} 
-          message={state.message as string} 
-        />
-      }
     </div>
   );
 

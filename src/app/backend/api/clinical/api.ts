@@ -167,7 +167,7 @@ async function updateUser(prev: unknown, formData: FormData){
 
 async function signPatient(prev: unknown, formData: FormData){
   try{
-    // personal info
+    // personal info 
     const patientName = formData.get("patientName") as string;
     const patientBirthDate = formData.get("patientBirthDate") as string;
     const patientAge = formData.get("patientAge") as string;

@@ -21,7 +21,7 @@ import {
   whoAreYou 
 } from "@/lib/web-token";
 import { redirect } from "next/navigation";
-import { exitFromWorkplace } from "@/app/backend/api/clinical/workplace";
+import { exitFromWorkplace } from "@/app/backend/api/clinical/workplace-api";
 import { 
   userModel as userClinicalModel, 
   unitModel, 
@@ -61,13 +61,13 @@ async function login(prev: unknown, formData: FormData){
         if(accessLimit.endAt < new Date())
           throw new Error(`Acesso expirado em ${accessLimit.endAt.toLocaleString('pt', {dateStyle: 'full'})}`)
       }
-    }else{
-      await currentLocationModel.create({
-        userId: user._id,
-        isActive: true
-      });
     }
 
+    await currentLocationModel.create({
+      userId: user._id,
+      isActive: true
+    });
+  
     const token = await authJWT({
       userId: user?._id.toString(),
       route: userGroupRoute?.route as string,
@@ -115,7 +115,7 @@ async function endSession(){
     await exitFromWorkplace();
     (await cookies()).delete(String(process.env.MASTER_HEADER_AUTH));
   }
-  redirect('/');
+  redirect('/?exit');
 }
 
 async function signUser(prev: unknown, formData: FormData){

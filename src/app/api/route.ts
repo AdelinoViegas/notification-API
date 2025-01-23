@@ -10,11 +10,10 @@ export async function GET(request: NextRequest){
       throw new Error("Informe o userId", { cause: "empty_userId"});
 
     const user = await getUser(userId);
-    console.log(dest);
 
     if(user.message)
       throw new Error(user.message);
-    
+
     if(dest !== "/manager")
       if(!user.session?.isActive)
         throw new Error("Sessão terminada!", { cause: "session_ended_by_user"});
