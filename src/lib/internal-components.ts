@@ -25,11 +25,11 @@ type Hospitalization = {
 }
 
 type Diseases = {
-		diabetes: Boolean,
-		hypertension: Boolean,
-		respirationDiseases: Boolean,
-		tuberculosis: Boolean,
-		malaria: Boolean,
+		diabetes: boolean,
+		hypertension: boolean,
+		respirationDiseases: boolean,
+		tuberculosis: boolean,
+		malaria: boolean,
 }
 
 type LifeStyle = {

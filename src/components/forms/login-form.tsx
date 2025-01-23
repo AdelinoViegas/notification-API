@@ -32,7 +32,7 @@ export default function LoginForm(){
   useEffect(()=>{
     if(searchParams.has('danied'))
       toast.warn("Sua sessão expirou, faça login novamente!", { theme: "light" });
-  }, []);
+  }, [searchParams]);
 
   return(
     <form action={action} className="rounded-xl px-10 py-6 md:bg-white/90 md:border md:w-96">
