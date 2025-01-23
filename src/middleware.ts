@@ -11,7 +11,7 @@ type RESTfulResponse = {
 export async function middleware(request: NextRequest) {
   if((await cookies()).has(String(process.env.MASTER_HEADER_AUTH))){ 
     const response = await decryptAndVerifyJWT(String((await cookies()).get(String(process.env.MASTER_HEADER_AUTH))?.value));
-    const apiData = await (await fetch(`http://localhost:3000/api?userId=${response.data?.userId}&dest=${request.nextUrl.pathname}`)).json() as RESTfulResponse;
+    const apiData = await (await fetch(`http://localhost:${process.env.REST_PORT}/api?userId=${response.data?.userId}&dest=${request.nextUrl.pathname}`)).json() as RESTfulResponse;
     
     if(!apiData.status){
       if(apiData.cause === "session_ended_by_user")

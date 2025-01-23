@@ -24,8 +24,6 @@ export default async function PatientForm({patientId}:{patientId: string}){
 		responsibles
   } = patient;
 	const firstAndSecond = responsibles?.responsibles as Responsable[];
-	
-	console.log(patient);
 
 	return(
 		<main>
