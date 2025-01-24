@@ -285,6 +285,12 @@ async function signPatient(prev: unknown, formData: FormData){
       externalUnitId,
     });
 
+    await patient.validate();
+    await locationDb.validate();
+    await groupDb.validate();
+    await responsiblesDb.validate();
+    await accessTypeDb.validate();
+    
     await patient.save();
     await locationDb.save();
     await groupDb.save();

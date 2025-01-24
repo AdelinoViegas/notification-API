@@ -9,6 +9,7 @@ const patientSchema = new Schema({
   fullname: {
     type: String,
     required: true,
+    match: new RegExp("^[a-zA-Z]+$")
   },
   registerNumber: {
     type: Number,
@@ -32,7 +33,7 @@ const patientSchema = new Schema({
   },
   userId: Schema.Types.ObjectId
 }, {
-  collection: "patient",
+  collection: "patients",
   timestamps: true,
 });
 

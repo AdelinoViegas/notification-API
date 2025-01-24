@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+//import { redirect } from "next/navigation";
 import Button from "@/components/ui/button";
 import GlobalComponent, { InternalComponent } from "@/components/global-component";
 import { 
@@ -12,10 +12,9 @@ import {
 	hospitalizationInternalComponent,
 	lifeStyleInternalComponent,
 	othersInternalComponent,
-	personalInternalComponent,
 	symptomsInternalComponent
 } from "@/lib/internal-components";
-import { getPatient } from "@/app/backend/api/clinical/api";
+//import { getPatient } from "@/app/backend/api/clinical/api";
 import { getPatientUrgencyBank } from "@/app/backend/api/clinical/urgency-bank-api";
 
 export default async function Page({ params }: {
@@ -24,21 +23,21 @@ export default async function Page({ params }: {
 	}>
 }){
   const { patientId } = await params;
-	const patient = await getPatient(patientId);
+	//const patient = await getPatient(patientId);
 	const anamnesis = await getPatientUrgencyBank(patientId);
 
-	if(!patient)
-		return redirect('/clinical?invalid-user');
+	/*if(!patient)
+		return redirect('/clinical?invalid-user');*/
 
-	const { personal } = patient;
+	//const { personal } = patient;
 
-  const personalData = personalInternalComponent({
+  /*const personalData = personalInternalComponent({
 		elements: [
 			{ defaultValue: personal.fullname },
 			{ defaultValue: personal.age },
 			{ defaultValue: personal.gender }
 		]
-	});
+	});*/
 	const symptoms = symptomsInternalComponent(anamnesis.generalClinic.symptoms);
 	const diseaseData = diseaseDataInternalComponent(anamnesis.generalClinic?.diseaseData);
 	const complementaryExams = examsInternalComponent(anamnesis?.generalClinic?.complementaryExams);
@@ -52,7 +51,6 @@ export default async function Page({ params }: {
 	const hospitalization = hospitalizationInternalComponent(anamnesis?.generalClinic.hospitalization);
 
 	const generalClinical:InternalComponent[] = [
-		personalData,
 		symptoms,
 		diseaseData,
 		complementaryExams,
@@ -68,7 +66,10 @@ export default async function Page({ params }: {
 	
   return(
 		<main>
-			<Button>Visualizar</Button>
+			<div className="flex gap-x-3">
+				<Button>Visualizar</Button>
+				<Button className="bg-slate-700">Internamento</Button>
+			</div>
 
 			<div className="flex flex-col gap-y-5 my-8">
 				<GlobalComponent

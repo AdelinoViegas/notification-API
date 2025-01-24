@@ -11,7 +11,7 @@ export default async function Page({ params }: {
   const { patientId } = await params;
   const results = await getPatientScheduledServices({ patientId });
   const rows = TableFormatter.urgencyExamResults(results);
-  
+ 
   return(
     <main>
       <WsUpdate target="laboratory" />
