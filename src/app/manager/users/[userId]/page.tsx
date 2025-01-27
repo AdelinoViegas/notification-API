@@ -19,7 +19,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function Page({ params }: { params: Promise<{ userId: string }>}){
   const { userId } = await params;
-  const user = await getUser(userId);
+  const user = await getUser(userId, true);
   if(!user)
     redirect('/?invalid-user');
 

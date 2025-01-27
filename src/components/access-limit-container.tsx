@@ -17,8 +17,8 @@ export default async function AccessLimitContainer({
   const userAccessLimit = await getUserAccessLimit(userId);
   const startAt = userAccessLimit?.startAt?String(userAccessLimit.startAt):undefined;
   const endAt = userAccessLimit?.endAt?String(userAccessLimit.endAt):undefined;
-  const user = await getUser(userId);
-  const userGroup = await getUserGroup(String(user?.userGroupId));
+  const user = await getUser(userId, true);
+  const userGroup = await getUserGroup(user.userGroupId as string);
   const isAdmin = userGroup? userGroup.name === 'administrator': false;
 
   return(

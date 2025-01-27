@@ -224,7 +224,7 @@ async function getUsers({ name }: { name?: string }){
   return usersFormated;
 }
 
-async function getUser(userId: string){
+async function getUser(userId: string, adminCall?: boolean){
   try{
     const user = await userModel.findById({_id: userId}).select({ password: 0 });
     if(!user)
@@ -237,7 +237,7 @@ async function getUser(userId: string){
     
     const userSession = await currentLocationModel.findOne({ userId: user.id, isActive: true });
     
-    if(!userSession)
+    if(!userSession && !adminCall)
       throw new Error("Sem sessão definida", { cause: "no_session"});
 
     return {
@@ -250,9 +250,9 @@ async function getUser(userId: string){
       userGroupId: userGroup._id.toString(),
       isActive: user.isActive,
       session: {
-        isActive: userSession.isActive,
-        locationId: userSession.locationId?.toString(),
-        createdAt: userSession.createdAt as Date
+        isActive: userSession?.isActive,
+        locationId: userSession?.locationId?.toString(),
+        createdAt: userSession?.createdAt as Date
       }
     };
   }catch(e: unknown){
