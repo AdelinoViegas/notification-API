@@ -5,8 +5,7 @@ import Header from "@/components/header";
 import Table from "@/components/table";
 import Search from "@/components/ui/search";
 import tableFormater,{ User } from "@/lib/table-formater";
-import { PlusIcon } from "@heroicons/react/24/outline";
-
+import SignUserModal from "@/components/sign-user-modal";
 export const dynamic = "force-dynamic";
 
 export default async function Page({
@@ -23,13 +22,9 @@ export default async function Page({
     <main className="px-2 pt-4 w-full">
 
       <Header title="Usuários Cadastrados">
-        <Link href="/manager/users/sign" className="-translate-y-2">
-            <Button className="flex gap-x-2">
-              <PlusIcon className="w-5"/>
-              Novo Usuário
-            </Button>
-        </Link>
+        <SignUserModal />
       </Header>
+      
       <Search
         label="Filtrar pelo Nome Completo"
         filterKey="name"

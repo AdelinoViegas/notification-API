@@ -108,7 +108,7 @@ async function login(prev: unknown, formData: FormData){
   }
 }
 
-async function endSession(){
+async function logout(){
   if((await cookies()).has(String(process.env.MASTER_HEADER_AUTH))){
     const userId = await whoAreYou();
     await loginAccessTokensModel.updateOne({ userId, inUse: true }, {  inUse: false });
@@ -127,17 +127,13 @@ async function signUser(prev: unknown, formData: FormData){
     const tel = formData.get('tel');
     const password = formData.get("password") as string; 
     const checkPassword = formData.get("checkPassword") as string; 
-    const userGroupId = formData.get('userGroupId');
+    const userGroupId = formData.get('userGroupId') as string;
     
     if(password !== checkPassword)
       throw new Error("As senhas informadas são diferentes!", { cause: 'not_equal'})
     
-    if(!passwordValidator(password))
-      throw new Error("A senha informada é demasiada fraca!", { cause: "weak_pwd"});
-    
     const encPassword = await encryptPwd(password);
-    const userGroup = await getUserGroup(String(userGroupId));
-    const isAdmin = userGroup?userGroup.name === 'administrator':false;
+    const userGroup = await getUserGroup(userGroupId);
     
     const user = new userModel({
       fullname,
@@ -145,27 +141,24 @@ async function signUser(prev: unknown, formData: FormData){
       email,
       tel,
       password: encPassword,
-      userGroupId,
-      isActive: isAdmin,
-      isAdmin
+      userGroupId
     });
 
-    if(userGroup?.name === "clinical"){
-      const clinicalUser = new userClinicalModel({
+    if(userGroup.name === "clinical"){
+      await userClinicalModel.create({
         userId: user._id,
-        categoryId: userCategory[2]._id,
+        categoryId: userCategory[2]._id, // por padrão "outros"
       });
-      const unitWorkplace = await unitModel.findOne();
-      const workplaceAccess = new workplaceModel({
+
+      const unitWorkplace = await unitModel.findOne(); // primeira unidade fisica existente
+      await workplaceModel.create({
         userId: user._id,
         workplaceId: unitWorkplace?._id,
         actor: await whoAreYou(),
       });
-
-      await workplaceAccess.save();
-      await clinicalUser.save();
     }
-
+    
+    await user.validate();
     await user.save();
    
     return {
@@ -199,7 +192,14 @@ async function getUserGroups(options?: boolean){
 }
 
 async function getUserGroup(groupId: string){
-  return await userGroupModel.findById({_id: groupId});
+  const userGroup = await userGroupModel.findById({ _id: groupId }); 
+
+  return {
+    _id: userGroup?._id.toString() as string,
+    label: userGroup?.label as string,
+    route: userGroup?.route as string,
+    name: userGroup?.name as string
+  };
 }
 
 async function getUsers({ name }: { name?: string }){
@@ -603,6 +603,6 @@ export {
   getGrantedPermission,
   resetUserPassword,
   verifyRouteUserPermission,
-  endSession
+  logout
 };
 

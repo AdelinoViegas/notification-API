@@ -2,7 +2,7 @@
 import { whoAreYou } from "@/lib/web-token";
 import DropDown from "@/components/drop-down";
 import Notification from "@/components/notification";
-import { UserIcon } from "@heroicons/react/24/outline";
+import { BiUser as UserIcon } from "react-icons/bi";
 import { getUserById } from "@/app/backend/api/manager/api"
 
 export const getFirstAndLastName = (fullname: string)=>{

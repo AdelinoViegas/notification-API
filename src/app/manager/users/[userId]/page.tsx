@@ -70,11 +70,11 @@ export default async function Page({ params }: { params: Promise<{ userId: strin
                 </Button>
               </Link>
 
-              <UserStatusButton
+              {/* <UserStatusButton
                 isAdmin={user.isAdmin}
                 status={user.isActive}
                 userId={userId}
-              />
+              /> */}
             </div>
           </Card>
 

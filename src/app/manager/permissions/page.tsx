@@ -2,7 +2,7 @@ import Link from "next/link";
 import Button from "@/components/ui/button";
 import { getPermissions } from "@/app/backend/api/manager/api";
 import Header from "@/components/header";
-import { PlusIcon } from "@heroicons/react/24/outline";
+import { BiPlus as PlusIcon } from "react-icons/bi";
 import { MdOutlineModeEdit  } from "react-icons/md";
 
 export const dynamic = "force-dynamic";

@@ -9,7 +9,7 @@ import { getPatients } from "@/app/backend/api/clinical/api";
 import WsUpdate from "@/components/ws-update";
 import Pagination from "@/components/pagination";
 import { PiArchiveDuotone } from "react-icons/pi";
-import { PlusIcon } from "@heroicons/react/24/outline";
+import { BiPlus as PlusIcon } from "react-icons/bi";
 
 export const dynamic = "force-dynamic";
 

@@ -58,7 +58,7 @@ export default function UserForm({
 
   return(
     <Card>
-      <form className='w-96' {...{action}}>
+      <form className='w-auto' {...{action}}>
         <input 
           type="hidden" 
           name="userId" 
@@ -86,7 +86,6 @@ export default function UserForm({
           placeholder='Endereço de E-mail'
           textLabel='E-mail'
           name="email"
-          required
           defaultValue={user?.email} 
         />
 

@@ -5,7 +5,7 @@ import Button from "@/components/ui/button";
 import Link from "next/link";
 import { getDoctorCalendars } from "@/app/backend/api/clinical/urgency-bank-api";
 import tableFormater, { Calendar } from "@/lib/table-formater";
-import { PlusIcon } from "@heroicons/react/24/outline";
+import { BiPlus as PlusIcon } from "react-icons/bi";
 
 export const dynamic = "force-dynamic";
 

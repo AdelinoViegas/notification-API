@@ -7,7 +7,7 @@ import {
 } from 'next/navigation';
 import Button from "@/components/ui/button";
 import Modal from '@/components/modal';
-import { ArchiveBoxXMarkIcon } from '@heroicons/react/24/outline';
+import { HiArchiveBoxXMark as ArchiveBoxXMarkIcon } from 'react-icons/hi2';
 import { changeArchived } from '@/app/backend/api/clinical/api';
 
 export default function ArchiveButton({ invert }:{ invert?: boolean }){

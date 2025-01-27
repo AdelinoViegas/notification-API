@@ -13,7 +13,6 @@ import {
 import InputField from "@/components/ui/input-field";
 import Selection, { SelectionOption } from "@/components/ui/selection";
 import PatientGroups from "@/components/forms/patient-groups";
-import { SimpleTooltip } from "@/components/tooltip";
 import { TbHelp } from "react-icons/tb";
 import { getExternalUnits } from "@/app/backend/api/clinical/urgency-bank-api";
 import ExternalUnitForm from "@/components/forms/external-unit-form";
@@ -108,11 +107,6 @@ const tabComponents = [
       />
 
       <div className="flex gap-3 items-center">
-        <SimpleTooltip 
-          id="documentation" 
-          content="Formatos válidos de documentos: 123456789AB123 | AB-1234-1234 | P-12345678" 
-        />
-
         <InputField
           textLabel="Documentação (BI | Passaporte |Cédula)"
           name="patientDocument" 

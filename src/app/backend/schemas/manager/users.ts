@@ -4,7 +4,8 @@ const userSchema = new Schema({
   username: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    match: new RegExp("^[a-zA-Z]+$")
   },
   fullname: {
     type: String,
@@ -21,14 +22,10 @@ const userSchema = new Schema({
   isActive: {
     type: Boolean,
     default: false
-  },
-  isAdmin: {
-    type: Boolean,
-    default: false
   }
 }, {
   timestamps: true,
-  collection: 'user'
+  collection: 'users'
 });
 
 const loginAccessTokensSchema = new Schema({

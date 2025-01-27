@@ -6,7 +6,7 @@ import {
   useSearchParams 
 } from "next/navigation";
 import InputField from "@/components/ui/input-field";
-import { BackspaceIcon } from "@heroicons/react/24/outline";
+import { BsBackspace as BackspaceIcon } from "react-icons/bs";
 import Button from "@/components/ui/button";
 import debounce from "debounce";
 import { useRef } from "react";

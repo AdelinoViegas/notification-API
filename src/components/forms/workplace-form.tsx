@@ -8,8 +8,8 @@ import { useRouter } from "next/navigation";
 import Button from "@/components/ui/button";
 import Selection from "@/components/ui/selection";
 import { enterIntoWorkplace } from "@/app/backend/api/clinical/workplace-api";
-import { endSession } from "@/app/backend/api/manager/api";
-import { ArrowUturnLeftIcon } from "@heroicons/react/24/outline";
+import { logout } from "@/app/backend/api/manager/api";
+import { HiArrowUturnLeft as ArrowUturnLeftIcon} from "react-icons/hi2";
 import { toast } from "react-toastify";
 
 export default function WorkplaceFrom({
@@ -19,7 +19,7 @@ export default function WorkplaceFrom({
 }){
   const [ state, action ] = useActionState(enterIntoWorkplace, { message: "", status: false });
   const router = useRouter();
-  const handlaBackButton = async()=> await endSession();
+  const handlaBackButton = async()=> await logout();
 
   useEffect(()=>{
     if(state.message){

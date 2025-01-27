@@ -13,7 +13,7 @@ import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
 import Selection, { SelectionOption } from "@/components/ui/selection";
 import Alert from "@/components/alert";
-import { PlusIcon } from "@heroicons/react/24/outline";
+import { BiPlus as PlusIcon } from "react-icons/bi";
 import { 
   signExam, 
   signCCG,

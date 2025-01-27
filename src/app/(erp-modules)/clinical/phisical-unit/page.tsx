@@ -7,7 +7,7 @@ import Button from "@/components/ui/button";
 import { PhisicalUnit } from "@/lib/table-formater";
 import tableFormater from "@/lib/table-formater";
 import { getUnits } from "@/app/backend/api/clinical/urgency-bank-api";
-import { PlusIcon } from "@heroicons/react/24/outline";
+import { BiPlus as PlusIcon } from "react-icons/bi";
 import { IoPerson } from "react-icons/io5";
 import { FaHospital } from "react-icons/fa";
 

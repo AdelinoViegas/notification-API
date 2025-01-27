@@ -3,7 +3,7 @@ import Card from "@/components/card";
 import SubTitle from "@/components/ui/subtitle";
 import Selection, { SelectionOption } from "@/components/ui/selection";
 import Button from "@/components/ui/button";
-import { TrashIcon } from "@heroicons/react/24/outline";
+import { BiTrash as TrashIcon } from "react-icons/bi";
 import { 
   getUnits, 
   grantUnitAccess, 

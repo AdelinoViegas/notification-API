@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Button from "@/components/ui/button";
 import Modal from '@/components/modal';
-import { ArrowUturnLeftIcon } from '@heroicons/react/24/outline';
+import { HiArrowUturnLeft as ArrowUturnLeftIcon } from 'react-icons/hi2';
 import { closePatientProcess } from '@/app/backend/api/clinical/process-api';
 
 export default function CloseProcess({

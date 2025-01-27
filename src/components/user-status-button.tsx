@@ -1,6 +1,6 @@
 'use client';
 
-import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
+import { BsExclamationCircle as ExclamationCircleIcon } from "react-icons/bs";
 import Button from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { changeUserState } from "@/app/backend/api/manager/api";

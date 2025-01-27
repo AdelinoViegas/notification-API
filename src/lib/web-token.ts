@@ -12,10 +12,8 @@ async function authJWT({
   route: string;
 }){
   try{
-    const alg = 'HS256';
-    
     const jwt = new SignJWT({ userId, route })
-    .setProtectedHeader({alg})
+    .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setIssuer('urn:socompser:issuer')
     .setAudience('urn:socompser:audience')
@@ -35,7 +33,10 @@ async function decryptAndVerifyJWT(token: string){
     const { payload } = await jwtVerify(token, privateKey)   
     
     return {
-      data: payload,
+      data: payload as { 
+        userId: string,
+        route: string,
+      },
       status: true,
     };
   }catch(err: unknown){

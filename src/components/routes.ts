@@ -1,7 +1,7 @@
 import { 
-  UsersIcon,
-  KeyIcon,
-} from "@heroicons/react/24/outline";
+  FaUserSecret as UsersIcon,
+  FaKey as KeyIcon 
+} from "react-icons/fa6";
 import { LuStethoscope } from "react-icons/lu";
 import { PiAmbulance } from "react-icons/pi";
 import { FiUsers } from "react-icons/fi";
