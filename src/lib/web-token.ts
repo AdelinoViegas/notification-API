@@ -35,10 +35,7 @@ async function decryptAndVerifyJWT(token: string){
     const { payload } = await jwtVerify(token, privateKey)   
     
     return {
-      data: payload as {
-        userId: string;
-        route: string;
-      },
+      data: payload,
       status: true,
     };
   }catch(err: unknown){
@@ -56,7 +53,7 @@ async function whoAreYou(){
     if((await cookies()).has(String(process.env.MASTER_HEADER_AUTH))){
       const token = (await cookies()).get(String(process.env.MASTER_HEADER_AUTH))?.value;
       const { data } = await decryptAndVerifyJWT(String(token));
-      return String(data?.userId);
+      return data?.userId;
     }
     throw new Error('sem login valido');
   }catch(err: unknown){

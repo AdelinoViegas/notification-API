@@ -38,10 +38,7 @@ async function getPatients({
 }:patientFilters){
   try{
     const userId = await whoAreYou() as string;
-    const user = await clinicalUserModel.findOne({userId}).select({
-      officeId: 1,
-    });
-
+    const user = await clinicalUserModel.findOne({userId}).select({ officeId: 1});
     const patients = await triedModel.find({ urgencyServices: user?.officeId });
     const patientList = [];
 
@@ -53,12 +50,12 @@ async function getPatients({
   
       const patientGroup = await groupModel.findOne({patientId: patientData._id});
       const accessType = await accessTypeModel.findOne({patientId: patientData._id});
+      const priority = await priorityModel.findOne({patientId: patient.patientId})
       let accessTypeLabel = patientAccess.find((props)=>props._id === accessType?.type)?.label;
       let groupLabel = patientGroups.find((props)=>(props._id === patientGroup?.type))?.label;
-      const priority = await priorityModel.findOne({patientId: patient.patientId})
       
-      accessTypeLabel = accessTypeLabel?accessTypeLabel:"Indefinido";
-      groupLabel = groupLabel?groupLabel:"Indefinido";
+      accessTypeLabel = accessTypeLabel || "Indefinido";
+      groupLabel = groupLabel || "Indefinido";
 
       patientList.push({
         id: patientData._id.toString(),
@@ -70,7 +67,7 @@ async function getPatients({
         priorityType: priorityToComponent.find((props)=>props._id == priority?.priority)?.label,
       });
     }
-    
+
     return name?orderByPriority(patientList.filter((item)=>item.fullname.match(new RegExp(`^${name}`, 'i')))).orderElements:
     priority?orderByPriority(patientList.filter((item)=>item.priorityType === priorityTranslator.find((props)=>props._id === priority)?.label)).orderElements:
     orderByPriority(patientList).orderElements;

@@ -40,7 +40,7 @@ export default async function Layout({
       
       <div>
         <TabScreening />
-        <div className="bg-white px-3 lg:px-16 py-5 rounded-b-xl border border-t-0 max-h-sizeTab overflow-auto">
+        <div className="bg-white px-3 lg:px-16 py-5 rounded-b-xl border border-t-0 max-h-sizeTab overflow-auto scroll">
           {children}
         </div>
       </div>

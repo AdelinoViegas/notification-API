@@ -35,7 +35,7 @@ export default function SignPatientForm(){
 	const verifyRequiredInputs = ()=>{
 		try{
 			const elements = (formRef.current?.querySelectorAll('[required]') as unknown as InputElement[]);
-	
+	 
 			elements.forEach((element)=>{
 				const elementIdValue = element.id.split(':') as string[];
 

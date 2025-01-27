@@ -85,7 +85,7 @@ const userGroups = [
 ];
 
 export default async function masterAutoSetup(){
-  try{
+  try{    
     const isConfigureded = await userModel.findOne({username: 'admin'});
     if(isConfigureded)
       return {
@@ -99,7 +99,7 @@ export default async function masterAutoSetup(){
     }
 
     // config admin account 
-    const password = await encryptPwd('admin'); // default password
+    const password = await encryptPwd('admin'); // default password 
     const userGroupAdmin = await userGroupModel.findOne({name: 'administrator'}).select({_id: 1});
     
     if(!userGroupAdmin){

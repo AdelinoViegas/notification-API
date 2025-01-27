@@ -19,7 +19,7 @@ export default function WorkplaceFrom({
 }){
   const [ state, action ] = useActionState(enterIntoWorkplace, { message: "", status: false });
   const router = useRouter();
-  const handlaBackButton = async()=>await endSession();
+  const handlaBackButton = async()=> await endSession();
 
   useEffect(()=>{
     if(state.message){

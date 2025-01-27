@@ -50,7 +50,8 @@ async function login(prev: unknown, formData: FormData){
     const userGroupRoute = await userGroupModel.findOne({_id: user.userGroupId});
     
     if(userGroupRoute?.name !== 'administrator'){
-      const accessLimit = await getUserAccessLimit(user?._id.toString());
+      const accessLimit = await getUserAccessLimit(user?._id.toString()); 
+
       if(!accessLimit) 
         throw new Error("Sem acesso definido, contacte o seu administrador!");
       

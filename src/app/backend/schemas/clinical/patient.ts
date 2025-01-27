@@ -8,8 +8,7 @@ import {
 const patientSchema = new Schema({
   fullname: {
     type: String,
-    required: true,
-    match: new RegExp("^[a-zA-Z]+$")
+    required: true
   },
   registerNumber: {
     type: Number,

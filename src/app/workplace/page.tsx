@@ -10,12 +10,11 @@ export const dynamic = "force-dynamic";
 export default async function Page(){
   const userId = await whoAreYou() as string;
   const units = await getGrantedUnitAccess(userId);
+  const user = await getUserById(userId);
 
   // if(!units.length || !userId)
   //   redirect("/?nologin");
-
-  const user = await getUserById(userId);
-  
+ 
   return(
     <main className="bg-white h-screen flex-col lg:flex-row-reverse flex gap-3 justify-center items-center">
       <div className="px-3 py-2 lg:mx-32 mt-32 lg:mt-0">

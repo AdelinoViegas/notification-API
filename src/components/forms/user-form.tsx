@@ -131,8 +131,8 @@ export default function UserForm({
           </>
         }
         <div className='flex gap-3'>
-          <Button>{jsonData?"Actualizar":"Salvar"}</Button>
           <Button cancel type="reset">Limpar</Button>
+          <Button>{jsonData?"Actualizar":"Salvar"}</Button>
         </div>
       </form>
       {
