@@ -2,9 +2,9 @@ import SubTitle from "@/components/ui/subtitle";
 import { redirect } from "next/navigation";
 import Alert from "@/components/alert";
 import UserClinicalForm from "@/components/forms/user-clinical-form";
-import { getUserById as getClinicalUser, getSpecialties } from "@/app/backend/api/clinical/api";
+import { getUser as getClinicalUser, getSpecialties } from "@/app/backend/api/clinical/api";
 import { 
-  getUserById, 
+  getUser, 
   getUserGroup 
 } from "@/app/backend/api/manager/api";
 
@@ -15,7 +15,7 @@ export default async function UserClinicalCard({
   userId: string;
   className?: string;
 }){
-  const user = await getUserById(userId);
+  const user = await getUser(userId);
   const specialties = await getSpecialties();
 
   if(!user)

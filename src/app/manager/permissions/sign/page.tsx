@@ -5,7 +5,7 @@ import { getUserGroups } from "@/app/backend/api/manager/api";
 export const dynamic = "force-dynamic";
 
 export default async function Page(){
-  const userGroups = await getUserGroups(true);
+  const userGroups = await getUserGroups();
   return(
     <main className="px-2 pt-4 w-full">
       <Header title="Cadastrar Permissão" />

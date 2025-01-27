@@ -38,7 +38,7 @@ export default function UserForm({
   const params = useParams();
 
   const handleGroup = async()=>{
-    const groups = await getUserGroups(true);
+    const groups = await getUserGroups();
     setUserGroups(groups);
   }
 

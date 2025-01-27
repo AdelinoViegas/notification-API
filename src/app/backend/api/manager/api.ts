@@ -176,18 +176,19 @@ async function signUser(prev: unknown, formData: FormData){
   }
 }
 
-async function getUserGroups(options?: boolean){
+async function getUserGroups(){
   const userGroups = await userGroupModel.find();
   const userGroupFormated = [];
 
-  if(options){
-    for(const userGroup of userGroups){
-      userGroupFormated.push({
-        _id: userGroup._id.toString(),
-        label: userGroup.label as string,
-      });
-    }
+  for(const userGroup of userGroups){
+    userGroupFormated.push({
+      _id: userGroup._id.toString(),
+      label: userGroup.label as string,
+      route: userGroup?.route as string,
+      name: userGroup?.name as string
+    });
   }
+
   return userGroupFormated;
 }
 
@@ -224,20 +225,6 @@ async function getUsers({ name }: { name?: string }){
   return usersFormated;
 }
 
-async function getUsersByGroupId(groupId: string){
-  const users = await userModel.find({userGroupId: groupId}).select({password: 0});
-  
-  return {
-    users,
-    count: users.length
-  };
-}
-
-async function getUserById(userId: string){
-  if(userId)
-    return await userModel.findById({_id: userId}).select({password: 0});
-}
-
 async function getUser(userId: string){
   try{
     const user = await userModel.findById({_id: userId}).select({ password: 0 });
@@ -261,8 +248,10 @@ async function getUser(userId: string){
       email: user.email as string,
       tel: user.tel as string,
       userGroup: userGroup.label as string,
+      userGroupId: userGroup._id.toString(),
+      isActive: user.isActive,
       session: {
-        isActive: userSession.isActive as boolean,
+        isActive: userSession.isActive,
         locationId: userSession.locationId?.toString(),
         createdAt: userSession.createdAt as Date
       }
@@ -276,22 +265,13 @@ async function getUser(userId: string){
   }
 }
 
-async function changeUserState(_id: string, state: boolean){
+async function updateUserState(id: string, state: boolean){
   try{
-    await userModel.findByIdAndUpdate({_id}, {
+    await userModel.updateOne({ _id: id }, {
       isActive: state,
     });
-    
-    return {
-      message: 'estado actualizado com sucesso!',
-      status: true,
-    }
   }catch(err: unknown){
-    return {
-      message: 'erro',
-      status: false,
-      detail: err,
-    }
+    console.log(err);
   }
 }
 
@@ -316,7 +296,7 @@ async function updateUser(prev: unknown, formData: FormData){
     }
   }catch(err: unknown){
     return {
-      message: 'Erro!',
+      message: 'Falha na actualização',
       status: true,
       detail: err
     }
@@ -356,13 +336,8 @@ async function signPermission(prev: unknown, formData: FormData){
     }
   }catch(e: unknown){
     const err = e as Error & {code: number}; 
-    if(err.code)
-      return {
-        message: 'Esta permissão já foi cadastrada!',
-        status: false
-      }
     return {
-      message: `Erro, ${err.message}`,
+      message: err.code?'Esta permissão já foi cadastrada!':`Erro, ${err.message}`,
       status: false
     }
   }
@@ -587,10 +562,8 @@ export {
   getUserGroups,
   getUserGroup,
   getUsers,
-  getUsersByGroupId,
-  getUserById,
   getUser,
-  changeUserState,
+  updateUserState,
   updateUser,
   signPermission,
   getPermissions,

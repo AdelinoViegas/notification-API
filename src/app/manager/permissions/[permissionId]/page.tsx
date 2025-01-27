@@ -6,7 +6,7 @@ import Card from "@/components/card";
 export default async function Page({params}:{ params: Promise<{ permissionId : string}>}){
   const { permissionId } = await params;
   const permission = await getPermission(permissionId);
-  const userGroups = await getUserGroups(true);
+  const userGroups = await getUserGroups();
 
   return(
     <main className="px-2 pt-4 w-full">

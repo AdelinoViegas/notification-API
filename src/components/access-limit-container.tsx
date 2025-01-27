@@ -4,7 +4,7 @@ import SubTitle from "@/components/ui/subtitle";
 import AccessLimitForm from "@/components/forms/access-limit-form";
 import { 
   getUserGroup, 
-  getUserById 
+  getUser 
 } from "@/app/backend/api/manager/api";
 import Alert from "@/components/alert";
 
@@ -17,7 +17,7 @@ export default async function AccessLimitContainer({
   const userAccessLimit = await getUserAccessLimit(userId);
   const startAt = userAccessLimit?.startAt?String(userAccessLimit.startAt):undefined;
   const endAt = userAccessLimit?.endAt?String(userAccessLimit.endAt):undefined;
-  const user = await getUserById(userId);
+  const user = await getUser(userId);
   const userGroup = await getUserGroup(String(user?.userGroupId));
   const isAdmin = userGroup? userGroup.name === 'administrator': false;
 

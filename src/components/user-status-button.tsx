@@ -3,7 +3,7 @@
 import { BsExclamationCircle as ExclamationCircleIcon } from "react-icons/bs";
 import Button from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { changeUserState } from "@/app/backend/api/manager/api";
+import { updateUserState } from "@/app/backend/api/manager/api";
 
 type StatusProps = {
   status: boolean;
@@ -13,18 +13,16 @@ type StatusProps = {
 
 export default function UserStatusButton({
   status,
-  userId,
-  isAdmin
+  userId
 }: StatusProps){
   const route = useRouter();
   
   return(
     <Button
-      disabled={isAdmin}
       className="flex gap-x-2" 
       cancel={status} 
       onClick={async()=>{
-        await changeUserState(userId, !status); 
+        await updateUserState(userId, !status); 
         route.refresh();
       }}
     >

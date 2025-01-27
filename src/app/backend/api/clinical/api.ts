@@ -99,7 +99,7 @@ async function getUser(userId: string){
     categoryId: clinicalUser?.categoryId as string,
   }
 }
-async function getUserById(userId: string){
+async function getUser(userId: string){
   return await userModel.findOne({userId});
 }
 
@@ -1143,7 +1143,7 @@ export {
   getUsers,
   getUser,
   getDoctors,
-  getUserById,
+  getUser,
   signUser,
   updateUser,
   signPatient,

@@ -1,5 +1,5 @@
 import { 
-  getUserById, 
+  getUser, 
   getUserGroup 
 } from "@/app/backend/api/manager/api";
 import UserStatusButton from "@/components/user-status-button";
@@ -12,17 +12,18 @@ import AccessLimitContainer from "@/components/access-limit-container";
 import Header from "@/components/header";
 import { redirect } from "next/navigation";
 import { MdOutlineModeEdit } from "react-icons/md";
-export const dynamic = 'force-dynamic';
 import TitleAndSubtitle from "@/components/title-subtitle";
 import Card from "@/components/card";
 
+export const dynamic = 'force-dynamic';
+
 export default async function Page({ params }: { params: Promise<{ userId: string }>}){
   const { userId } = await params;
-  const user = await getUserById(userId);
+  const user = await getUser(userId);
   if(!user)
     redirect('/?invalid-user');
 
-  const userGroup = await getUserGroup(user.userGroupId?.toString() as string);
+  const userGroup = await getUserGroup(user.userGroupId as string);
   
   return(
     <main className="px-2 pt-4 w-full">
@@ -70,11 +71,10 @@ export default async function Page({ params }: { params: Promise<{ userId: strin
                 </Button>
               </Link>
 
-              {/* <UserStatusButton
-                isAdmin={user.isAdmin}
-                status={user.isActive}
+              <UserStatusButton
+                status={user.isActive as boolean}
                 userId={userId}
-              /> */}
+              />
             </div>
           </Card>
 

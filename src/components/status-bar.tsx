@@ -3,7 +3,7 @@ import { whoAreYou } from "@/lib/web-token";
 import DropDown from "@/components/drop-down";
 import Notification from "@/components/notification";
 import { BiUser as UserIcon } from "react-icons/bi";
-import { getUserById } from "@/app/backend/api/manager/api"
+import { getUser } from "@/app/backend/api/manager/api"
 
 export const getFirstAndLastName = (fullname: string)=>{
   if(!fullname)
@@ -19,7 +19,7 @@ export default async function StatusLoginUser(){
   // if(!userId) 
   //   redirect("/?invalid-user");
 
-  const user = await getUserById(userId as string);
+  const user = await getUser(userId as string);
   const menuItems = [
     {
       label: "Meu Perfil",

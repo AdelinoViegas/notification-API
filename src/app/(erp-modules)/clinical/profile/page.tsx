@@ -5,8 +5,8 @@ import Button from "@/components/ui/button";
 import Header from "@/components/header";
 import InputField from "@/components/ui/input-field";
 import { whoAreYou } from "@/lib/web-token";
-import { getUserById } from "@/app/backend/api/manager/api";
-//import { getUserById as getClinicalUser } from "@/app/backend/api/clinical/api";
+import { getUser } from "@/app/backend/api/manager/api";
+//import { getUser as getClinicalUser } from "@/app/backend/api/clinical/api";
 
 export const dynamic = "force-dynamic";
 
@@ -14,7 +14,7 @@ export default async function Page(){
   const userId = await whoAreYou();
   if(!userId) 
     redirect('/');
-  const user = await getUserById(userId); 
+  const user = await getUser(userId); 
   //const clinicalData = await getClinicalUser(userId);
 
   return(

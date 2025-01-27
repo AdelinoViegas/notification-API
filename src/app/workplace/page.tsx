@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Header from "@/components/header";
-import { getUserById } from "@/app/backend/api/manager/api";
+import { getUser } from "@/app/backend/api/manager/api";
 import { whoAreYou } from "@/lib/web-token";
 import WorkplaceFrom from "@/components/forms/workplace-form";
 import { getGrantedUnitAccess } from "@/app/backend/api/clinical/urgency-bank-api";
@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 export default async function Page(){
   const userId = await whoAreYou() as string;
   const units = await getGrantedUnitAccess(userId);
-  const user = await getUserById(userId);
+  const user = await getUser(userId);
 
   // if(!units.length || !userId)
   //   redirect("/?nologin");

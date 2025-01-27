@@ -1,5 +1,3 @@
-import Link from "next/link";
-import Button from "@/components/ui/button";
 import { getUsers } from "@/app/backend/api/manager/api";
 import Header from "@/components/header";
 import Table from "@/components/table";
