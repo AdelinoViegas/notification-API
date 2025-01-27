@@ -12,7 +12,6 @@ import { cookies, headers } from "next/headers";
 import { getUserAccessLimit } from "@/lib/access-limit";
 import { 
   encryptPwd, 
-  passwordValidator,
   decryptPwd 
 } from "@/lib/auth-pwd";
 import masterAutoSetup from "@/app/backend/api/manager/setup";
@@ -343,52 +342,27 @@ async function signPermission(prev: unknown, formData: FormData){
   }
 }
 
-async function getPermissions(userGroupId?: string, permId?: string, option?:boolean){
-  const formatedPermissions = [];
-  const permissions = userGroupId?await permissionModel.find({ userGroupId }):await permissionModel.find();
-  
-  if(option){ 
-    for(const permission of permissions)
-      formatedPermissions.push({
-        _id: permission._id.toString(),
-        label: permission.label,
-      });
-
-    return formatedPermissions;
-  }
-
-  if(permId){
-    const permission = await permissionModel.findById({_id: permId});
-    return {
-      label: permission?.label,
-      route: permission?.route,
-      userGroupId: permission?.userGroupId,
-      detail: permission?.detail,
-      _id: permission?._id.toString(),
-    }
-  }
-
-  for(const permission of permissions)
-    formatedPermissions.push({
-      _id: permission?._id.toString(),
-      label: permission?.label,
-      route: permission?.route,
-      userGroupId: permission?.userGroupId,
-      group: (await userGroupModel.findById({_id: permission?.userGroupId}))?.label,
-      detail: permission?.detail,
-    });
-  
-  return formatedPermissions;
-}
-
-async function deletePermission(permId: string){
+async function getPermissions(userGroupId?: string){
   try{
-    await permissionModel.deleteOne({_id: permId});
-    return true;
+    const permissions = [];
+    const dbPermissions = await (userGroupId?permissionModel.find({ userGroupId }):permissionModel.find());
+
+
+    for(const permission of dbPermissions){
+      const userGroup = await getUserGroup(permission?.userGroupId?.toString() as string);
+      permissions.push({
+        _id: permission._id.toString(),
+        label: permission.label as string,
+        route: permission.route as string,
+        userGroupId: userGroup._id,
+        userGroupLabel: userGroup.label,
+        detail: permission.detail as string,
+      });
+    }
+    return permissions;
   }catch(e: unknown){
-    const err = e as Error;
-    console.log(err.message);
-    return false;
+    console.log(e);
+    return [];
   }
 }
 
@@ -567,7 +541,6 @@ export {
   updateUser,
   signPermission,
   getPermissions,
-  deletePermission,
   getPermission,
   grantPermission,
   getUserPermissions,

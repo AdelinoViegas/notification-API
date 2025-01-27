@@ -99,9 +99,6 @@ async function getUser(userId: string){
     categoryId: clinicalUser?.categoryId as string,
   }
 }
-async function getUser(userId: string){
-  return await userModel.findOne({userId});
-}
 
 async function signUser(prev: unknown, formData: FormData){
   try{
@@ -1143,7 +1140,6 @@ export {
   getUsers,
   getUser,
   getDoctors,
-  getUser,
   signUser,
   updateUser,
   signPatient,

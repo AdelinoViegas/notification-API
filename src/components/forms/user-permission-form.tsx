@@ -26,12 +26,12 @@ export default function AddUserPermissionForm({
 }){
 
   const [ messageState, setMessageState ] = useState(false);
-  const [ state, action ] = useActionState(grantPermission, { message: '',status: false});
+  const [ state, action ] = useActionState(grantPermission, { message: '', status: false});
   const router = useRouter();
   const [ permissions, setPermissions ] = useState<SelectionOption[]>([]);
 
   const handlePermission = useCallback(async ()=>{
-    const perms = await getPermissions(userGroupId, undefined, true) as SelectionOption[];
+    const perms = await getPermissions(userGroupId);
     setPermissions(perms);
   }, [userGroupId]);
 

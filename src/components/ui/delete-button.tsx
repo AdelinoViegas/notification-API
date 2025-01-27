@@ -1,7 +1,7 @@
 'use client';
 
 import Button from "@/components/ui/button";
-import { TrashIcon } from "@heroicons/react/24/outline";
+import { BiTrash } from "react-icons/bi";
 
 type DeleteButtonProps = {
   id: string;
@@ -17,7 +17,7 @@ export default function DeleteButton({
   return(
     <Button onClick={()=>callback(id)} cancel>
       { icon?
-        <TrashIcon className="w-5 h-5" />:
+        <BiTrash className="w-5 h-5" />:
         'Apagar'
       }
     </Button>

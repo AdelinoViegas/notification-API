@@ -1,8 +1,4 @@
 import clsx from "clsx";
-import { 
-  HandThumbUpIcon,
-  HandThumbDownIcon
-} from "@heroicons/react/24/outline";
 
 type ParamsProps = {
   status: boolean;
@@ -28,12 +24,12 @@ export default function LabelStatus({
           status ? 
             <div className="flex gap-3">
               <p>{customText}</p>
-              <HandThumbUpIcon className="h-5" />
+              {/* <HandThumbUpIcon className="h-5" /> */}
             </div>
             :
             <div className="flex gap-3">
               <p>{customText}</p>
-              <HandThumbDownIcon className="h-5" />
+              {/* <HandThumbDownIcon className="h-5" /> */}
             </div>
         )
       }

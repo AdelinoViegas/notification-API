@@ -12,19 +12,19 @@ type PermissionsProps = {
   label: string;
   detail: string;
   userGroupId: string;
-  group: string;
+  userGroupLabel: string;
 }
 
 function Permission({
   _id,
   label,
   detail,
-  group,
+  userGroupLabel,
 }: PermissionsProps){
   return(
     <div className="bg-white h-auto w-full lg:w-60 px-4 py-3 rounded-xl border">
       <h2 className="font-medium mb-4 text-primary text-lg">{label}</h2>
-      <p className="inline-flex text-sm bg-gray-700 text-white px-2 py-1 rounded-xl">{group}</p>
+      <p className="inline-flex text-sm bg-gray-700 text-white px-2 py-1 rounded-xl">{userGroupLabel}</p>
       <p className="text-sm line-clamp-1">{detail}</p>
       <Link href={`/manager/permissions/${_id}`}>
         <Button className="flex gap-x-2">
