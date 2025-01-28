@@ -110,7 +110,7 @@ export default function Notification(){
         onClose={toggle} 
         open={state}
         title="Notificações">
-          <div className="h-[50vh] overflow-auto px-3 space-y-1">
+          <div className="h-[50vh] overflow-auto pt-2 px-3 space-y-1">
             <div className="flex gap-3 border-b pb-3 mb-1">
               <h2 className="bg-primary/15 rounded-md px-3 py-2 text-xs font-medium">Não lidos ({notifications.notReads})</h2>
               <h2 className="bg-primary/15 rounded-md px-3 py-2 text-xs font-medium">Lidos ({notifications.reads})</h2>

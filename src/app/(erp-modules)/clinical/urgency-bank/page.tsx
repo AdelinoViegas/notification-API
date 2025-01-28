@@ -17,7 +17,7 @@ export default async function Page({
     registerNumber: number;
     priority: string;
   }>
-}){
+}){ 
   const { name, priority } = await searchParams;
   const patientRows = tableFormater(await getPatients({
     name: name, 

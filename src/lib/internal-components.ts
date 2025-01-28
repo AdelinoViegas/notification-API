@@ -1,6 +1,7 @@
 import { updatePersonalInfo } from "@/app/backend/api/clinical/api";
 import { gender as genderTemplate } from "@/app/backend/api/clinical/translator";
 import { signUrgencyBank } from "@/app/backend/api/clinical/urgency-bank-api";
+import { Children, InternalComponent } from "@/components/global-component";
 import { getDataToInputLocalTime } from "@/lib/date-formater";
 
 type Personal = {
@@ -161,12 +162,49 @@ function examsInternalComponent(defaultValue: string){
 	}
 }
 
-function diagnosticInternalComponent(defaultValue: string){
+function diagnosticInternalComponent(defaultValue: string):InternalComponent{
   return {
 		title: "Hipótese de Diagnóstico",
 		apiFn: signUrgencyBank,
 		initialState: { message: "", status: false },
 		childrens: [
+			 { 
+				separatedElements: [
+					{
+						label: "Escolhe a forma de pesquisa do CID",
+						className: "flex gap-x-3 items-center",
+						elements: [
+							{ 
+								type: "radio",
+								props: {
+									label: "Código",
+									name: "cid",
+								}
+							},
+							{ 
+								type: "radio",
+								props: {
+									label: "Descrição",
+									name: "cid",
+								}
+							},
+						]
+					},
+				],elements: []
+			},
+			{
+				className:"w-96",
+				elements:[
+					{ 
+						type: "input",
+						props: {
+							label: "CID 10",
+							placeholder: "Digite o código ou descreve",
+							name: "CID",
+						}
+					},
+				]
+			},
 			{
 				elements: [
 					{ 
@@ -217,7 +255,7 @@ function diseasesInternalComponent(diseases: Diseases){
 							},
 						]
 					},
-				],elements : []
+				],elements : [],
 			},
 			{ 
 				separatedElements: [

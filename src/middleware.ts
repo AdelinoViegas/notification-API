@@ -37,7 +37,7 @@ export async function middleware(request: NextRequest) {
     }else
       return NextResponse.redirect(new URL('/?nologin', request.url))
   }catch(e: unknown){
-    console.log('error: ', e.message);
+    console.log('error: ', e);
   }
 }
  
