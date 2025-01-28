@@ -1,7 +1,7 @@
 'use server';
 
 import { whoAreYou } from "@/lib/web-token";
-import { userModel as UserModel } from '@/app/backend/models/manager';
+import { userModel as managerUserModel } from '@/app/backend/models/manager';
 import {
   Responsable,
   Assured,
@@ -48,7 +48,7 @@ async function getUsers(){
   const formatedUsers = [];
 
   for(const user of users){
-    const sysUser = await UserModel.findById({ _id: user.userId }).select({ password: 0 });
+    const sysUser = await managerUserModel.findById({ _id: user.userId }).select({ password: 0 });
     const workplaces = await getGrantedUnitAccess(user.userId as unknown as string);
     const role = user?.roleId?(await specialtyModel.findById({ _id: user.roleId }))?.name:"Indefinido";
     
@@ -88,15 +88,21 @@ async function getDoctors(){
 
   return doctors;
 }
+
 async function getUser(userId: string){
   const clinicalUser = await userModel.findOne({ userId });
-  const user = await UserModel.findById({ _id: userId }).select({ password: 0 });
-
+  const user = await managerUserModel.findById({ _id: userId }).select({ password: 0 });
+  const userSpecialty = await specialtyModel.findById({ _id: clinicalUser?.roleId });
+  
   return {
     _id: user?._id.toString() as string,
     fullname: user?.fullname as string,
     category:  userCategory.find(item => item._id == clinicalUser?.categoryId)?.label,
-    categoryId: clinicalUser?.categoryId as string,
+    categoryId: clinicalUser?.categoryId?.toString() as string,
+    orderNumber: clinicalUser?.orderNumber as number,
+    roleId: clinicalUser?.roleId?.toString() as string,
+    role: userSpecialty?.name as string, 
+    officeId: clinicalUser?.officeId?.toString() as string
   }
 }
 
@@ -108,15 +114,13 @@ async function signUser(prev: unknown, formData: FormData){
     const roleId = formData.get("roleId") as string;
     const categoryId = formData.get("categoryId") as string;
 
-    const user = new userModel({
+    await userModel.create({
       userId,
       orderNumber,
       officeId,
       roleId,
       categoryId,
     });
-
-    await user.save();
 
     return {
       message: "Usuário clínico registrado!",

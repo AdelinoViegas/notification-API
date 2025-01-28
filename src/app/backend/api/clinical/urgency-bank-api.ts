@@ -263,7 +263,7 @@ async function signDoctorCalender(prev: unknown, formData: FormData){
     const description = formData.get("description");
     const doctors = JSON.parse(formData.get("doctors") as string) as unknown as DoctorCalendar[];
     const maxSchedule = Number(formData.get("maxSchedule"));
-    
+
     if(!doctors.length)
       throw new Error('Por favor, escale os medicos!', { cause: 'empty'});
 

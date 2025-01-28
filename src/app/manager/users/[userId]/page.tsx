@@ -43,17 +43,17 @@ export default async function Page({ params }: { params: Promise<{ userId: strin
               />
 
               <TitleAndSubtitle
-                label="Nome Completo"
+                label="Nº de Telefone"
                 value={user.tel}
               />
 
               <TitleAndSubtitle
-                label="Nome Completo"
+                label="E-mail"
                 value={user.email}
               />
 
               <TitleAndSubtitle
-                label="Nome Completo"
+                label="Grupo de Usuário"
                 value={userGroup?.label}
               />
               

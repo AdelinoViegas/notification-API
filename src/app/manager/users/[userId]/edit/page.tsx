@@ -10,7 +10,7 @@ export default async function Page({
   }>
 }){
   const { userId } = await params;
-  const user = await getUser(userId);
+  const user = await getUser(userId, true);
  
   return(
     <main className="px-2 pt-4 w-full">

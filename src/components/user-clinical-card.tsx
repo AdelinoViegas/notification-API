@@ -18,7 +18,7 @@ export default async function UserClinicalCard({
   const user = await getUser(userId);
   const specialties = await getSpecialties();
 
-  if(!user)
+  if(user?.status === false)
     redirect("/manager/?invalid-user");
 
   const userGroup = await getUserGroup(user.userGroupId?.toString() as string);

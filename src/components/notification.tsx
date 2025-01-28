@@ -129,12 +129,12 @@ export default function Notification(){
                     <span className="cursor-pointer line-clamp-1 hover:line-clamp-none">{item.sinopse}</span>
                   </div>
                 </div>
-                <div className="flex gap-3">
+                <div className="flex gap-x-3">
                   <button onClick={()=>readNotification({ notifyId: item._id})} className="hover:bg-gray-200">
-                    <TiInputChecked className="size-5" />
+                    <TiInputChecked className="size-7" />
                   </button>
                   <button onClick={()=>deleteNotificaion({ notifyId: item._id })} className="hover:bg-gray-200">
-                    <TiDeleteOutline className="size-5 text-red-500" />
+                    <TiDeleteOutline className="size-6 text-red-500" />
                   </button>
                   <button onClick={()=>{
                     goToNotification({ notifyId: item._id});

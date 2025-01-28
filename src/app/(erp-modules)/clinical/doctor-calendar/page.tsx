@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 
 export default async function Page(){
   const calendarRows = tableFormater(await getDoctorCalendars() as Calendar[]);
-  
+
   return(
     <main className="space-y-3">
       

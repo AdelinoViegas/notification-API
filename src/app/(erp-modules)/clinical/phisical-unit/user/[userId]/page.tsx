@@ -23,7 +23,7 @@ export default async function Page({
   const { userId } = await params;
   const workplaces = await getUnits("workplace", true) as SelectionOption[];
   const grantedAccess = await getGrantedUnitAccess(userId);
-  const { fullname } = await getUser(userId); 
+  const { fullname } = await getUser(userId, true); 
 
   return (
     <main className="space-y-3">
