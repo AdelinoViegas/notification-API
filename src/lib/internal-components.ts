@@ -1,8 +1,9 @@
 import { updatePersonalInfo } from "@/app/backend/api/clinical/api";
 import { gender as genderTemplate } from "@/app/backend/api/clinical/translator";
 import { signUrgencyBank } from "@/app/backend/api/clinical/urgency-bank-api";
-import { Children, InternalComponent } from "@/components/global-component";
+import { InternalComponent } from "@/components/global-component";
 import { getDataToInputLocalTime } from "@/lib/date-formater";
+import { getByName } from "./cid-query";
 
 type Personal = {
   elements: [
@@ -162,23 +163,33 @@ function examsInternalComponent(defaultValue: string){
 	}
 }
 
-function diagnosticInternalComponent(defaultValue: string):InternalComponent{
-  return {
+async function diagnosticInternalComponent(defaultValue: string): Promise<InternalComponent>{
+	console.log(defaultValue);
+	
+  const cids = await getByName("In");
+	const cidOptions = [];
+	for(const i of cids)
+		cidOptions.push({
+			_id: i.code,
+			label: i.value
+		});
+
+	return {
 		title: "Hipótese de Diagnóstico",
 		apiFn: signUrgencyBank,
 		initialState: { message: "", status: false },
 		childrens: [
-			 { 
+			{ 
 				separatedElements: [
 					{
-						label: "Escolhe a forma de pesquisa do CID",
+						label: "Tipo de Filtro",
 						className: "flex gap-x-3 items-center",
 						elements: [
 							{ 
 								type: "radio",
 								props: {
 									label: "Código",
-									name: "cid",
+									name: "cid"
 								}
 							},
 							{ 
@@ -186,37 +197,38 @@ function diagnosticInternalComponent(defaultValue: string):InternalComponent{
 								props: {
 									label: "Descrição",
 									name: "cid",
+									defaultChecked: true,
 								}
 							},
 						]
 					},
-				],elements: []
+				],
+				elements: []
 			},
 			{
-				className:"w-96",
+				className: "w-96",
 				elements:[
 					{ 
 						type: "input",
 						props: {
-							label: "CID 10",
-							placeholder: "Digite o código ou descreve",
+							label: "Código/Nome da CID 10",
+							placeholder: "Digite o código ou a discrição da CID...",
 							name: "CID",
 						}
 					},
+					{
+						type: "select",
+						props: {
+							label: "Selecione a CID's",
+							name: "cidCode",
+							options: cidOptions
+						}
+					}
 				]
 			},
 			{
 				elements: [
-					{ 
-						type: "textarea",
-						props: {
-							label: "Hipótese de Diagnóstico",
-							rows: 3,
-							placeholder: "Descreva",
-							name: "diagnosticHypothesis",
-							defaultValue: defaultValue
-						}
-					}
+					
 				]
 			}
 		]

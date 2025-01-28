@@ -16,7 +16,7 @@ import {
 } from "@/lib/internal-components";
 //import { getPatient } from "@/app/backend/api/clinical/api";
 import { getPatientUrgencyBank } from "@/app/backend/api/clinical/urgency-bank-api";
-import { getByCode, getByName } from "@/lib/cid-query";
+// import { getByCode, getByName } from "@/lib/cid-query";
 
 export default async function Page({ params }: {
 	params: Promise<{
@@ -42,7 +42,7 @@ export default async function Page({ params }: {
 	const symptoms = symptomsInternalComponent(anamnesis.generalClinic.symptoms);
 	const diseaseData = diseaseDataInternalComponent(anamnesis.generalClinic?.diseaseData);
 	const complementaryExams = examsInternalComponent(anamnesis?.generalClinic?.complementaryExams);
-	const diagnostic =	diagnosticInternalComponent(anamnesis?.generalClinic?.diagnosticHypothesis);
+	const diagnostic =	await diagnosticInternalComponent(anamnesis?.generalClinic?.diagnosticHypothesis);
 	const diseases = diseasesInternalComponent(anamnesis.generalClinic.diseases);
   const others = othersInternalComponent(anamnesis?.generalClinic?.others);
 	const evaluation = evaluationInternalComponent(anamnesis?.generalClinic.evaluation);
