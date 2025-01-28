@@ -1,5 +1,5 @@
 import Header from "@/components/header";
-import Card from "@/components/card";
+import Card from "@/components/ui/card";
 import SubTitle from "@/components/ui/subtitle";
 import Selection, { SelectionOption } from "@/components/ui/selection";
 import Button from "@/components/ui/button";

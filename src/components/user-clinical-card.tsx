@@ -1,6 +1,6 @@
 import SubTitle from "@/components/ui/subtitle";
 import { redirect } from "next/navigation";
-import Alert from "@/components/alert";
+import Alert from "@/components/ui/alert";
 import UserClinicalForm from "@/components/forms/user-clinical-form";
 import { getUser as getClinicalUser, getSpecialties } from "@/app/backend/api/clinical/api";
 import { 

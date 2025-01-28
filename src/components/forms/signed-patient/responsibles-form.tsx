@@ -8,7 +8,7 @@ import {
 import InputField from "@/components/ui/input-field";
 import Selection from "@/components/ui/selection";
 import Button from "@/components/ui/button";
-import Alert from '@/components/alert';
+import Alert from '@/components/ui/alert';
 import forceRefreshPage from "@/lib/force-refresh";
 import { kinshipDegree } from "@/app/backend/api/clinical/translator";
 import type { Responsable } from "@/app/backend/api/clinical/types";

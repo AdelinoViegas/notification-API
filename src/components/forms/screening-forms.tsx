@@ -11,7 +11,7 @@ import Header from "@/components/header";
 import InputDetails from "@/components/ui/input-details";
 import Button from "@/components/ui/button";
 import { useRouter, useParams, usePathname } from 'next/navigation';
-import Alert from "@/components/alert";
+import Alert from "@/components/ui/alert";
 import Selection from "@/components/ui/selection";
 import InputField from "@/components/ui/input-field";
 import { priorityToComponent, urgencyServices } from "@/app/backend/api/clinical/translator";

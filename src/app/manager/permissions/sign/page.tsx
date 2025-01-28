@@ -1,6 +1,6 @@
 import PermissionForm from "@/components/forms/permission-form";
 import Header from "@/components/header";
-import Card from "@/components/card";
+import Card from "@/components/ui/card";
 import { getUserGroups } from "@/app/backend/api/manager/api";
 export const dynamic = "force-dynamic";
 

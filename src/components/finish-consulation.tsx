@@ -14,7 +14,7 @@ import Button from "@/components/ui/button";
 import Modal from '@/components/modal';
 import { TiInputChecked } from 'react-icons/ti';
 import { finishConsultation } from '@/app/backend/api/clinical/office-api';
-import Alert from '@/components/alert';
+import Alert from '@/components/ui/alert';
 
 export default function FinishConsultation(){
   const [ state, action ] = useActionState(finishConsultation, { message: "", status: false });

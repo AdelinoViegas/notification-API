@@ -1,6 +1,6 @@
 import Header from "@/components/header";
 import Table from "@/components/table";
-import Alert from "@/components/alert";
+import Alert from "@/components/ui/alert";
 import tableFormater from "@/lib/table-formater";
 import { getPatients } from "@/app/backend/api/clinical/api";
 import Search from "@/components/ui/search";

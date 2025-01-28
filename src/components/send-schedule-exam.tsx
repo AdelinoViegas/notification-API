@@ -8,7 +8,7 @@ import {
 import { useRouter } from "next/navigation";
 import Modal from "@/components/modal";
 import Button from "@/components/ui/button";
-import Alert from "@/components/alert";
+import Alert from "@/components/ui/alert";
 import { triggerUpdate } from "@/lib/ws-trigger";
 import { VscSend } from "react-icons/vsc";
 import { sendPatientToUnit } from "@/app/backend/api/clinical/unit-api";

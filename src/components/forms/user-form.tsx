@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
-import Card from '@/components/card';
+import Card from '@/components/ui/card';
 import Selection, { SelectionOption } from '@/components/ui/selection';
 import { 
   signUser, 
@@ -15,7 +15,7 @@ import {
   updateUser 
 } from '@/app/backend/api/manager/api';
 import { useParams, useRouter } from 'next/navigation';
-import Alert from '@/components/alert';
+import Alert from '@/components/ui/alert';
 
 type User = {
   fullname: string;

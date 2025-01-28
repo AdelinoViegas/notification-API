@@ -2,7 +2,7 @@ import Header from "@/components/header";
 import Button from "@/components/ui/button";
 import Link from "next/link";
 import Table from "@/components/table";
-import Alert from "@/components/alert";
+import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
 import tableFormater from "@/lib/table-formater";
 import { getPatients } from "@/app/backend/api/clinical/api";

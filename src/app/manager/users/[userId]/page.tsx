@@ -13,7 +13,7 @@ import Header from "@/components/header";
 import { redirect } from "next/navigation";
 import { MdOutlineModeEdit } from "react-icons/md";
 import TitleAndSubtitle from "@/components/title-subtitle";
-import Card from "@/components/card";
+import Card from "@/components/ui/card";
 
 export const dynamic = 'force-dynamic';
 

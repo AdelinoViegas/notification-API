@@ -6,7 +6,7 @@ import {
   getUserGroup, 
   getUser 
 } from "@/app/backend/api/manager/api";
-import Alert from "@/components/alert";
+import Alert from "@/components/ui/alert";
 
 export default async function AccessLimitContainer({
   userId

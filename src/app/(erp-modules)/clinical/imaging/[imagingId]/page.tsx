@@ -1,5 +1,5 @@
 import Header from "@/components/header";
-import Card from "@/components/card";
+import Card from "@/components/ui/card";
 import { getExamResult, getPatient, getPatientExams } from "@/app/backend/api/clinical/unit-api";
 import LaboratoryImagingForm from "@/components/forms/laboratory-imaging-form";
 import { openPatientProcess } from "@/app/backend/api/clinical/process-api";

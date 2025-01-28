@@ -1,10 +1,10 @@
 import Header from "@/components/header";
-import Card from "@/components/card";
+import Card from "@/components/ui/card";
 import SubTitle from "@/components/ui/subtitle";
 import TitleAndSubtitle from "@/components/title-subtitle";
 import InputField from "@/components/ui/input-field";
 import { getConsult, getPatient } from "@/app/backend/api/clinical/office-api";
-import Accordium from "@/components/accordium";
+import Accordium from "@/components/ui/accordium";
 import { civilState, gender } from "@/app/backend/api/clinical/translator";
 
 export default async function Page({

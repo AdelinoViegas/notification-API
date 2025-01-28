@@ -1,9 +1,9 @@
 import Header from "@/components/header";
-import Card from "@/components/card";
+import Card from "@/components/ui/card";
 import TitleAndSubtitle from "@/components/title-subtitle";
 import { CurrentDataInOffice, FileUpload, VitalSignalsInOffice } from "@/components/forms/office-form";
 import { getConsult, getPatient, readExternalExamFile } from "@/app/backend/api/clinical/office-api";
-import Accordium from "@/components/accordium";
+import Accordium from "@/components/ui/accordium";
 import { civilState, gender } from "@/app/backend/api/clinical/translator";
 import FinishConsultation from "@/components/finish-consulation";
 import RequestReschedule from "@/components/request-reschedule";

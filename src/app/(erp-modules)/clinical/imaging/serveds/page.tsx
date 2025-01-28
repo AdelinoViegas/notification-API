@@ -1,6 +1,6 @@
 import Header from "@/components/header";
 import Table from "@/components/table";
-import Alert from "@/components/alert";
+import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
 import WsUpdate from "@/components/ws-update";
 import { getPatients } from "@/app/backend/api/clinical/unit-api";

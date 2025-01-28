@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import Card from "./card";
+import Card from "./ui/card";
 import { FileHandler } from "@/lib/client-files";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
 import Link from "next/link";

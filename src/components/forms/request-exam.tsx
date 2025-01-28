@@ -17,7 +17,7 @@ import {
   getCCGs
 } from "@/app/backend/api/clinical/scheduling-api";
 import InputDetails from "@/components/ui/input-details";
-import Alert from "@/components/alert";
+import Alert from "@/components/ui/alert";
 import { BiTrash as TrashIcon } from "react-icons/bi";
 import SubTitle from "@/components/ui/subtitle";
 import { triggerUpdate } from "@/lib/ws-trigger";

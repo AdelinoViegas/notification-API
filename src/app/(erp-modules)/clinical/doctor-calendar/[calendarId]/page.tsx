@@ -1,4 +1,4 @@
-import Card from "@/components/card";
+import Card from "@/components/ui/card";
 import Header from "@/components/header";
 import CalendarForm from "@/components/forms/calendar-form";
 import { getUsers } from "@/app/backend/api/clinical/api";

@@ -1,8 +1,8 @@
 import Link from "next/link";
 import Header from "@/components/header";
-import Card from "@/components/card";
+import Card from "@/components/ui/card";
 import SubTitle from "@/components/ui/subtitle";
-import Accordium from "@/components/accordium";
+import Accordium from "@/components/ui/accordium";
 import { FileHandler } from "@/lib/client-files";
 import { FaRegFileImage, FaRegFilePdf } from "react-icons/fa6";
 import { getExamResult, getPatient, getPatientExams } from "@/app/backend/api/clinical/unit-api";

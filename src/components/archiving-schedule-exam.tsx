@@ -11,7 +11,7 @@ import Button from "@/components/ui/button";
 import { BiTrash as TrashIcon } from "react-icons/bi";
 import Modal from "@/components/modal";
 import InputDetails from "@/components/ui/input-details";
-import Alert from "@/components/alert";
+import Alert from "@/components/ui/alert";
 
 export default function ArchivingScheduleExam({ scheduleId }: { scheduleId: string }){
   const [ state, action ] = useActionState(archivingScheduleExam, { message: "", status: false });

@@ -8,11 +8,11 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 import Header from "@/components/header";
-import Card from "@/components/card";
+import Card from "@/components/ui/card";
 import Button from "@/components/ui/button";
 import tabComponents from "@/components/tab-components";
 import clsx from "clsx";
-import Alert from "@/components/alert";
+import Alert from "@/components/ui/alert";
 import { signPatient } from "@/app/backend/api/clinical/api";
 import { GrLinkNext } from "react-icons/gr";
 import { triggerUpdate } from "@/lib/ws-trigger";

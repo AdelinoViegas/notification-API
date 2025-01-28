@@ -8,7 +8,7 @@ import {
 import Selection from "@/components/ui/selection";
 import Button from "@/components/ui/button";
 import { updatePatientGroup } from "@/app/backend/api/clinical/api";
-import Alert from '@/components/alert';
+import Alert from '@/components/ui/alert';
 import { 
   AssuredInputs,
   EmployeeInputs,

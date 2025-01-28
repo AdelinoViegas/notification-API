@@ -1,7 +1,7 @@
 import Header from "@/components/header";
 import Table from "@/components/table";
 import tableFormater from "@/lib/table-formater";
-import Alert from "@/components/alert";
+import Alert from "@/components/ui/alert";
 import SignExam from "@/components/sign-exam";
 import { PatientExam } from "@/lib/table-formater";
 import { getExams } from "@/app/backend/api/clinical/scheduling-api";

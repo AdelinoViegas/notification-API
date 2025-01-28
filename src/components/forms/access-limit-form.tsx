@@ -8,7 +8,7 @@ import React,{
 import { useRouter } from 'next/navigation';
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
-import Alert from '@/components/alert';
+import Alert from '@/components/ui/alert';
 import { addOrUpdateAccessLimit } from "@/lib/access-limit";
 
 export default function AccessLimitForm({

@@ -9,7 +9,7 @@ import {
 import InputField from "@/components/ui/input-field";
 import InputDetails from "@/components/ui/input-details";
 import Button from "@/components/ui/button";
-import Alert from "@/components/alert";
+import Alert from "@/components/ui/alert";
 import { signConsutation, uploadExternalExamFile } from "@/app/backend/api/clinical/office-api";
 import { useRouter } from "next/navigation";
 import { triggerUpdate } from "@/lib/ws-trigger";

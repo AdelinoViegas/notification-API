@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import PersonalInfoForm from "@/components/forms/signed-patient/personal-form";
-import Accordium from "@/components/accordium";
+import Accordium from "@/components/ui/accordium";
 import DemographicInfoForm from "@/components/forms/signed-patient/demography-form";
 import ResponsiblesForm from "@/components/forms/signed-patient/responsibles-form";
 import GroupForm from "@/components/forms/signed-patient/group-form";

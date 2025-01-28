@@ -129,7 +129,7 @@ export default function Notification(){
                     <span className="cursor-pointer line-clamp-1 hover:line-clamp-none">{item.sinopse}</span>
                   </div>
                 </div>
-                <div className="flex gap-x-3">
+                <div className="flex gap-x-2">
                   <button onClick={()=>readNotification({ notifyId: item._id})} className="hover:bg-gray-200">
                     <TiInputChecked className="size-7" />
                   </button>
@@ -140,7 +140,7 @@ export default function Notification(){
                     goToNotification({ notifyId: item._id});
                     toggle();
                   }} className="hover:bg-gray-200">
-                    <IoMdOpen className="size-5" />
+                    <IoMdOpen className="size-5 ms-1" />
                   </button>
                 </div>
               </div>

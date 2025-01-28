@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import Modal from "@/components/modal";
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
-import Alert from "@/components/alert";
+import Alert from "@/components/ui/alert";
 import { BiPlus as PlusIcon } from "react-icons/bi";
 import { signExternalUnit } from "@/app/backend/api/clinical/urgency-bank-api";
 

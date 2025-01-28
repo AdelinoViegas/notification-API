@@ -7,7 +7,7 @@ import {
   useActionState
 } from "react";
 import Button from "@/components/ui/button";
-import Alert from '@/components/alert';
+import Alert from '@/components/ui/alert';
 import Selection, { SelectionOption } from "@/components/ui/selection";
 import forceRefreshPage from "@/lib/force-refresh";
 import { updateAccessType } from "@/app/backend/api/clinical/api";

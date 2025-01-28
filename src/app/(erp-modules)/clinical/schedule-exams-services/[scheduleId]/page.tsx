@@ -1,5 +1,5 @@
 import Header from "@/components/header";
-import Card from "@/components/card";
+import Card from "@/components/ui/card";
 import { getSchedulePatientExam } from "@/app/backend/api/clinical/scheduling-api";
 import RescheduleExam from "@/components/reschedule-exam";
 import { getUnits } from "@/app/backend/api/clinical/urgency-bank-api";

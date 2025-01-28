@@ -1,5 +1,5 @@
 import Header from "@/components/header";
-import Card from "@/components/card";
+import Card from "@/components/ui/card";
 import { 
   getExamCancel, 
   getSchedulePatientExam 

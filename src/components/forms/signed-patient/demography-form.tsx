@@ -7,7 +7,7 @@ import {
 } from "react";
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
-import Alert from '@/components/alert';
+import Alert from '@/components/ui/alert';
 import forceRefreshPage from "@/lib/force-refresh";
 import type { Demography } from "@/app/backend/api/clinical/types";
 import { updateDemography } from "@/app/backend/api/clinical/api";

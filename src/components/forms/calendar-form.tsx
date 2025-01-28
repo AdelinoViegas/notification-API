@@ -9,7 +9,7 @@ import {
 import Button from "@/components/ui/button";
 import InputField from "@/components/ui/input-field";
 import Selection, { SelectionOption } from "@/components/ui/selection";
-import Alert from "@/components/alert";
+import Alert from "@/components/ui/alert";
 import SubTitle from "@/components/ui/subtitle";
 import { getFirstAndLastName } from "@/components/status-bar";
 import { BiTrash as TrashIcon } from "react-icons/bi";

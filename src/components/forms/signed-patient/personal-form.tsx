@@ -8,7 +8,7 @@ import {
 import Selection from "@/components/ui/selection";
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
-import Alert from '@/components/alert';
+import Alert from '@/components/ui/alert';
 import forceRefreshPage from "@/lib/force-refresh";
 import type { Patient } from "@/app/backend/api/clinical/types";
 import { updatePersonalInfo } from "@/app/backend/api/clinical/api";

@@ -13,7 +13,7 @@ import Button from "@/components/ui/button";
 import Modal from '@/components/modal';
 import { TiInputChecked } from 'react-icons/ti';
 import { finishExam } from '@/app/backend/api/clinical/unit-api';
-import Alert from '@/components/alert';
+import Alert from '@/components/ui/alert';
 import { triggerUpdate } from '@/lib/ws-trigger';
 
 export default function FinishAnalysis({

@@ -1,5 +1,5 @@
 import Button from "@/components/ui/button";
-import Accordium from "@/components/accordium";
+import Accordium from "@/components/ui/accordium";
 
 export default async function Page(){
 

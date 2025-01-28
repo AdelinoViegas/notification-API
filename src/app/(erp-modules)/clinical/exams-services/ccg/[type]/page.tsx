@@ -1,4 +1,4 @@
-import Alert from "@/components/alert";
+import Alert from "@/components/ui/alert";
 import Header from "@/components/header";
 import Table from "@/components/table";
 import { ccgTypes } from "@/app/backend/api/clinical/translator";

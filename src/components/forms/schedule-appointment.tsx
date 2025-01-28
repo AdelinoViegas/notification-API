@@ -17,7 +17,7 @@ import {
   getExams
 } from "@/app/backend/api/clinical/scheduling-api";
 import InputDetails from "@/components/ui/input-details";
-import Alert from "@/components/alert";
+import Alert from "@/components/ui/alert";
 import { getDoctors, getSpecialties } from "@/app/backend/api/clinical/api";
 import { getDateInDashFormat } from "@/lib/date-formater";
 import { Types } from "mongoose";

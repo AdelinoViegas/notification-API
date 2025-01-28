@@ -6,7 +6,7 @@ import {
   useActionState 
 } from "react";
 import { useParams, useRouter } from "next/navigation";
-import Alert from "@/components/alert";
+import Alert from "@/components/ui/alert";
 import Button from "@/components/ui/button";
 import { putInScreening } from "@/app/backend/api/clinical/api";
 import { triggerUpdate } from "@/lib/ws-trigger";

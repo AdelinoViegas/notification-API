@@ -2,7 +2,7 @@ import Header from "@/components/header";
 import { getCCG, updateCCG } from "@/app/backend/api/clinical/scheduling-api";
 import Button from "@/components/ui/button";
 import InputField from "@/components/ui/input-field";
-import Card from "@/components/card";
+import Card from "@/components/ui/card";
 
 export default async function Page({
 	params

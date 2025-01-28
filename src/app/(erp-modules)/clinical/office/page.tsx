@@ -1,7 +1,7 @@
 import Header from "@/components/header";
 import Table from "@/components/table";
 import { type DoctorOffice, tableOffice } from "@/lib/table-formater";
-import Alert from "@/components/alert";
+import Alert from "@/components/ui/alert";
 import Link from "next/link";
 import Button from "@/components/ui/button";
 import Search from "@/components/ui/search";

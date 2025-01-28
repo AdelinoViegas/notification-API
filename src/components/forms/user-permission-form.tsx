@@ -8,7 +8,7 @@ import {
 } from 'react';
 import { useRouter } from 'next/navigation';
 import Button from '@/components/ui/button';
-import Alert from '@/components/alert';
+import Alert from '@/components/ui/alert';
 import SubTitle from '@/components/ui/subtitle';
 import Selection, { SelectionOption } from '@/components/ui/selection';
 import { 

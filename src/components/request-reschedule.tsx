@@ -13,7 +13,7 @@ import {
 import Button from "@/components/ui/button";
 import Modal from '@/components/modal';
 import { requestReschedule } from '@/app/backend/api/clinical/office-api';
-import Alert from '@/components/alert';
+import Alert from '@/components/ui/alert';
 import { MdOutlineMoreTime } from "react-icons/md";
 import { triggerUpdate } from '@/lib/ws-trigger';
 

@@ -10,7 +10,7 @@ import { useParams } from 'next/navigation';
 import InputField from '@/components/ui/input-field';
 import Button from '@/components/ui/button';
 import { signUser, updateUser } from '@/app/backend/api/clinical/api';
-import Alert from '@/components/alert';
+import Alert from '@/components/ui/alert';
 import Selection from '@/components/ui/selection';
 import SpecialtyModal from "@/components/specialty-modal";
 import forceRefreshPage from '@/lib/force-refresh';

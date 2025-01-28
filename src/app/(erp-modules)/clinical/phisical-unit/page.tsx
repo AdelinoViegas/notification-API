@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Header from "@/components/header";
 import Table from "@/components/table";
-import Alert from "@/components/alert";
+import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
 import Button from "@/components/ui/button";
 import { PhisicalUnit } from "@/lib/table-formater";

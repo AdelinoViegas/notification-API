@@ -2,7 +2,7 @@ import {
 	getTriedPatient,
 	getPatientScreening, 
 } from "@/app/backend/api/clinical/api";
-import Accordium from "@/components/accordium";
+import Accordium from "@/components/ui/accordium";
 import Button from "@/components/ui/button";
 import { redirect } from "next/navigation";
 import { Priority } from "@/app/(erp-modules)/clinical/screening/[patientId]/priority/page";

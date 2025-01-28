@@ -1,7 +1,7 @@
 import PermissionForm from "@/components/forms/permission-form";
 import { getPermission, getUserGroups } from "@/app/backend/api/manager/api";
 import Header from "@/components/header";
-import Card from "@/components/card";
+import Card from "@/components/ui/card";
 
 export default async function Page({params}:{ params: Promise<{ permissionId : string}>}){
   const { permissionId } = await params;

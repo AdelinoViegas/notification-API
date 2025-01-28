@@ -11,7 +11,7 @@ import Button from "@/components/ui/button";
 import { LuArchiveRestore } from "react-icons/lu";
 import Modal from "@/components/modal";
 import InputDetails from "@/components/ui/input-details";
-import Alert from "@/components/alert";
+import Alert from "@/components/ui/alert";
 import { triggerUpdate } from "@/lib/ws-trigger";
 
 export default function ArchivingAppointment({ 

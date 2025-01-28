@@ -13,7 +13,7 @@ import {
   signPermission, 
   updatePermission,
 } from "@/app/backend/api/manager/api";
-import Alert from '@/components/alert';
+import Alert from '@/components/ui/alert';
 import { useParams } from 'next/navigation';
 
 type Permission = {

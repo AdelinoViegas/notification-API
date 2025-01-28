@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import Modal from "@/components/modal";
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
-import Alert from "@/components/alert";
+import Alert from "@/components/ui/alert";
 import { updatePaymentData } from "@/app/backend/api/clinical/office-api";
 import { triggerUpdate } from "@/lib/ws-trigger";
 import { MdAttachMoney } from "react-icons/md";
