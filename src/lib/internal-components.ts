@@ -163,17 +163,7 @@ function examsInternalComponent(defaultValue: string){
 	}
 }
 
-async function diagnosticInternalComponent(defaultValue?: string): Promise<InternalComponent>{
-	console.log(defaultValue);
-	
-  const cids = await getByName("In");
-	const cidOptions = [];
-	for(const i of cids)
-		cidOptions.push({
-			_id: i.code,
-			label: i.value
-		});
-
+function diagnosticInternalComponent(){
 	return {
 		title: "Hipótese de Diagnóstico",
 		apiFn: signUrgencyBank,

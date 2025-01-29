@@ -1,6 +1,6 @@
 const CID_URL='http://192.168.1.16:3000/cid10.json';
 
-type Cid = {
+export type Cid = {
   code: string;
   value: string;
 };

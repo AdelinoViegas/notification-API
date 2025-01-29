@@ -42,7 +42,7 @@ export default async function Page({ params }: {
 	const symptoms = symptomsInternalComponent(anamnesis.generalClinic.symptoms);
 	const diseaseData = diseaseDataInternalComponent(anamnesis.generalClinic?.diseaseData);
 	const complementaryExams = examsInternalComponent(anamnesis?.generalClinic?.complementaryExams);
-	const diagnostic =	await diagnosticInternalComponent('');
+	const diagnostic = diagnosticInternalComponent();
 	const diseases = diseasesInternalComponent(anamnesis.generalClinic.diseases);
   const others = othersInternalComponent(anamnesis?.generalClinic?.others);
 	const evaluation = evaluationInternalComponent(anamnesis?.generalClinic.evaluation);

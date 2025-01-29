@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { getByName } from "@/lib/cid-query";
+import { Cid, getByName } from "@/lib/cid-query";
 import InputField from "./input-field";
 import Button from "./button";
 import { toast } from "react-toastify";
@@ -21,9 +21,8 @@ const people = [
   })
 ]
 
-export function ListBox({ items }: { items: { value: string; code: string }[] }) {
-  const [selected, setSelected] = useState(people[1])
-
+export function ListBox({ items }: { items: Cid[]}) {
+  const [selected, setSelected] = useState(items)
   return (
     <div>
       <Listbox value={selected} onChange={setSelected} __demoMode>
@@ -33,7 +32,7 @@ export function ListBox({ items }: { items: { value: string; code: string }[] })
             'focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25'
           )}
         >
-          {selected.name}
+          {'selected'}
 
         </ListboxButton>
         <ListboxOptions
@@ -44,13 +43,13 @@ export function ListBox({ items }: { items: { value: string; code: string }[] })
             'transition duration-100 h-32 ease-in data-[leave]:data-[closed]:opacity-0'
           )}
         >
-          {people.map((person) => (
+          {selected.map((person) => (
             <ListboxOption
-              key={person.name}
-              value={person}
+              key={person.code}
+              value={person.value}
               className="group flex cursor-default items-center gap-2 rounded-lg py-1.5 px-3 select-none data-[focus]:bg-white/10"
             >
-              <div className="text-sm/6 text-white">{person.name}</div>
+              <div className="text-sm/6 text-white">{person.value}</div>
             </ListboxOption>
           ))}
         </ListboxOptions>
@@ -60,13 +59,13 @@ export function ListBox({ items }: { items: { value: string; code: string }[] })
 }
 
 export default function ComboBox(){
-  const [ items, setItems ] = useState([]);
+  const [ items, setItems ] = useState<Cid[]>([]);
   const [ query, setQuery ] = useState("");
   const filterHandler = async ()=> {
     try{
       if(!query)
         throw new Error("Escreva alguma coisa!");
-      const cids = await getByName(query);
+      const cids = await getByName(query.trim());
       
       if(!cids.length)
         throw new Error("Não foi encontrado referências para esse filtro!");
@@ -79,8 +78,12 @@ export default function ComboBox(){
   }
   return(
     <div>
-      <div>
-        <InputField onChange={e => setQuery(e.target.value)} />
+      <div className="flex gap-3 items-center">
+        <InputField 
+          textLabel="Procurar pela descrição"
+          placeholder="Procure pela descrição da CID 10" 
+          onChange={e => setQuery(e.target.value)} 
+        />
         <Button type="button" onClick={filterHandler}>Filtrar</Button>
       </div>
 

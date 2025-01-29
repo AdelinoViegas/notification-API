@@ -557,8 +557,6 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
     const hasPatientUrgencyBank = await urgencyBankModel.findOne({ patientId })
     const generalClinic = hasPatientUrgencyBank?.anamnesis?.generalClinic;
     const cidCode = formData.get("cidCode"); 
-    
-    console.log(cidCode);
 
     const anamnesis = {
       generalClinic:{
