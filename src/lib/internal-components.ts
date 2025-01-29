@@ -27,11 +27,11 @@ type Hospitalization = {
 }
 
 type Diseases = {
-		diabetes: boolean,
-		hypertension: boolean,
-		respirationDiseases: boolean,
-		tuberculosis: boolean,
-		malaria: boolean,
+	diabetes: boolean,
+	hypertension: boolean,
+	respirationDiseases: boolean,
+	tuberculosis: boolean,
+	malaria: boolean,
 }
 
 type LifeStyle = {
@@ -163,7 +163,7 @@ function examsInternalComponent(defaultValue: string){
 	}
 }
 
-async function diagnosticInternalComponent(defaultValue: string): Promise<InternalComponent>{
+async function diagnosticInternalComponent(defaultValue?: string): Promise<InternalComponent>{
 	console.log(defaultValue);
 	
   const cids = await getByName("In");
@@ -179,56 +179,17 @@ async function diagnosticInternalComponent(defaultValue: string): Promise<Intern
 		apiFn: signUrgencyBank,
 		initialState: { message: "", status: false },
 		childrens: [
-			{ 
-				separatedElements: [
-					{
-						label: "Tipo de Filtro",
-						className: "flex gap-x-3 items-center",
-						elements: [
-							{ 
-								type: "radio",
-								props: {
-									label: "Código",
-									name: "cid"
-								}
-							},
-							{ 
-								type: "radio",
-								props: {
-									label: "Descrição",
-									name: "cid",
-									defaultChecked: true,
-								}
-							},
-						]
-					},
-				],
-				elements: []
-			},
 			{
 				className: "w-96",
 				elements:[
 					{ 
-						type: "input",
+						type: "combobox",
 						props: {
 							label: "Código/Nome da CID 10",
 							placeholder: "Digite o código ou a discrição da CID...",
-							name: "CID",
-						}
-					},
-					{
-						type: "select",
-						props: {
-							label: "Selecione a CID's",
-							name: "cidCode",
-							options: cidOptions
+							name: "CID"
 						}
 					}
-				]
-			},
-			{
-				elements: [
-					
 				]
 			}
 		]

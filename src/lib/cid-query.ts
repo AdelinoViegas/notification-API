@@ -17,7 +17,7 @@ async function getByCode(code: string): Promise<Cid>{
 
 async function getByName(name: string): Promise<Cid[]>{
   const data = await (await fetch(CID_URL)).json() as Cid[];
-  return data.filter((props) => props.value.startsWith(name));
+  return data.filter((props) => props.value.match(name));
 } 
 
 export {

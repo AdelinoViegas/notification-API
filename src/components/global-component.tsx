@@ -13,6 +13,7 @@ import InputField from "@/components/ui/input-field";
 import Selection, { SelectionOption } from "@/components/ui/selection";
 import Alert from "@/components/ui/alert";
 import { useRouter } from "next/navigation";
+import ComboBox from "./ui/combobox";
 
 type InitialValue = {
   message?: string;
@@ -31,7 +32,7 @@ type Props = {
   components: InternalComponent[];
 };
 
-type TypeUI = HTMLInputTypeAttribute | "select" | "textarea";
+type TypeUI = HTMLInputTypeAttribute | "select" | "textarea" | "combobox";
 
 type InternalComponent = {
   title: string;
@@ -52,6 +53,7 @@ type UIComponent = {
     rows?: number;
     options?: SelectionOption[];
     defaultChecked?: boolean;
+    onChange?: (e: unknown)=>void; 
   };
 };
 
@@ -153,15 +155,6 @@ function RenderUIElement({ items }: { items: UIComponent[] }){
           defaultValue={item.props.defaultValue}
         />
       );
-    if(item.type === "radio" || item.type === "checkbox")
-      return(
-        <InputField 
-          key={key}
-          type={item.type}
-          textLabel={item.props.label}
-          {...item.props} 
-        />
-      );
     else if (item.type === "textarea")
       return(
         <InputDetails
@@ -169,6 +162,10 @@ function RenderUIElement({ items }: { items: UIComponent[] }){
           textLabel={item.props.label}
           {...item.props} 
         />
+      )
+    else if (item.type === "combobox")
+      return(
+        <ComboBox key={key} />
       )
     else
       return(
