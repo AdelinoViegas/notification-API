@@ -1,9 +1,7 @@
 import { updatePersonalInfo } from "@/app/backend/api/clinical/api";
 import { gender as genderTemplate } from "@/app/backend/api/clinical/translator";
 import { signUrgencyBank } from "@/app/backend/api/clinical/urgency-bank-api";
-import { InternalComponent } from "@/components/global-component";
 import { getDataToInputLocalTime } from "@/lib/date-formater";
-import { getByName } from "./cid-query";
 
 type Personal = {
   elements: [

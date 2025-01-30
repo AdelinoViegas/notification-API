@@ -9,6 +9,7 @@ import {
 	evaluationInternalComponent,
 	examsInternalComponent,
 	familyInternalComponent,
+	hospitalizationInternalComponent,
 	/*hospitalizationInternalComponent,*/
 	lifeStyleInternalComponent,
 	othersInternalComponent,
@@ -16,6 +17,7 @@ import {
 } from "@/lib/internal-components";
 //import { getPatient } from "@/app/backend/api/clinical/api";
 import { getPatientUrgencyBank } from "@/app/backend/api/clinical/urgency-bank-api";
+import Hospitalization from "@/components/hospitalization";
 // import { getByCode, getByName } from "@/lib/cid-query";
 
 export default async function Page({ params }: {
@@ -49,7 +51,7 @@ export default async function Page({ params }: {
   const lifeStyle = lifeStyleInternalComponent(anamnesis.generalClinic.lifeStyle);
 	const eatingHabits = eatingHabitsInternalComponent(anamnesis.generalClinic.eatingHabits);
   const familyHistory = familyInternalComponent(anamnesis?.generalClinic.diseasesInFamily);
-	//const hospitalization = hospitalizationInternalComponent(anamnesis?.generalClinic.hospitalization);
+	const hospitalization = hospitalizationInternalComponent(anamnesis?.generalClinic.hospitalization);
 
 	const generalClinical:InternalComponent[] = [
 		symptoms,
@@ -62,7 +64,7 @@ export default async function Page({ params }: {
 		lifeStyle,
 		eatingHabits,
 		familyHistory,
-		/*hospitalization*/
+		hospitalization
 	];
 
 	//const cid = await getByCode("C77.0");
@@ -72,7 +74,7 @@ export default async function Page({ params }: {
 		<main>
 			<div className="flex gap-x-3">
 				<Button>Visualizar</Button>
-				<Button className="bg-slate-700">Internamento</Button>
+				<Hospitalization/>
 			</div>
 
 			<div className="flex flex-col gap-y-5 my-8">
