@@ -1,13 +1,16 @@
 import Button from "@/components/ui/button";
-import Accordium from "@/components/ui/accordium";
+import ClinicalDiary from "@/components/clinical-diary";
 
 export default async function Page(){
 
   return(
 		<main>
-			<Button>Visualizar</Button>
-
-			<div className="flex flex-col gap-y-5 my-8">
+			<ClinicalDiary 
+				accordiumTitle="test"
+				modalTitle="test"
+				apiType="diary" 
+			/>
+			{/* <div className="flex flex-col gap-y-5 my-8">
 				<Accordium className="hover:bg-primary/35 bg-primary/40" title="Diário Clínico">
           Exemplo
 				</Accordium>
@@ -31,7 +34,7 @@ export default async function Page(){
         <Accordium className="hover:bg-primary/35 bg-primary/40" title="Balanço Hidromineral">
           Exemplo
 				</Accordium>
-			</div>
+			</div> */}
 		</main>
 	)
 }

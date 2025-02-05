@@ -1,7 +1,6 @@
 import { updatePersonalInfo } from "@/app/backend/api/clinical/api";
 import { gender as genderTemplate } from "@/app/backend/api/clinical/translator";
 import { signUrgencyBank } from "@/app/backend/api/clinical/urgency-bank-api";
-import { getDataToInputLocalTime } from "@/lib/date-formater";
 
 type Personal = {
   elements: [
@@ -18,11 +17,6 @@ type EatingHabits = {
 	typeWater?: string,
 }
 
-type Hospitalization = {
-	description?: string,
-	dateTime?: Date,
-	currentState?: string,
-}
 
 type Diseases = {
 	diabetes: boolean,
@@ -629,52 +623,6 @@ function familyInternalComponent(defaultValue: string){
 	}
 }
 
-function hospitalizationInternalComponent(hospitalization: Hospitalization){
-	return {
-		title: "Internamento",
-		apiFn: signUrgencyBank,
-		initialState: { message: "", status: false },
-		className: "grid",
-		childrens: [
-			{
-				elements: [
-					{
-						type: "textarea",
-						props: {
-							name: "description",
-							label: "Descrição",
-							rows: 3,
-							defaultValue: hospitalization.description
-						}
-					}
-				]
-			},
-			{
-				className: "grid lg:grid-cols-2 gap-3",
-				elements: [
-					{
-						type: "datetime-local",
-						props: {
-							label: "Data e Hora",
-							name: "createdAt",
-							defaultValue: hospitalization.dateTime?getDataToInputLocalTime(hospitalization.dateTime):undefined
-						}
-					},
-					{
-						type: "input",
-						props: {
-							label: "Estado ao Internar",
-							name: "currentState",
-							placeholder: "Estado antes do internamento",
-							defaultValue: hospitalization.currentState
-						}
-					}
-				]
-			}
-		]
-	}
-}
-
 export {
   personalInternalComponent,
 	symptomsInternalComponent,
@@ -686,6 +634,5 @@ export {
 	evaluationInternalComponent,
 	lifeStyleInternalComponent,
 	eatingHabitsInternalComponent,
-	familyInternalComponent,
-	hospitalizationInternalComponent
+	familyInternalComponent
 }

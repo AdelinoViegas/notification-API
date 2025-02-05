@@ -1,4 +1,3 @@
-//import { redirect } from "next/navigation";
 import Button from "@/components/ui/button";
 import GlobalComponent, { InternalComponent } from "@/components/global-component";
 import { 
@@ -9,16 +8,12 @@ import {
 	evaluationInternalComponent,
 	examsInternalComponent,
 	familyInternalComponent,
-	hospitalizationInternalComponent,
-	/*hospitalizationInternalComponent,*/
 	lifeStyleInternalComponent,
 	othersInternalComponent,
 	symptomsInternalComponent
 } from "@/lib/internal-components";
-//import { getPatient } from "@/app/backend/api/clinical/api";
 import { getPatientUrgencyBank } from "@/app/backend/api/clinical/urgency-bank-api";
 import Hospitalization from "@/components/hospitalization";
-// import { getByCode, getByName } from "@/lib/cid-query";
 
 export default async function Page({ params }: {
 	params: Promise<{
@@ -26,21 +21,8 @@ export default async function Page({ params }: {
 	}>
 }){
   const { patientId } = await params;
-	//const patient = await getPatient(patientId);
 	const anamnesis = await getPatientUrgencyBank(patientId);
 
-	/*if(!patient)
-		return redirect('/clinical?invalid-user');*/
-
-	//const { personal } = patient;
-
-  /*const personalData = personalInternalComponent({
-		elements: [
-			{ defaultValue: personal.fullname },
-			{ defaultValue: personal.age },
-			{ defaultValue: personal.gender }
-		]
-	});*/
 	const symptoms = symptomsInternalComponent(anamnesis.generalClinic.symptoms);
 	const diseaseData = diseaseDataInternalComponent(anamnesis.generalClinic?.diseaseData);
 	const complementaryExams = examsInternalComponent(anamnesis?.generalClinic?.complementaryExams);
@@ -51,7 +33,6 @@ export default async function Page({ params }: {
   const lifeStyle = lifeStyleInternalComponent(anamnesis.generalClinic.lifeStyle);
 	const eatingHabits = eatingHabitsInternalComponent(anamnesis.generalClinic.eatingHabits);
   const familyHistory = familyInternalComponent(anamnesis?.generalClinic.diseasesInFamily);
-	const hospitalization = hospitalizationInternalComponent(anamnesis?.generalClinic.hospitalization);
 
 	const generalClinical:InternalComponent[] = [
 		symptoms,
@@ -63,12 +44,8 @@ export default async function Page({ params }: {
 		evaluation,
 		lifeStyle,
 		eatingHabits,
-		familyHistory,
-		hospitalization
+		familyHistory
 	];
-
-	//const cid = await getByCode("C77.0");
-	//const cids = await getByName("In");
 	
   return(
 		<main>

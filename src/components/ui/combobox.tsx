@@ -1,10 +1,10 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useState } from "react";
-import { Cid, getByName } from "@/lib/cid-query";
-import InputField from "./input-field";
-import Button from "./button";
+import { useState, useEffect } from "react";
+import { Cid, getByCode, getByName } from "@/lib/cid-query";
+import InputField from "@/components/ui/input-field";
+import Button from "@/components/ui/button";
 import { toast } from "react-toastify";
 import { 
   Listbox,
@@ -14,9 +14,10 @@ import {
 } from '@headlessui/react';
 import { BiCheck, BiChevronDown } from "react-icons/bi"; 
 import clsx from 'clsx';
+import { getPatientUrgencyBank } from "@/app/backend/api/clinical/urgency-bank-api";
 
-export function ListBox({ items }:{ items: Cid[] }){
-  const [selected, setSelected] = useState({code:'',value:'Clique para escolher uma opção'});
+export function ListBox({ cid, items }:{ items: Cid[], cid: Cid}){
+  const [selected, setSelected] = useState(cid);
 
   return (
     <div>
@@ -32,7 +33,7 @@ export function ListBox({ items }:{ items: Cid[] }){
             'focus:outline-none data-[focus]:outline-2'
           )}
         >
-          <p>{(items.length > 0)?selected.value:'Lista Vazia'}</p>
+          <p>{((items.length > 0)?selected.value:cid.value) || 'Lista vazia'}</p>
           <BiChevronDown className="size-5 text-black" />
         </ListboxButton>
         {items.length > 0 &&
@@ -56,7 +57,6 @@ export function ListBox({ items }:{ items: Cid[] }){
             ))}
           </ListboxOptions>
         }
-
       </Listbox>
     </div>
   )
@@ -65,6 +65,17 @@ export function ListBox({ items }:{ items: Cid[] }){
 export default function ComboBox(){
   const [ items, setItems ] = useState<Cid[]>([]);
   const [ query, setQuery ] = useState<string>();
+  const [ defaultValue, setDefaultValue] = useState({code:'', value:'Clique para escolher uma opção'});
+  const { patientId } = useParams<{patientId: string}>();
+
+  useEffect(()=>{
+    const getDiagnostic = async ()=> {
+      const anamnesis = await getPatientUrgencyBank(patientId);
+      const cid = await getByCode(anamnesis.generalClinic.diagnosticHypothesis);
+      setDefaultValue({code:cid.code, value: cid.value});
+    }
+    getDiagnostic();
+  },[patientId]);
 
   const filterHandler = async ()=> {
     try{
@@ -87,7 +98,6 @@ export default function ComboBox(){
         toast.warn(err.message);
         return;
       }
-
       toast.error(err.message); 
     }
   }
@@ -105,7 +115,7 @@ export default function ComboBox(){
         <Button type="button" onClick={filterHandler}>Filtrar</Button>
       </div>
 
-      <ListBox {...{items}} />
+      <ListBox cid={defaultValue} {...{items}} />
     </div>
   )
 

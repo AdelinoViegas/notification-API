@@ -4,7 +4,7 @@ import {
   HTMLInputTypeAttribute, 
   useActionState, 
   useEffect, 
-  useState
+  useState,
 } from "react";
 import Accordium from "@/components/ui/accordium";
 import Button from "@/components/ui/button";
@@ -144,7 +144,7 @@ async function FallbackFn(): Promise<InitialValue> {
   }
 }
 
-function RenderUIElement({ items }: { items: UIComponent[] }){
+function RenderUIElement({ items }: { items: UIComponent[]}){
   return items.map((item, key)=>{
     if(item.type === "select")
       return(
