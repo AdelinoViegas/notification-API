@@ -9,7 +9,7 @@ import InputField from "@/components/ui/input-field";
 import InputDetails from "@/components/ui/input-details";
 import Selection from "@/components/ui/selection";
 
-type Props = {
+export type ClinicalDiaryProps = {
   accordiumTitle: string;
   modalTitle: string;
   apiType: "diary" | "therapeutic" | "vital" | "annotation" | "balance";
@@ -19,7 +19,7 @@ export default function ClinicalDiary({
   accordiumTitle,
   modalTitle,
   apiType
-}: Props){
+}: ClinicalDiaryProps){
   const [ modalState, setModalState ] = useState(false);
   
   return(

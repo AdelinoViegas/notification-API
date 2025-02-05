@@ -17,7 +17,6 @@ type EatingHabits = {
 	typeWater?: string,
 }
 
-
 type Diseases = {
 	diabetes: boolean,
 	hypertension: boolean,
