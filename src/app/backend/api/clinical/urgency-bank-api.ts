@@ -569,14 +569,15 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
         }
       }
     }
-    
+
     console.log(cidCodes);
+    
     const anamnesis = {
       generalClinic:{
         symptoms: symptoms || generalClinic?.symptoms,
         diseaseData: diseaseData || generalClinic?.diseaseData,
         complementaryExams: complementaryExams || generalClinic?.complementaryExams,
-        diagnosticHypothesis: !!cidCodes || undefined,
+        diagnosticHypothesis: !!cidCodes.length?generalClinic?.diagnosticHypothesis.concat(cidCodes):generalClinic?.diagnosticHypothesis,
         others: others || generalClinic?.others,
         diseasesInFamily: diseasesInFamily || generalClinic?.diseasesInFamily,
         evaluation: evaluation || generalClinic?.evaluation,

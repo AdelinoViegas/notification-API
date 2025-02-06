@@ -1,4 +1,3 @@
-import TabOffice from "@/components/clinical/tab-office";
 import Header from "@/components/header";
 import { getPatient } from "@/app/backend/api/clinical/api";
 import clsx from "clsx";
@@ -33,8 +32,8 @@ export default async function Layout({
         />
 			</div>
       
-      <div className="flex h-screen">
-        <div className="bg-white px-3 lg:px-16 py-5 rounded-s-xl border border-e-0 max-h-sizeTab scroll overflow-auto w-full">
+      <div className="flex h-[70vh] gap-x-3">
+        <div className="bg-white px-3 lg:px-16 py-5 rounded-lg border max-h-sizeTab scroll overflow-auto w-full">
           {children}
         </div>
        
