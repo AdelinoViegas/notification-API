@@ -102,6 +102,7 @@ export default function ComboBox(){
         throw new Error(`Demasiados resultados para mostrar, estreite a busca (total encontrados: ${cids.length})!`, { cause: "exceeded" });
 
       setItems(cids);
+      toast.success(`Foram encontrados um total de ${cids.length} referências!`, { autoClose: 1500 });
     }catch(e: unknown){
       const err = e as Error;
       
@@ -146,12 +147,10 @@ export default function ComboBox(){
             {cids.map((item, i)=>(
               <div key={i} className="flex justify-between items-center gap-2 px-3 py-2 bg-gray-100 my-1 rounded-md border ">
                 {item.value}
-                <form>
                   <input type="hidden" name="patientId" value={patientId}/>
                   <button type="button" className="bg-red-500 text-white px-2 rounded-md py-1">
                     <BiTrash onClick={()=>removeCid(item)} className="w-5"/>
                   </button>
-                </form>
               </div>
             ))}
             </>:
