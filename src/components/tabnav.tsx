@@ -28,7 +28,7 @@ export default function TabNav({
     <nav> 
       <ul className="flex md:flex-nowrap flex-wrap gap-x-1 justify-between line-clamp-1 text-center font-bold">
         {subPaths.map((item, index)=>{
-          const absPathname = idAsIndexPage && index == 0?([baseUrl, paramId]).join('/'):([baseUrl, paramId, item.path]).join('/');  
+          const absPathname = (idAsIndexPage && index == 0?[baseUrl, paramId]:[baseUrl, paramId, item.path]).join('/');  
           return(
             <Link 
               href={absPathname} 

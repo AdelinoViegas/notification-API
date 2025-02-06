@@ -1,8 +1,8 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useState, useEffect, Dispatch, SetStateAction } from "react";
-import { Cid, getByCode, getByName } from "@/lib/cid-query";
+import { useState, Dispatch, SetStateAction } from "react";
+import { Cid, getByName } from "@/lib/cid-query";
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
 import { toast } from "react-toastify";
@@ -14,10 +14,10 @@ import {
 } from '@headlessui/react';
 import { BiTrash, BiCheck, BiChevronDown } from "react-icons/bi";
 import clsx from 'clsx';
-import { getPatientUrgencyBank } from "@/app/backend/api/clinical/urgency-bank-api";
+// import { getPatientUrgencyBank } from "@/app/backend/api/clinical/urgency-bank-api";
 import SubTitle from "./subtitle";
 
-export function ListBox({ cids, setCids, items }:{ items: Cid[], cids: Cid[], setCids: Dispatch<SetStateAction<Cid[]>>}){
+export function ListBox({ setCids, items }:{ items: Cid[], setCids: Dispatch<SetStateAction<Cid[]>>}){
   const [selected, setSelected] = useState({code:'', value:'Clique para escolher uma opção'});
 
   const addCid = ()=>{
@@ -73,8 +73,8 @@ export default function ComboBox(){
   const [ cids, setCids] = useState<Cid[]>([]);
   const { patientId } = useParams<{patientId: string}>();
   
-  useEffect(()=>{
-    /*let cid:Cid[] = [];
+  /*useEffect(()=>{
+    let cid:Cid[] = [];
     const getDiagnostic = async ()=> {
       const anamnesis = await getPatientUrgencyBank(patientId);
       if(anamnesis.generalClinic.diagnosticHypothesis.length > 0){
@@ -85,8 +85,8 @@ export default function ComboBox(){
       }
     }
 
-    getDiagnostic();*/
-  },[patientId]);
+    getDiagnostic();
+  },[patientId]);*/
 
   const filterHandler = async ()=> {
     try{
@@ -120,6 +120,11 @@ export default function ComboBox(){
 
   return(
     <div className="flex gap-x-4 justify-between mb-6">
+      <input
+        className="hidden"
+        name="cids"
+        defaultValue={!!cids.length?JSON.stringify(cids):undefined}
+      />
       <div className="w-full flex flex-col gap-y-5">
         <div className="flex gap-x-3 justify-between items-center">
           <InputField

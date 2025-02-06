@@ -42,7 +42,7 @@ export default function RootLayout({
   return (
     <html lang="pt-ao">
       <body className={`${local.className} antialiased`}>
-        <ToastContainer theme="colored" />
+        <ToastContainer />
         {children}
       </body>
     </html>

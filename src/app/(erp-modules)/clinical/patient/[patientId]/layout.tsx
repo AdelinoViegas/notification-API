@@ -1,6 +1,6 @@
 import Header from "@/components/header";
 import TabNav from "@/components/tabnav";
-
+import SendToScreening from "@/components/send-screening";
 export default function LayoutOptions({ 
   children 
 }:{ 
@@ -9,7 +9,9 @@ export default function LayoutOptions({
   return(
     <div>
       <div className="mt-4 mb-6">
-				<Header title="Utente Registrado"/>
+				<Header title="Utente Registrado">
+          <SendToScreening />
+        </Header>
 			</div>
       <div>
         <TabNav

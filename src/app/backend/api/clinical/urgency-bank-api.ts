@@ -530,7 +530,7 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
     const symptoms = formData.get("symptoms") as string;
     const diseaseData = formData.get("diseaseData") as string;
     const complementaryExams = formData.get("complementaryExams") as string;
-    const diagnosticHypothesis = formData.get("cidCode") as string;
+    const diagnosticHypothesis = JSON.parse(formData.get("cids") as string);
     const others = formData.get("others") as string;
     const evaluation = formData.get("evaluation") as string;
     const meals = formData.get("meals") as string;
@@ -556,13 +556,21 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
     const timeExercise = formData.get("time") as string;
     const hasPatientUrgencyBank = await urgencyBankModel.findOne({ patientId });
     const generalClinic = hasPatientUrgencyBank?.anamnesis?.generalClinic;
+    let cidCodes:string[] = [];
 
+    if(!!diagnosticHypothesis.length){
+      for(let diagnostic of diagnosticHypothesis){
+        cidCodes.push(diagnostic.code);
+      }
+    }
+    
+    console.log(cidCodes);
     const anamnesis = {
       generalClinic:{
         symptoms: symptoms || generalClinic?.symptoms,
         diseaseData: diseaseData || generalClinic?.diseaseData,
         complementaryExams: complementaryExams || generalClinic?.complementaryExams,
-        diagnosticHypothesis: [...(diagnosticHypothesis || []), diagnosticHypothesis],
+        diagnosticHypothesis: [ cidCodes ],
         others: others || generalClinic?.others,
         diseasesInFamily: diseasesInFamily || generalClinic?.diseasesInFamily,
         evaluation: evaluation || generalClinic?.evaluation,

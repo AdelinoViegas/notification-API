@@ -13,7 +13,6 @@ import {
 import InputField from "@/components/ui/input-field";
 import Selection, { SelectionOption } from "@/components/ui/selection";
 import PatientGroups from "@/components/forms/patient-groups";
-import { TbHelp } from "react-icons/tb";
 import { getExternalUnits } from "@/app/backend/api/clinical/urgency-bank-api";
 import ExternalUnitForm from "@/components/forms/external-unit-form";
 
@@ -114,13 +113,8 @@ const tabComponents = [
           required
           className="w-full"
           id="Documentação:0:documentation"
+          title="123456789AB123"
         />
-        <button
-          className="relative"
-          data-tooltip-id="documentation"
-          type="button">
-            <TbHelp className="size-5" />
-        </button>
       </div>
       
       <InputField
