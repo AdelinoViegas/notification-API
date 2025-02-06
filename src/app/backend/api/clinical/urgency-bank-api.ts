@@ -562,7 +562,7 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
         symptoms: symptoms || generalClinic?.symptoms,
         diseaseData: diseaseData || generalClinic?.diseaseData,
         complementaryExams: complementaryExams || generalClinic?.complementaryExams,
-        diagnosticHypothesis: diagnosticHypothesis || generalClinic?.diagnosticHypothesis,
+        diagnosticHypothesis: [...(diagnosticHypothesis || []), diagnosticHypothesis],
         others: others || generalClinic?.others,
         diseasesInFamily: diseasesInFamily || generalClinic?.diseasesInFamily,
         evaluation: evaluation || generalClinic?.evaluation,
@@ -637,7 +637,7 @@ async function getPatientUrgencyBank(patientId: string){
       symptoms: patientData?.anamnesis?.generalClinic?.symptoms as string,
       diseaseData: patientData?.anamnesis?.generalClinic?.diseaseData as string,
       complementaryExams: patientData?.anamnesis?.generalClinic?.complementaryExams as string,
-      diagnosticHypothesis: patientData?.anamnesis?.generalClinic?.diagnosticHypothesis as string,
+      diagnosticHypothesis: patientData?.anamnesis?.generalClinic?.diagnosticHypothesis as string[],
       others: patientData?.anamnesis?.generalClinic?.others as string,
       evaluation: patientData?.anamnesis?.generalClinic?.evaluation as string,
       diseasesInFamily: patientData?.anamnesis?.generalClinic?.diseasesInFamily as string,
@@ -677,6 +677,12 @@ async function getPatientUrgencyBank(patientId: string){
 
     //outras anamneses
   }
+}
+
+async function removeDiagnosticHypothesis(prev:unknown, formData:FormData){
+  try{
+    const diagnosticHypothesis = formData.get("");
+  }finally{}
 }
 
 export {

@@ -161,7 +161,6 @@ function diagnosticInternalComponent(){
 		initialState: { message: "", status: false },
 		childrens: [
 			{
-				className: "w-96",
 				elements:[
 					{ 
 						type: "combobox",

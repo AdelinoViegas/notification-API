@@ -1,5 +1,5 @@
-import TabPatient from "@/components/clinical/tab-patient";
 import Header from "@/components/header";
+import TabNav from "@/components/tabnav";
 
 export default function LayoutOptions({ 
   children 
@@ -12,7 +12,17 @@ export default function LayoutOptions({
 				<Header title="Utente Registrado"/>
 			</div>
       <div>
-        <TabPatient />
+        <TabNav
+          idAsIndexPage
+          keyParam="patientId"
+          baseUrl="/clinical/patient"
+          subPaths={[
+            { path: "", title: "Ficha de Cadastro" },
+            { path: "schedule-appointment", title: "Agendar Consulta" },
+            { path: "schedule-exam", title: "Agendar Exame" },
+            { path: "card", title: "Cartão do Utente" }
+          ]}
+        />
         <div className="bg-white px-3 lg:px-16 py-5 rounded-b-xl border border-t-0 max-h-sizeTab overflow-auto">
           {children}
         </div>

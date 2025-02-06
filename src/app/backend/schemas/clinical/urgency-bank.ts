@@ -5,7 +5,7 @@ const anamnesis = new Schema({
     symptoms: String,
     diseaseData: String,
     complementaryExams: String,
-    diagnosticHypothesis: String,
+    diagnosticHypothesis: [String],
     others: String,
     evaluation: String,
     diseasesInFamily: String,
