@@ -3,6 +3,7 @@ import Header from "@/components/header";
 import { getPatient } from "@/app/backend/api/clinical/api";
 import clsx from "clsx";
 import { priorityModel } from "@/app/backend/models/clinical";
+import TabNav from "@/components/tabnav";
 
 export default async function Layout({ 
   children,
@@ -32,11 +33,26 @@ export default async function Layout({
         />
 			</div>
       
-      <div className="flex">
+      <div className="flex h-screen">
         <div className="bg-white px-3 lg:px-16 py-5 rounded-s-xl border border-e-0 max-h-sizeTab scroll overflow-auto w-full">
           {children}
         </div>
-        <TabOffice />
+       
+        <TabNav
+          idAsIndexPage
+          isAside
+          keyParam="patientId"
+          baseUrl="/clinical/urgency-bank"
+          subPaths={[
+            { path: "", title: "Ficha de Cadastro" },
+            { path: "screening", title: "Ficha de Triagem" },
+            { path: "anamnesis", title: "Anamneses" },
+            { path: "exam", title: "Exames" },
+            { path: "clinical-diary", title: "Diário Clínico" },
+            { path: "office", title: "Consultas" },
+            { path: "surgery", title: "Cirurgias" }
+          ]}
+        />
       </div>
     </div>
   )

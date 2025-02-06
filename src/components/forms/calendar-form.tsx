@@ -260,7 +260,7 @@ export default function CalendarForm({
                 <button 
                   type="button" 
                   onClick={()=>removeCart(item.day)}>
-                    <TrashIcon className="p-2 size-8 btn" />
+                    <TrashIcon className="p-2 size-8 bg-red-500 text-white rounded" />
                 </button>
               </p>
             </li>

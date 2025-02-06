@@ -560,7 +560,13 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
 
     if(!!diagnosticHypothesis.length){
       for(let diagnostic of diagnosticHypothesis){
-        cidCodes.push(diagnostic.code);
+        if(!!generalClinic?.diagnosticHypothesis.length){
+          if(!generalClinic.diagnosticHypothesis.includes(diagnostic.code)){
+            cidCodes.push(diagnostic.code);
+          }
+        }else{
+          cidCodes.push(diagnostic.code);
+        }
       }
     }
     
@@ -570,7 +576,7 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
         symptoms: symptoms || generalClinic?.symptoms,
         diseaseData: diseaseData || generalClinic?.diseaseData,
         complementaryExams: complementaryExams || generalClinic?.complementaryExams,
-        diagnosticHypothesis: [ cidCodes ],
+        diagnosticHypothesis: !!cidCodes || undefined,
         others: others || generalClinic?.others,
         diseasesInFamily: diseasesInFamily || generalClinic?.diseasesInFamily,
         evaluation: evaluation || generalClinic?.evaluation,

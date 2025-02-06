@@ -11,10 +11,12 @@ export default function TabNav({
   baseUrl,
   keyParam,
   subPaths,
+  isAside,
   idAsIndexPage
 }: {
   baseUrl: string;
   keyParam: string;
+  isAside?: boolean;
   subPaths: {
     path: string;
     title: string;
@@ -25,18 +27,23 @@ export default function TabNav({
   const paramId = useParams()[keyParam];
   
   return(
-    <nav> 
-      <ul className="flex md:flex-nowrap flex-wrap gap-x-1 justify-between line-clamp-1 text-center font-bold">
+    <nav className={clsx({ "w-60 rounded-e-xl overflow-hidden": isAside })}> 
+      <ul className={clsx(
+        { "flex md:flex-nowrap flex-wrap gap-x-1 justify-between line-clamp-1 text-center font-bold": !isAside },
+        { "flex flex-col w-full h-full": isAside },
+      )}>
         {subPaths.map((item, index)=>{
           const absPathname = (idAsIndexPage && index == 0?[baseUrl, paramId]:[baseUrl, paramId, item.path]).join('/');  
           return(
             <Link 
               href={absPathname} 
               key={index}
-              className={clsx("sm:rounded-t-3xl py-2 text-center w-full text-primary",
+              className={clsx("py-2 text-center w-full text-primary",
                 {
-                  "bg-tabMenu border-t-2 border-solid border-t-primary bg-white":pathname === absPathname,
-                  "bg-primary text-white":pathname !== absPathname,
+                  "bg-tabMenu border-t-2 border-solid border-t-primary bg-white": !isAside && (pathname === absPathname),
+                  "bg-primary text-white":!isAside && (pathname !== absPathname),
+                  "sm:rounded-t-3xl": !isAside,
+                  "": isAside
                 }
               )}
             >
