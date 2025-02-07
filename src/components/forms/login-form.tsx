@@ -31,12 +31,12 @@ export default function LoginForm(){
 
   useEffect(()=>{
     if(searchParams.has('danied')){
-      toast.warn("Sua sessão expirou, faça login novamente!", { theme: "light" });
+      toast.warn("Sua sessão expirou, faça login novamente!");
       return;
     }
       
     if(searchParams.has('exit')){
-      toast.warn("Sessão terminada!", { theme: "light", onClose: ()=> router.replace('/')});
+      toast.warn("Sessão terminada!");
       return;
     }
   }, [searchParams, router]);
