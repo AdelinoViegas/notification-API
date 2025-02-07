@@ -27,9 +27,9 @@ export async function middleware(request: NextRequest) {
         console.warn('[warn] ', jwtToken?.message);
         return NextResponse.redirect(new URL('/?danied', request.url));
       }
-  
+
       if(!request.nextUrl.pathname.startsWith(String(jwtToken.data?.route))){
-        console.error('[error] ', jwtToken?.message);
+        console.error('[error] ', jwtToken);
         return NextResponse.redirect(new URL('/?danied', request.url));
       }
       

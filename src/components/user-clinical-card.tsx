@@ -20,10 +20,10 @@ export default async function UserClinicalCard({
 
   if(user?.status === false)
     redirect("/manager/?invalid-user");
-
+  
   const userGroup = await getUserGroup(user.userGroupId?.toString() as string);
   const userData = await getClinicalUser(userId);
-
+  
   return(
     <div className={className?className:"border bg-white rounded-xl px-3 py-2"}>
       <SubTitle className="inline-flex mb-3">Informações adicionais</SubTitle>

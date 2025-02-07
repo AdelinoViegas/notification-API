@@ -91,9 +91,9 @@ async function getDoctors(){
 
 async function getUser(userId: string){
   const clinicalUser = await userModel.findOne({ userId });
-  const user = await managerUserModel.findById({ _id: userId }).select({ password: 0 });
-  const userSpecialty = await specialtyModel.findById({ _id: clinicalUser?.roleId });
-  
+  const user = await managerUserModel.findById({ _id: userId }).select({ fullname: 1 });
+  const userSpecialty = clinicalUser?.roleId?(await specialtyModel.findById({ _id: clinicalUser?.roleId }))?.name:"";
+
   return {
     _id: user?._id.toString() as string,
     fullname: user?.fullname as string,
@@ -101,7 +101,7 @@ async function getUser(userId: string){
     categoryId: clinicalUser?.categoryId?.toString() as string,
     orderNumber: clinicalUser?.orderNumber as number,
     roleId: clinicalUser?.roleId?.toString() as string,
-    role: userSpecialty?.name as string, 
+    role: userSpecialty, 
     officeId: clinicalUser?.officeId?.toString() as string
   }
 }
@@ -425,9 +425,8 @@ async function getPatient(patientId: string){
 async function updatePersonalInfo(prev:unknown, formData: FormData){
   try{
     const patientId = formData.get("id") as string;
-    const anamnese = formData.get("anamnese") as string;
     const fullname = formData.get("fullname") as string;
-    const birthDate = formData.get("birthDate") as string;
+    const birthDate = formData.get("birthDate");
     const age = Number(formData.get("age"));
     const civilState = formData.get("civilState") as string;
     const gender = formData.get("gender") as string;
@@ -438,22 +437,9 @@ async function updatePersonalInfo(prev:unknown, formData: FormData){
     if(!validatePatientDoc(documentation))
       throw new Error("Formato do documento inválido!", { cause: "incorrect" });
 
-    if(anamnese){
-      await patientModel.updateOne({_id: patientId}, {
-        fullname,
-        age,
-        gender,
-      });
-
-      return {
-        message: "Actualizado com sucesso!",
-        status: true,
-      }
-    }
-
     await patientModel.updateOne({_id: patientId}, {
       fullname,
-      birthDate: Date.parse(birthDate),
+      birthDate,
       age,
       civilState,
       tel,

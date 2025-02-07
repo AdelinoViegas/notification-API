@@ -17,11 +17,25 @@ import clsx from 'clsx';
 // import { getPatientUrgencyBank } from "@/app/backend/api/clinical/urgency-bank-api";
 import SubTitle from "./subtitle";
 
-export function ListBox({ setCids, items }:{ items: Cid[], setCids: Dispatch<SetStateAction<Cid[]>>}){
+export function ListBox({ cids, setCids, items }:{ items: Cid[], cids: Cid[], setCids: Dispatch<SetStateAction<Cid[]>>}){
   const [selected, setSelected] = useState({code:'', value:'Clique para escolher uma opção'});
 
-  const addCid = ()=>{
-    setCids(prev =>[...prev, {code: selected.code, value: selected.value}]);
+  const addCid = async ()=>{
+    try{
+      if(cids.find((item)=>item.code === selected.code)){
+        throw new Error("A Cid já foi Adicionada", { cause: "duplicateData" });
+      }else{
+        setCids(prev =>[...prev, {code: selected.code, value: selected.value}]);
+      }
+    }catch(err: unknown){
+      const error = err as Error;
+      
+      if(error.cause == "duplicateData"){
+        toast.warn(error.message);
+        return;
+      }
+      toast.error(error.message); 
+    }
   }
 
   return (
@@ -38,7 +52,7 @@ export function ListBox({ setCids, items }:{ items: Cid[], setCids: Dispatch<Set
             'focus:outline-none data-[focus]:outline-2'
           )}
         >
-          <p>{selected.value}</p>
+          <p>{!!items.length?selected.value:"Lista Vazia"}</p>
           <BiChevronDown className="size-5 text-black" />
         </ListboxButton>
         <ListboxOptions
@@ -84,7 +98,6 @@ export default function ComboBox(){
         setCids(cid);
       }
     }
-
     getDiagnostic();
   },[patientId]);*/
 

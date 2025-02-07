@@ -6,7 +6,7 @@ import Button from "@/components/ui/button";
 import { BiTrash as TrashIcon } from "react-icons/bi";
 import { 
   getUnits, 
-  grantUnitAccess, 
+  // grantUnitAccess, 
   getGrantedUnitAccess,
   removeUnitAccess,
 } from "@/app/backend/api/clinical/urgency-bank-api";
@@ -23,7 +23,7 @@ export default async function Page({
   const { userId } = await params;
   const workplaces = await getUnits("workplace", true) as SelectionOption[];
   const grantedAccess = await getGrantedUnitAccess(userId);
-  const { fullname } = await getUser(userId, true); 
+  const { fullname } = await getUser(userId, true);
 
   return (
     <main className="space-y-3">
@@ -42,7 +42,7 @@ export default async function Page({
           <div>
             <SubTitle className="inline-flex">Area de Trabalho</SubTitle>
             
-            <form action={grantUnitAccess}>
+            <form action={'grantUnitAccess'}>
               <input 
                 type="hidden" 
                 name="userId" 

@@ -16,10 +16,8 @@ export const getFirstAndLastName = (fullname: string)=>{
 
 export default async function StatusLoginUser(){
   const userId = await whoAreYou();
-  // if(!userId) 
-  //   redirect("/?invalid-user");
-
   const user = await getUser(userId as string);
+
   const menuItems = [
     {
       label: "Meu Perfil",
@@ -38,7 +36,7 @@ export default async function StatusLoginUser(){
   return(
     <main className="select-none border-b bg-white flex justify-between p-3 items-center">
       <div>
-        <h2 className="">Instituto de Saúde Pública de Angola - ISPA</h2>
+        <h2 className="uppercase">Hospital Privado da Socompser</h2>
       </div>
 
       <div className="flex gap-3 items-center">

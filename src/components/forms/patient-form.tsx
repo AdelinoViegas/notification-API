@@ -12,6 +12,7 @@ import { getExternalUnits } from "@/app/backend/api/clinical/urgency-bank-api";
 
 export default async function PatientForm({patientId}:{patientId: string}){
 	const patient = await getPatient(patientId);
+	
   if(!patient)
     redirect('/clinical?invalid-user');
 
