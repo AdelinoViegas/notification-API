@@ -29,7 +29,7 @@ import {
 import { userModel } from "@/app/backend/models/manager";
 import { getUser, patientFilters } from "@/app/backend/api/clinical/api";
 import { redirect } from "next/navigation";
-import { Cid } from "@/lib/cid-query";
+import type { CID } from "@/lib/cid-query";
 
 type UnitType = "workplace" | "internment" | "laboratory" | "imaging";
 
@@ -531,7 +531,7 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
     const symptoms = formData.get("symptoms") as string;
     const diseaseData = formData.get("diseaseData") as string;
     const complementaryExams = formData.get("complementaryExams") as string;
-    const diagnosticHypothesis = JSON.parse(formData.get("cids") as string) as Cid[];
+    const diagnosticHypothesis = JSON.parse(formData.get("cids") as string) as CID[];
     const others = formData.get("others") as string;
     const evaluation = formData.get("evaluation") as string;
     const meals = formData.get("meals") as string;
@@ -559,8 +559,8 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
     const generalClinic = hasPatientUrgencyBank?.anamnesis?.generalClinic;
     
     const cidCodes = diagnosticHypothesis
-    .filter((diagnostic: Cid) => !generalClinic?.diagnosticHypothesis?.includes(diagnostic.code))
-    .map((cid: Cid)=> cid.code);
+    .filter((diagnostic: CID) => !generalClinic?.diagnosticHypothesis?.includes(diagnostic.code))
+    .map((CID: CID)=> CID.code);
 
     const anamnesis = {
       generalClinic:{
