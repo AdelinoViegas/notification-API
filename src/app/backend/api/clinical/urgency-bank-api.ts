@@ -561,15 +561,13 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
     const cidCodes = diagnosticHypothesis
     .filter((diagnostic: Cid) => !generalClinic?.diagnosticHypothesis?.includes(diagnostic.code))
     .map((cid: Cid)=> cid.code);
-   
-    if(cidCodes.length === 0)
-      console.log("sem dados")
+
     const anamnesis = {
       generalClinic:{
         symptoms: symptoms || generalClinic?.symptoms,
         diseaseData: diseaseData || generalClinic?.diseaseData,
         complementaryExams: complementaryExams || generalClinic?.complementaryExams,
-        diagnosticHypothesis: !!cidCodes.length?generalClinic?.diagnosticHypothesis.concat(cidCodes):generalClinic?.diagnosticHypothesis,
+        diagnosticHypothesis: !!cidCodes.length?generalClinic?.diagnosticHypothesis.concat(cidCodes) ?? cidCodes:generalClinic?.diagnosticHypothesis,
         others: others || generalClinic?.others,
         diseasesInFamily: diseasesInFamily || generalClinic?.diseasesInFamily,
         evaluation: evaluation || generalClinic?.evaluation,

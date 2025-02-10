@@ -21,7 +21,7 @@ export default function TabNav({
     path: string;
     title: string;
   }[];
-  idAsIndexPage: boolean; // para marcar o primeiro elementro da rota como index o id da pagina
+  idAsIndexPage: boolean; // marca o id como page.tsx da rota
 }){
   const pathname = usePathname();
   const paramId = useParams()[keyParam];
@@ -44,7 +44,7 @@ export default function TabNav({
                   "bg-primary text-white":!isAside && (pathname !== absPathname),
                   "sm:rounded-t-3xl": !isAside,
                   "text-primary": !isAside,
-                  "text-primary bg-primary/15": isAside && (pathname === absPathname),
+                  "text-primary bg-primary/15 border-primary/70 border-2": isAside && (pathname === absPathname),
                   "text-black text-start font-semibold text-sm hover:bg-primary/15 px-3 rounded-lg": isAside
                 }
               )}
