@@ -17,7 +17,6 @@ import {
 } from "@/lib/internal-components";
 import { getPatientUrgencyBank } from "@/app/backend/api/clinical/urgency-bank-api";
 import Hospitalization from "@/components/hospitalization";
-import ChildrenMedicine from "@/components/urgency-bank/anamnesis/childrens-medicine";
 
 export default async function Page({ params }: {
 	params: Promise<{
@@ -76,8 +75,6 @@ export default async function Page({ params }: {
 					title="CLINICA GERAL"
 					components={generalClinical} 
 				/>
-
-				{/*<ChildrenMedicine/>*/}
 
 				<GlobalComponent
 				  {...{patientId}}
