@@ -131,7 +131,7 @@ export default function GlobalComponent({
   components
 }: Props){
   return(
-    <Accordium className="hover:bg-primary/95 bg-primary text-white" title={title}>
+    <Accordium className="bg-gray-200 hover:bg-gray-300" title={title}>
       {components.map((item, i)=> <Component {...{patientId}} {...item} key={i} />)}
     </Accordium>
   );

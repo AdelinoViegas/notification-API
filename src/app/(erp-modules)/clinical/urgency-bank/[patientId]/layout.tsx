@@ -3,7 +3,7 @@ import { getPatient } from "@/app/backend/api/clinical/api";
 import clsx from "clsx";
 import { priorityModel } from "@/app/backend/models/clinical";
 import TabNav from "@/components/tabnav";
-
+import Card from "@/components/ui/card";
 export default async function Layout({ 
   children,
   params
@@ -33,9 +33,7 @@ export default async function Layout({
 			</div>
       
       <div className="flex h-[70vh] gap-x-3">
-        <div className="bg-white px-3 lg:px-16 py-5 rounded-lg border max-h-sizeTab scroll overflow-auto w-full">
-          {children}
-        </div>
+        <Card className="h-full w-full overflow-y-scroll">{children}</Card>
        
         <TabNav
           idAsIndexPage

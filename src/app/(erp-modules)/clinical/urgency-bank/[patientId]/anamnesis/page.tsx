@@ -63,13 +63,13 @@ export default async function Page({ params }: {
 	];
 	
   return(
-		<main>
+		<main className="relative">
 			<div className="flex gap-x-3">
 				<Button>Visualizar</Button>
 				<Hospitalization/>
 			</div>
 
-			<div className="flex flex-col gap-y-5 my-8">
+			<div className="flex flex-col gap-y-3 mt-4">
 				<GlobalComponent
 				  {...{patientId}}
 					title="CLINICA GERAL"
