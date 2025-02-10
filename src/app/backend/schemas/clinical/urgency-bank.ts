@@ -64,6 +64,20 @@ const urgencyBankSchema = new Schema({
   timestamps: true,
 });
 
+const urgencyService = new Schema({
+  name: String,
+  label: String,
+  userId: Schema.Types.ObjectId,
+  isActive: {
+    type: Boolean,
+    default: true
+  }
+}, {
+  collection: "urgency_services",
+  timestamps: true
+});
+
 export {
-  urgencyBankSchema
+  urgencyBankSchema,
+  urgencyService
 }

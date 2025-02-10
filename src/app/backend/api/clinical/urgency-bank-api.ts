@@ -684,6 +684,14 @@ async function getPatientUrgencyBank(patientId: string){
   }
 }
 
+async function signUrgencyService(){
+  
+}
+
+async function getUrgencyServices(){}
+
+async function getUrgencyService(){}
+
 export {
   getPatients,
   signUnit,
@@ -703,4 +711,7 @@ export {
   updateExternalUnit,
   signUrgencyBank,
   getPatientUrgencyBank,
+  signUrgencyService,
+  getUrgencyService,
+  getUrgencyServices
 };
