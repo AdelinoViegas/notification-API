@@ -7,14 +7,13 @@ export type CID = {
 
 async function getByCode(code: string): Promise<CID[]>{
   const data = await (await fetch(CID_URL)).json() as CID[];
-  const result = data.find(item => item.code === code);
+  const result = data.find(item => item.code === code.trim());
   return result?[{ code: result?.code, value: result?.value }]:[];
-  return data.filter((props) => props.code === code.toUpperCase());  
 }
 
 async function getByName(name: string): Promise<CID[]>{
   const data = await (await fetch(CID_URL)).json() as CID[];
-  return data.filter((props) => props.value.match(name));
+  return data.filter((props) => props.value.match(name.trim()));
 } 
 
 export {

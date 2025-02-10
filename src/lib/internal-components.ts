@@ -621,6 +621,175 @@ function familyInternalComponent(defaultValue: string){
 	}
 }
 
+function gestationComponent(){
+	return {
+		title: "Avaliação da Gestão Actual",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: [
+			{
+				className: "grid grid-cols-2 gap-x-4",
+				elements: [
+					{ 
+						type: "date",
+						props: {
+							label: "Data da última menstrução",
+							name: "lastPeriod",
+						}
+					},
+					{ 
+						type: "text",
+						props: {
+							label: "Tempo de atraso",
+							placeholder: "Descreva",
+							name: "time",
+						}
+					},
+					{ 
+						type: "number",
+						props: {
+							label: "Idade gestacional",
+							placeholder: "digite a idade gestacional",
+							name: "age",
+						}
+					},
+					{ 
+						type: "date",
+						props: {
+							label: "Data provável do parto",
+							placeholder: "Descreva",
+							name: "childbirth",
+						}
+					},
+				]
+			}
+		]
+	}
+}
+
+function symptomsComponent(){
+	return {
+		title: "Sinais e Sintómas Presentes",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: [
+			{
+				elements: [
+					{ 
+						type: "textarea",
+						props: {
+							label: "Sinais e Sintómas Presentes",
+							rows:3,
+							placeholder: "náuseas, vómitos, dor abdominal, sangramentos, outros, duração",
+							name: "signs",
+						}
+					},
+				]
+			}
+		]
+	};
+}
+
+function prenatalExams(){
+	return {
+		title: "Exames Pré-Natal",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: [
+			{ 
+				className: "mb-8",
+				separatedElements: [
+					{
+						label: "Ecografia",
+						className: "flex gap-3 items-center",
+						elements: [
+							{ 
+								type: "radio",
+								props: {
+									label: "Sim",
+									name: "ultrasound",
+								}
+							},
+							{ 
+								type: "radio",
+								props: {
+									label: "Não",
+									name: "ultrasound",
+								}
+							},
+						]
+					},
+				],elements: []
+			},
+			{ 
+				className: "mt-[30px]",
+				elements: [
+					{ 
+						type: "text",
+						props: {
+							label: "Resultado",
+							name: "resultExam",
+						}
+					},
+				]
+			},
+			{ 
+				className: "mb-8",
+				separatedElements: [
+					{
+						label: "Exame de Sangue",
+						className: "flex flex-col",
+						elements: [
+							{ 
+								type: "checkbox",
+								props: {
+									label: "Hemograma",
+									name: "bloodCount",
+								}
+							},
+							{ 
+								type: "checkbox",
+								props: {
+									label: "Glicemia",
+									name: "bloodGlucose",
+								}
+							},
+							{ 
+								type: "checkbox",
+								props: {
+									label: "VDR",
+									name: "VDR",
+								}
+							},
+							{ 
+								type: "checkbox",
+								props: {
+									label: "VIH",
+									name: "VIH",
+								}
+							},
+							{ 
+								type: "checkbox",
+								props: {
+									label: "Hepatite-B",
+									name: "hepatitis-b",
+								}
+							},
+							{ 
+								type: "checkbox",
+								props: {
+									label: "Falciformação",
+									name: "sickleCell",
+								}
+							},
+						]
+					},
+				],elements: []
+			},
+		]
+	};
+}
+
 export {
   personalInternalComponent,
 	symptomsInternalComponent,
@@ -632,5 +801,8 @@ export {
 	evaluationInternalComponent,
 	lifeStyleInternalComponent,
 	eatingHabitsInternalComponent,
-	familyInternalComponent
+	familyInternalComponent,
+	gestationComponent,
+	symptomsComponent,
+	prenatalExams
 }

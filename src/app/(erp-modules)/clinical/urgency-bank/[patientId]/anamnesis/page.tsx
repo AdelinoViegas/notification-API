@@ -8,12 +8,16 @@ import {
 	evaluationInternalComponent,
 	examsInternalComponent,
 	familyInternalComponent,
+	gestationComponent,
 	lifeStyleInternalComponent,
 	othersInternalComponent,
+	prenatalExams,
+	symptomsComponent,
 	symptomsInternalComponent
 } from "@/lib/internal-components";
 import { getPatientUrgencyBank } from "@/app/backend/api/clinical/urgency-bank-api";
 import Hospitalization from "@/components/hospitalization";
+import ChildrenMedicine from "@/components/urgency-bank/anamnesis/childrens-medicine";
 
 export default async function Page({ params }: {
 	params: Promise<{
@@ -23,6 +27,7 @@ export default async function Page({ params }: {
   const { patientId } = await params;
 	const anamnesis = await getPatientUrgencyBank(patientId);
 
+	/*Clinica geral*/
 	const symptoms = symptomsInternalComponent(anamnesis.generalClinic.symptoms);
 	const diseaseData = diseaseDataInternalComponent(anamnesis.generalClinic?.diseaseData);
 	const complementaryExams = examsInternalComponent(anamnesis?.generalClinic?.complementaryExams);
@@ -33,6 +38,11 @@ export default async function Page({ params }: {
   const lifeStyle = lifeStyleInternalComponent(anamnesis.generalClinic.lifeStyle);
 	const eatingHabits = eatingHabitsInternalComponent(anamnesis.generalClinic.eatingHabits);
   const familyHistory = familyInternalComponent(anamnesis?.generalClinic.diseasesInFamily);
+  
+	/*Medicina materno infantil*/
+	const gestation = gestationComponent();
+	const signs = symptomsComponent();
+	const prenatal = prenatalExams();
 
 	const generalClinical:InternalComponent[] = [
 		symptoms,
@@ -45,6 +55,12 @@ export default async function Page({ params }: {
 		lifeStyle,
 		eatingHabits,
 		familyHistory
+	];
+
+	const childrensMedicine:InternalComponent[] = [
+		gestation,
+		signs,
+		prenatal,
 	];
 	
   return(
@@ -59,6 +75,14 @@ export default async function Page({ params }: {
 				  {...{patientId}}
 					title="CLINICA GERAL"
 					components={generalClinical} 
+				/>
+
+				{/*<ChildrenMedicine/>*/}
+
+				<GlobalComponent
+				  {...{patientId}}
+					title="MEDICINA MATERNO INFANTIL"
+					components={childrensMedicine} 
 				/>
 			</div>
 		</main>
