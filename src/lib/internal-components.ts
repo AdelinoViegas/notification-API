@@ -690,14 +690,13 @@ function symptomsComponent(){
 	};
 }
 
-function prenatalExams(){
+function prenatalExamsComponent(){
 	return {
 		title: "Exames Pré-Natal",
 		apiFn: signUrgencyBank,
 		initialState: { message: "", status: false },
 		childrens: [
 			{ 
-				className: "mb-8",
 				separatedElements: [
 					{
 						label: "Ecografia",
@@ -722,7 +721,7 @@ function prenatalExams(){
 				],elements: []
 			},
 			{ 
-				className: "mt-[30px]",
+				className: "mb-40 w-96",
 				elements: [
 					{ 
 						type: "text",
@@ -734,7 +733,7 @@ function prenatalExams(){
 				]
 			},
 			{ 
-				className: "mb-8",
+				className: "mt-20",
 				separatedElements: [
 					{
 						label: "Exame de Sangue",
@@ -790,6 +789,621 @@ function prenatalExams(){
 	};
 }
 
+
+function historyOFDiseaseComponent(){
+	return {
+		title: "História da Doênça Actual(sinais e sintomas presentes)",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: [
+			{ 
+				separatedElements: [
+					{
+						label: "Sistema Cardiovascular",
+						className: "flex flex-col",
+						elements: [
+							{ 
+								type: "checkbox",
+								props: {
+									label: "Dor Torácica",
+									name: "chestPain",
+								}
+							},
+							{ 
+								type: "checkbox",
+								props: {
+									label: "Palpitações",
+									name: "palpitations",
+								}
+							},
+							{ 
+								type: "checkbox",
+								props: {
+									label: "Dispneia",
+									name: "dyspnea",
+								}
+							},
+							{ 
+								type: "checkbox",
+								props: {
+									label: "Edema",
+									name: "edema",
+								}
+							},
+							{ 
+								type: "checkbox",
+								props: {
+									label: "Síncope",
+									name: "syncope",
+								}
+							},
+						]
+					},
+				],elements: []
+			},
+			{
+				elements: [
+					{
+						type: "textarea",
+						props: {
+							label: "Duração dos Sinais e Sintomas Cardiovascular",
+							name: "durationOfSymptoms",
+							rows: 3,
+							placeholder: "Descreva",
+						}
+					}
+				]
+			},
+			{
+				separatedElements: [
+					{
+						className: "flex gap-x-2 items-center",
+						label: "Sistema Respiratório",
+						elements: [
+							{
+								type:"radio",
+								props:{
+									label: "Produtiva",
+									name: "productivity"
+								}
+							},
+							{
+								type:"radio",
+								props:{
+									label: "Não Produtiva",
+									name: "productivity"
+								}
+							},
+						]
+					}
+				], elements: []
+			},
+			{ 
+				className: "flex flex-col",
+				elements: [
+					{ 
+						type: "checkbox",
+						props: {
+							label: "Tosse",
+							name: "cough",
+						}
+					},
+					{ 
+						type: "checkbox",
+						props: {
+							label: "Chiado no Peito",
+							name: "badBreath",
+						}
+					},
+					{ 
+						type: "checkbox",
+						props: {
+							label: "Hemoptise",
+							name: "hemoptysis",
+						}
+					},
+				]
+			},
+			{
+				className: "flex gap-x-4",
+				elements:[
+					{
+						type: "text",
+						props:{
+							label: "Dor Torácica Pleurítica",
+							placeholder: "Descreva",
+							name: "chestPain",
+						}
+					},
+					{
+						type: "text",
+						props:{
+							label: "Expectoração (características)",
+							placeholder: "Descreva",
+							name: "features",
+						}
+					},
+				]
+			},
+			{
+				elements: [
+					{
+						type: "textarea",
+						props: {
+							label: "Duração dos Sinais e Sintomas Respiratório",
+							name: "durationOfSymptoms",
+							rows: 3,
+							placeholder: "Descreva"
+						}
+					}
+				]
+			}
+		]
+	};
+}
+
+function phisicalExamComponent(){
+	return {
+		title: "Exame Físico",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: [
+			{
+				className: "grid grid-cols-3 items-center gap-x-2",
+				elements:[
+					{
+						type: "text",
+						props:{
+							label: "Estado geral",
+							placeholder: "Descreva",
+							name: "generalCondition",
+						}
+					},
+					{
+						type: "text",
+						props:{
+							label: "Postura",
+							placeholder: "Descreva",
+							name: "posture",
+						}
+					},
+					{
+						type: "text",
+						props:{
+							label: "Clanose",
+							placeholder: "Descreva",
+							name: "clanosis",
+						}
+					},
+					{
+						type: "text",
+						props:{
+							label: "Edema",
+							placeholder: "Descreva",
+							name: "edema",
+						}
+					},
+					{
+						type: "text",
+						props:{
+							label: "Inspeção e palpação do precórdio",
+							placeholder: "Descreva",
+							name: "inspect",
+						}
+					},
+					{
+						type: "text",
+						props:{
+							label: "Ausculta Cardíaca",
+							placeholder: "ritmo, sopros, bulhas",
+							name: "cardiacAuscultation",
+						}
+					},
+					{
+						type: "text",
+						props:{
+							label: "Pulso",
+							placeholder: "frequência, amplitude, ritmo",
+							name: "pulse",
+						}
+					},
+					{
+						type: "text",
+						props:{
+							label: "Inspeção do tórax",
+							placeholder: "simetria, defomidades",
+							name: "chestInspection",
+						}
+					},
+					{
+						type: "text",
+						props:{
+							label: "Palpação",
+							placeholder: "Descreva",
+							name: "palpation",
+						}
+					},
+					{
+						type: "text",
+						props:{
+							label: "Percussão",
+							placeholder: "Descreva",
+							name: "percussion",
+						}
+					},
+				]
+			},
+			{
+				elements: [
+					{
+						type: "textarea",
+						props: {
+							label: "Ausculta Pulmonar",
+							name: "pulmonaryAuscultation",
+							rows: 3,
+							placeholder: "Descreva"
+						}
+					}
+				]
+			}
+		]
+	};
+}
+
+function personalHistoryComponent(){
+  return {
+		title: "Antecedentes Pessoais",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: [
+			{
+        separatedElements: [
+					{
+						label:"Doênças Prévias",
+						elements: [
+							{
+								type:"checkbox",
+								props:{
+									label: "Hipertensão:",
+									name: "hypertension"
+								}
+							},
+							{
+								type:"checkbox",
+								props:{
+									label: "Insuficiência Cardiáca:",
+									name: "heartFailure"
+								}
+							},
+							{
+								type:"checkbox",
+								props:{
+									label: "Infarto:",
+									name: "heartAttack"
+								}
+							},
+							{
+								type:"checkbox",
+								props:{
+									label: "Asma:",
+									name: "asthma"
+								}
+							},
+							{
+								type:"checkbox",
+								props:{
+									label: "Tuberculose:",
+									name: "tuberculosis"
+								}
+							},
+							{
+								type:"checkbox",
+								props:{
+									label: "DPOC:",
+									name: "dpoc"
+								}
+							},
+						]
+					}
+				], elements: []
+			},
+			{ 
+				className: "grid grid-cols-3 items-center gap-x-2",
+				elements: [
+					{
+						type: "text",
+						props: {
+							label: "Outra",
+							name: "OtherDiseases",
+							placeholder: "Descreva"
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Cirurgia Pré-existente",
+							name: "surgeries",
+							placeholder: "Descreva"
+						}
+					},
+					{
+						type: "date",
+						props: {
+							label: "Data da Cirurgia",
+							name: "surgeryDate",
+							placeholder: "Descreva"
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Outras Complicações",
+							name: "otherComplications",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Internamentos Anteriores",
+							name: "previousHospitalizations",
+							placeholder: "Descreva"
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Motivo",
+							name: "reason",
+							placeholder: "Descreva"
+						}
+					},
+					{
+						type: "date",
+						props: {
+							label: "Data",
+							name: "date",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Alergias",
+							name: "allergies",
+							placeholder: "Descreva"
+						}
+					},											
+					{
+						type: "text",
+						props: {
+							label: "Agente reativo",
+							name: "reactiveAgent",
+							placeholder: "Descreva"
+						}
+					},
+				]
+			}
+		]
+	}
+}
+
+function familyHistoryComponent(){
+  return {
+		title: "Antecedentes Familiares",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: [
+			{
+        separatedElements: [
+					{
+						label:"Doênças na família",
+						elements: [
+							{
+								type:"checkbox",
+								props:{
+									label: "infarto:",
+									name: "heartAttack"
+								}
+							},
+							{
+								type:"checkbox",
+								props:{
+									label: "Hipertensão:",
+									name: "hypertension"
+								}
+							},
+							{
+								type:"checkbox",
+								props:{
+									label: "Insuficiência Cardíaca:",
+									name: "heartFailure"
+								}
+							},
+							{
+								type:"checkbox",
+								props:{
+									label: "Câncer do pulmão:",
+									name: "lungCancer"
+								}
+							},
+						]
+					}
+				], elements: []
+			},
+			{
+				className: "w-96",
+				elements: [
+					{
+						type: "text",
+						props: {
+							label: "Outras",
+							name: "otherDisease",
+							placeholder: "Descreva",
+						}
+					}
+				]
+			}
+		]
+	}
+}
+
+function lifeStyleHabitsComponent(){
+  return {
+		title: "Hábitos de Vida",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: [
+			{
+				className: "grid grid-cols-3 items-center gap-x-2",
+				elements: [
+					{
+						type: "text",
+						props: {
+							label: "Tabagismo",
+							name: "smoking",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Tempo de uso",
+							name: "timeOfUse",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Tentativas de cessação",
+							name: "cessation",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Consumo de bebidas alcoólicas",
+							name: "alcoholConsumption",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Tipo de bebida",
+							name: "typeOfDrink",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Frenquência",
+							name: "frequency",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Actividade física",
+							name: "physicalActivity",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Tipos",
+							name: "types",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Duração",
+							name: "duration",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Regime Alimentar",
+							name: "diet",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Comida habitual",
+							name: "usualFood",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Nª de refeições dia",
+							name: "numberOfMeals",
+							placeholder: "Descreva",
+						}
+					},
+				]
+			}
+		]
+	}
+}
+
+function treatmentAndCareComponent(){
+  return {
+		title: "Plano de Tratamento e Cuidados",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: [
+			{
+				elements: [
+					{
+						type: "textarea",
+						props: {
+							label: "Plano de Tratamento e Cuidados",
+							name: "treatmentAndCare",
+							rows: 3,
+							placeholder: "Descreva",
+						}
+					},
+				]
+			}
+		]
+	}
+}
+
+function purposeOfTreatmentComponent(){
+  return {
+		title: "Objectivos do Plano de Tratamento e Cuidados",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: [
+			{
+				elements: [
+					{
+						type: "textarea",
+						props: {
+							label: "Objectivos do Plano de Tratamento e Cuidados",
+							name: "purposeOfTreatment",
+							rows: 3,
+							placeholder: "Descreva",
+						}
+					},
+				]
+			}
+		]
+	}
+}
+
 export {
   personalInternalComponent,
 	symptomsInternalComponent,
@@ -804,5 +1418,12 @@ export {
 	familyInternalComponent,
 	gestationComponent,
 	symptomsComponent,
-	prenatalExams
+	prenatalExamsComponent,
+	historyOFDiseaseComponent,
+	phisicalExamComponent,
+	personalHistoryComponent,
+	familyHistoryComponent,
+	lifeStyleHabitsComponent,
+	treatmentAndCareComponent,
+	purposeOfTreatmentComponent,
 }

@@ -14,6 +14,7 @@ import {
   doctorCalendarModel,
   externalUnitModel,
   urgencyBankModel,
+  urgencyServiceModel,
   // anamnesisModel,
 } from "@/app/backend/models/clinical";
 import { 
@@ -684,11 +685,43 @@ async function getPatientUrgencyBank(patientId: string){
   }
 }
 
-async function signUrgencyService(){
-  
+async function signUrgencyService(prev:never, formData:FormData){
+  try{
+    const name = formData.get('name');
+    const label = formData.get('label');
+    
+    if(!name || !label)
+      throw new Error("Preencha todos os campos!", { cause: "empty"});
+    await urgencyServiceModel.create({ 
+      name, 
+      label,
+      userId: await whoAreYou() 
+    });
+
+    return {
+      message: "Serviço de Urgência registrado com sucesso!",
+      status: true
+    }
+  }catch(e){
+    const err = e as Error;
+    return {
+      message: "error",
+      status: false
+    }
+  }
 }
 
-async function getUrgencyServices(){}
+async function getUrgencyServices(){
+  const services = await urgencyServiceModel.find();
+  return services.map(item => {
+    return {
+      label: item.label as string,
+      name: item.name as string,
+      userId: item.userId?.toString() as string,
+      isActive: item.isActive as boolean
+    }
+  })
+}
 
 async function getUrgencyService(){}
 
