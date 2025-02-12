@@ -12,9 +12,9 @@ import InputDetails from "@/components/ui/input-details";
 import Button from "@/components/ui/button";
 import { useRouter, useParams, usePathname } from 'next/navigation';
 import Alert from "@/components/ui/alert";
-import Selection from "@/components/ui/selection";
+import Selection, { SelectionOption } from "@/components/ui/selection";
 import InputField from "@/components/ui/input-field";
-import { priorityToComponent, urgencyServices } from "@/app/backend/api/clinical/translator";
+import { priorityToComponent } from "@/app/backend/api/clinical/translator";
 import { VitalSignalType } from "@/app/backend/api/clinical/types";
 import { 
   finishScreening,
@@ -24,6 +24,7 @@ import {
 import forceRefreshPage from "@/lib/force-refresh";
 import { triggerUpdate } from "@/lib/ws-trigger";
 import Modal from "@/components/modal";
+import { getUrgencyServices } from "@/app/backend/api/clinical/urgency-bank-api";
 
 export type FormProps = {
   jsonData?: string;
@@ -514,6 +515,7 @@ function FinishScreening(){
   const router = useRouter();
   const [ messageState, setMessageState ] = useState(false);
   const [ messageError, setMessageError ] = useState("");
+  const [ urgencyServices, setUrgencyServices ] = useState<SelectionOption[]>([]);
 
   const confirmScreening = ()=>{
     if(formRef.current?.checkValidity())
@@ -549,6 +551,11 @@ function FinishScreening(){
       }, 2000);
     }
   }, [state, router]);
+
+  useEffect(()=>{
+    getUrgencyServices()
+    .then(setUrgencyServices)
+  }, [])
 
   return(
     <form ref={formRef} action={action} hidden={pathname.includes("urgency-bank")}>

@@ -715,6 +715,7 @@ async function getUrgencyServices(){
   const services = await urgencyServiceModel.find();
   return services.map(item => {
     return {
+      _id: item._id?.toString() as string,
       label: item.label as string,
       userId: item.userId?.toString() as string,
       isActive: item.isActive as boolean
