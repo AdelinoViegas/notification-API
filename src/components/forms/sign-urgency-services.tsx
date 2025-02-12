@@ -14,9 +14,10 @@ export default function SignUrgencyService(){
 
   useEffect(()=>{
     if(state.message)
-      state.status
-      ? toast.success(state.message)
-      : toast.error(state.message);
+      if(state.status)
+        toast.success(state.message)
+      else
+        toast.error(state.message);
 
   }, [ state ]);
 

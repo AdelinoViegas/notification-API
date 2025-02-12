@@ -1,7 +1,6 @@
 import { updatePersonalInfo } from "@/app/backend/api/clinical/api";
 import { gender as genderTemplate } from "@/app/backend/api/clinical/translator";
 import { signUrgencyBank } from "@/app/backend/api/clinical/urgency-bank-api";
-import { TfiLayoutMenuSeparated } from "react-icons/tfi";
 
 type Personal = {
   elements: [

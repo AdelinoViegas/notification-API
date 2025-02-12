@@ -36,7 +36,6 @@ import {
 } from "@/lib/internal-components";
 import { getPatientUrgencyBank } from "@/app/backend/api/clinical/urgency-bank-api";
 import Hospitalization from "@/components/hospitalization";
-import PediatricMedicine from "@/components/urgency-bank/anamnesis/pediatric-medicine";
 
 export default async function Page({ params }: {
 	params: Promise<{
@@ -167,8 +166,6 @@ export default async function Page({ params }: {
 					title="SERVIÇO DE OFTALMOLOGIA"
 					components={ophthalmologyService} 
 				/>
-
-				<PediatricMedicine/>
 
 				<GlobalComponent
 					{...{patientId}}
