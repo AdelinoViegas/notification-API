@@ -11,6 +11,7 @@ type ModalProps = {
   description?: string;
   alertOnly?: boolean;
   children?: React.ReactNode;
+  asWindow?: boolean;
 };
 
 export default function Modal({
@@ -21,10 +22,11 @@ export default function Modal({
   onConfirm,
   alertOnly,
   children,
+  asWindow
 }: ModalProps){
   return(
     <>
-    <Dialog {...{open}} as="div" className="relative z-10 focus:outline-none" {...{onClose}}>
+    <Dialog {...{open}} as="div" className="relative z-10 focus:outline-none" onClose={asWindow?()=>{}:onClose}>
         <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <DialogPanel

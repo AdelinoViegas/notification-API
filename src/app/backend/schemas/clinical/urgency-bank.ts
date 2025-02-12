@@ -65,8 +65,12 @@ const urgencyBankSchema = new Schema({
 });
 
 const urgencyService = new Schema({
-  name: String,
-  label: String,
+  label: {
+    type: String,
+    unique: true,
+    required: true,
+    trim: true,
+  },
   userId: Schema.Types.ObjectId,
   isActive: {
     type: Boolean,

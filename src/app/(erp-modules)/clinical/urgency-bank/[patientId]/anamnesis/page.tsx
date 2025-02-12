@@ -2,29 +2,41 @@ import Button from "@/components/ui/button";
 import GlobalComponent, { InternalComponent } from "@/components/global-component";
 import { 
 	diagnosticInternalComponent,
-	diseaseDataInternalComponent,
+	diseaseCardioPulmunaryComponent,
+	diseaseInGeneralClinicComponent,
+	diseaseinOphthalmologyComponent,
 	diseasesInternalComponent,
+	diseasesPediatricComponent,
 	eatingHabitsInternalComponent,
 	evaluationInternalComponent,
+	examAndEvaluationComponent,
 	examsInternalComponent,
-	familyHistoryComponent,
+	eyeExamsComponent,
+	familyHistoryCardioPulmunaryComponent,
+	familyHistoryOphthalmologyComponent,
 	familyInternalComponent,
+	foodInPediatricComponent,
 	//gestationComponent,
-	historyOFDiseaseComponent,
 	lifeStyleHabitsComponent,
 	lifeStyleInternalComponent,
 	othersInternalComponent,
-	personalHistoryComponent,
+	personalHistoryCardioPulmunaryComponent,
+	personalHistoryOphthalmologyComponent,
+	personalHistoryPediatricComponent,
 	phisicalExamComponent,
-	purposeOfTreatmentComponent,
+	socialHistoryComponent,
 	//prenatalExamsComponent,
 	//symptomsComponent,
 	symptomsInternalComponent,
-	treatmentAndCareComponent
+	systemsReviewComponent,
+	therapyAndCareComponent,
+	therapyAndCareobjectiveComponent,
+	treatmentAndCareComponent,
+	treatmentAndCareObjectiveComponent,
 } from "@/lib/internal-components";
 import { getPatientUrgencyBank } from "@/app/backend/api/clinical/urgency-bank-api";
 import Hospitalization from "@/components/hospitalization";
-import CardiopulmonaryMedicine from "@/components/urgency-bank/anamnesis/cardiopulmonary-medicine";
+import PediatricMedicine from "@/components/urgency-bank/anamnesis/pediatric-medicine";
 
 export default async function Page({ params }: {
 	params: Promise<{
@@ -35,7 +47,7 @@ export default async function Page({ params }: {
 	const anamnesis = await getPatientUrgencyBank(patientId);
 
 	const symptoms = symptomsInternalComponent(anamnesis.generalClinic.symptoms);
-	const diseaseData = diseaseDataInternalComponent(anamnesis.generalClinic?.diseaseData);
+	const diseaseInGeneralClinic = diseaseInGeneralClinicComponent(anamnesis.generalClinic?.diseaseData);
 	const complementaryExams = examsInternalComponent(anamnesis?.generalClinic?.complementaryExams);
 	const diagnostic = diagnosticInternalComponent();
 	const diseases = diseasesInternalComponent(anamnesis.generalClinic.diseases);
@@ -47,17 +59,29 @@ export default async function Page({ params }: {
 	//const gestation = gestationComponent();
 	//const signs = symptomsComponent();
 	//const prenatal = prenatalExamsComponent();
-  const history = historyOFDiseaseComponent();
+  const diseaseCardioPulmunary = diseaseCardioPulmunaryComponent();
   const phisicalExam = phisicalExamComponent();
-  const historical = personalHistoryComponent();
-  const familyHistory = familyHistoryComponent();
+  const historicalCardioPulmunary = personalHistoryCardioPulmunaryComponent();
+  const familyHistoryCardioPulmunary = familyHistoryCardioPulmunaryComponent();
   const lifeStyleHabits = lifeStyleHabitsComponent();
   const treatmentAndCare = treatmentAndCareComponent();
-  const purposeOfTreatment = purposeOfTreatmentComponent();
+  const treatmentAndCareObjective = treatmentAndCareObjectiveComponent();
+  const diseaseinOphthalmology = diseaseinOphthalmologyComponent(); 
+  const eyesExams = eyeExamsComponent();
+  const historicalOphthalmology = personalHistoryOphthalmologyComponent();
+  const familyHistoryOphthalmology = familyHistoryOphthalmologyComponent();
+  const socialHistory = socialHistoryComponent();
+  const systemsReview = systemsReviewComponent();
+  const therapyAndCare = therapyAndCareComponent();
+	const therapyAndCareobjective = therapyAndCareobjectiveComponent();
+  const diseasesPediatric = diseasesPediatricComponent();
+  const examAndEvaluation = examAndEvaluationComponent();
+	const historicalPediatric = personalHistoryPediatricComponent();
+  const foodInPediatric = foodInPediatricComponent(); 
 
 	const generalClinical:InternalComponent[] = [
 		symptoms,
-		diseaseData,
+		diseaseInGeneralClinic,
 		complementaryExams,
 		diagnostic,
 		diseases,
@@ -76,17 +100,42 @@ export default async function Page({ params }: {
 
 	const cardioPulmunaryMedicine:InternalComponent[] = [
 		symptoms,
-		history,
+		diseaseCardioPulmunary,
 		phisicalExam,
 		complementaryExams,
 		diagnostic,
-		historical,
-    familyHistory,
+		historicalCardioPulmunary,
+    familyHistoryCardioPulmunary,
 		lifeStyleHabits,
 		treatmentAndCare,
-		purposeOfTreatment,
+		treatmentAndCareObjective,
 	];
 	
+	const ophthalmologyService:InternalComponent[] = [
+		symptoms,
+		diseaseinOphthalmology,
+		eyesExams,
+		complementaryExams,
+		diagnostic,
+		historicalOphthalmology,
+		familyHistoryOphthalmology,
+		socialHistory,
+		systemsReview,
+		therapyAndCare,
+		therapyAndCareobjective,
+	];
+
+	const pediatricMedicine:InternalComponent[] = [
+		symptoms,
+		diseasesPediatric,
+		complementaryExams,
+		examAndEvaluation,
+		diagnostic,
+		examAndEvaluation,
+		historicalPediatric,
+		foodInPediatric,
+	];
+
   return(
 		<main className="relative">
 			<div className="flex gap-x-3">
@@ -107,12 +156,24 @@ export default async function Page({ params }: {
 					components={childrensMedicine} 
 				/>*/}
 
-				<CardiopulmonaryMedicine/>
-
 				<GlobalComponent
 					{...{patientId}}
 					title="MEDICINA CARDIOPULMUNAL"
 					components={cardioPulmunaryMedicine} 
+				/>
+
+				<GlobalComponent
+					{...{patientId}}
+					title="SERVIÇO DE OFTALMOLOGIA"
+					components={ophthalmologyService} 
+				/>
+
+				<PediatricMedicine/>
+
+				<GlobalComponent
+					{...{patientId}}
+					title="MEDICINA PEDIÁTRICA"
+					components={pediatricMedicine} 
 				/>
 			</div>
 		</main>

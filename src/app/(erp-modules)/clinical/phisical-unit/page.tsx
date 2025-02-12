@@ -10,7 +10,7 @@ import { getUnits } from "@/app/backend/api/clinical/urgency-bank-api";
 import { BiPlus as PlusIcon } from "react-icons/bi";
 import { IoPerson } from "react-icons/io5";
 import { FaHospital } from "react-icons/fa";
-
+import SignUrgencyService from "@/components/forms/sign-urgency-services";
 export const dynamic = "force-dynamic";
 
 export default async function Page({
@@ -31,7 +31,7 @@ export default async function Page({
       </div>
 
       <div className="flex gap-x-2">
-        <Link href="/clinical/phisical-unit/sign" >
+        <Link href="/clinical/phisical-unit/sign">
           <Button className="flex gap-x-2">
             <PlusIcon className="w-5" />
             Nova Unidade
@@ -51,6 +51,8 @@ export default async function Page({
             Funcionários
           </Button>
         </Link>
+
+        <SignUrgencyService />
       </div>
 
       <div className="lg:flex justify-between items-center">

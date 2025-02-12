@@ -685,15 +685,14 @@ async function getPatientUrgencyBank(patientId: string){
   }
 }
 
-async function signUrgencyService(prev:never, formData:FormData){
+async function signUrgencyService(prev:unknown, formData:FormData){
   try{
-    const name = formData.get('name');
-    const label = formData.get('label');
+    const label = (formData.get('label') as string)?.trim();
     
-    if(!name || !label)
-      throw new Error("Preencha todos os campos!", { cause: "empty"});
-    await urgencyServiceModel.create({ 
-      name, 
+    if(!label)
+      throw new Error("Campo vazio não é aceite!", { cause: "empty"});
+
+    await urgencyServiceModel.create({  
       label,
       userId: await whoAreYou() 
     });
@@ -703,9 +702,10 @@ async function signUrgencyService(prev:never, formData:FormData){
       status: true
     }
   }catch(e){
-    const err = e as Error;
+    const err = e as Error & { code: number };
+
     return {
-      message: "error",
+      message: !!err.code?"Este serviço ja existe!":err.message,
       status: false
     }
   }
@@ -716,14 +716,32 @@ async function getUrgencyServices(){
   return services.map(item => {
     return {
       label: item.label as string,
-      name: item.name as string,
       userId: item.userId?.toString() as string,
       isActive: item.isActive as boolean
     }
-  })
+  });
 }
 
-async function getUrgencyService(){}
+async function getUrgencyService(serviceId: string){
+  try{
+    const service = await urgencyServiceModel.findById({ _id: serviceId });
+    if(!service)
+      throw new Error("serviço não encontrado!", { cause: "not_found" });
+
+    return {
+      _id: serviceId,
+      label: service.label as string,
+      userId: service.userId?.toString() as string
+    }
+  }catch(e){
+    const err = e as Error;
+
+    return {
+      message: err.cause?err.message:"Erro critico",
+      status: false 
+    }
+  }
+}
 
 export {
   getPatients,

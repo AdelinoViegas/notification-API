@@ -1,6 +1,7 @@
 import { updatePersonalInfo } from "@/app/backend/api/clinical/api";
 import { gender as genderTemplate } from "@/app/backend/api/clinical/translator";
 import { signUrgencyBank } from "@/app/backend/api/clinical/urgency-bank-api";
+import { TfiLayoutMenuSeparated } from "react-icons/tfi";
 
 type Personal = {
   elements: [
@@ -106,7 +107,7 @@ function symptomsInternalComponent(defaultValue?: string){
 	}
 }
 
-function diseaseDataInternalComponent(defaultValue?: string){
+function diseaseInGeneralClinicComponent(defaultValue?: string){
   return {
 		title: "História da Doênça Actual",
 		apiFn: signUrgencyBank,
@@ -790,7 +791,7 @@ function prenatalExamsComponent(){
 }
 
 
-function historyOFDiseaseComponent(){
+function diseaseCardioPulmunaryComponent(){
 	return {
 		title: "História da Doênça Actual(sinais e sintomas presentes)",
 		apiFn: signUrgencyBank,
@@ -1050,7 +1051,7 @@ function phisicalExamComponent(){
 	};
 }
 
-function personalHistoryComponent(){
+function personalHistoryCardioPulmunaryComponent(){
   return {
 		title: "Antecedentes Pessoais",
 		apiFn: signUrgencyBank,
@@ -1187,7 +1188,7 @@ function personalHistoryComponent(){
 	}
 }
 
-function familyHistoryComponent(){
+function familyHistoryCardioPulmunaryComponent(){
   return {
 		title: "Antecedentes Familiares",
 		apiFn: signUrgencyBank,
@@ -1381,7 +1382,7 @@ function treatmentAndCareComponent(){
 	}
 }
 
-function purposeOfTreatmentComponent(){
+function treatmentAndCareObjectiveComponent(){
   return {
 		title: "Objectivos do Plano de Tratamento e Cuidados",
 		apiFn: signUrgencyBank,
@@ -1393,7 +1394,7 @@ function purposeOfTreatmentComponent(){
 						type: "textarea",
 						props: {
 							label: "Objectivos do Plano de Tratamento e Cuidados",
-							name: "purposeOfTreatment",
+							name: "TreatmentAndCareObjective",
 							rows: 3,
 							placeholder: "Descreva",
 						}
@@ -1404,10 +1405,726 @@ function purposeOfTreatmentComponent(){
 	}
 }
 
+function diseaseinOphthalmologyComponent(){
+  return {
+		title: "História da Doênça Actual(Sinais e sintomas presentes)",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: [
+			{
+				elements: [
+					{
+						type: "checkbox",
+						props: {
+							label: "Dor",
+							name: "pain",
+						}
+					},
+				]
+			},
+			{
+				elements: [
+					{
+						type: "checkbox",
+						props: {
+							label: "Vermelhidão",
+							name: "redness",
+						}
+					},
+				]
+			},
+			{
+				elements: [
+					{
+						type: "checkbox",
+						props: {
+							label: "Lacrimejamento",
+							name: "tearing",
+						}
+					},
+				]
+			},
+			{
+				elements: [
+					{
+						type: "checkbox",
+						props: {
+							label: "Fotofobia",
+							name: "photophobia",
+						}
+					},
+				]
+			},
+			{
+				elements: [
+					{
+						type: "checkbox",
+						props: {
+							label: "Secreção",
+							name: "secretion",
+						}
+					},
+				]
+			},
+			{
+				elements: [
+					{
+						type: "checkbox",
+						props: {
+							label: "Visão Embaçada",
+							name: "blurredVision",
+						}
+					},
+				]
+			},
+			{
+				className: "grid grid-cols-2 gap-x-4",
+				elements: [
+					{
+						type: "text",
+						props: {
+							label: "Outros",
+							name: "others",
+							placeholder: "Descreva",
+
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Progressão dos Sinais e Sintomas",
+							name: "progressionOfSymptoms",
+							placeholder: "Descrever tratamentos feitos para as queixas",
+							
+						}
+					},
+				]
+			},
+		]
+	}
+}
+
+function eyeExamsComponent(){
+	return{
+		title: "Exames Físicos Oculares",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: [
+			{
+				className: "grid grid-cols-2 items-center gap-x-4",
+				elements: [
+					{
+						type: "text",
+						props: {
+							label: "Acuidade Visual (OD, OE, CC, SC)",
+							name: "visualAcuity",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Tonometria",
+							name: "tonometry",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Motilidade Ocular",
+							name: "ocularMotility",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Reflexos Pupilares",
+							name: "popullaryReflexes",
+							placeholder: "Descreva",
+						}
+					},
+				]
+			},
+			{
+				elements: [
+					{
+						type: "textarea",
+						props: {
+							label: "Biomicroscopia",
+							name: "biomicroscopy",
+							rows: 3,
+							placeholder: "pálpebras, conjuntiva, cómea, câmara anterior, íris, cristalino",
+						}
+					}
+				]
+			},
+			{
+				elements: [
+					{
+						type: "textarea",
+						props: {
+							label: "Fundoscopia",
+							name: "fundoscopy",
+							rows: 3,
+							placeholder: "papila ótica, retina, mácula, vasos",
+						}
+					}
+				]
+			}
+		]
+	}
+}
+
+function personalHistoryOphthalmologyComponent(){
+  return {
+		title: "Antecedentes Pessoais",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: [
+			{
+    		elements: [
+					{
+						type: "textarea",
+						props: {
+							label: "Doênças Sistêmicas",
+							name: "systemicDiseases",
+							rows: 3,
+							placeholder: "diabetes, hipertensão, doênças autoimunes, outras",
+						}
+					}
+				]
+			},
+			{
+    		elements: [
+					{
+						type: "textarea",
+						props: {
+							label: "Doênças Oculares Prévias",
+							name: "eyeDiseases",
+							rows: 3,
+							placeholder: "glaucoma, catarata, deslocamento de retina, outra",
+						}
+					}
+				]
+			},
+			{ 
+				className: "grid grid-cols-3 items-center gap-x-2",
+				elements: [
+					{
+						type: "text",
+						props: {
+							label: "Cirurgias Oculares Prévias",
+							name: "eyeSurgeries",
+							placeholder: "Descreva"
+						}
+					},
+					{
+						type: "date",
+						props: {
+							label: "Data",
+							name: "date",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Uso de Óculos ou Lentes de Contato",
+							name: "birthHeight",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Tipo de Correção",
+							name: "typeOfCorrection",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Tempo de Uso",
+							name: "timeOfUse",
+							placeholder: "Descreva"
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Resultados Obtidos",
+							name: "resultsObtained",
+							placeholder: "Descreva"
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Alergias Ocular",
+							name: "eyeAllergies",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Agente Reativo",
+							name: "reactiveAgent",
+							placeholder: "Descreva"
+						}
+					},											
+					{
+						type: "text",
+						props: {
+							label: "Outros",
+							name: "others",
+							placeholder: "Descreva"
+						}
+					},
+				]
+			}
+		]
+	}
+}
+
+function familyHistoryOphthalmologyComponent(){
+  return {
+		title: "Antecedentes Familiares",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: [
+			{
+    		elements: [
+					{
+						type: "textarea",
+						props: {
+							label: "Doênças Oculares na Família",
+							name: "eyesDiseases",
+							rows: 3,
+							placeholder: "glaucoma, degeneração, macular, retinite pigmentosa, outras",
+						}
+					}
+				]
+			},
+			{
+    		elements: [
+					{
+						type: "textarea",
+						props: {
+							label: "Doênças Sistêmicas na Família",
+							name: "systemicDiseases",
+							rows: 3,
+							placeholder: "diabetes, hipertensão, doênças autoimunes, outras",
+						}
+					}
+				]
+			},
+		]
+	}
+}
+
+function socialHistoryComponent(){
+	return{
+		title: "História Social",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: [
+			{
+				separatedElements: [
+					{ 
+						className: "flex gap-x-2 items-center",
+						label: "Hábitos de vida",
+						elements: [
+							{
+								type: "checkbox",
+								props: {
+									label: "Tabagismo",
+									name: "smoking"
+								}
+							},
+							{
+								type: "checkbox",
+								props: {
+									label: "Estilismo",
+									name: "style"
+								}
+							},
+							{
+								type: "checkbox",
+								props: {
+									label: "Drogas",
+									name: "drugs"
+								}
+							}
+						]
+					}
+			  ], elements: []
+			},
+			{
+				className: "grid grid-cols-2 gap-x-4",
+				elements: [
+					{
+						type: "text",
+						props: {
+							label: "Exposição Ocupacional a Riscos Oculares",
+							name: "eyeRisks",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Actividades de Lazer que possam Afectar a Visão",
+							name: "leisureActivities",
+							placeholder: "Descreva",
+						}
+					}
+				]
+			},
+		]
+	}
+}
+
+function systemsReviewComponent(){
+  return {
+		title: "Revisão de Sistemas",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: [
+			{
+				elements: [
+					{
+						type: "textarea",
+						props: {
+							label: "Sintomas Gerais",
+							name: "generalSymptoms",
+							rows: 3,
+							placeholder: "febre, perda de peso, outro",
+						}
+					},
+				]
+			},
+			{
+				elements: [
+					{
+						type: "textarea",
+						props: {
+							label: "Sintomas Neurológicos",
+							name: "neurologicalSymptoms",
+							rows: 3,
+							placeholder: "cefaleia, tontura, outro",
+						}
+					},
+				]
+			},
+			{
+				elements: [
+					{
+						type: "textarea",
+						props: {
+							label: "Sintomas Cardiovasculares",
+							name: "cardiovascularSymptoms",
+							rows: 3,
+							placeholder: "Descreva",
+						}
+					},
+				]
+			},
+			{
+				elements: [
+					{
+						type: "textarea",
+						props: {
+							label: "Sintomas Respiratórios",
+							name: "respiratorySymptoms",
+							rows: 3,
+							placeholder: "Descreva",
+						}
+					},
+				]
+			},
+			{
+				elements: [
+					{
+						type: "textarea",
+						props: {
+							label: "Sistomas Gastrointestinais",
+							name: "gastrointestinalSymptoms",
+							rows: 3,
+							placeholder: "Descreva",
+						}
+					},
+				]
+			},
+		]
+	}
+}
+
+function therapyAndCareComponent(){
+  return {
+		title: "Plano Terapêutico e de Cuidados",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: [
+			{
+				elements: [
+					{
+						type: "textarea",
+						props: {
+							label: "Plano Terapêutico e de Cuidados",
+							name: "therapyAndCare",
+							rows: 3,
+							placeholder: "Descreva",
+						}
+					},
+				]
+			}
+		]
+	}
+}
+
+function therapyAndCareobjectiveComponent(){
+  return {
+		title: "Objectivos do Plano Terapêutico e dos Cuidados",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: [
+			{
+				elements: [
+					{
+						type: "textarea",
+						props: {
+							label: "Objectivos do Plano Terapêutico e dos Cuidados",
+							name: "therapyAndCareObjective",
+							rows: 3,
+							placeholder: "Descreva",
+						}
+					},
+				]
+			}
+		]
+	}
+}
+
+function diseasesPediatricComponent(){
+  return {
+		title: "História da Doênça Actual(Sinais e sintomas presentes)",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: [
+			{
+				elements: [
+					{
+						type: "textarea",
+						props: {
+							label: "Sinais e Sintomas(início, duração, evolução, intensidade, outros aspectos associados aos sinais e sintomas)",
+							name: "symptoms",
+							rows: 3,
+							placeholder: "Descreva",
+						}
+					},
+				]
+			},
+			{
+				elements: [
+					{
+						type: "textarea",
+						props: {
+							label: "Tratamento Prévio(descrever tratamento feitos para as queixas actuais, e resultados)",
+							name: "previousTreatment",
+							rows: 3,
+							placeholder: "Descreva",
+						}
+					},
+				]
+			},
+		]
+	}
+}
+
+function examAndEvaluationComponent(){
+  return {
+		title: "Exame Físico e Avialação dos Orgãos Vitais",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: [
+			{
+				elements: [
+					{
+						type: "textarea",
+						props: {
+							label: "Exame Físico e Avialação dos Orgãos Vitais",
+							name: "examAndEvaluation",
+							rows: 3,
+							placeholder: "Descreva",
+						}
+					},
+				]
+			},
+		]
+	}
+}
+
+function personalHistoryPediatricComponent(){
+  return {
+		title: "Antecedentes Pessoais",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: [
+			{
+				separatedElements: [
+					{ 
+						className: "flex gap-x-2 items-center",
+						label: "Tipo de parto",
+						elements: [
+							{
+								type: "radio",
+								props: {
+									label: "Normal",
+									name: "typeOfDelivery"
+								}
+							},
+							{
+								type: "radio",
+								props: {
+									label: "Cesariana",
+									name: "typeOfDelivery"
+								}
+							},
+						]
+
+					}
+				], elements: []
+			},
+			{
+				className: "grid grid-cols-3 gap-x-2",
+				elements: [
+					{
+						type: "number",
+						props: {
+							label: "Idade gestacional",
+							name: "gestationalAge",
+							placeholder: "Digite o valor"
+						}
+					},
+					{
+						type: "number",
+						props: {
+							label: "Peso ao nascer(kg)",
+							name: "birthWeight",
+							placeholder: "Digite o valor"
+						}
+					},
+					{
+						type: "number",
+						props: {
+							label: "Altura ao nascer(kg)",
+							name: "birthHeight",
+							placeholder: "Digite o valor"
+						}
+					},
+				]
+			},
+			{
+				elements: [
+					{
+						type: "textarea",
+						props: {
+							label: "Desenvolvimento Neuropsicomotor",
+							name: "neuropsychomotorDevelopment",
+							placeholder: "descrever aspectos relevantes sobre o desenvolvimento da criança",
+						}
+					}
+				]
+			}
+		]
+	}
+}
+
+function foodInPediatricComponent(){
+  return {
+		title: "Antecedentes Pessoais",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: [
+			{
+				separatedElements: [
+					{ 
+						className: "flex gap-x-2 items-center",
+						label: "Aleitamento materno",
+						elements: [
+							{
+								type: "radio",
+								props: {
+									label: "Sim",
+									name: "breastfeeding",
+								}
+							},
+							{
+								type: "radio",
+								props: {
+									label: "Não",
+									name: "breastfeeding",
+								}
+							},
+						]
+					}
+				], elements: []
+			},
+			{
+				elements: [
+					{
+						type: "text",
+						props: {
+							label: "Razões",
+							name: "reason",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Alimentação Complementar",
+							name: "complementaryFeeding",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Tipo",
+							name: "type",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Inicio da Alimentação Complementar",
+							name: "startOfComplementaryFeeding",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Resultados Visíveis",
+							name: "visibleResults",
+							placeholder: "Descreva",
+						}
+					},
+				]
+			},
+		]
+	}
+}
+
 export {
   personalInternalComponent,
 	symptomsInternalComponent,
-	diseaseDataInternalComponent,
+	diseaseInGeneralClinicComponent,
   examsInternalComponent,
 	diagnosticInternalComponent,
 	diseasesInternalComponent,
@@ -1419,11 +2136,23 @@ export {
 	gestationComponent,
 	symptomsComponent,
 	prenatalExamsComponent,
-	historyOFDiseaseComponent,
+	diseaseCardioPulmunaryComponent,
 	phisicalExamComponent,
-	personalHistoryComponent,
-	familyHistoryComponent,
+	personalHistoryCardioPulmunaryComponent,
+	familyHistoryCardioPulmunaryComponent,
 	lifeStyleHabitsComponent,
 	treatmentAndCareComponent,
-	purposeOfTreatmentComponent,
+	treatmentAndCareObjectiveComponent,
+	diseaseinOphthalmologyComponent,
+	eyeExamsComponent,
+	personalHistoryOphthalmologyComponent,
+	familyHistoryOphthalmologyComponent,
+	socialHistoryComponent,
+	systemsReviewComponent,
+	therapyAndCareComponent,
+	therapyAndCareobjectiveComponent,
+  diseasesPediatricComponent,
+	examAndEvaluationComponent,
+	personalHistoryPediatricComponent,
+	foodInPediatricComponent,
 }
