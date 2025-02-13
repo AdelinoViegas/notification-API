@@ -32,7 +32,6 @@ import {
 import { closePatientProcess } from "@/app/backend/api/clinical/process-api";
 import { getGrantedUnitAccess } from "@/app/backend/api/clinical/urgency-bank-api";
 import { validatePatientDoc, validatePatientLocation } from "@/lib/regexp";
-import { Schema } from "mongoose";
 
 type ChoosedGroup = Assured | Employee | Enterprise | undefined;
 type TypeScreeningData = "reason" | "vital signal" | "priority" | "status" | "advice";
@@ -816,9 +815,10 @@ async function insertScreening(prev: unknown, formData: FormData){
       status: true
     }
   }catch(e){
-    
+    const err = e as Error;
+
     return {
-      message: "Falha na operação",
+      message: "Falha na operação "+err.message,
       status: false,
       type: "error"
     }

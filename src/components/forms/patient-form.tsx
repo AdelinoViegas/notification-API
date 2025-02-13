@@ -7,7 +7,7 @@ import GroupForm from "@/components/forms/signed-patient/group-form";
 import AcessForm from "@/components/forms/signed-patient/access-form";
 import { getPatient } from "@/app/backend/api/clinical/api";
 import type { Responsable } from "@/app/backend/api/clinical/types";
-import PDFButton from "@/components/pdf-button";
+// import PDFButton from "@/components/pdf-button";
 import { getExternalUnits } from "@/app/backend/api/clinical/urgency-bank-api";
 
 export default async function PatientForm({patientId}:{patientId: string}){

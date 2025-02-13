@@ -566,50 +566,50 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
     .filter((diagnostic: CID) => !generalClinic?.diagnosticHypothesis?.includes(diagnostic.code))
     .map((CID: CID)=> CID.code);
 
-    const anamnesis = {
-      generalClinic:{
-        symptoms: symptoms || generalClinic?.symptoms,
-        diseaseData: diseaseData || generalClinic?.diseaseData,
-        complementaryExams: complementaryExams || generalClinic?.complementaryExams,
-        diagnosticHypothesis: !!cidCodes.length?generalClinic?.diagnosticHypothesis.concat(cidCodes) ?? cidCodes:generalClinic?.diagnosticHypothesis,
-        others: others || generalClinic?.others,
-        diseasesInFamily: diseasesInFamily || generalClinic?.diseasesInFamily,
-        evaluation: evaluation || generalClinic?.evaluation,
-        eatingHabits: {
-          meals: meals || generalClinic?.eatingHabits?.meals,
-          typeFood: typeFood || generalClinic?.eatingHabits?.typeFood,
-          waterConsumption: waterConsumption || generalClinic?.eatingHabits?.waterConsumption,
-          typeWater: typeWater || generalClinic?.eatingHabits?.typeWater,
-        },
-        hospitalization: {
-          description: description || generalClinic?.hospitalization?.description,
-          dateTime: datetime || generalClinic?.hospitalization?.dateTime,
-          currentState: currentState || generalClinic?.hospitalization?.currentState,
+    // const anamnesis = {
+    //   generalClinic:{
+    //     symptoms: symptoms || generalClinic?.symptoms,
+    //     diseaseData: diseaseData || generalClinic?.diseaseData,
+    //     complementaryExams: complementaryExams || generalClinic?.complementaryExams,
+    //     diagnosticHypothesis: !!cidCodes.length?generalClinic?.diagnosticHypothesis.concat(cidCodes) ?? cidCodes:generalClinic?.diagnosticHypothesis,
+    //     others: others || generalClinic?.others,
+    //     diseasesInFamily: diseasesInFamily || generalClinic?.diseasesInFamily,
+    //     evaluation: evaluation || generalClinic?.evaluation,
+    //     eatingHabits: {
+    //       meals: meals || generalClinic?.eatingHabits?.meals,
+    //       typeFood: typeFood || generalClinic?.eatingHabits?.typeFood,
+    //       waterConsumption: waterConsumption || generalClinic?.eatingHabits?.waterConsumption,
+    //       typeWater: typeWater || generalClinic?.eatingHabits?.typeWater,
+    //     },
+    //     hospitalization: {
+    //       description: description || generalClinic?.hospitalization?.description,
+    //       dateTime: datetime || generalClinic?.hospitalization?.dateTime,
+    //       currentState: currentState || generalClinic?.hospitalization?.currentState,
 
-        },
-        diseases: {
-          diabetes: diabetes ?? generalClinic?.diseases?.diabetes ?? false,
-          hypertension: hypertension ?? generalClinic?.diseases?.hypertension ?? false,
-          respirationDiseases: respirationDiseases ?? generalClinic?.diseases?.respirationDiseases ?? false,
-          tuberculosis: tuberculosis ?? generalClinic?.diseases?.tuberculosis ?? false,
-          malaria: malaria ?? generalClinic?.diseases?.malaria ?? false,
-        },
-        lifeStyle: {   
-          tabaccoConsumption: tabaccoConsumption ?? generalClinic?.lifeStyle?.tabaccoConsumption ?? "",
-          alcoholConsumption: {
-            alcohol: alcohol ?? generalClinic?.lifeStyle?.alcoholConsumption?.alcohol ?? "",
-            frequency: frequency || generalClinic?.lifeStyle?.alcoholConsumption?.frequency,
-            amount: alcoholAmount || generalClinic?.lifeStyle?.alcoholConsumption?.amount,
-          },
-          physicalActivity: {
-            exercise: exercise ?? generalClinic?.lifeStyle?.physicalActivity?.exercise ?? "",
-            type: type || generalClinic?.lifeStyle?.physicalActivity?.type,
-            amount: physicalAmount || generalClinic?.lifeStyle?.physicalActivity?.amount,
-            timeExercise: timeExercise || generalClinic?.lifeStyle?.physicalActivity?.timeExercise,
-          }
-        }
-      }
-    }
+    //     },
+    //     diseases: {
+    //       diabetes: diabetes ?? generalClinic?.diseases?.diabetes ?? false,
+    //       hypertension: hypertension ?? generalClinic?.diseases?.hypertension ?? false,
+    //       respirationDiseases: respirationDiseases ?? generalClinic?.diseases?.respirationDiseases ?? false,
+    //       tuberculosis: tuberculosis ?? generalClinic?.diseases?.tuberculosis ?? false,
+    //       malaria: malaria ?? generalClinic?.diseases?.malaria ?? false,
+    //     },
+    //     lifeStyle: {   
+    //       tabaccoConsumption: tabaccoConsumption ?? generalClinic?.lifeStyle?.tabaccoConsumption ?? "",
+    //       alcoholConsumption: {
+    //         alcohol: alcohol ?? generalClinic?.lifeStyle?.alcoholConsumption?.alcohol ?? "",
+    //         frequency: frequency || generalClinic?.lifeStyle?.alcoholConsumption?.frequency,
+    //         amount: alcoholAmount || generalClinic?.lifeStyle?.alcoholConsumption?.amount,
+    //       },
+    //       physicalActivity: {
+    //         exercise: exercise ?? generalClinic?.lifeStyle?.physicalActivity?.exercise ?? "",
+    //         type: type || generalClinic?.lifeStyle?.physicalActivity?.type,
+    //         amount: physicalAmount || generalClinic?.lifeStyle?.physicalActivity?.amount,
+    //         timeExercise: timeExercise || generalClinic?.lifeStyle?.physicalActivity?.timeExercise,
+    //       }
+    //     }
+    //   }
+    // }
   
     let message = "";
 
