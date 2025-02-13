@@ -30,7 +30,7 @@ import {
 import { userModel } from "@/app/backend/models/manager";
 import { getUser, patientFilters } from "@/app/backend/api/clinical/api";
 import { redirect } from "next/navigation";
-import type { CID } from "@/lib/cid-query";
+// import type { CID } from "@/lib/cid-query";
 
 type UnitType = "workplace" | "internment" | "laboratory" | "imaging";
 
@@ -530,41 +530,41 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
 
     const typeMedicine = formData.get("typeMedicine") as string;
     console.log(typeMedicine);
-    const patientId = formData.get("patientId") as string;
+    // const patientId = formData.get("patientId") as string;
     const state = formData.get("state") as string;
-    const symptoms = formData.get("symptoms") as string;
-    const diseaseData = formData.get("diseaseData") as string;
-    const complementaryExams = formData.get("complementaryExams") as string;
-    const diagnosticHypothesis = JSON.parse(formData.get("cids") as string) as CID[];
-    const others = formData.get("others") as string;
-    const evaluation = formData.get("evaluation") as string;
-    const meals = formData.get("meals") as string;
-    const typeFood = formData.get("typeFood") as string;
-    const waterConsumption = formData.get("waterConsumption") as string;
-    const typeWater = formData.get("typeWater") as string;
-    const diseasesInFamily = formData.get("diseasesInFamily") as string;
-    const description = formData.get("description") as string;
-    const datetime = formData.get("createdAt");
-    const currentState = formData.get("currentState") as string;
-    const diabetes  = formData.get("diabetes");
-    const hypertension = formData.get("hypertension");
-    const tuberculosis = formData.get("tuberculosis"); 
-    const respirationDiseases = formData.get("respiratoryDiseases");
-    const malaria = formData.get("malaria");
-    const tabaccoConsumption = formData.get("tobaccoConsumption") as string;
-    const alcohol = formData.get('alcoholConsumption') as string;
-    const frequency = formData.get("frequency") as string;
-    const alcoholAmount = Number(formData.get("alcoholAmount"));
-    const exercise = formData.get("exercise") as string;
-    const type = formData.get("type") as string;
-    const physicalAmount = Number(formData.get("physicalAmount"));
-    const timeExercise = formData.get("time") as string;
-    const hasPatientUrgencyBank = await urgencyBankModel.findOne({ patientId });
-    const generalClinic = hasPatientUrgencyBank?.anamnesis?.generalClinic;
+    // const symptoms = formData.get("symptoms") as string;
+    // const diseaseData = formData.get("diseaseData") as string;
+    // const complementaryExams = formData.get("complementaryExams") as string;
+    // const diagnosticHypothesis = JSON.parse(formData.get("cids") as string) as CID[];
+    // const others = formData.get("others") as string;
+    // const evaluation = formData.get("evaluation") as string;
+    // const meals = formData.get("meals") as string;
+    // const typeFood = formData.get("typeFood") as string;
+    // const waterConsumption = formData.get("waterConsumption") as string;
+    // const typeWater = formData.get("typeWater") as string;
+    // const diseasesInFamily = formData.get("diseasesInFamily") as string;
+    // const description = formData.get("description") as string;
+    // const datetime = formData.get("createdAt");
+    // const currentState = formData.get("currentState") as string;
+    // const diabetes  = formData.get("diabetes");
+    // const hypertension = formData.get("hypertension");
+    // const tuberculosis = formData.get("tuberculosis"); 
+    // const respirationDiseases = formData.get("respiratoryDiseases");
+    // const malaria = formData.get("malaria");
+    // const tabaccoConsumption = formData.get("tobaccoConsumption") as string;
+    // const alcohol = formData.get('alcoholConsumption') as string;
+    // const frequency = formData.get("frequency") as string;
+    // const alcoholAmount = Number(formData.get("alcoholAmount"));
+    // const exercise = formData.get("exercise") as string;
+    // const type = formData.get("type") as string;
+    // const physicalAmount = Number(formData.get("physicalAmount"));
+    // const timeExercise = formData.get("time") as string;
+    // const hasPatientUrgencyBank = await urgencyBankModel.findOne({ patientId });
+    // const generalClinic = hasPatientUrgencyBank?.anamnesis?.generalClinic;
     
-    const cidCodes = diagnosticHypothesis
-    .filter((diagnostic: CID) => !generalClinic?.diagnosticHypothesis?.includes(diagnostic.code))
-    .map((CID: CID)=> CID.code);
+    // const cidCodes = diagnosticHypothesis
+    // .filter((diagnostic: CID) => !generalClinic?.diagnosticHypothesis?.includes(diagnostic.code))
+    // .map((CID: CID)=> CID.code);
 
     // const anamnesis = {
     //   generalClinic:{
@@ -611,7 +611,7 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
     //   }
     // }
   
-    let message = "";
+    // let message = "";
 
     /*if(!hasPatientUrgencyBank){
       await urgencyBankModel.create({ patientId, anamnesis });
@@ -622,7 +622,7 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
     }*/
 
     return {
-      message,
+      message: "test",
       status: true,
       state
     }

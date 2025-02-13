@@ -116,8 +116,7 @@ const initialState = {
 // }
 
 function ReasonForm({
-  screeningId,
-  data
+  screeningId
 }: ScreeningProps){
   const [ state, action ] = useActionState(insertScreening, initialState);
   
