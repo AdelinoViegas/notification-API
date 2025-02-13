@@ -25,6 +25,8 @@ import forceRefreshPage from "@/lib/force-refresh";
 import { triggerUpdate } from "@/lib/ws-trigger";
 import Modal from "@/components/modal";
 import { getUrgencyServices } from "@/app/backend/api/clinical/urgency-bank-api";
+import { insertScreening } from "@/app/backend/api/clinical/api";
+import { toast } from "react-toastify";
 
 export type FormProps = {
   jsonData?: string;
@@ -32,73 +34,115 @@ export type FormProps = {
   screeningId?: string;
 };
 
-function ReasonForm({
-  jsonData,
-  hasData,
-  screeningId
-}: FormProps){
-  const [ state, action ] = useActionState(
-    hasData?updatePatientScreening:signPatientScreening, 
-    { message: "", status: false }
-  )
-  const [ messageState, setMessageState ] = useState(false);
-  const [ isEdit, setIsEdit ] = useState(!!hasData);
-  const router = useRouter();
-  const { patientId }: { patientId: string } = useParams();
-  const disableEdit = ()=>setIsEdit(true);
+type ScreeningProps = {
+  data?: string;
+  screeningId: string;
+}
 
-  useEffect(()=>{
-    if(state?.message){
-      setMessageState(true);
+const initialState = { 
+  message: "",
+  status: false
+}
 
-      setTimeout(()=>{
-        if(state?.status){
-          disableEdit();
-          router.refresh();
-        }
-        setMessageState(false);
-      },state.status?2000:3000);
-    }
-  }, [state, router]);
+// function ReasonForm({
+//   jsonData,
+//   hasData,
+//   screeningId
+// }: FormProps){
+//   const [ state, action ] = useActionState(
+//     hasData?updatePatientScreening:signPatientScreening, 
+//     { message: "", status: false }
+//   )
+//   const [ messageState, setMessageState ] = useState(false);
+//   const [ isEdit, setIsEdit ] = useState(!!hasData);
+//   const router = useRouter();
+//   const { patientId }: { patientId: string } = useParams();
+//   const disableEdit = ()=>setIsEdit(true);
+
+//   useEffect(()=>{
+//     if(state?.message){
+//       setMessageState(true);
+
+//       setTimeout(()=>{
+//         if(state?.status){
+//           disableEdit();
+//           router.refresh();
+//         }
+//         setMessageState(false);
+//       },state.status?2000:3000);
+//     }
+//   }, [state, router]);
   
+//   return(
+//     <div>
+//       <Header title="Motivo da Vinda a Consulta" />
+      
+//       <form {...{action}} className="py-3">
+//         <input type="hidden" name="typeData" value="reason" />
+//         <input type="hidden" name="patientId" value={patientId} />
+//         <input type="hidden" name="screeningId" value={screeningId} />
+        
+//         <InputDetails
+//           textLabel="Escreva na caixa de Texto"
+//           placeholder="Descreva o motivo da vinda do utente..."
+//           name="detail"
+//           required
+//           disabled={isEdit}
+//           defaultValue={hasData?JSON.parse(jsonData as string):undefined}
+//         />
+
+//         <div className="flex gap-3">
+//           { hasData && 
+//           <Button 
+//             cancel={!isEdit} 
+//             type="button" 
+//             onClick={!isEdit?disableEdit:()=>setIsEdit(false)}>
+//             {!isEdit?"Cancelar":"Editar"}
+//           </Button>}
+//           <Button disabled={isEdit}>{hasData?"Actualizar":"Salvar"}</Button>
+//         </div>
+//       </form>
+//       {
+//         state?.message && messageState &&
+//         <div className="flex mt-3">
+//           <Alert
+//             type={state?.status?'success':'error'}
+//             message={state?.message}
+//           />
+//         </div>
+//       }
+//     </div>
+//   );
+// }
+
+function ReasonForm({
+  screeningId,
+  data
+}: ScreeningProps){
+  const [ state, action ] = useActionState(insertScreening, initialState);
+  
+  useEffect(()=>{
+    if(state.message){
+      if(state.status)
+        toast.success(state.message);
+      else
+        toast.error(state.message);
+    }
+  }, [state]);
   return(
     <div>
-      <Header title="Motivo da Vinda a Consulta" />
-      
       <form {...{action}} className="py-3">
-        <input type="hidden" name="typeData" value="reason" />
-        <input type="hidden" name="patientId" value={patientId} />
         <input type="hidden" name="screeningId" value={screeningId} />
         
         <InputDetails
           textLabel="Escreva na caixa de Texto"
           placeholder="Descreva o motivo da vinda do utente..."
-          name="detail"
+          name="reason"
           required
-          disabled={isEdit}
-          defaultValue={hasData?JSON.parse(jsonData as string):undefined}
         />
 
-        <div className="flex gap-3">
-          { hasData && 
-          <Button 
-            cancel={!isEdit} 
-            type="button" 
-            onClick={!isEdit?disableEdit:()=>setIsEdit(false)}>
-            {!isEdit?"Cancelar":"Editar"}
-          </Button>}
-          <Button disabled={isEdit}>{hasData?"Actualizar":"Salvar"}</Button>
-        </div>
+        <Button>Salvar</Button>
       </form>
-      {
-        state?.message && messageState &&
-        <div className="flex mt-3">
-          <Alert
-            type={state?.status?'success':'error'}
-            message={state?.message}
-          />
-        </div>
-      }
     </div>
   );
 }

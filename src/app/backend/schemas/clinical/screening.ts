@@ -4,6 +4,36 @@ const screeningSchema = new Schema({
   patientId: Schema.Types.ObjectId,
   userId: Schema.Types.ObjectId,
   adviceId: Schema.Types.ObjectId,
+  reason: {
+    type: String,
+    trim: true
+  },
+  advice: {
+    type: String,
+    trim: true
+  },
+  priority:{
+    type: String,
+    trim: true,
+    lowercase: true
+  },
+  state: {
+    type: String,
+    trim: true
+  },
+  vitalSignals: {
+    paMax: Number,
+    paMin: Number,
+    jump: Number,
+    pvc: Number,
+    imc: Number,
+    sp02: Number,
+    temperature: Number,
+    breathing: Number,
+    weight: Number,
+    height: Number,
+    bloodGlucose: Number,
+  },
   isArchived: {
     type: Boolean,
     default: false,
@@ -13,7 +43,7 @@ const screeningSchema = new Schema({
     default: false
   },
 }, {
-  collection: "patient_in_screening",
+  collection: "screening",
   timestamps: true,
 });
 
@@ -24,7 +54,10 @@ const reasonSchema = new Schema({
     unique: true,
     required: true,
   },
-  detail: String,
+  detail: {
+    type: String,
+    trim: true
+  },
 }, {
   timestamps: true,
   collection: "screening_reason"
@@ -37,7 +70,10 @@ const adviceSchema = new Schema({
     unique: true,
     required: true,
   },
-  detail: String,
+  detail: {
+    type: String,
+    trim: true
+  },
 }, {
   timestamps: true,
   collection: "screening_advice"
@@ -50,7 +86,10 @@ const prioritySchema = new Schema({
     unique: true,
     required: true,
   },
-  priority: String,
+  priority: {
+    type: String,
+    trim: true
+  },
 }, {
   timestamps: true,
   collection: "screening_priority"
@@ -63,7 +102,10 @@ const statusSchema = new Schema({
     unique: true,
     required: true,
   },
-  detail: String,
+  detail: {
+    type: String,
+    trim: true
+  },
 }, {
   timestamps: true,
   collection: "screening_status"
@@ -96,13 +138,10 @@ const triedSchema = new Schema({
   inScreeningId: Schema.Types.ObjectId,
   patientId: Schema.Types.ObjectId,
   userId: Schema.Types.ObjectId,
-  urgencyServices: {
-    type: String,
-    required: true,
-  },
+  serviceId: Schema.Types.ObjectId
 }, {
   timestamps: true,
-  collection: "patient_tried_to_urgency_bank"
+  collection: "tried_to_urgency_bank"
 });
 
 export {

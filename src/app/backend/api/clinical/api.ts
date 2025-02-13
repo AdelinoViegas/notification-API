@@ -32,6 +32,7 @@ import {
 import { closePatientProcess } from "@/app/backend/api/clinical/process-api";
 import { getGrantedUnitAccess } from "@/app/backend/api/clinical/urgency-bank-api";
 import { validatePatientDoc, validatePatientLocation } from "@/lib/regexp";
+import { Schema } from "mongoose";
 
 type ChoosedGroup = Assured | Employee | Enterprise | undefined;
 type TypeScreeningData = "reason" | "vital signal" | "priority" | "status" | "advice";
@@ -761,6 +762,69 @@ async function getPatientInScreening(patientId: string, isServed=false){
   return await screeningModel.findOne({ patientId, served:isServed });
 }
 
+async function getScreening(patientId: string){
+  try{
+    const screening = await screeningModel.findOne({ patientId: patientId, served: false });
+    if(!screening)
+      throw new Error("Não foi encontrado nenhuma ficha", { cause: "not_found"});
+
+    return {
+      _id: screening?._id?.toString() as string,
+      patientId,
+      reason: screening.reason as string,
+      vitalSignals: {
+        paMax: screening.vitalSignals?.paMax as number,
+        paMin: screening.vitalSignals?.paMin as number,
+        jump: screening.vitalSignals?.jump as number,
+        pvc: screening.vitalSignals?.pvc as number,
+        imc: screening.vitalSignals?.imc as number,
+        sp02: screening.vitalSignals?.sp02 as number,
+        temperature: screening.vitalSignals?.temperature as number,
+        breathing: screening.vitalSignals?.breathing as number,
+        weight: screening.vitalSignals?.weight as number,
+        height: screening.vitalSignals?.height as number,
+        bloodGlucose: screening.vitalSignals?.bloodGlucose as number,
+      },
+      advice: screening.advice as string,
+      priority: screening.priority as string,
+      state: screening.state as string,
+      isArchived: screening.isArchived as boolean,
+      served: screening.served as boolean
+    }
+  }catch(e){
+    const err = e as Error;
+
+    return {
+      message: err.cause === "not_found"?err.message:"Erro critico",
+      status: false 
+    }
+  }
+}
+
+async function insertScreening(prev: unknown, formData: FormData){
+  try{
+    const screeningPayload:{ [key: string]: string } = {};
+
+    for(const [key, value] of formData.entries())
+      screeningPayload[key] = value as string;
+
+    const data = new screeningModel(screeningPayload);
+    console.log(screeningPayload, data);
+
+    return {
+      message: "ok",
+      status: true
+    }
+  }catch(e){
+    
+    return {
+      message: "Falha na operação",
+      status: false,
+      type: "error"
+    }
+  }
+}
+
 /**
  * @remarks Zona de Triagem
  */
@@ -1151,4 +1215,6 @@ export {
   getTriedPatient,
   finishScreening,
   signSpecialty,
+  getScreening,
+  insertScreening
 };

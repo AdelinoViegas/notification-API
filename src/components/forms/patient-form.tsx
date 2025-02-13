@@ -28,52 +28,6 @@ export default async function PatientForm({patientId}:{patientId: string}){
 
 	return(
 		<main>
-			<PDFButton 
-				label="Visualizar"
-				args={{ personal: {
-					fullname: "Adelino Quibundo Viegas dos Santos",
-					gender:"masculino",
-					birthDate: new Date(),
-					age:123,
-					tel:"987785412",
-					civilState:"Divorciado/a",
-					lang:"Português",
-					documentation: "012345678LJ124"
-				},
-				demography: {
-					actualLocation: "Luanda/multiperfil/junto a loja maxi",
-					homeNumber: "",
-					nationality: "TrinidadeTobago",
-					naturality: "Trinidade e Tobago",
-					province: "Kuando-kubango",
-					street:"",
-				} 
-			}}
-				type="patientRecord"
-			/>
-
-     {/*<PDFButton 
-				label="Visualizar"
-				args={{ reason:"doente",
-					 vitalsSignal:{
-						paMax: "4",
-						paMin: "5", 
-						jump: "7",
-						pvc: "5",
-						imc: "50",
-						sp02: "7",
-						temperature: "9",
-						breathing: "2",
-						weight: "10",
-						height: "6",
-						bloodGlucose: "8",
-					 },
-					 status:"deve ser observado",
-					 advice:"beba muita água",
-			}}
-				type="screeningRecord"
-			/>*/}
-
 			<div className="flex flex-col gap-3 mb-8 mt-3">
 				<Accordium title="Informações Pessoais">
 					<PersonalInfoForm 

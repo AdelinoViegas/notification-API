@@ -69,8 +69,9 @@ function Component({
   className,
   childrens,
   apiFn,
-  initialState
-}: InternalComponent & {patientId : string}){
+  initialState,
+  type,
+}: InternalComponent & {patientId : string} & { type?: string}){
   const [ state, action ] = useActionState(apiFn?apiFn:FallbackFn, initialState);
   const [ messageState, setMessageState ] = useState(false);
   const router = useRouter();
@@ -90,6 +91,12 @@ function Component({
           className="hidden"
           name="patientId"
           defaultValue={patientId}
+        />
+        
+        <input
+          className="hidden"
+          name="typeMedicine"
+          defaultValue={type}
         />
 
         <div className={className}>
@@ -128,11 +135,12 @@ function Component({
 export default function GlobalComponent({
   patientId, 
   title, 
-  components
-}: Props){
+  components,
+  type,
+}: Props & {type?: string}){
   return(
     <Accordium className="bg-gray-200 hover:bg-gray-300" title={title}>
-      {components.map((item, i)=> <Component {...{patientId}} {...item} key={i} />)}
+      {components.map((item, i)=> <Component {...{type}} {...{patientId}} {...item} key={i} />)}
     </Accordium>
   );
 }

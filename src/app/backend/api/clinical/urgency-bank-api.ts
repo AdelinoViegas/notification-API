@@ -526,7 +526,10 @@ async function updateExternalUnit(prev: unknown, formData: FormData){
 }
 
 async function signUrgencyBank(prev: unknown, formData:FormData){
-  try{
+  try{console.log('entro na api');
+
+    const typeMedicine = formData.get("typeMedicine") as string;
+    console.log(typeMedicine);
     const patientId = formData.get("patientId") as string;
     const state = formData.get("state") as string;
     const symptoms = formData.get("symptoms") as string;
@@ -610,13 +613,13 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
   
     let message = "";
 
-    if(!hasPatientUrgencyBank){
+    /*if(!hasPatientUrgencyBank){
       await urgencyBankModel.create({ patientId, anamnesis });
       message = "Informações registradas com sucesso!";
     }else{
       await urgencyBankModel.updateOne({ _id: hasPatientUrgencyBank._id },{ anamnesis })
       message = "Informações actualizadas com sucesso!";
-    }
+    }*/
 
     return {
       message,

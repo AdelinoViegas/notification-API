@@ -45,11 +45,12 @@ import {
 	obstetricsAndGynecologyComponent,
 	previousBirthsComponent,
 	clinicalHistoryComponent,
+	familyAndSocialHistoryComponent,
+	livingConditionsComponent,
+	nutritionalHistoryComponent,
 } from "@/lib/internal-components";
 import { getPatientUrgencyBank } from "@/app/backend/api/clinical/urgency-bank-api";
 import Hospitalization from "@/components/hospitalization";
-import PhisicalMedicine from "@/components/urgency-bank/anamnesis/phisical-medicine";
-import ChildrenMedicine from "@/components/urgency-bank/anamnesis/cardiopulmonary-medicine";
 
 export default async function Page({ params }: {
 	params: Promise<{
@@ -105,6 +106,9 @@ export default async function Page({ params }: {
   const obstetricAndGynecology = obstetricsAndGynecologyComponent();
   const previousBirths = previousBirthsComponent();
   const clinicalHistory = clinicalHistoryComponent();
+  const familyAndSocialHistory = familyAndSocialHistoryComponent();
+  const livingCondition = livingConditionsComponent();
+  const nutricionalHistory = nutritionalHistoryComponent();
 
 	const generalClinical:InternalComponent[] = [
 		symptoms,
@@ -127,6 +131,11 @@ export default async function Page({ params }: {
 		obstetricAndGynecology,
 		previousBirths,
 		clinicalHistory,
+		familyAndSocialHistory,
+		livingCondition,
+		nutricionalHistory,
+		therapyAndCare,
+		therapyAndCareobjective,
 	];
 
 	const cardioPulmunaryMedicine:InternalComponent[] = [
@@ -191,40 +200,44 @@ export default async function Page({ params }: {
 				<Hospitalization/>
 			</div>
 
-			<div className="flex flex-col gap-y-3 mt-4">
+			<div className="flex flex-col gap-y-3 pt-8">
 				<GlobalComponent
+				  type="clinicaGeral"
 				  {...{patientId}}
 					title="CLINICA GERAL"
 					components={generalClinical} 
 				/>
 
-				<ChildrenMedicine/>
-
-				{<GlobalComponent
+				<GlobalComponent
+				  type="childrenMedicine"
 				  {...{patientId}}
 					title="MEDICINA MATERNO INFANTIL"
 					components={childrensMedicine} 
-				/>}
+				/>
 
 				<GlobalComponent
+					type="cardioPulmunaryMedicine"
 					{...{patientId}}
 					title="MEDICINA CARDIOPULMUNAL"
 					components={cardioPulmunaryMedicine} 
 				/>
 
 				<GlobalComponent
+					type="ophthalmologyService"
 					{...{patientId}}
 					title="SERVIÇO DE OFTALMOLOGIA"
 					components={ophthalmologyService} 
 				/>
 
 				<GlobalComponent
+					type="pediatricMedicine"
 					{...{patientId}}
 					title="MEDICINA PEDIÁTRICA"
 					components={pediatricMedicine} 
 				/>
 
 				<GlobalComponent
+					type="phisicalMedicine"
 					{...{patientId}}
 					title="MEDICINA FÍSICA E REABILITAÇÃO"
 					components={phisicalMedicine}

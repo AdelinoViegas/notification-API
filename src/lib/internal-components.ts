@@ -1,8 +1,6 @@
 import { updatePersonalInfo } from "@/app/backend/api/clinical/api";
 import { gender as genderTemplate } from "@/app/backend/api/clinical/translator";
 import { signUrgencyBank } from "@/app/backend/api/clinical/urgency-bank-api";
-import { root } from "postcss";
-import { PiPlaceholder } from "react-icons/pi";
 
 type Personal = {
   elements: [
@@ -2257,28 +2255,6 @@ function familyConditionAndEnvironmentComponent(){
 	}
 }
 
-function othernent(){
-  return {
-		title: "Outros",
-		apiFn: signUrgencyBank,
-		initialState: { message: "", status: false },
-		childrens: [
-			{
-    		elements: [
-					{
-						type: "textarea",
-						props: {
-							label: "Outro",
-							name: "others",
-							placeholder: "Descreva",
-						}
-					},
-				]
-			},
-		]
-	}
-}
-
 function phisicalExamMedicineComponent(){
 	return {
 		title: "Exame Físico",
@@ -3200,10 +3176,251 @@ function familyAndSocialHistoryComponent(){
 		title: "História Familiar e Social",
 		apiFn: signUrgencyBank,
 		initialState: { message: "", status: false },
-		childrens: []
+		childrens: [
+			{
+				elements: [
+					{
+						type: "textarea",
+						props: {
+							label: "História Familiar e Social",
+							name: "familyAndSocialHistory",
+							rows: 3,
+							placeholder: "Doênças na Família (hipertensão, diabetes, doênças cardíacas, falciformação, malformação congénita)",
+						}
+					}
+				]
+			}
+		]
 	}
 }
 
+function livingConditionsComponent(){
+	return {
+		title: "Condições de Vida (habitação, acesso a água potável, saneamento)",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: [
+			{
+        separatedElements: [
+					{
+						className: "flex gap-x-2 items-center",
+						label: "Consumo de Tabaco",
+						elements: [
+							{
+								type: "radio",
+								props: {
+									label: "Sim",
+									name: "tabacco",
+								}
+							},
+							{
+								type: "radio",
+								props: {
+									label: "Não",
+									name: "tabacco",
+								}
+							},
+						]
+					}
+				], elements: []
+			},
+			{
+        separatedElements: [
+					{
+						className: "flex gap-x-2 items-center",
+						label: "Consumo de Álcool",
+						elements: [
+							{
+								type: "radio",
+								props: {
+									label: "Sim",
+									name: "alcohol",
+								}
+							},
+							{
+								type: "radio",
+								props: {
+									label: "Não",
+									name: "alcohol",
+								}
+							},
+						]
+					}
+				], elements: []
+			},
+			{
+        separatedElements: [
+					{
+						className: "flex gap-x-2 items-center",
+						label: "Uso de Drogas Ilícitas",
+						elements: [
+							{
+								type: "radio",
+								props: {
+									label: "Sim",
+									name: "illicitDrugs",
+								}
+							},
+							{
+								type: "radio",
+								props: {
+									label: "Não",
+									name: "illicitDrugs",
+								}
+							},
+						]
+					}
+				], elements: []
+			},
+			{
+        separatedElements: [
+					{
+						className: "flex gap-x-2 items-center",
+						label: "Violência Doméstica",
+						elements: [
+							{
+								type: "radio",
+								props: {
+									label: "Sim",
+									name: "violence",
+								}
+							},
+							{
+								type: "radio",
+								props: {
+									label: "Não",
+									name: "violence",
+								}
+							},
+						]
+					}
+				], elements: []
+			},
+			{
+				elements: [
+					{
+						type: "textarea",
+						props: {
+							label: "Outros",
+							name: "others",
+							rows: 3,
+							placeholder: "Descreva",
+						}
+					}
+				]
+			}
+		]
+	}
+}
+
+function nutritionalHistoryComponent(){
+	return {
+		title: "História Nutricional e Estilo de Vida",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: [
+			{
+				separatedElements: [
+					{
+						label: "Alimentação Durante a Gestação",
+						elements: [
+							{
+								type: "radio",
+								props: {
+									label: "Balanceada",
+									name: "food",
+								}
+							},
+							{
+								type: "radio",
+								props: {
+									label: "Deficiente",
+									name: "food",
+								}
+							}
+						]
+					}
+				], elements: []
+			},
+			{
+				separatedElements: [
+					{
+						label: "Consumo de Frutas e Vegetais",
+						elements: [
+							{
+								type: "radio",
+								props: {
+									label: "Sim",
+									name: "fruitsAndVegetables",
+								}
+							},
+							{
+								type: "radio",
+								props: {
+									label: "Não",
+									name: "fruitsAndVegetables",
+								}
+							}
+						]
+					}
+				], elements: []
+			},
+			{
+				separatedElements: [
+					{
+						label: "Actividade Física",
+						elements: [
+							{
+								type: "radio",
+								props: {
+									label: "Regular",
+									name: "physicalActivity",
+								}
+							},
+							{
+								type: "radio",
+								props: {
+									label: "Ocasional",
+									name: "physicalActivity",
+								}
+							},
+							{
+								type: "radio",
+								props: {
+									label: "Nenhuma",
+									name: "physicalActivity",
+								}
+							},
+						]
+					}
+				], elements: []
+			},
+			{
+				separatedElements: [
+					{
+						label: "Ganho de Peso Durante a Gracidez",
+						elements: [
+							{
+								type: "radio",
+								props: {
+									label: "Sim",
+									name: "wightGain",
+								}
+							},
+							{
+								type: "radio",
+								props: {
+									label: "Não",
+									name: "wightGain",
+								}
+							},
+						]
+					}
+				], elements: []
+			},  
+		]
+	}
+}
 
 export {
   personalInternalComponent,
@@ -3252,4 +3469,6 @@ export {
 	previousBirthsComponent,
 	clinicalHistoryComponent,
 	familyAndSocialHistoryComponent,
+	livingConditionsComponent,
+	nutritionalHistoryComponent,
 }
