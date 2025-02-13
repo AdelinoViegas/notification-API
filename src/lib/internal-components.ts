@@ -1,6 +1,8 @@
 import { updatePersonalInfo } from "@/app/backend/api/clinical/api";
 import { gender as genderTemplate } from "@/app/backend/api/clinical/translator";
 import { signUrgencyBank } from "@/app/backend/api/clinical/urgency-bank-api";
+import { root } from "postcss";
+import { PiPlaceholder } from "react-icons/pi";
 
 type Personal = {
   elements: [
@@ -326,7 +328,7 @@ function diseasesInternalComponent(diseases: Diseases){
 	}
 }
 
-function othersInternalComponent(defaultValue?: string){
+function othersComponent(defaultValue?: string){
 	return {
 		title: "Outros",
 		apiFn:	signUrgencyBank,
@@ -2044,7 +2046,7 @@ function personalHistoryPediatricComponent(){
 
 function foodInPediatricComponent(){
   return {
-		title: "Antecedentes Pessoais",
+		title: "Alimentação",
 		apiFn: signUrgencyBank,
 		initialState: { message: "", status: false },
 		childrens: [
@@ -2073,6 +2075,7 @@ function foodInPediatricComponent(){
 				], elements: []
 			},
 			{
+				className: "grid grid-cols-3 gap-x-2",
 				elements: [
 					{
 						type: "text",
@@ -2103,7 +2106,7 @@ function foodInPediatricComponent(){
 						props: {
 							label: "Inicio da Alimentação Complementar",
 							name: "startOfComplementaryFeeding",
-							placeholder: "Descreva",
+							placeholder: "Idade",
 						}
 					},
 					{
@@ -2115,10 +2118,1092 @@ function foodInPediatricComponent(){
 						}
 					},
 				]
+			}
+		]
+	}
+}
+
+function immunizationInPediatricsComponent(){
+  return {
+		title: "Imunização",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: [
+			{
+				className: "grid grid-cols-3 gap-x-2",
+				elements: [
+					{
+						type: "text",
+						props: {
+							label: "Vacina recebida",
+							name: "reason",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "date",
+						props: {
+							label: "Data",
+							name: "date",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Reação",
+							name: "reaction",
+							placeholder: "Descreva",
+						}
+					},
+				]
+			},
+			{
+				elements: [
+					{
+						type: "textarea",
+						props: {
+							label: "Doenças Anteriores",
+							name: "previousDiseases",
+							rows: 3,
+							placeholder: "Descrever infecções, alergias, internamentos, cirurgias, duração, resultados"
+						}
+					}
+				]
+			}
+		]
+	}
+}
+
+function familyHistoryPediatricComponent(){
+  return {
+		title: "Antecedentes Familiares",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: [
+			{
+    		elements: [
+					{
+						type: "textarea",
+						props: {
+							label: "Doênças na familiares",
+							name: "familyDiseases",
+							rows: 3,
+							placeholder: "Hipertensão, Diabetes, Hepatites, doenças infecciosas, outras",
+						}
+					}
+				]
+			},
+			{
+    		elements: [
+					{
+						type: "textarea",
+						props: {
+							label: "Condição de saúde dos pais e irmão.",
+							name: "healthConditions",
+							rows: 3,
+							placeholder: "Descreva",
+						}
+					}
+				]
 			},
 		]
 	}
 }
+
+function familyConditionAndEnvironmentComponent(){
+  return {
+		title: "Condição de Vida e Ambiente Familiar",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: [
+			{
+				className: "grid grid-cols-2 gap-x-4",
+    		elements: [
+					{
+						type: "text",
+						props: {
+							label: "Condições da Moradia",
+							name: "housingConditions",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Processo de higiene e saneamento",
+							name: "hygieneAndSanitation",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Presença de animal doméstico",
+							name: "domesticAnimal",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Fonte de renda dos pais",
+							name: "income",
+							placeholder: "Descreva",
+						}
+					},
+				]
+			},
+		]
+	}
+}
+
+function othernent(){
+  return {
+		title: "Outros",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: [
+			{
+    		elements: [
+					{
+						type: "textarea",
+						props: {
+							label: "Outro",
+							name: "others",
+							placeholder: "Descreva",
+						}
+					},
+				]
+			},
+		]
+	}
+}
+
+function phisicalExamMedicineComponent(){
+	return {
+		title: "Exame Físico",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: [
+			{
+				className: "grid grid-cols-3 items-center gap-x-2",
+				elements:[
+					{
+						type: "text",
+						props:{
+							label: "Postura",
+							placeholder: "Descreva",
+							name: "posture",
+						}
+					},
+					{
+						type: "text",
+						props:{
+							label: "Marcha",
+							placeholder: "Descreva",
+							name: "march",
+						}
+					},
+					{
+						type: "text",
+						props:{
+							label: "Tônus Muscular",
+							placeholder: "Descreva",
+							name: "muscleTone",
+						}
+					},
+					{
+						type: "text",
+						props:{
+							label: "Força Muscular",
+							placeholder: "Descreva",
+							name: "muscleStrength",
+						}
+					},
+					{
+						type: "text",
+						props:{
+							label: "Reflexos",
+							placeholder: "Descreva",
+							name: "reflexes",
+						}
+					},
+					{
+						type: "text",
+						props:{
+							label: "Sensibilidade",
+							placeholder: "Descreva",
+							name: "sensitivity",
+						}
+					},
+					{
+						type: "text",
+						props:{
+							label: "Mobilidade Articular",
+							placeholder: "Descreva",
+							name: "joinMobility",
+						}
+					},
+				]
+			},
+			{
+				separatedElements: [
+					{
+						className: "flex gap-x-3 items-center",
+						label: "Tem dor",
+						elements: [
+							{
+								type: "radio",
+								props: {
+									label: "Sim",
+									name: "plain",
+								}
+							},
+							{
+								type: "radio",
+								props: {
+									label: "Não",
+									name: "plain",
+								}
+							}
+						]
+					}
+				], elements: []
+			},
+			{
+				className: "w-96",
+				elements: [
+					{
+						type: "text",
+						props: {
+							label: "Local",
+							name: "local",
+							placeholder: "Descreva",
+						}
+					}
+				]
+			},
+			{
+				separatedElements: [
+					{
+						className: "flex gap-x-3 items-center",
+						label: "Intensidade",
+						elements: [
+							{
+								type: "radio",
+								props: {
+									label: "Leve",
+									name: "degreeOfPlain",
+								}
+							},
+							{
+								type: "radio",
+								props: {
+									label: "Forte",
+									name: "degreeOfPlain",
+								}
+							},
+							{
+								type: "radio",
+								props: {
+									label: "Muito Forte",
+									name: "degreeOfPlain",
+								}
+							}
+						]
+					}
+				], elements: []
+			}
+		]
+	};
+}
+
+function pathologyInPhisicalMedicineComponent(){
+  return {
+		title: "Antecedentes Pessoais Patológicos(Doênças pré-existentes, hospitalizações, acidentes)",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: [
+			{
+				separatedElements: [
+					{
+						label: "Diabete",
+						className: "flex gap-x-3 items-center",
+						elements: [
+							{ 
+								type: "radio",
+								props: {
+									label: "Sim",
+									name: "diabetes",
+								}
+							},
+							{ 
+								type: "radio",
+								props: {
+									label: "Não",
+									name: "diabetes",
+								}
+							},
+						]
+					},
+				],elements : [],
+			},
+			{ 
+				separatedElements: [
+					{
+						label: "Hipertensão",
+						className: "flex gap-3 items-center",
+						elements: [
+							{ 
+								type: "radio",
+								props: {
+									label: "Sim",
+									name: "hypertension",
+								}
+							},
+							{ 
+								type: "radio",
+								props: {
+									label: "Não",
+									name: "hypertension",
+								}
+							},
+						]
+					}
+				],elements : []
+			},
+			{
+				separatedElements: [
+					{
+						label: "Doênças Respiratórias",
+						className: "flex gap-3 items-center",
+						elements: [
+							{ 
+								type: "radio",
+								props: {
+									label: "Sim",
+									name: "respiratoryDiseases",
+								}
+							},
+							{ 
+								type: "radio",
+								props: {
+									label: "Não",
+									name: "respiratoryDiseases",					
+								}
+							},
+						]
+					}
+				],elements: []
+			},
+			{
+				separatedElements: [
+					{
+						label: "Tuberculose",
+						className: "flex gap-3 items-center",
+						elements: [
+							{ 
+								type: "radio",
+								props: {
+									label: "Sim",
+									name: "tuberculosis",
+								}
+							},
+							{ 
+								type: "radio",
+								props: {
+									label: "Não",
+									name: "tuberculosis",
+								}
+							},
+						]
+					}
+				],elements: []
+			},
+			{
+				separatedElements: [
+					{
+						label: "Malária",
+						className: "flex gap-3 items-center",
+						elements: [
+							{ 
+								type: "radio",
+								props: {
+									label: "Sim",
+									name: "malaria",
+								}
+							},
+							{ 
+								type: "radio",
+								props: {
+									label: "Não",
+									name: "malaria",
+								}
+							},
+						]
+					}
+				],elements: []
+			},
+			{
+				elements: [
+					{
+						type: "textarea",
+						props: {
+							label: "Outros",
+							name: "others",
+							rows: 3,
+							placeholder: "Descreva",
+						}
+					}
+				]
+			}
+		]
+	}
+}
+
+function diseasesFamilyComponent(){
+  return {
+		title: "Antecedentes Familiares (Doênças relevantes na família)",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: [
+			{
+				separatedElements: [
+					{
+						label: "Há histórico familiar de doênças relevantes?",
+						className: "flex gap-x-3 items-center",
+						elements: [
+							{ 
+								type: "radio",
+								props: {
+									label: "Sim",
+									name: "relevantDiseases",
+								}
+							},
+							{ 
+								type: "radio",
+								props: {
+									label: "Não",
+									name: "relevantDiseases",
+								}
+							},
+						]
+					},
+				],elements : [],
+			},
+			{ 
+				separatedElements: [
+					{
+						label: "Doênças Cardiovasculares",
+						className: "flex gap-3 items-center",
+						elements: [
+							{ 
+								type: "radio",
+								props: {
+									label: "Sim",
+									name: "cardiovascularDiseases",
+								}
+							},
+							{ 
+								type: "radio",
+								props: {
+									label: "Não",
+									name: "cardiovascularDiseases",
+								}
+							},
+						]
+					}
+				],elements : []
+			},
+			{
+				separatedElements: [
+					{
+						label: "Doênças Respiratórias",
+						className: "flex gap-3 items-center",
+						elements: [
+							{ 
+								type: "radio",
+								props: {
+									label: "Sim",
+									name: "respiratoryDiseases",
+								}
+							},
+							{ 
+								type: "radio",
+								props: {
+									label: "Não",
+									name: "respiratoryDiseases",					
+								}
+							},
+						]
+					}
+				],elements: []
+			},
+			{
+				separatedElements: [
+					{
+						label: "Doênças Osteomusculares",
+						className: "flex gap-3 items-center",
+						elements: [
+							{ 
+								type: "radio",
+								props: {
+									label: "Sim",
+									name: "musculoskeletalDiseases",
+								}
+							},
+							{ 
+								type: "radio",
+								props: {
+									label: "Não",
+									name: "musculoskeletalDiseases",
+								}
+							},
+						]
+					}
+				],elements: []
+			},
+			{
+				separatedElements: [
+					{
+						label: "Doênças Neurológicas",
+						className: "flex gap-3 items-center",
+						elements: [
+							{ 
+								type: "radio",
+								props: {
+									label: "Sim",
+									name: "neurologicalDiseases",
+								}
+							},
+							{ 
+								type: "radio",
+								props: {
+									label: "Não",
+									name: "neurologicalDiseases",
+								}
+							},
+						]
+					}
+				],elements: []
+			},
+			{
+				elements: [
+					{
+						type: "textarea",
+						props: {
+							label: "Outros",
+							name: "others",
+							rows: 3,
+							placeholder: "Descreva",
+						}
+					}
+				]
+			}
+		]
+	}	
+}
+
+function therapyPlanComponent(){
+  return {
+		title: "Plano Terapêutico",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: [
+			{
+				elements: [
+					{
+						type: "checkbox",
+						props: {
+							label: "Reabilitação Física",
+							name: "physicalRehabilitation",
+						}
+					},
+					{
+						type: "checkbox",
+						props: {
+							label: "Fisioterapia",
+							name: "physiotherapy",
+						}
+					},
+					{
+						type: "checkbox",
+						props: {
+							label: "Terapia Ocupacional",
+							name: "occupationalTherapy",
+						}
+					},
+					{
+						type: "checkbox",
+						props: {
+							label: "Uso de órteses/próteses",
+							name: "orthosis/prosthesis",
+						}
+					}
+				]
+			},
+			{
+				className: "grid grid-cols-2 gap-x-4",
+				elements: [
+					{
+						type: "text",
+						props: {
+							label: "Indicação de Acompanhamento por outras Especialidades",
+							name: "otherSpecialties",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label:"Medicamentos",
+							name: "medicines",
+							placeholder: "Descreva",
+						}
+					},
+				]
+			},
+			{
+				elements: [
+					{
+						type: "textarea",
+						props: {
+							label: "Outros",
+							name: "others",
+							rows: 3,
+							placeholder: "Descreva",
+						}
+					}
+				]
+			}
+		]
+	}
+}
+
+function therapyObjectiveComponent(){
+  return {
+		title: "Objectivo do Plano Terapêutico",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: [
+			{
+				elements: [
+					{
+						type: "textarea",
+						props: {
+							label: "Objectivo do Plano Terapêutico",
+							name: "therapyObjective",
+							rows: 3,
+							placeholder: "Descreva",
+						}
+					},
+				]
+			}
+		]
+	}
+}
+
+function physicalAndObstetricExamsComponent(){
+  return {
+		title: "Exames Físico e Obstétrico",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: [
+			{
+				className: "grid grid-cols-3 gap-x-2",
+				elements: [
+					{
+						type: "text",
+						props: {
+							label: "Circunferência Abdominal",
+							name: "abdominalCircumference",
+							placeholder: "abdomen",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Altura Uterina",
+							name: "fundalHeight",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Batimentos Cardiácos Fetais",
+							name: "heartBeat",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Movimentos Fetais",
+							name: "fetalMovements",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Toque Vaginal",
+							name: "vaginalTouch",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Exames das Mamas",
+							name: "breastExam",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Outros",
+							name: "others",
+							placeholder: "Descreva",
+						}
+					},
+				]
+			}
+		]
+	}
+}
+
+function obstetricsAndGynecologyComponent(){
+  return {
+		title: "Antecedentes Obstétrico e Ginecológico",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: [
+			{
+				className: "grid grid-cols-3 gap-x-2",
+				elements: [
+					{
+						type: "text",
+						props: {
+							label: "Idade da Primeira Menstrução",
+							name: "firstMenstruation",
+							placeholder: "abdomen",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Regularidade do Ciclo Menstrual",
+							name: "menstrualCycle",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Duração do Fluxo Menstrual",
+							name: "mestrualFlow",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Quantidade do Fluxo",
+							name: "flowQuantity",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Doênças Ginecológias",
+							name: "gynecologicalDiseases",
+							placeholder: "Descreva",
+						}
+					}
+				]
+			},
+			{
+				separatedElements: [
+					{
+						className: "flex gap-x-2 items-center",
+						label: "Uso de Anticoncepcionais",
+						elements: [
+							{
+								type: "radio",
+								props: {
+									label: "Sim",
+									name: "ultrasound",
+								}
+							},
+							{
+								type: "radio",
+								props: {
+									label: "Não",
+									name: "ultrasound",
+								}
+							},
+						]
+					}
+				], elements: []
+			},
+			{
+				className: "grid grid-cols-2 gap-x-4",
+				elements: [
+					{
+						type: "text",
+						props: {
+							label: "Tipo",
+							name: "type",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Tempo de Uso",
+							name: "timeOfUse",
+							placeholder: "Descreva",
+						}
+					}
+				]
+			}
+		]
+	}
+}
+
+function previousBirthsComponent(){
+  return {
+		title: "Sobre Partos Anteriores",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: [
+			{
+				className: "grid grid-cols-2 gap-x-4",
+				elements: [
+					{
+						type: "number",
+						props: {
+							label: "Número de Gestações Anteriores",
+							name: "previousPregnancies",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "number",
+						props: {
+							label: "Nª de Partos",
+							name: "births",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "date",
+						props: {
+							label: "Data do Último Parto",
+							name: "lastBirths",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "number",
+						props: {
+							label: "Nª de Abortos",
+							name: "abortions",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Complicações em Gestações e Partos Anteriores",
+							name: "managementOfBirths",
+							placeholder: "Descreva",
+						}
+					},
+				]
+			},
+			{
+				separatedElements: [
+					{
+						className: "flex gap-x-2 items-center",
+						label: "Tipo de Parto",
+						elements: [
+							{
+								type: "radio",
+								props: {
+									label: "Normal",
+									name: "typeOfDelivery",
+								}
+							},
+							{
+								type: "radio",
+								props: {
+									label: "Cesariana",
+									name: "typeOfDelivery",
+								}
+							},
+							{
+								type: "radio",
+								props: {
+									label: "Parto Prematuro",
+									name: "typeOfDelivery",
+								}
+							},
+							{
+								type: "radio",
+								props: {
+									label: "Fórceps",
+									name: "typeOfDelivery",
+								}
+							}
+						]
+					}
+				], elements: []
+			},
+			{
+				separatedElements: [
+					{
+						className: "flex gap-x-2 items-center",
+						label: "Filhos com malformações ou Doênças Congénitas",
+						elements: [
+							{
+								type: "radio",
+								props: {
+									label: "Sim",
+									name: "congenitalDiseases",
+								}
+							},
+							{
+								type: "radio",
+								props: {
+									label: "Não",
+									name: "congenitalDiseases",
+								}
+							},
+						]
+					}
+				], elements: []
+			},
+			{
+				className: "w-96",
+				elements: [
+					{
+						type: "number",
+						props: {
+							label: "Quantos",
+							name: "quantity",
+							placeholder: "Digite o valor",
+						}
+					}
+				]
+			}
+		]
+	}
+}
+
+function clinicalHistoryComponent(){
+	return {
+		title: "Antecedentes Clínicos e Cirúrgicos",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: [
+			{
+				elements: [
+					{
+						type: "textarea",
+						props: {
+							label: "Doênças Pré-existentes",
+							name: "pre-existingDiseases",
+							rows: 3,
+							placeholder: "hipertensão, diabetes, doênças cardiácas, outras",
+						}
+					}
+				]
+			},
+			{
+				className: "grid grid-cols-2 gap-x-4",
+				elements: [
+					{
+						type: "text",
+						props: {
+							label: "Alergia",
+							name: "allergy",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Agente Reativo",
+							name: "reactiveAgent",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Outros",
+							name: "others",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Medicamentos em Uso ou Usados",
+							name: "medicineUsed",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "number",
+						props: {
+							label: "Duração",
+							name: "duration",
+							placeholder: "Digite o valor",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Cirurgias Prévias",
+							name: "previousSurgeries",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "text",
+						props: {
+							label: "Tipo de Cirurgia",
+							name: "typeOfSurgery",
+							placeholder: "Descreva",
+						}
+					},
+					{
+						type: "date",
+						props: {
+							label: "Data",
+							name: "date",
+						}
+					},
+				]
+			}
+		]
+	}
+}
+
+function familyAndSocialHistoryComponent(){
+	return {
+		title: "História Familiar e Social",
+		apiFn: signUrgencyBank,
+		initialState: { message: "", status: false },
+		childrens: []
+	}
+}
+
 
 export {
   personalInternalComponent,
@@ -2127,7 +3212,7 @@ export {
   examsInternalComponent,
 	diagnosticInternalComponent,
 	diseasesInternalComponent,
-	othersInternalComponent,
+	othersComponent,
 	evaluationInternalComponent,
 	lifeStyleInternalComponent,
 	eatingHabitsInternalComponent,
@@ -2154,4 +3239,17 @@ export {
 	examAndEvaluationComponent,
 	personalHistoryPediatricComponent,
 	foodInPediatricComponent,
+	immunizationInPediatricsComponent,
+	familyHistoryPediatricComponent,
+	familyConditionAndEnvironmentComponent,
+	phisicalExamMedicineComponent,
+	pathologyInPhisicalMedicineComponent,
+	diseasesFamilyComponent,
+	therapyPlanComponent,
+	therapyObjectiveComponent,
+	physicalAndObstetricExamsComponent,
+	obstetricsAndGynecologyComponent,
+	previousBirthsComponent,
+	clinicalHistoryComponent,
+	familyAndSocialHistoryComponent,
 }
