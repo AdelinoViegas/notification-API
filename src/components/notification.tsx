@@ -15,7 +15,7 @@ import { TiDeleteOutline } from "react-icons/ti";
 import { IoMdOpen } from "react-icons/io";
 import clsx from "clsx";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
-import { whoAreYou } from "@/lib/web-token";
+import { whoIsUser } from "@/lib/web-token";
 import { TbMessage2 } from "react-icons/tb";
 type Notification = {
   _id: string;
@@ -77,7 +77,7 @@ export default function Notification(){
         throw new Error();
 
       const lastNotification = notify.notifications[notify.notifications.length - 1];
-      const currentUserId = await whoAreYou();
+      const currentUserId = await whoIsUser();
       
       if(lastNotification.creator._id !== currentUserId)
         await playSound();

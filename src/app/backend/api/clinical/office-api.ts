@@ -9,7 +9,7 @@ import {
   externalResultsModel,
 } from "@/app/backend/models/clinical";
 import { officeModel } from "@/app/backend/models/clinical";
-import { whoAreYou } from "@/lib/web-token";
+import { whoIsUser } from "@/lib/web-token";
 import { findDoctorCalendar } from "@/app/backend/api/clinical/scheduling-api";
 import { getDateInSlashFormat } from "@/lib/date-formater";
 import { userModel } from "@/app/backend/models/manager";
@@ -82,7 +82,7 @@ async function sendPatientToOffice(prev: unknown, formData: FormData){
     // if(!service?.price){
     //   await officeModel.create({
     //     scheduleId,
-    //     userId: await whoAreYou(),
+    //     userId: await whoIsUser(),
     //   });
   
     // }else{
@@ -91,7 +91,7 @@ async function sendPatientToOffice(prev: unknown, formData: FormData){
 
     //   await officeModel.create({
     //     scheduleId,
-    //     userId: await whoAreYou(),
+    //     userId: await whoIsUser(),
     //   });
     // }
 
@@ -103,7 +103,7 @@ async function sendPatientToOffice(prev: unknown, formData: FormData){
     
     await officeModel.create({
       scheduleId,
-      userId: await whoAreYou(),
+      userId: await whoIsUser(),
     });
 
     await scheduleAppointmentModel.updateOne({_id: scheduleId}, { served: true });
@@ -146,7 +146,7 @@ async function getPatients({
       await scheduleAppointmentModel.findOne({ _id: appointment.scheduleId }):
       await scheduleAppointmentModel.findOne({ 
         _id: appointment.scheduleId,
-        doctorId: await whoAreYou(),
+        doctorId: await whoIsUser(),
       });
 
       if(!scheduledAppointment)
@@ -343,7 +343,7 @@ async function requestReschedule(prev: unknown, formData: FormData){
 
     const scheduleAppoint = await scheduleAppointmentModel.findById({ _id: patientInOffice?.scheduleId });
     const patient = await patientModel.findById({ _id: scheduleAppoint?.patientId }).select({ fullname: 1 });
-    const userDoctor = await userModel.findById({ _id: await whoAreYou() }).select({ fullname: 1 });
+    const userDoctor = await userModel.findById({ _id: await whoIsUser() }).select({ fullname: 1 });
      
     await signNotification({
       title: "Pedido de remarcação",
@@ -415,7 +415,7 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
         mimeType: file.type,
         binaryData: Buffer.from(await file.arrayBuffer())
       },
-      userId: await whoAreYou()
+      userId: await whoIsUser()
     });
 
     return {

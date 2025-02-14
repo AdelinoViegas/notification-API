@@ -1,5 +1,5 @@
 // import { redirect } from "next/navigation";
-import { whoAreYou } from "@/lib/web-token";
+import { whoIsUser } from "@/lib/web-token";
 import DropDown from "@/components/drop-down";
 import Notification from "@/components/notification";
 import { BiUser as UserIcon } from "react-icons/bi";
@@ -15,7 +15,7 @@ export const getFirstAndLastName = (fullname: string)=>{
 }
 
 export default async function StatusLoginUser(){
-  const userId = await whoAreYou();
+  const userId = await whoIsUser();
   const user = await getUser(userId as string);
 
   const menuItems = [

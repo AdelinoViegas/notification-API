@@ -120,7 +120,7 @@ export default async function Page({ params }: {
 		evaluation,
 		lifeStyle,
 		eatingHabits,
-		family
+		family,
 	];
 
 	const childrensMedicine:InternalComponent[] = [
@@ -192,6 +192,7 @@ export default async function Page({ params }: {
 		therapyPlan,
 		therapyObjective,
 	];
+
 
   return(
 		<main className="relative">

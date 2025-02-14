@@ -17,7 +17,7 @@ import {
 import masterAutoSetup from "@/app/backend/api/manager/setup";
 import { 
   authJWT, 
-  whoAreYou 
+  whoIsUser 
 } from "@/lib/web-token";
 import { redirect } from "next/navigation";
 import { exitFromWorkplace } from "@/app/backend/api/clinical/workplace-api";
@@ -109,7 +109,7 @@ async function login(prev: unknown, formData: FormData){
 
 async function logout(){
   if((await cookies()).has(String(process.env.MASTER_HEADER_AUTH))){
-    const userId = await whoAreYou();
+    const userId = await whoIsUser();
     await loginAccessTokensModel.updateOne({ userId, inUse: true }, {  inUse: false });
 
     await exitFromWorkplace();
@@ -153,7 +153,7 @@ async function signUser(prev: unknown, formData: FormData){
       await workplaceModel.create({
         userId: user._id,
         workplaceId: unitWorkplace?._id,
-        actor: await whoAreYou(),
+        actor: await whoIsUser(),
       });
     }
     
@@ -446,7 +446,7 @@ async function updatePermission(prev: unknown, formData: FormData){
 
 async function getGrantedPermission(routes: Route[]){
   try{
-    const user = await whoAreYou();
+    const user = await whoIsUser();
     const grantedPermissions = await accessPermissionModel.find({userId: user});
     const grantedAccessPermissions = [];
     
@@ -510,7 +510,7 @@ async function resetUserPassword(prev: unknown, formData:FormData){
 //checkAccessPermission()
 async function verifyRouteUserPermission(targetUrl: string){
   try{
-    const userId = await whoAreYou(); 
+    const userId = await whoIsUser(); 
     const requestedUrl = targetUrl.split('/')[2];
 
     if(userId){

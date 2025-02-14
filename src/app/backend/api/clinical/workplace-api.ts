@@ -1,7 +1,7 @@
 "use server";
 
 import { currentLocationModel } from "@/app/backend/models/clinical";
-import { whoAreYou } from "@/lib/web-token";
+import { whoIsUser } from "@/lib/web-token";
 
 async function enterIntoWorkplace(prev: unknown, formData: FormData){
   const workplaceId = formData.get("workplaceId") as string;
@@ -15,13 +15,13 @@ async function enterIntoWorkplace(prev: unknown, formData: FormData){
 
 async function openWorkplace(workplaceId: string){
   try{
-    const userId = await whoAreYou();
+    const userId = await whoIsUser();
     const workplace = await currentLocationModel.findOne({ isActive: true, userId });
 
     if(!workplace){
       await currentLocationModel.create({
         locationId: workplaceId,
-        userId: await whoAreYou(),
+        userId: await whoIsUser(),
       });
       return true
     }
@@ -43,7 +43,7 @@ async function openWorkplace(workplaceId: string){
 
 async function exitFromWorkplace(){
   await currentLocationModel.updateOne({ 
-    userId: await whoAreYou(), 
+    userId: await whoIsUser(), 
     isActive: true 
   }, { 
     isActive: false 

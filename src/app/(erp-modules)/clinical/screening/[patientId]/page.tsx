@@ -6,7 +6,7 @@ import { getPatient } from "@/app/backend/api/clinical/api";
 import CloseProcess from "@/components/close-process";
 import ArchiveButton from "@/components/archive-button";
 import Screening from "@/components/screening";
-type Routes = "patient" | "reason" | "vital-signals" | "priority" | "status" | "advice";
+type Routes = "patient" | "reason" | "vital-signals" | "priority" | "state" | "advice";
 
 export default async function Page({
   params,
@@ -37,7 +37,7 @@ export default async function Page({
             { path: "reason", title: "Movito da vinda" },
             { path: "vital-signals", title: "Sinais Vitais" },
             { path: "priority", title: "Grau de Prioridade" },
-            { path: "status", title: "Estado Actual" },
+            { path: "state", title: "Estado Actual" },
             { path: "advice", title: "Recomendações" }
           ]}
         />
@@ -53,8 +53,40 @@ export default async function Page({
         </div>
 
         <div className="max-h-[60vh] overflow-auto px-2">
-          { r === "patient" && <PatientForm patientId={patientId} /> }
+          { r === "patient" && 
+            <PatientForm 
+              patientId={patientId} 
+            /> 
+          }
           { r === "reason" && 
+            <Screening 
+              patientId={patientId}
+              renderComponent={r} 
+            />
+          }
+
+          { r === "vital-signals" && 
+            <Screening 
+              patientId={patientId}
+              renderComponent={r} 
+            />
+          }
+
+          { r === "priority" && 
+            <Screening 
+              patientId={patientId}
+              renderComponent={r} 
+            />
+          }
+
+          { r === "state" && 
+            <Screening 
+              patientId={patientId}
+              renderComponent={r} 
+            />
+          }
+
+          { r === "advice" && 
             <Screening 
               patientId={patientId}
               renderComponent={r} 

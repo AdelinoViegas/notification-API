@@ -47,7 +47,7 @@ function personalInternalComponent({ elements }: Personal){
 		initialState: { message: "", status: false },
 		childrens: [
 			{
-				className: "grid grid-cols-3 gap-3",
+				className: "grid grid-cols-3 gap-x-3",
 				elements: [
 					{ 
 						type: "input",
@@ -420,11 +420,10 @@ function lifeStyleInternalComponent(lifeStyle: LifeStyle){
 				elements: []
 			},
 			{ 
-				className: "mt-8 mb-[-30px]",
 				separatedElements: [
 					{
 						label: "Consumo de Álcool",
-						className: "flex items-center gap-x-4 row-span-1 col-span-2",
+						className: "flex items-center gap-x-2",
 						elements: [
 							{ 
 								type: "radio",
@@ -481,12 +480,11 @@ function lifeStyleInternalComponent(lifeStyle: LifeStyle){
 					},
 				]
 			},
-			{
-				className:"grid grid-cols-2 gap-x-5 mt-8 mb-[-10px]", 
+			{ 
 				separatedElements: [
 					{
 						label: "Actividade Física",
-						className: "flex items-center gap-x-4 row-span-1 col-span-2",
+						className: "flex items-center gap-x-2",
 						elements: [
 							{ 
 								type: "radio",
@@ -511,7 +509,7 @@ function lifeStyleInternalComponent(lifeStyle: LifeStyle){
 				],elements: []
 			},
 			{ 
-				className:"grid grid-cols-3 gap-x-3",
+				className:"grid grid-cols-3 gap-x-2",
 				elements: [
 					{ 
 						type: "text",
@@ -553,7 +551,7 @@ function eatingHabitsInternalComponent(eatingHabits: EatingHabits){
 		initialState: { message: "", status: false },
 		childrens: [
 			{
-				className: "grid grid-cols-2 gap-x-4",
+				className: "grid grid-cols-2 gap-x-3",
 				elements: [
 					{ 
 						type: "text",
@@ -628,7 +626,7 @@ function gestationComponent(){
 		initialState: { message: "", status: false },
 		childrens: [
 			{
-				className: "grid grid-cols-2 gap-x-4",
+				className: "grid grid-cols-2 gap-x-3",
 				elements: [
 					{ 
 						type: "date",
@@ -905,7 +903,7 @@ function diseaseCardioPulmunaryComponent(){
 				]
 			},
 			{
-				className: "flex gap-x-4",
+				className: "grid grid-cols-2 gap-x-3",
 				elements:[
 					{
 						type: "text",
@@ -1108,7 +1106,7 @@ function personalHistoryCardioPulmunaryComponent(){
 				], elements: []
 			},
 			{ 
-				className: "grid grid-cols-3 items-center gap-x-2",
+				className: "grid grid-cols-2 items-center gap-x-2",
 				elements: [
 					{
 						type: "text",
@@ -1477,7 +1475,7 @@ function diseaseinOphthalmologyComponent(){
 				]
 			},
 			{
-				className: "grid grid-cols-2 gap-x-4",
+				className: "grid grid-cols-2 gap-x-3",
 				elements: [
 					{
 						type: "text",
@@ -1510,7 +1508,7 @@ function eyeExamsComponent(){
 		initialState: { message: "", status: false },
 		childrens: [
 			{
-				className: "grid grid-cols-2 items-center gap-x-4",
+				className: "grid grid-cols-2 items-center gap-x-3",
 				elements: [
 					{
 						type: "text",
@@ -1609,7 +1607,7 @@ function personalHistoryOphthalmologyComponent(){
 				]
 			},
 			{ 
-				className: "grid grid-cols-3 items-center gap-x-2",
+				className: "grid grid-cols-3 gap-x-2",
 				elements: [
 					{
 						type: "text",
@@ -1681,7 +1679,7 @@ function personalHistoryOphthalmologyComponent(){
 							name: "others",
 							placeholder: "Descreva"
 						}
-					},
+					}
 				]
 			}
 		]
@@ -1762,7 +1760,7 @@ function socialHistoryComponent(){
 			  ], elements: []
 			},
 			{
-				className: "grid grid-cols-2 gap-x-4",
+				className: "grid grid-cols-2 gap-x-3",
 				elements: [
 					{
 						type: "text",
@@ -2215,7 +2213,7 @@ function familyConditionAndEnvironmentComponent(){
 		initialState: { message: "", status: false },
 		childrens: [
 			{
-				className: "grid grid-cols-2 gap-x-4",
+				className: "grid grid-cols-2 gap-x-3",
     		elements: [
 					{
 						type: "text",
@@ -2262,7 +2260,7 @@ function phisicalExamMedicineComponent(){
 		initialState: { message: "", status: false },
 		childrens: [
 			{
-				className: "grid grid-cols-3 items-center gap-x-2",
+				className: "grid grid-cols-3 gap-x-2",
 				elements:[
 					{
 						type: "text",
@@ -2363,7 +2361,7 @@ function phisicalExamMedicineComponent(){
 				separatedElements: [
 					{
 						className: "flex gap-x-3 items-center",
-						label: "Intensidade",
+						label: "Tem dor",
 						elements: [
 							{
 								type: "radio",
@@ -2719,7 +2717,7 @@ function therapyPlanComponent(){
 				]
 			},
 			{
-				className: "grid grid-cols-2 gap-x-4",
+				className: "grid grid-cols-2 gap-x-3",
 				elements: [
 					{
 						type: "text",
@@ -2926,7 +2924,7 @@ function obstetricsAndGynecologyComponent(){
 				], elements: []
 			},
 			{
-				className: "grid grid-cols-2 gap-x-4",
+				className: "grid grid-cols-2 gap-x-3",
 				elements: [
 					{
 						type: "text",
@@ -2957,7 +2955,7 @@ function previousBirthsComponent(){
 		initialState: { message: "", status: false },
 		childrens: [
 			{
-				className: "grid grid-cols-2 gap-x-4",
+				className: "grid grid-cols-2 gap-x-3",
 				elements: [
 					{
 						type: "number",
@@ -3100,7 +3098,7 @@ function clinicalHistoryComponent(){
 				]
 			},
 			{
-				className: "grid grid-cols-2 gap-x-4",
+				className: "grid grid-cols-2 gap-x-3",
 				elements: [
 					{
 						type: "text",
@@ -3322,6 +3320,7 @@ function nutritionalHistoryComponent(){
 			{
 				separatedElements: [
 					{
+						className: "flex gap-x-2 items-center",
 						label: "Alimentação Durante a Gestação",
 						elements: [
 							{
@@ -3345,6 +3344,7 @@ function nutritionalHistoryComponent(){
 			{
 				separatedElements: [
 					{
+						className: "flex gap-x-2 items-center",
 						label: "Consumo de Frutas e Vegetais",
 						elements: [
 							{
@@ -3368,6 +3368,7 @@ function nutritionalHistoryComponent(){
 			{
 				separatedElements: [
 					{
+						className: "flex gap-x-2 items-center",
 						label: "Actividade Física",
 						elements: [
 							{
@@ -3398,6 +3399,7 @@ function nutritionalHistoryComponent(){
 			{
 				separatedElements: [
 					{
+						className: "flex gap-x-2 items-center",
 						label: "Ganho de Peso Durante a Gracidez",
 						elements: [
 							{

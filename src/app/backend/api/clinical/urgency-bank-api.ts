@@ -1,6 +1,6 @@
 "use server";
 
-import { whoAreYou } from "@/lib/web-token";
+import { whoIsUser } from "@/lib/web-token";
 import { orderByPriority } from "@/lib/filters";
 import { 
   patientModel,
@@ -39,7 +39,7 @@ async function getPatients({
   priority 
 }:patientFilters){
   try{
-    const userId = await whoAreYou() as string;
+    const userId = await whoIsUser() as string;
     const user = await clinicalUserModel.findOne({userId}).select({ officeId: 1});
     const patients = await triedModel.find({ urgencyServices: user?.officeId });
     const patientList = [];
@@ -86,7 +86,7 @@ async function signUnit(prev: unknown, formData: FormData){
 
     const name = formData.get("name") as string;
     const type = formData.get("unitTypeId") as UnitType;
-    const userId = await whoAreYou();
+    const userId = await whoIsUser();
 
     switch(type){
       case "internment": {
@@ -140,7 +140,7 @@ async function updateUnit(prev: unknown, formData: FormData){
     const unitId = formData.get("unitId");
     const name = formData.get("name") as string;
     const type = formData.get("unitTypeId") as UnitType;
-    const userId = await whoAreYou();
+    const userId = await whoIsUser();
 
     switch(type){
       case "internment": {
@@ -276,7 +276,7 @@ async function signDoctorCalender(prev: unknown, formData: FormData){
       description,
       month,
       doctors,
-      userId: await whoAreYou(),
+      userId: await whoIsUser(),
       maxSchedule,
       signatureDateTo: calendarSignature.toISOString().split('T')[0],
     });
@@ -307,7 +307,7 @@ async function updateDoctorCalender(prev: unknown, formData: FormData){
     await doctorCalendarModel.updateOne({ _id: calendarId }, {
       description,
       doctors,
-      userId: await whoAreYou(),
+      userId: await whoIsUser(),
     });
 
     return {
@@ -385,7 +385,7 @@ async function grantUnitAccess(formData: FormData){
     const workplaceAccess = new workplaceModel({
       userId,
       workplaceId,
-      actor: await whoAreYou(),
+      actor: await whoIsUser(),
     });
 
     await workplaceAccess.save();
@@ -435,7 +435,7 @@ async function signExternalUnit(prev: unknown, formData: FormData){
       street,
       municipality,
       province,
-      userId: await whoAreYou()
+      userId: await whoIsUser()
     });
 
     await externalUnit.save();
@@ -507,7 +507,7 @@ async function updateExternalUnit(prev: unknown, formData: FormData){
       street,
       municipality,
       province,
-      userId: await whoAreYou()
+      userId: await whoIsUser()
     });
 
     return {
@@ -697,7 +697,7 @@ async function signUrgencyService(prev:unknown, formData:FormData){
 
     await urgencyServiceModel.create({  
       label,
-      userId: await whoAreYou() 
+      userId: await whoIsUser() 
     });
 
     return {

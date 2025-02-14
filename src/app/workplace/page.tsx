@@ -1,14 +1,14 @@
 import Image from "next/image";
 import Header from "@/components/header";
 import { getUser } from "@/app/backend/api/manager/api";
-import { whoAreYou } from "@/lib/web-token";
+import { whoIsUser } from "@/lib/web-token";
 import WorkplaceFrom from "@/components/forms/workplace-form";
 import { getGrantedUnitAccess } from "@/app/backend/api/clinical/urgency-bank-api";
 // import { redirect } from "next/navigation";
 export const dynamic = "force-dynamic";
 
 export default async function Page(){
-  const userId = await whoAreYou() as string;
+  const userId = await whoIsUser() as string;
   const units = await getGrantedUnitAccess(userId);
   const user = await getUser(userId);
 

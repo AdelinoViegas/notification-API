@@ -1,6 +1,6 @@
 "use server";
 
-import { whoAreYou } from "@/lib/web-token";
+import { whoIsUser } from "@/lib/web-token";
 import { processStateModel, notificationModel } from "@/app/backend/models/clinical";
 import { triggerUpdate } from "@/lib/ws-trigger";
 import { redirect } from "next/navigation";
@@ -22,7 +22,7 @@ async function openPatientProcess(patientId: string, location: string){
     if(!existProcess){
       const process = new processStateModel({
         patientId,
-        userId: await whoAreYou(),
+        userId: await whoIsUser(),
         location,
         isInUse: true,
       });
@@ -38,11 +38,11 @@ async function openPatientProcess(patientId: string, location: string){
     if(!existProcess?.isInUse){
       await processStateModel.updateOne({ patientId, location}, {
         isInUse: true,
-        userId: await whoAreYou(),
+        userId: await whoIsUser(),
       });
     } 
 
-    if(existProcess?.isInUse && existProcess.userId?.toString() !== await whoAreYou())
+    if(existProcess?.isInUse && existProcess.userId?.toString() !== await whoIsUser())
       throw new Error("Este processo está em uso!", { cause: "busy" }); 
   }catch(err: unknown){
     const error = err as Error;
@@ -95,7 +95,7 @@ async function signNotification({
     sinopse,
     type,
     target,
-    creator: await whoAreYou(),
+    creator: await whoIsUser(),
     targetDataId: dataId
   });
 
@@ -148,7 +148,7 @@ async function getNotifications(){
 
 async function readNotification({ notifyId }: { notifyId: string }){
   const notification = await notificationModel.findById({ _id: notifyId});
-  const userId = await whoAreYou();
+  const userId = await whoIsUser();
   if(!notification)
     return;
 
@@ -183,7 +183,7 @@ async function goToNotification({
 async function deleteNotificaion({ notifyId }: { notifyId: string }){
   await notificationModel.updateOne({ _id: notifyId}, {
     deletedBy: {
-      userId: await whoAreYou(),
+      userId: await whoIsUser(),
       deletedAt: new Date(),
     },
     visible: false,

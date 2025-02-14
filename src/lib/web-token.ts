@@ -1,6 +1,7 @@
 'use server';
 import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 const privateKey = new TextEncoder().encode(String(process.env.JWT_SECRET_KEY));
 
@@ -49,7 +50,7 @@ async function decryptAndVerifyJWT(token: string){
   }
 }
 
-async function whoAreYou(){
+async function whoIsUser(){
   try{
     if((await cookies()).has(String(process.env.MASTER_HEADER_AUTH))){
       const token = (await cookies()).get(String(process.env.MASTER_HEADER_AUTH))?.value;
@@ -60,12 +61,12 @@ async function whoAreYou(){
   }catch(err: unknown){
     const error = err as Error;
     console.log(error.message);
-    return;
+    redirect('/?exit');
   }
 }
 
 export {
   decryptAndVerifyJWT,
   authJWT,
-  whoAreYou
+  whoIsUser
 }

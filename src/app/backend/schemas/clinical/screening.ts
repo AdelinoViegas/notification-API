@@ -22,17 +22,47 @@ const screeningSchema = new Schema({
     trim: true
   },
   vitalSignals: {
-    paMax: Number,
-    paMin: Number,
-    jump: Number,
-    pvc: Number,
-    imc: Number,
+    paMax: {
+      type: Number,
+      default: 0,
+    },
+    paMin: {
+      type: Number,
+      default: 0,
+    },
+    jump: {
+      type: Number,
+      default: 0,
+    },
+    pvc: {
+      type: Number,
+      default: 0
+    },
+    imc: {
+      type: Number,
+      default: 0,
+    },
     sp02: Number,
-    temperature: Number,
-    breathing: Number,
-    weight: Number,
-    height: Number,
-    bloodGlucose: Number,
+    temperature: {
+      type: Number,
+      default: 0,
+    },
+    breathing: {
+      type: Number,
+      default: 0,
+    },
+    weight: {
+      type: Number,
+      default: 0,
+    },
+    height: {
+      type: Number,
+      default: 0,
+    },
+    bloodGlucose: {
+      type: Number,
+      default: 0
+    },
   },
   isArchived: {
     type: Boolean,

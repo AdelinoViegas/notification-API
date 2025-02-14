@@ -8,7 +8,7 @@ import {
   unitModel,
   serviceResultModel
 } from "@/app/backend/models/clinical";
-import { whoAreYou } from "@/lib/web-token";
+import { whoIsUser } from "@/lib/web-token";
 import { userModel } from "@/app/backend/models/manager";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
 import { Types } from "mongoose";
@@ -83,7 +83,7 @@ async function sendPatientToUnit(prev: unknown, formData: FormData){
       
       await scheduleServiceModel.create({
         scheduleId,
-        userId: await whoAreYou(),
+        userId: await whoIsUser(),
         Type: typeUnit?.unitTypeId
       });
 
@@ -92,7 +92,7 @@ async function sendPatientToUnit(prev: unknown, formData: FormData){
 
       await scheduleServiceModel.create({
         scheduleId,
-        userId: await whoAreYou(),
+        userId: await whoIsUser(),
         Type: typeUnit?.unitTypeId
       });
 
@@ -226,9 +226,9 @@ async function signExamResult(prev:unknown, formData:FormData){
             },
             plainText
           },
-          userId: await whoAreYou(),
+          userId: await whoIsUser(),
         }],
-        userId: await whoAreYou()
+        userId: await whoIsUser()
       });
     }else{
       if(!resultService.exams.find(item => item.serviceId?.toString() === serviceId)){
@@ -243,7 +243,7 @@ async function signExamResult(prev:unknown, formData:FormData){
             },
             plainText,
           },
-          userId: await whoAreYou(),
+          userId: await whoIsUser(),
         });
 
         await serviceResultModel.updateOne({ _id: resultService._id}, {
@@ -264,7 +264,7 @@ async function signExamResult(prev:unknown, formData:FormData){
             },
             plainText,
           },
-          userId: await whoAreYou(),
+          userId: await whoIsUser(),
         });
 
         await serviceResultModel.updateOne({ _id: resultService._id}, {

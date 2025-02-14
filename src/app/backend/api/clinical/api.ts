@@ -1,6 +1,6 @@
 'use server';
 
-import { whoAreYou } from "@/lib/web-token";
+import { whoIsUser } from "@/lib/web-token";
 import { userModel as managerUserModel } from '@/app/backend/models/manager';
 import {
   Responsable,
@@ -187,7 +187,7 @@ async function signPatient(prev: unknown, formData: FormData){
       tel: patientTel,
       documentation: patientDocument,
       lang: language,
-      userId: await whoAreYou()
+      userId: await whoIsUser()
     });
 
     // locations info
@@ -643,12 +643,11 @@ async function putInScreening(prev: unknown, formData: FormData){
         throw new Error("Utente já em atendimento!", { cause: "exist" });
 
     const patient = await patientModel.findByIdAndUpdate({_id: patientId}, { served: true });
-    const patientInScreening = new screeningModel({
+    
+    await screeningModel.create({
       patientId: patient?._id,
-      userId: await whoAreYou()
+      userId: await whoIsUser()
     });
-
-    await patientInScreening.save(); 
 
     return {
       message: 'Utente enviado para a Triagem!',
@@ -656,6 +655,7 @@ async function putInScreening(prev: unknown, formData: FormData){
     }
   }catch(e: unknown){
     const err = e as Error & { code: number };
+    console.log(err.message);
 
     return {
       message: err.cause?err.message:err.code?
@@ -802,16 +802,51 @@ async function getScreening(patientId: string){
 
 async function insertScreening(prev: unknown, formData: FormData){
   try{
-    const screeningPayload:{ [key: string]: string } = {};
+    const userPayload:{ [key: string]: string } = {};
+    const uiType = (formData.get('t') as string)?.trim();
+    const patientId = formData.get('Id') as string;
 
-    for(const [key, value] of formData.entries())
-      screeningPayload[key] = value as string;
+    for(const [key, value] of formData.entries()){
+      userPayload[key] = value as string;
+    }
 
-    const data = new screeningModel(screeningPayload);
-    console.log(screeningPayload, data);
+    userPayload['patientId'] = patientId;
+    userPayload['userId'] = (await whoIsUser()) as string;
+
+    if(uiType === "vital-signals"){
+      const w = Number(userPayload.weight);
+      const h = Number(userPayload.height);
+
+      userPayload['imc'] = (w/(h*h)).toFixed(2);
+    }
+
+    await screeningModel.updateOne({
+      patientId: patientId,
+      served: false
+    }, uiType==="vital-signals"
+      ?{ 
+        vitalSignals: userPayload,
+        userId: await whoIsUser(),
+        patientId,
+      }
+      :userPayload
+    );
+    
+    // const data = new screeningModel(uiType==="vital-signals"
+    //   ?{ 
+    //     vitalSignals: userPayload,
+    //     userId: await whoIsUser(),
+    //     patientId,
+    //   }
+    //   :userPayload
+    // );
+    
+   
+    
+    // await data.save();
 
     return {
-      message: "ok",
+      message: "Registrado com sucesso!",
       status: true
     }
   }catch(e){
@@ -973,7 +1008,7 @@ async function finishScreening(prev: unknown, formData: FormData){
       const tried = new triedModel({
         inScreeningId: inScreening?._id,
         patientId,
-        userId: await whoAreYou(),
+        userId: await whoIsUser(),
         urgencyServices: serviceType,
       });
 
