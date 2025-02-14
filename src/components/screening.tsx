@@ -16,7 +16,6 @@ export default async function Screening({
     <ScreeningUI
       ui={renderComponent} 
       patientId={patientId}
-      id="test"
     />
   )
 }

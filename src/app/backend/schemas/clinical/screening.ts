@@ -77,92 +77,92 @@ const screeningSchema = new Schema({
   timestamps: true,
 });
 
-const reasonSchema = new Schema({
-  patientId: Schema.Types.ObjectId,
-  inScreeningId: {
-    type: Schema.Types.ObjectId,
-    unique: true,
-    required: true,
-  },
-  detail: {
-    type: String,
-    trim: true
-  },
-}, {
-  timestamps: true,
-  collection: "screening_reason"
-});
+// const reasonSchema = new Schema({
+//   patientId: Schema.Types.ObjectId,
+//   inScreeningId: {
+//     type: Schema.Types.ObjectId,
+//     unique: true,
+//     required: true,
+//   },
+//   detail: {
+//     type: String,
+//     trim: true
+//   },
+// }, {
+//   timestamps: true,
+//   collection: "screening_reason"
+// });
 
-const adviceSchema = new Schema({
-  patientId: Schema.Types.ObjectId,
-  inScreeningId: {
-    type: Schema.Types.ObjectId,
-    unique: true,
-    required: true,
-  },
-  detail: {
-    type: String,
-    trim: true
-  },
-}, {
-  timestamps: true,
-  collection: "screening_advice"
-});
+// const adviceSchema = new Schema({
+//   patientId: Schema.Types.ObjectId,
+//   inScreeningId: {
+//     type: Schema.Types.ObjectId,
+//     unique: true,
+//     required: true,
+//   },
+//   detail: {
+//     type: String,
+//     trim: true
+//   },
+// }, {
+//   timestamps: true,
+//   collection: "screening_advice"
+// });
 
-const prioritySchema = new Schema({
-  patientId: Schema.Types.ObjectId,
-  inScreeningId: {
-    type: Schema.Types.ObjectId,
-    unique: true,
-    required: true,
-  },
-  priority: {
-    type: String,
-    trim: true
-  },
-}, {
-  timestamps: true,
-  collection: "screening_priority"
-});
+// const prioritySchema = new Schema({
+//   patientId: Schema.Types.ObjectId,
+//   inScreeningId: {
+//     type: Schema.Types.ObjectId,
+//     unique: true,
+//     required: true,
+//   },
+//   priority: {
+//     type: String,
+//     trim: true
+//   },
+// }, {
+//   timestamps: true,
+//   collection: "screening_priority"
+// });
 
-const statusSchema = new Schema({
-  patientId: Schema.Types.ObjectId,
-  inScreeningId: {
-    type: Schema.Types.ObjectId,
-    unique: true,
-    required: true,
-  },
-  detail: {
-    type: String,
-    trim: true
-  },
-}, {
-  timestamps: true,
-  collection: "screening_status"
-});
+// const statusSchema = new Schema({
+//   patientId: Schema.Types.ObjectId,
+//   inScreeningId: {
+//     type: Schema.Types.ObjectId,
+//     unique: true,
+//     required: true,
+//   },
+//   detail: {
+//     type: String,
+//     trim: true
+//   },
+// }, {
+//   timestamps: true,
+//   collection: "screening_status"
+// });
 
-const vitalSignalSchema = new Schema({
-  patientId: Schema.Types.ObjectId,
-  inScreeningId: {
-    type: Schema.Types.ObjectId,
-    unique: true,
-    required: true,
-  },
-  paMax: Number,
-  paMin: Number,
-  jump: Number,
-  pvc: Number,
-  imc: Number,
-  sp02: Number,
-  temperature: Number,
-  breathing: Number,
-  weight: Number,
-  height: Number,
-  bloodGlucose: Number,
-}, {
-  timestamps: true,
-  collection: "screening_vital_signal"
-});
+// const vitalSignalSchema = new Schema({
+//   patientId: Schema.Types.ObjectId,
+//   inScreeningId: {
+//     type: Schema.Types.ObjectId,
+//     unique: true,
+//     required: true,
+//   },
+//   paMax: Number,
+//   paMin: Number,
+//   jump: Number,
+//   pvc: Number,
+//   imc: Number,
+//   sp02: Number,
+//   temperature: Number,
+//   breathing: Number,
+//   weight: Number,
+//   height: Number,
+//   bloodGlucose: Number,
+// }, {
+//   timestamps: true,
+//   collection: "screening_vital_signal"
+// });
 
 const triedSchema = new Schema({
   inScreeningId: Schema.Types.ObjectId,
@@ -176,10 +176,10 @@ const triedSchema = new Schema({
 
 export {
   screeningSchema,
-  reasonSchema,
-  adviceSchema,
-  prioritySchema,
-  vitalSignalSchema,
-  statusSchema,
+  // reasonSchema,
+  // adviceSchema,
+  // prioritySchema,
+  // vitalSignalSchema,
+  // statusSchema,
   triedSchema
 };

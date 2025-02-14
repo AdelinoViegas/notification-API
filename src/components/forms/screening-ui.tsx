@@ -3,29 +3,15 @@
 import { 
   useState,
   useEffect, 
-  useActionState,
-  useRef,
+  useActionState
 } from "react";
 
-import Header from "@/components/header";
 import InputDetails from "@/components/ui/input-details";
 import Button from "@/components/ui/button";
-import { useRouter, useParams, usePathname } from 'next/navigation';
-// import Alert from "@/components/ui/alert";
-import Selection, { SelectionOption } from "@/components/ui/selection";
+import Selection, {  } from "@/components/ui/selection";
 import InputField from "@/components/ui/input-field";
 import { priorityToComponent } from "@/app/backend/api/clinical/translator";
-// import { VitalSignalType } from "@/app/backend/api/clinical/types";
-// import { 
-//   finishScreening,
-//   signPatientScreening, 
-//   updatePatientScreening 
-// } from "@/app/backend/api/clinical/api";
-// import forceRefreshPage from "@/lib/force-refresh";
-// import { triggerUpdate } from "@/lib/ws-trigger";
-// import Modal from "@/components/modal";
-// import { getUrgencyServices } from "@/app/backend/api/clinical/urgency-bank-api";
-import { insertScreening } from "@/app/backend/api/clinical/api";
+import { insertScreening, getScreening } from "@/app/backend/api/clinical/api";
 import { toast } from "react-toastify";
 
 const initialState = { 
@@ -36,16 +22,16 @@ const initialState = {
 export type UIComponent = "reason" | "vital-signals" | "state" | "priority" | "advice" | "all";
 
 export default function ScreeningUI({
-  id,
   ui,
   patientId
 }:{
   ui: UIComponent,
-  id: string;
   patientId: string;
 }){
   const [ state, action ] = useActionState(insertScreening, initialState);
-  
+  const [ screeningData, setScreeningData ] = useState<any>({});
+  const [ editable, setEditable ] = useState(false);
+
   useEffect(()=>{
     if(state.message){
       if(state.status)
@@ -53,23 +39,26 @@ export default function ScreeningUI({
       else
         toast.error(state.message);
     }
+
+    getScreening(patientId)
+    .then(setScreeningData)
+    .finally(()=>setEditable(false))
   }, [state]);
 
   return(
     <div>
       <form action={action} className="py-3">
-        <input type="hidden" name="id" value={id} />
         <input type="hidden" name="t" value={ui} />
         <input type="hidden" name="Id" value={patientId} />
 
         {ui === "reason" && 
           <>
-            <input type="hidden" name="id" value={id} />
-            
             <InputDetails
               textLabel="Escreva na caixa de Texto"
               placeholder="Descreva o motivo da vinda do utente..."
               name="reason"
+              defaultValue={screeningData?.reason}
+              disabled={!editable}
               required
             />
           </>
@@ -77,12 +66,14 @@ export default function ScreeningUI({
 
         {ui === "vital-signals" && 
           <>
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid md:grid-cols-3 lg:grid-cols-6 gap-4">
               <InputField
                 type="number"
                 textLabel="P.A MÁXIMA (mmHG)"
                 name="paMax" 
                 placeholder="0 (mmHG)"
+                defaultValue={screeningData?.vitalSignals?.paMax}
+                disabled={!editable}
               />
 
               <InputField
@@ -90,6 +81,8 @@ export default function ScreeningUI({
                 textLabel="P.A MÍNIMA (mmHG)"
                 name="paMin" 
                 placeholder="0 (mmHG)"
+                defaultValue={screeningData?.vitalSignals?.paMin}
+                disabled={!editable}
               />
               
               <InputField
@@ -98,6 +91,8 @@ export default function ScreeningUI({
                 name="jump" 
                 placeholder="0 (BPM)"
                 required
+                defaultValue={screeningData?.vitalSignals?.jump}
+                disabled={!editable}
               />
 
               <InputField
@@ -107,6 +102,8 @@ export default function ScreeningUI({
                 name="temperature"
                 required 
                 placeholder="0 graus(°)"
+                defaultValue={screeningData?.vitalSignals?.temperature}
+                disabled={!editable}
               />
 
               <InputField
@@ -115,6 +112,8 @@ export default function ScreeningUI({
                 name="breathing" 
                 required
                 placeholder="0 (IRPM)"
+                defaultValue={screeningData?.vitalSignals?.breathing}
+                disabled={!editable}
               />
 
               <InputField
@@ -124,7 +123,8 @@ export default function ScreeningUI({
                 placeholder="0 (kg)"
                 step={0.01}
                 required 
-               
+                defaultValue={screeningData?.vitalSignals?.weight}
+                disabled={!editable}
               />
 
               <InputField
@@ -133,17 +133,18 @@ export default function ScreeningUI({
                 textLabel="ALTURA ((m)"
                 name="height"
                 placeholder="0 (m)"
+                defaultValue={screeningData?.vitalSignals?.height}
+                disabled={!editable}
               />
 
-              {true &&
-                <InputField
-                  type="number"
-                  textLabel="IMC (kg/m²)"
-                  name="imc"
-                  placeholder="0 (kg/m²)"
-                  disabled
-                />
-              }
+              <InputField
+                type="number"
+                textLabel="IMC (kg/m²)"
+                name="imc"
+                placeholder="0 (kg/m²)"
+                disabled
+                defaultValue={screeningData?.vitalSignals?.imc}
+              />
 
               <InputField
                 type="number"
@@ -151,6 +152,8 @@ export default function ScreeningUI({
                 name="sp02"
                 step={0.01}
                 placeholder="0 (%)"
+                defaultValue={screeningData?.vitalSignals?.sp02}
+                disabled={!editable}
               />
 
               <InputField
@@ -158,6 +161,8 @@ export default function ScreeningUI({
                 textLabel="PVC ((CH20) opcional)"
                 name="pvc"
                 placeholder="0 (CH20)"
+                defaultValue={screeningData?.vitalSignals?.pvc}
+                disabled={!editable}
               />
 
               <InputField
@@ -166,6 +171,8 @@ export default function ScreeningUI({
                 textLabel="GLICEMIA ( (mg/dl) opcional)"
                 name="bloodGlucose"
                 placeholder="0 (mg/dl)"
+                defaultValue={screeningData?.vitalSignals?.bloodGlucose}
+                disabled={!editable}
               />
             </div> 
           </>
@@ -179,6 +186,7 @@ export default function ScreeningUI({
                 options={priorityToComponent}
                 name="priority"
                 required
+                disabled={!editable}
               />
             </div>
           </>
@@ -186,37 +194,48 @@ export default function ScreeningUI({
 
         { ui === "state" && 
           <>
-            <input type="hidden" name="id" value={id} />
-            
             <InputDetails
               textLabel="Estado actual"
               placeholder="Diga como o utente está actualmente..."
               name="state"
               required
+              disabled={!editable}
             />
           </>
         }
 
         { ui === "advice" && 
-          <>
-            <input type="hidden" name="id" value={id} />
-            
+          <>  
             <InputDetails
               textLabel="Recomendações"
               placeholder="O que gostaria de recomendar ?"
               name="advice"
               required
+              disabled={!editable}
             />
           </>
         }
 
-        <Button>Salvar</Button>
+        <div className="flex gap-x-3">
+          <Button 
+            type="button"
+            cancel={editable}
+            onClick={()=>setEditable(!editable)}
+          >
+            {editable?"Cancelar":"Editar"}
+          </Button>
+
+          <Button 
+            type="submit" 
+            disabled={!editable}
+          >
+            Salvar
+          </Button>
+        </div>
       </form>
     </div>
   );
 }
-
-// function ReasonForm({ screeningId }: ScreeningProps){
 //   const [ state, action ] = useActionState(insertScreening, initialState);
   
 //   useEffect(()=>{
