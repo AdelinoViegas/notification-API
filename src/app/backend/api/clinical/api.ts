@@ -846,7 +846,6 @@ async function insertScreening(prev: unknown, formData: FormData){
   }
 }
 
-
 // async function signPatientScreening(prev: unknown, formData: FormData){
 //   try{console.log("entrou na triagem sign")
 //     const type = formData.get("typeData") as TypeScreeningData;

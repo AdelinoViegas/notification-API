@@ -20,6 +20,25 @@ const initialState = {
 }
 
 export type UIComponent = "reason" | "vital-signals" | "state" | "priority" | "advice" | "all";
+type Screening = {
+  reason: string;
+  advice: string;
+  priority: string;
+  state: string;
+  vitalSignals: {
+    paMax: number;
+    paMin: number;
+    jump: number;
+    pvc: number;
+    imc: number;
+    sp02: number;
+    temperature: number;
+    breathing: number;
+    weight: number;
+    height: number;
+    bloodGlucose: number;
+  };
+}
 
 export default function ScreeningUI({
   ui,
@@ -29,7 +48,7 @@ export default function ScreeningUI({
   patientId: string;
 }){
   const [ state, action ] = useActionState(insertScreening, initialState);
-  const [ screeningData, setScreeningData ] = useState<any>({});
+  const [ screeningData, setScreeningData ] = useState<Screening>();
   const [ editable, setEditable ] = useState(false);
 
   useEffect(()=>{
@@ -41,9 +60,9 @@ export default function ScreeningUI({
     }
 
     getScreening(patientId)
-    .then(setScreeningData)
+    .then(data => setScreeningData(data as Screening))
     .finally(()=>setEditable(false))
-  }, [state]);
+  }, [state, patientId]);
 
   return(
     <div>

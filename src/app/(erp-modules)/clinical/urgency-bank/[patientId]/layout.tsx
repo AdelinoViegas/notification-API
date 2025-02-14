@@ -1,9 +1,9 @@
 import Header from "@/components/header";
-import { getPatient } from "@/app/backend/api/clinical/api";
+import { getPatient, getScreening } from "@/app/backend/api/clinical/api";
 import clsx from "clsx";
-import { priorityModel } from "@/app/backend/models/clinical";
 import TabNav from "@/components/tabnav";
 import Card from "@/components/ui/card";
+
 export default async function Layout({ 
   children,
   params
@@ -15,16 +15,16 @@ export default async function Layout({
 }){
   const { patientId } = await params;
   const patient = await getPatient(patientId); 
-  const priority =  await priorityModel.findOne({ patientId: patientId });
+  const screening =  await getScreening(patientId);
   
   return(
     <div>
       <div className={clsx("my-4 text-center pt-3 text-white rounded-lg",
-         {"bg-red-500 animate-pulse": priority?.priority === "red"},
-         {"bg-blue-500": priority?.priority === "blue"},
-         {"bg-green-500": priority?.priority=== "green"},
-         {"bg-yellow-500": priority?.priority=== "yellow"},
-         {"bg-orange-600": priority?.priority === "orange"}
+         {"bg-red-500 animate-pulse": screening?.priority === "red"},
+         {"bg-blue-500": screening?.priority === "blue"},
+         {"bg-green-500": screening?.priority === "green"},
+         {"bg-yellow-500": screening?.priority === "yellow"},
+         {"bg-orange-600": screening?.priority === "orange"}
        )}>
 			 	<Header 
           center 

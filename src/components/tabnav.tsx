@@ -99,7 +99,7 @@ export default function TabNav({
   useEffect(()=>{
     if(useReactHook)
       router.replace(`${pathname}?r=${subPaths[0].path}`);
-  }, []);
+  }, [pathname, router, useReactHook]);
 
   return(
     <nav className={clsx({ "w-[20%] border bg-primary/5 px-3 py-2 rounded": isAside })}> 

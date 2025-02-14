@@ -6,7 +6,7 @@ import {
   patientModel,
   groupModel,
   accessTypeModel,
-  priorityModel,
+  // priorityModel,
   triedModel,
   unitModel,
   userModel as clinicalUserModel,
@@ -15,6 +15,7 @@ import {
   externalUnitModel,
   urgencyBankModel,
   urgencyServiceModel,
+  screeningModel,
   // anamnesisModel,
 } from "@/app/backend/models/clinical";
 import { 
@@ -52,7 +53,7 @@ async function getPatients({
   
       const patientGroup = await groupModel.findOne({patientId: patientData._id});
       const accessType = await accessTypeModel.findOne({patientId: patientData._id});
-      const priority = await priorityModel.findOne({patientId: patient.patientId})
+      const priority = await screeningModel.findOne({patientId: patient.patientId, served: true })
       let accessTypeLabel = patientAccess.find((props)=>props._id === accessType?.type)?.label;
       let groupLabel = patientGroups.find((props)=>(props._id === patientGroup?.type))?.label;
       
