@@ -38,8 +38,10 @@ export default function Table({
   const handleDoubleClick = (rowId: string)=>{
     if(isEdit)
       push(`${baseRowLink}/edit?id=${rowId}`);
+
     if(baseRowLink)
       push(`${baseRowLink}/${rowId}`);
+
     if(searchParams){
       const search = new URLSearchParams();
       search.set("id", rowId);

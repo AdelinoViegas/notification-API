@@ -3,7 +3,8 @@
 import { 
   useState,
   useEffect, 
-  useActionState
+  useActionState,
+  useImperativeHandle
 } from "react";
 
 import InputDetails from "@/components/ui/input-details";
@@ -203,6 +204,7 @@ export default function ScreeningUI({
               <Selection
                 label="Prioridade"
                 options={priorityToComponent}
+                defaultValue={screeningData?.priority as string}
                 name="priority"
                 required
                 disabled={!editable}
@@ -217,6 +219,7 @@ export default function ScreeningUI({
               textLabel="Estado actual"
               placeholder="Diga como o utente está actualmente..."
               name="state"
+              defaultValue={screeningData?.state}
               required
               disabled={!editable}
             />
@@ -229,6 +232,7 @@ export default function ScreeningUI({
               textLabel="Recomendações"
               placeholder="O que gostaria de recomendar ?"
               name="advice"
+              defaultValue={screeningData?.advice}
               required
               disabled={!editable}
             />

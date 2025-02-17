@@ -804,14 +804,14 @@ async function insertScreening(prev: unknown, formData: FormData){
     const userPayload:{ [key: string]: string } = {};
     const uiType = (formData.get('t') as string)?.trim();
     const patientId = formData.get('Id') as string;
-
+ 
     for(const [key, value] of formData.entries()){
       userPayload[key] = value as string;
     }
 
     userPayload['patientId'] = patientId;
     userPayload['userId'] = (await whoIsUser()) as string;
-
+    console.log(userPayload);
     if(uiType === "vital-signals"){
       const w = Number(userPayload.weight);
       const h = Number(userPayload.height);
