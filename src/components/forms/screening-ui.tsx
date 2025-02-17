@@ -61,13 +61,15 @@ export default function ScreeningUI({
     }
 
     getScreening(patientId)
-    .then(data => setScreeningData(data as Screening))
+    .then(data => {
+      setScreeningData(data as Screening);
+      setDefaultPriority(data.priority);
+    })
     .finally(()=>{
       setEditable(false);
-      setDefaultPriority(screeningData?.priority);
     })
   }, [state, patientId]);
-
+  
   return(
     <div>
       <form action={action} className="py-3">
@@ -203,7 +205,7 @@ export default function ScreeningUI({
 
         { ui === "priority" &&
           <>
-            <div className="w-96">
+           <div className="w-96">
               <Selection
                 label="Prioridade"
                 options={priorityToComponent}
