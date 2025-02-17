@@ -19,11 +19,11 @@ export default function Selection({
   defaultOptionLabel,
   className,
   ...rest
-}: SelectProps & {defaultValue: string}){
+}: SelectProps){
   return(
     <div className={clsx("flex flex-col my-4 gap-y-1", className)}>
       <label className="text-xs font-medium">{label}</label>
-      <select {...rest} defaultValue={defaultValue} className={clsx('disabled:bg-gray-100 disabled:cursor-not-allowed disabled:text-gray-500 bg-white focus:border-blue-500 px-3 py-[6px] border rounded-md border-2 hover:bg-gray-100',
+      <select {...rest} className={clsx('disabled:bg-gray-100 disabled:cursor-not-allowed disabled:text-gray-500 bg-white focus:border-blue-500 px-3 py-[6px] border rounded-md border-2 hover:bg-gray-100',
         { 
           'w-auto': !className,
         }
