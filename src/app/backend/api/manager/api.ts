@@ -35,16 +35,17 @@ async function login(prev: unknown, formData: FormData){
 
     const username = formData.get('username');
     const password = formData.get('password');
-    const user = await userModel.findOne({username});
-    
+    const invalidLogin: [ string, { cause: string }] = ["Credenciais inválidas!", { cause: "invalid_login" }];
+    const user = await userModel.findOne({ username });
+
     if(!user)
-      throw new Error("Usuário ou senha inválida!");
+      throw new Error(invalidLogin[0], invalidLogin[1]);
     
     if(!await decryptPwd(user.password, String(password)))
-      throw new Error("Usuário ou senha inválida!");
+      throw new Error(invalidLogin[0], invalidLogin[1]);
     
     if(!user.isActive)
-      throw new Error("Conta bloqueada, contacte o seu administrador!");
+      throw new Error("Conta bloqueada, contacte o seu administrador!", { cause: "account_blocked" });
     
     const userGroupRoute = await userGroupModel.findOne({_id: user.userGroupId});
     
@@ -52,7 +53,7 @@ async function login(prev: unknown, formData: FormData){
       const accessLimit = await getUserAccessLimit(user?._id.toString()); 
 
       if(!accessLimit) 
-        throw new Error("Sem acesso definido, contacte o seu administrador!");
+        throw new Error("Sem acesso definido, contacte o seu administrador!", { cause: "not_limit_access"});
       
       // verificando as datas do limite de acesso
       if(accessLimit.startAt && accessLimit.endAt){
@@ -93,15 +94,15 @@ async function login(prev: unknown, formData: FormData){
     });
 
     return {
-      message: 'Credencias verificadas!',
+      message: 'Login feito com sucesso!',
       status: true,
       module: userGroupRoute?.route as string
     }
-  }catch(err: unknown){
-    const e = err as { message: string };
+  }catch(e){
+    const err = e as Error;
 
     return {
-      message: e.message,
+      message: err.cause?err.message:"Falha critica no servidor, contacte o seu administrador!",
       status: false
     }
   }
