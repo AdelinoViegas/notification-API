@@ -16,11 +16,6 @@ import {
   responsibleModel,
   accessTypeModel,
   screeningModel,
-  // reasonModel,
-  // vitalSignalModel,
-  // priorityModel,
-  // statusModel,
-  // adviceModel,
   triedModel,
   specialtyModel,
 } from "@/app/backend/models/clinical";
@@ -49,7 +44,7 @@ async function getUsers(){
   for(const user of users){
     const sysUser = await managerUserModel.findById({ _id: user.userId }).select({ password: 0 });
     const workplaces = await getGrantedUnitAccess(user.userId as unknown as string);
-    const role = user?.roleId?(await specialtyModel.findById({ _id: user.roleId }))?.name:"Indefinido";
+    const role = user?.specialtyId?(await specialtyModel.findById({ _id: user.specialtyId }))?.name:"Indefinido";
     
     formatedUsers.push({
       _id: user?.userId?.toString() as string,
@@ -57,9 +52,9 @@ async function getUsers(){
       fullname: sysUser?.fullname as string,
       createdAt: user?.createdAt as Date,
       category: user?.categoryId?userCategory.find(item => item._id == user?.categoryId)?.label:"Indefinido",
-      categoryId: user.categoryId,
+      categoryId: user.categoryId?.toString() as string,
       role: role,
-      roleId: user.roleId,
+      roleId: user.specialtyId?.toString() as string,
       workplaces: workplaces.length,
     });
   }
@@ -91,7 +86,7 @@ async function getDoctors(){
 async function getUser(userId: string){
   const clinicalUser = await userModel.findOne({ userId });
   const user = await managerUserModel.findById({ _id: userId }).select({ fullname: 1 });
-  const userSpecialty = clinicalUser?.roleId?(await specialtyModel.findById({ _id: clinicalUser?.roleId }))?.name:"";
+  const userSpecialty = clinicalUser?.specialtyId?(await specialtyModel.findById({ _id: clinicalUser?.specialtyId }))?.name:"";
 
   return {
     _id: user?._id.toString() as string,
@@ -99,9 +94,9 @@ async function getUser(userId: string){
     category:  userCategory.find(item => item._id == clinicalUser?.categoryId)?.label,
     categoryId: clinicalUser?.categoryId?.toString() as string,
     orderNumber: clinicalUser?.orderNumber as number,
-    roleId: clinicalUser?.roleId?.toString() as string,
-    role: userSpecialty, 
-    officeId: clinicalUser?.officeId?.toString() as string
+    specialtyId: clinicalUser?.specialtyId?.toString() as string,
+    specialty: userSpecialty, 
+    serviceId: clinicalUser?.specialtyId?.toString() as string
   }
 }
 
@@ -921,16 +916,14 @@ async function signSpecialty(prev: unknown, formData: FormData){
 
 async function getSpecialties(){
   const specialities = await specialtyModel.find();
-  const formated = [];
 
-  for(const item of specialities)
-    formated.push({
+  return specialities.map(item =>{
+    return {
       _id: item._id.toString() as string,
       label: item.name as string,
-      name: item.name,
-    });
-
-  return formated;
+      name: item.name as string
+    }
+  });
 }
 
 export {
