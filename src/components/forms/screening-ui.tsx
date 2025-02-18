@@ -8,11 +8,13 @@ import {
 
 import InputDetails from "@/components/ui/input-details";
 import Button from "@/components/ui/button";
-import Selection, {  } from "@/components/ui/selection";
+import Selection, { SelectionOption } from "@/components/ui/selection";
 import InputField from "@/components/ui/input-field";
 import { priorityToComponent } from "@/app/backend/api/clinical/translator";
-import { insertScreening, getScreening } from "@/app/backend/api/clinical/api";
+import { insertScreening, getScreening, finishScreening } from "@/app/backend/api/clinical/api";
 import { toast } from "react-toastify";
+import Modal from "@/components/modal";
+import { getUrgencyServices } from "@/app/backend/api/clinical/urgency-bank-api";
 
 const initialState = { 
   message: "",
@@ -259,8 +261,78 @@ export default function ScreeningUI({
           >
             Salvar
           </Button>
+
+          <DoneScreening 
+            disabled={ui !== "advice"}
+            patientId={patientId} 
+          />
         </div>
       </form>
     </div>
   );
+}
+
+function DoneScreening({ 
+  disabled,
+  patientId 
+}: { 
+  disabled: boolean;
+  patientId: string; 
+}){
+  const [ state, action ] = useActionState(finishScreening, initialState);
+  const [ modalState, setModalState ] = useState(false);
+  const closeModal = ()=>setModalState(false);
+  const [ urgecyServices, setUrgecyServices ] = useState<SelectionOption[]>([]);
+
+  useEffect(()=>{
+    if(state.message){
+      if(state.status)
+        toast.success(state.message);
+      else
+        toast.error(state.message);
+    }
+  }, [state]);
+
+  useEffect(()=>{
+    getUrgencyServices()
+    .then(data => setUrgecyServices(data))
+  }, []);
+  return(
+    <div>
+      <Button 
+        type="button"
+        disabled={disabled}
+        onClick={()=>setModalState(true)}
+      >
+        Concluir
+      </Button>
+      <Modal
+        open={modalState}
+        asWindow
+        title="Concluir Triagem do Utente"
+        onClose={closeModal}
+      >
+        <form action={action}>
+          <input type="hidden" name="patientId" value={patientId} />
+          <Selection
+            label="Serviço de Urgência"
+            name="serviceId"
+            required
+            options={urgecyServices} 
+          />
+
+          <div className="flex gap-x-3">
+            <Button 
+              cancel 
+              type="button"
+              onClick={closeModal}
+            >
+              Cancelar
+            </Button>
+            <Button>Salvar</Button>
+          </div>
+        </form>
+      </Modal>
+    </div>
+  )
 }

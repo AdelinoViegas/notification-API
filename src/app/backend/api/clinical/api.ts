@@ -845,6 +845,23 @@ async function insertScreening(prev: unknown, formData: FormData){
   }
 }
 
+async function finishScreening(prev: unknown, formData: FormData){
+  try{
+    const patientId = formData.get('patientId');
+    
+    return {
+      message: "ok",
+      status: true
+    }
+  }catch(e){
+    const err = e as Error;
+
+    return {
+      message: err.cause === "not_found"?err.message:"Erro critico",
+      status: false 
+    }
+  }
+}
 async function getTriedPatient(patientId: string){
   return await triedModel.findOne({ patientId });
 }
@@ -903,12 +920,9 @@ export {
   putInScreening,
   getPatientsInScreening,
   getPatientInScreening,
-  // signPatientScreening,
-  // updatePatientScreening,
-  // getPatientScreening,
   changeArchived,
   getTriedPatient,
-  // finishScreening,
+  finishScreening,
   signSpecialty,
   getScreening,
   insertScreening

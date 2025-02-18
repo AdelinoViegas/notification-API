@@ -717,6 +717,7 @@ async function signUrgencyService(prev:unknown, formData:FormData){
 
 async function getUrgencyServices(){
   const services = await urgencyServiceModel.find();
+
   return services.map(item => {
     return {
       _id: item._id?.toString() as string,
