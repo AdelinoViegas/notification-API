@@ -848,20 +848,51 @@ async function insertScreening(prev: unknown, formData: FormData){
 async function finishScreening(prev: unknown, formData: FormData){
   try{
     const patientId = formData.get('patientId');
+    const serviceId = formData.get('serviceId');
+
+    if(!patientId || !serviceId)
+      throw new Error("Formato inválido!", { cause: "invalid_request"});
+
+    const scrPatient = await screeningModel.findOne({ patientId, served: false });
     
+    if(!scrPatient)
+      throw new Error("Opps, ficha não encontrada!", { cause: "not_found"});
+    
+    if(!scrPatient?.reason)
+      throw new Error("Informe o motivo da vinda do Utente!", { cause: "empty"});
+    
+    if(!scrPatient?.state)
+      throw new Error("Informe o estado actual do utente!", { cause: "empty"});
+
+    if(!scrPatient?.priority)
+      throw new Error("Escolha a prioridade do utente!", { cause: "empty"});
+
+    await screeningModel.updateOne({ _id: scrPatient._id }, { 
+      served: true,
+      userId: await whoIsUser() 
+    });
+
+    await triedModel.create({
+      srcId: scrPatient?._id,
+      patientId,
+      userId: await whoIsUser(),
+      serviceId
+    });
+
     return {
-      message: "ok",
+      message: "Utente triado com sucesso!",
       status: true
     }
   }catch(e){
     const err = e as Error;
 
     return {
-      message: err.cause === "not_found"?err.message:"Erro critico",
+      message: err.cause?err.message:"Opps, algo ocorreu mal!",
       status: false 
     }
   }
 }
+
 async function getTriedPatient(patientId: string){
   return await triedModel.findOne({ patientId });
 }

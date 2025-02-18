@@ -15,6 +15,7 @@ import { insertScreening, getScreening, finishScreening } from "@/app/backend/ap
 import { toast } from "react-toastify";
 import Modal from "@/components/modal";
 import { getUrgencyServices } from "@/app/backend/api/clinical/urgency-bank-api";
+import { useRouter } from "next/navigation";
 
 const initialState = { 
   message: "",
@@ -280,6 +281,7 @@ function DoneScreening({
   patientId: string; 
 }){
   const [ state, action ] = useActionState(finishScreening, initialState);
+  const router = useRouter();
   const [ modalState, setModalState ] = useState(false);
   const closeModal = ()=>setModalState(false);
   const [ urgecyServices, setUrgecyServices ] = useState<SelectionOption[]>([]);
@@ -287,11 +289,14 @@ function DoneScreening({
   useEffect(()=>{
     if(state.message){
       if(state.status)
-        toast.success(state.message);
+        toast.success(state.message, { 
+          onClose: ()=>router.replace('/clinical/screeining'),
+          autoClose: 1500
+        });
       else
         toast.error(state.message);
     }
-  }, [state]);
+  }, [state, router]);
 
   useEffect(()=>{
     getUrgencyServices()
