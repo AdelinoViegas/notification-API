@@ -23,7 +23,7 @@ export default function ClinicalDiary({
   const [ modalState, setModalState ] = useState(false);
   
   return(
-    <Accordium className="hover:bg-primary/35 bg-primary/40" title={accordiumTitle}>
+    <Accordium className="bg-gray-200 hover:bg-gray-300" title={accordiumTitle}>
       <div>
         <Button onClick={()=>setModalState(true)}>Novo</Button>
       </div>

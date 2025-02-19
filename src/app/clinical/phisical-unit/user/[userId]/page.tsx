@@ -11,7 +11,6 @@ import {
   removeUnitAccess,
 } from "@/app/backend/api/clinical/urgency-bank-api";
 import { getUser } from "@/app/backend/api/manager/api";
-import UserClinicalCard from "@/components/user-clinical-card";
 import UserClinicalConfig from "@/components/user-clinical-config";
 
 export default async function Page({

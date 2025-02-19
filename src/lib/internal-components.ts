@@ -509,7 +509,7 @@ function lifeStyleInternalComponent(lifeStyle: LifeStyle){
 				],elements: []
 			},
 			{ 
-				className:"grid grid-cols-3 gap-x-2",
+				className:"grid grid-cols-2 gap-x-3",
 				elements: [
 					{ 
 						type: "text",
@@ -947,7 +947,7 @@ function phisicalExamComponent(){
 		initialState: { message: "", status: false },
 		childrens: [
 			{
-				className: "grid grid-cols-3 items-center gap-x-2",
+				className: "grid grid-cols-2 items-center gap-x-3",
 				elements:[
 					{
 						type: "text",
@@ -1106,7 +1106,7 @@ function personalHistoryCardioPulmunaryComponent(){
 				], elements: []
 			},
 			{ 
-				className: "grid grid-cols-2 items-center gap-x-2",
+				className: "grid grid-cols-2 items-center gap-x-3",
 				elements: [
 					{
 						type: "text",
@@ -1252,7 +1252,7 @@ function lifeStyleHabitsComponent(){
 		initialState: { message: "", status: false },
 		childrens: [
 			{
-				className: "grid grid-cols-3 items-center gap-x-2",
+				className: "grid grid-cols-2 items-center gap-x-3",
 				elements: [
 					{
 						type: "text",
@@ -1607,7 +1607,7 @@ function personalHistoryOphthalmologyComponent(){
 				]
 			},
 			{ 
-				className: "grid grid-cols-3 gap-x-2",
+				className: "grid grid-cols-2 gap-x-3",
 				elements: [
 					{
 						type: "text",
@@ -1996,7 +1996,7 @@ function personalHistoryPediatricComponent(){
 				], elements: []
 			},
 			{
-				className: "grid grid-cols-3 gap-x-2",
+				className: "grid grid-cols-2 gap-x-3",
 				elements: [
 					{
 						type: "number",
@@ -2071,7 +2071,7 @@ function foodInPediatricComponent(){
 				], elements: []
 			},
 			{
-				className: "grid grid-cols-3 gap-x-2",
+				className: "grid grid-cols-2 gap-x-3",
 				elements: [
 					{
 						type: "text",
@@ -2126,7 +2126,7 @@ function immunizationInPediatricsComponent(){
 		initialState: { message: "", status: false },
 		childrens: [
 			{
-				className: "grid grid-cols-3 gap-x-2",
+				className: "grid grid-cols-2 gap-x-3",
 				elements: [
 					{
 						type: "text",
@@ -2260,7 +2260,7 @@ function phisicalExamMedicineComponent(){
 		initialState: { message: "", status: false },
 		childrens: [
 			{
-				className: "grid grid-cols-3 gap-x-2",
+				className: "grid grid-cols-2 gap-x-3",
 				elements:[
 					{
 						type: "text",
@@ -2784,7 +2784,7 @@ function physicalAndObstetricExamsComponent(){
 		initialState: { message: "", status: false },
 		childrens: [
 			{
-				className: "grid grid-cols-3 gap-x-2",
+				className: "grid grid-cols-2 gap-x-3",
 				elements: [
 					{
 						type: "text",
@@ -2855,7 +2855,7 @@ function obstetricsAndGynecologyComponent(){
 		initialState: { message: "", status: false },
 		childrens: [
 			{
-				className: "grid grid-cols-3 gap-x-2",
+				className: "grid grid-cols-2 gap-x-3",
 				elements: [
 					{
 						type: "text",

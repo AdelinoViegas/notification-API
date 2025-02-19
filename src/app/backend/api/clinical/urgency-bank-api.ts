@@ -41,8 +41,8 @@ async function getPatients({
 }:patientFilters){
   try{
     const userId = await whoIsUser() as string;
-    const user = await clinicalUserModel.findOne({userId}).select({ officeId: 1});
-    const patients = await triedModel.find({ urgencyServices: user?.officeId });
+    const user = await clinicalUserModel.findOne({userId}).select({ serviceId: 1});
+    const patients = await triedModel.find({ urgencyServices: user?.serviceId });
     const patientList = [];
 
     for(const patient of patients){

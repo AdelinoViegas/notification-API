@@ -54,7 +54,7 @@ export default function ScreeningUI({
   const [ screeningData, setScreeningData ] = useState<Screening>();
   const [ defaultPriority, setDefaultPriority ] = useState<string>();
   const [ editable, setEditable ] = useState(false);
-
+  
   useEffect(()=>{
     if(state.message){
       if(state.status)
@@ -210,12 +210,12 @@ export default function ScreeningUI({
           <>
            <div className="w-96">
               <Selection
-                label="Prioridade"
                 options={priorityToComponent}
-                defaultValue={defaultPriority}
+                label="Prioridade"
                 name="priority"
-                required
                 disabled={!editable}
+                required
+                defaultValue={defaultPriority}
               />
             </div>
           </>
