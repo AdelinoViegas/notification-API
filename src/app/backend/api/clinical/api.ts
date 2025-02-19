@@ -16,11 +16,6 @@ import {
   responsibleModel,
   accessTypeModel,
   screeningModel,
-  // reasonModel,
-  // vitalSignalModel,
-  // priorityModel,
-  // statusModel,
-  // adviceModel,
   triedModel,
   specialtyModel,
 } from "@/app/backend/models/clinical";
@@ -49,7 +44,7 @@ async function getUsers(){
   for(const user of users){
     const sysUser = await managerUserModel.findById({ _id: user.userId }).select({ password: 0 });
     const workplaces = await getGrantedUnitAccess(user.userId as unknown as string);
-    const role = user?.roleId?(await specialtyModel.findById({ _id: user.roleId }))?.name:"Indefinido";
+    const role = user?.specialtyId?(await specialtyModel.findById({ _id: user.specialtyId }))?.name:"Indefinido";
     
     formatedUsers.push({
       _id: user?.userId?.toString() as string,
@@ -57,9 +52,9 @@ async function getUsers(){
       fullname: sysUser?.fullname as string,
       createdAt: user?.createdAt as Date,
       category: user?.categoryId?userCategory.find(item => item._id == user?.categoryId)?.label:"Indefinido",
-      categoryId: user.categoryId,
+      categoryId: user.categoryId?.toString() as string,
       role: role,
-      roleId: user.roleId,
+      roleId: user.specialtyId?.toString() as string,
       workplaces: workplaces.length,
     });
   }
@@ -91,7 +86,7 @@ async function getDoctors(){
 async function getUser(userId: string){
   const clinicalUser = await userModel.findOne({ userId });
   const user = await managerUserModel.findById({ _id: userId }).select({ fullname: 1 });
-  const userSpecialty = clinicalUser?.roleId?(await specialtyModel.findById({ _id: clinicalUser?.roleId }))?.name:"";
+  const userSpecialty = clinicalUser?.specialtyId?(await specialtyModel.findById({ _id: clinicalUser?.specialtyId }))?.name:"";
 
   return {
     _id: user?._id.toString() as string,
@@ -99,9 +94,9 @@ async function getUser(userId: string){
     category:  userCategory.find(item => item._id == clinicalUser?.categoryId)?.label,
     categoryId: clinicalUser?.categoryId?.toString() as string,
     orderNumber: clinicalUser?.orderNumber as number,
-    roleId: clinicalUser?.roleId?.toString() as string,
-    role: userSpecialty, 
-    officeId: clinicalUser?.officeId?.toString() as string
+    specialtyId: clinicalUser?.specialtyId?.toString() as string,
+    specialty: userSpecialty, 
+    serviceId: clinicalUser?.specialtyId?.toString() as string
   }
 }
 
@@ -811,11 +806,10 @@ async function insertScreening(prev: unknown, formData: FormData){
 
     userPayload['patientId'] = patientId;
     userPayload['userId'] = (await whoIsUser()) as string;
-    console.log(userPayload);
+
     if(uiType === "vital-signals"){
       const w = Number(userPayload.weight);
       const h = Number(userPayload.height);
-
       userPayload['imc'] = (w/(h*h)).toFixed(2);
     }
 
@@ -846,331 +840,57 @@ async function insertScreening(prev: unknown, formData: FormData){
   }
 }
 
-// async function signPatientScreening(prev: unknown, formData: FormData){
-//   try{console.log("entrou na triagem sign")
-//     const type = formData.get("typeData") as TypeScreeningData;
-//     const patientId = formData.get('patientId') as string;
-//     const inScreening = await screeningModel.findOne({ patientId, served: false });
+async function finishScreening(prev: unknown, formData: FormData){
+  try{
+    const patientId = formData.get('patientId');
+    const serviceId = formData.get('serviceId');
 
-//     if(!inScreening)
-//       throw new Error("Não existe processo em triagem!", { cause: "not exist"});
+    if(!patientId || !serviceId)
+      throw new Error("Formato inválido!", { cause: "invalid_request"});
 
-//     if(type === "reason"){
-//       const detail = formData.get("detail") as string;
-//       const reason = new reasonModel({
-//         patientId,
-//         inScreeningId: inScreening._id,
-//         detail,
-//       });
-
-//       await reason.save();
-
-//       return {
-//         message: "Motivo da vinda registrado com sucesso!",
-//         status: true,
-//       };
-//     }
-
-//     if(type === "vital signal"){
-//       const paMax = formData.get("pamax") as string;
-//       const paMin = formData.get("pamin") as string;
-//       const jump = formData.get("jump") as string;
-//       const pvc = formData.get("pvc") as string;
-//       const sp02 = formData.get("sp02") as string;
-//       const temperature = formData.get("temperature") as string;
-//       const breathing = formData.get("breathing") as string;
-//       const weight = formData.get("weight") as string;
-//       const height = formData.get("height") as string;
-//       const bloodGlucose = formData.get("bloodGlucose") as string;
-      
-//       if(Number(height) <= 0)
-//         throw new Error("Altura inválida!", { cause: "zero_divisor" });
-
-//       const imc = Number(weight)/Math.pow(Number(height), 2);   
-      
-//       const vitalSignal = new vitalSignalModel({
-//         patientId,
-//         inScreeningId: inScreening._id,
-//         paMax,
-//         paMin,
-//         jump,
-//         pvc,
-//         imc:imc.toFixed(2),
-//         sp02,
-//         temperature,
-//         breathing,
-//         weight,
-//         height,
-//         bloodGlucose
-//       });
-
-//       await vitalSignal.save();
-
-//       return {
-//         message: "Sinais Vitais registrado com sucesso!",
-//         status: true,
-//       };
-//     }
-
-//     if(type === "priority"){
-//       const prioritySelect = formData.get("priority") as string;
-
-//       const priority = new priorityModel({
-//         patientId,
-//         inScreeningId: inScreening._id,
-//         priority: prioritySelect
-//       });
-
-//       await priority.save();
-
-//       return {
-//         message:"Prioridade registrado com sucesso!",
-//         status:true,
-//       }
-//     }
-
-//     if(type === "advice"){
-//       const detail = formData.get("detail") as string;
-
-//       const advice = new adviceModel({
-//         inScreeningId: inScreening._id,
-//         patientId,
-//         detail,
-//       });
-      
-//       await advice.save();
-//       return {
-//         message: "Recomendações registrado com sucesso!",
-//         status: true,
-//       }
-//     }
-
-//     if(type === "status"){
-//       const detail = formData.get("detail");
-//       const status = new statusModel({
-//         patientId,
-//         inScreeningId: inScreening._id,
-//         detail,
-//       });
-
-//       await status.save();
-
-//       return {
-//         message: "Estado actual registrado com sucesso!",
-//         status: true,
-//       }
-//     }
-
-//   }catch(e: unknown){
-//     const err = e as Error & { code: number };
-
-//     return {
-//       message: err.cause?err.message:err.code?
-//       "Ja existe!":
-//       "Falha na triagem!",
-//       status: false,
-//     }
-//   }
-// }
-
-// async function finishScreening(prev: unknown, formData: FormData){
-//   try{
-//     const serviceType = formData.get("service") as string;
-//     const patientId = formData.get('patientId') as string;
-//     const inScreening = await screeningModel.findOne({ patientId, served: false });
-
-//     // verificação dos campos obriagatórios
-//     const reason = await reasonModel.findOne({ patientId, inScreeningId: inScreening?._id,});
-//     const vitalSignal = await vitalSignalModel.findOne({ patientId, inScreeningId: inScreening?._id,});
-//     const priority = await priorityModel.findOne({ patientId, inScreeningId: inScreening?._id,});
-//     const status = await statusModel.findOne({ patientId, inScreeningId: inScreening?._id,});
+    const scrPatient = await screeningModel.findOne({ patientId, served: false });
     
-//     if(!reason || !vitalSignal || !priority || !status)
-//       throw new Error("Por favor, preencha as abas anteriores!", { cause: "incomplete"});
+    if(!scrPatient)
+      throw new Error("Opps, ficha não encontrada!", { cause: "not_found"});
     
-//       const tried = new triedModel({
-//         inScreeningId: inScreening?._id,
-//         patientId,
-//         userId: await whoIsUser(),
-//         urgencyServices: serviceType,
-//       });
-
-//       await tried.save();
-//       await screeningModel.updateOne({_id: inScreening?._id}, { served: true });
-//       await closePatientProcess(patientId, "screening");
-
-//     return {
-//       message: "Triagem do utente concluída com sucesso!",
-//       status: true,
-//     }
-//  }catch(e: unknown){
-//   const err = e as Error;
-
-//   return {
-//     message: err.cause?err.message:"Falha na triagem do utente!",
-//     status: false,
-//   }
-//  }
-// }
-
-// async function updatePatientScreening(prev: unknown, formData: FormData){
-//   try{
-//     const type = formData.get("typeData") as TypeScreeningData;
-//     const patientId = formData.get('patientId') as string;
-//     const screeningId = formData.get('screeningId');
-//     const inScreening = !!screeningId?await screeningModel.findById({_id: screeningId }):await screeningModel.findOne({ patientId, served: false });
-
-//     if(!inScreening)
-//       throw new Error("Não existe processo em triagem!", { cause: "not exist"});
-
-//     if(type === "reason"){
-//       const detail = formData.get("detail") as string;
-
-//       await reasonModel.updateOne({ 
-//         patientId, 
-//         inScreeningId: inScreening._id
-//       }, { detail });
-
-//       return {
-//         message: "Movito actualizado com sucesso!",
-//         status: true,
-//       }
-//     }
-
-//     if(type === "status"){
-//       const detail = formData.get("detail") as string;
-
-//       await statusModel.updateOne({ 
-//         patientId, 
-//         inScreeningId: inScreening._id
-//       }, { detail });
-
-//       return {
-//         message: "Estado actual actualizado com sucesso!",
-//         status: true,
-//       }
-//     }
-
-//     if(type === "priority"){
-//       const priority = formData.get("priority") as string
-      
-//       await priorityModel.updateOne({
-//         patientId, 
-//         inScreeningId: inScreening._id
-//       },{priority});
-
-//       return {
-//         message: "Prioridade actualizado com sucesso!",
-//         status: true,
-//       }
-//     }
-
-//     if(type === "vital signal"){
-//       const paMax = formData.get("pamax") as string;
-//       const paMin = formData.get("pamin") as string;
-//       const jump = formData.get("jump") as string;
-//       const pvc = formData.get("pvc") as string;
-//       const sp02 = formData.get("sp02") as string;
-//       const temperature = formData.get("temperature") as string;
-//       const breathing = formData.get("breathing") as string;
-//       const weight = formData.get("weight");
-//       const height = formData.get("height");
-//       const bloodGlucose = formData.get("bloodGlucose") as string;
-
-//       if(Number(height) <= 0)
-//         throw new Error("Altura inválida!", { cause: "zero_divisor" });
-
-//       const imc = Number(weight)/Math.pow(Number(height), 2);
-
-//       await vitalSignalModel.updateOne({
-//         patientId,
-//         inScreeningId: inScreening._id
-//       },{
-//         paMax,
-//         paMin,
-//         jump,
-//         pvc,
-//         sp02,
-//         imc: imc.toFixed(2),
-//         temperature,
-//         breathing,
-//         weight,
-//         height,
-//         bloodGlucose
-//       });
-
-//       return {
-//         message: "Sinais Vitais Actualizados com sucesso!",
-//         status: true,
-//       }; 
-//     }
-
-//     if(type === "advice"){
-//       const detail = formData.get("detail") as string
-        
-//       await adviceModel.updateOne({        
-//         patientId,
-//         inScreeningId: inScreening._id
-//       },{detail});
-
-//       return {
-//         message:"Recomendações actualizado com sucesso!",
-//         status: true,
-//       }
-//     }
-
-//   }catch(err: unknown){
-//     const error = err as Error;
-
-//     return {
-//       message: error.cause?error.message:"Falha na actualiação",
-//       status: false,
-//     }
-
-//   }
-// }
-
-// async function getPatientScreening(typeData: TypeScreeningData, screeningId: string){
-//   try{
-//     if(typeData === "priority"){
-//       return await priorityModel.findOne({
-//         inScreeningId: screeningId,
-//       });
-//     }
+    if(!scrPatient?.reason)
+      throw new Error("Informe o motivo da vinda do Utente!", { cause: "empty"});
     
-//     if(typeData === "reason"){
-//       return await reasonModel.findOne({
-//         inScreeningId: screeningId,
-//       });
-//     }
+    if(!scrPatient?.state)
+      throw new Error("Informe o estado actual do utente!", { cause: "empty"});
 
-//     if(typeData === "vital signal"){
-//       return await vitalSignalModel.findOne({
-//         inScreeningId: screeningId,
-//       });
-//     }
+    if(!scrPatient?.priority)
+      throw new Error("Escolha a prioridade do utente!", { cause: "empty"});
 
-//     if(typeData === "status"){
-//       return await statusModel.findOne({
-//         inScreeningId: screeningId,
-//       });
-//     }
+    await screeningModel.updateOne({ _id: scrPatient._id }, { 
+      served: true,
+      userId: await whoIsUser() 
+    });
 
-//     if(typeData === "advice"){
-//       return await adviceModel.findOne({ 
-//         inScreeningId: screeningId, 
-//       });
-//     }
+    await triedModel.create({
+      srcId: scrPatient?._id,
+      patientId,
+      userId: await whoIsUser(),
+      serviceId
+    });
 
-//     throw new Error("selecione o tipo", { cause: "empty"});
-//   }finally{}
-// }
+    return {
+      message: "Utente triado com sucesso!",
+      status: true
+    }
+  }catch(e){
+    const err = e as Error;
+
+    return {
+      message: err.cause?err.message:"Opps, algo ocorreu mal!",
+      status: false 
+    }
+  }
+}
 
 async function getTriedPatient(patientId: string){
   return await triedModel.findOne({ patientId });
 }
-
-// fim da triagem
 
 async function signSpecialty(prev: unknown, formData: FormData){
   try{
@@ -1196,16 +916,14 @@ async function signSpecialty(prev: unknown, formData: FormData){
 
 async function getSpecialties(){
   const specialities = await specialtyModel.find();
-  const formated = [];
 
-  for(const item of specialities)
-    formated.push({
+  return specialities.map(item =>{
+    return {
       _id: item._id.toString() as string,
       label: item.name as string,
-      name: item.name,
-    });
-
-  return formated;
+      name: item.name as string
+    }
+  });
 }
 
 export {
@@ -1226,12 +944,9 @@ export {
   putInScreening,
   getPatientsInScreening,
   getPatientInScreening,
-  // signPatientScreening,
-  // updatePatientScreening,
-  // getPatientScreening,
   changeArchived,
   getTriedPatient,
-  // finishScreening,
+  finishScreening,
   signSpecialty,
   getScreening,
   insertScreening

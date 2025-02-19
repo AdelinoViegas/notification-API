@@ -8,11 +8,14 @@ import {
 
 import InputDetails from "@/components/ui/input-details";
 import Button from "@/components/ui/button";
-import Selection, {  } from "@/components/ui/selection";
+import Selection, { SelectionOption } from "@/components/ui/selection";
 import InputField from "@/components/ui/input-field";
 import { priorityToComponent } from "@/app/backend/api/clinical/translator";
-import { insertScreening, getScreening } from "@/app/backend/api/clinical/api";
+import { insertScreening, getScreening, finishScreening } from "@/app/backend/api/clinical/api";
 import { toast } from "react-toastify";
+import Modal from "@/components/modal";
+import { getUrgencyServices } from "@/app/backend/api/clinical/urgency-bank-api";
+import { useRouter } from "next/navigation";
 
 const initialState = { 
   message: "",
@@ -49,6 +52,7 @@ export default function ScreeningUI({
 }){
   const [ state, action ] = useActionState(insertScreening, initialState);
   const [ screeningData, setScreeningData ] = useState<Screening>();
+  const [ defaultPriority, setDefaultPriority ] = useState<string>();
   const [ editable, setEditable ] = useState(false);
 
   useEffect(()=>{
@@ -60,10 +64,15 @@ export default function ScreeningUI({
     }
 
     getScreening(patientId)
-    .then(data => setScreeningData(data as Screening))
-    .finally(()=>setEditable(false))
+    .then(data => {
+      setScreeningData(data as Screening);
+      setDefaultPriority(data.priority);
+    })
+    .finally(()=>{
+      setEditable(false);
+    })
   }, [state, patientId]);
-
+  
   return(
     <div>
       <form action={action} className="py-3">
@@ -199,11 +208,11 @@ export default function ScreeningUI({
 
         { ui === "priority" &&
           <>
-            <div className="w-96">
+           <div className="w-96">
               <Selection
                 label="Prioridade"
                 options={priorityToComponent}
-                defaultValue={screeningData?.priority as string}
+                defaultValue={defaultPriority}
                 name="priority"
                 required
                 disabled={!editable}
@@ -253,552 +262,82 @@ export default function ScreeningUI({
           >
             Salvar
           </Button>
+
+          <DoneScreening 
+            disabled={ui !== "advice"}
+            patientId={patientId} 
+          />
         </div>
       </form>
     </div>
   );
 }
-//   const [ state, action ] = useActionState(insertScreening, initialState);
-  
-//   useEffect(()=>{
-//     if(state.message){
-//       if(state.status)
-//         toast.success(state.message);
-//       else
-//         toast.error(state.message);
-//     }
-//   }, [state]);
-//   return(
-//     <div>
-//       <form {...{action}} className="py-3">
-//         <input type="hidden" name="screeningId" value={screeningId} />
-        
-//         <InputDetails
-//           textLabel="Escreva na caixa de Texto"
-//           placeholder="Descreva o motivo da vinda do utente..."
-//           name="reason"
-//           required
-//         />
 
-//         <Button>Salvar</Button>
-//       </form>
-//     </div>
-//   );
-// }
+function DoneScreening({ 
+  disabled,
+  patientId 
+}: { 
+  disabled: boolean;
+  patientId: string; 
+}){
+  const [ state, action ] = useActionState(finishScreening, initialState);
+  const router = useRouter();
+  const [ modalState, setModalState ] = useState(false);
+  const closeModal = ()=>setModalState(false);
+  const [ urgecyServices, setUrgecyServices ] = useState<SelectionOption[]>([]);
 
-// function VitalSignalsForm({ screeningId }:ScreeningProps){
+  useEffect(()=>{
+    if(state.message){
+      if(state.status)
+        toast.success(state.message, { 
+          onClose: ()=>router.replace('/clinical/screeining'),
+          autoClose: 1500
+        });
+      else
+        toast.error(state.message);
+    }
+  }, [state, router]);
 
-//   return<></>;
-// }
+  useEffect(()=>{
+    getUrgencyServices()
+    .then(data => setUrgecyServices(data))
+  }, []);
+  return(
+    <div>
+      <Button 
+        type="button"
+        disabled={disabled}
+        onClick={()=>setModalState(true)}
+      >
+        Concluir
+      </Button>
+      <Modal
+        open={modalState}
+        asWindow
+        title="Concluir Triagem do Utente"
+        onClose={closeModal}
+      >
+        <form action={action}>
+          <input type="hidden" name="patientId" value={patientId} />
+          <Selection
+            label="Serviço de Urgência"
+            name="serviceId"
+            required
+            options={urgecyServices} 
+          />
 
-// // function VitalSignalsForm({
-// //   jsonData,
-// //   hasData,
-// //   screeningId
-// // }:FormProps){
-// //   const parsedData = jsonData?JSON.parse(jsonData as string) as VitalSignalType:undefined;
-// //   const [ messageState, setMessageState ] = useState(false);
-// //   const [ state, action ] = useActionState(!!hasData?
-// //     updatePatientScreening:signPatientScreening, 
-// //     { message: "", status: false }
-// //   );
-// //   const [ isEdit, setIsEdit ] = useState(!!hasData);
-// //   const router = useRouter();
-// //   const { patientId }: { patientId: string } = useParams();
-// //   const disableEdit = ()=> setIsEdit(true);
-
-// //   useEffect(()=>{
-// //     if(state?.message){
-// //       setMessageState(true);
-
-// //       setTimeout(()=>{
-// //         if(state?.status){
-// //           disableEdit();
-// //           router.refresh();
-// //         }
-// //         setMessageState(false);
-// //       },state.status?2000:3000);
-// //     }
-// //   }, [state, router]);
-
-// //   return(
-// //     <div>
-// //       <div>
-// //         <Header title="Sinais Vitais do Utente" />
-// //       </div>
-// //       <form {...{action}} className="py-3">
-// //         <input type="hidden" name="typeData" value="vital signal" />
-// //         <input type="hidden" name="patientId" value={patientId} />
-// //         <input type="hidden" name="screeningId" value={screeningId} />
-
-// //         <div className="grid grid-cols-4 gap-4">
-// //           <InputField
-// //             type="number"
-// //             textLabel="P.A MÁXIMA (mmHG)"
-// //             name="pamax" 
-// //             placeholder="0 (mmHG)"
-// //             disabled={isEdit}
-// //             required
-// //             defaultValue={parsedData?.paMax}
-// //           />
-
-// //           <InputField
-// //             type="number"
-// //             textLabel="P.A MÍNIMA (mmHG)"
-// //             name="pamin" 
-// //             placeholder="0 (mmHG)"
-// //             disabled={isEdit}
-// //             required
-// //             defaultValue={parsedData?.paMin}
-// //           />
-          
-// //           <InputField
-// //             type="number"
-// //             textLabel="PULSO (BPM)"
-// //             name="jump" 
-// //             placeholder="0 (BPM)"
-// //             disabled={isEdit}
-// //             required 
-// //             defaultValue={parsedData?.jump}
-// //           />
-
-// //           <InputField
-// //             type="number"
-// //             step={0.01}
-// //             textLabel="TEMPERATURA (°)"
-// //             name="temperature"
-// //             required 
-// //             placeholder="0 graus(°)"
-// //             disabled={isEdit}
-// //             defaultValue={parsedData?.temperature}
-// //           />
-
-// //           <InputField
-// //             type="number"
-// //             textLabel="RESPIRAÇÂO (IRPM)"
-// //             name="breathing" 
-// //             required
-// //             placeholder="0 (IRPM)"
-// //             disabled={isEdit}
-// //             defaultValue={parsedData?.breathing}
-// //           />
-
-// //           <InputField
-// //             type="number"
-// //             textLabel="PESO (kg)"
-// //             name="weight" 
-// //             placeholder="0 (kg)"
-// //             step={0.01}
-// //             disabled={isEdit}
-// //             required 
-// //             defaultValue={parsedData?.weight}
-// //           />
-
-// //           <InputField
-// //             type="number"
-// //             step={0.01}
-// //             textLabel="ALTURA ((m)"
-// //             name="height"
-// //             placeholder="0 (m)"
-// //             disabled={isEdit}
-// //             defaultValue={parsedData?.height}
-// //           />
-
-// //           {parsedData?.imc &&
-// //           <InputField
-// //             type="number"
-// //             textLabel="IMC (kg/m²)"
-// //             name="imc"
-// //             placeholder="0 (kg/m²)"
-// //             disabled
-// //             defaultValue={parsedData?.imc}
-// //           />}
-
-// //           <InputField
-// //             type="number"
-// //             textLabel="SpO2 ((%) opcional)"
-// //             name="sp02"
-// //             step={0.01}
-// //             placeholder="0 (%)"
-// //             disabled={isEdit}
-// //             defaultValue={parsedData?.sp02}
-// //           />
-
-// //           <InputField
-// //             type="number"
-// //             textLabel="PVC ((CH20) opcional)"
-// //             name="pvc"
-// //             placeholder="0 (CH20)"
-// //             disabled={isEdit}
-// //             defaultValue={parsedData?.pvc}
-// //           />
-
-// //           <InputField
-// //             type="number"
-// //             step={0.01}
-// //             textLabel="GLICEMIA ( (mg/dl) opcional)"
-// //             name="bloodGlucose"
-// //             placeholder="0 (mg/dl)"
-// //             disabled={isEdit}
-// //             defaultValue={parsedData?.bloodGlucose}
-// //           />
-// //         </div>
-// //         <div className="flex gap-3">
-// //           {hasData && 
-// //           <Button 
-// //             cancel={!isEdit} 
-// //             type="button" 
-// //             onClick={!isEdit?disableEdit:()=>setIsEdit(false)}>
-// //             {!isEdit?"Cancelar":"Editar"}
-// //           </Button>}
-// //           <Button disabled={isEdit}>{hasData?"Actualizar":"Salvar"}</Button>
-// //         </div>
-// //         {
-// //           state?.message && messageState &&
-// //           <div className="flex mt-3">
-// //             <Alert
-// //               type={state?.status?'success':'error'}
-// //               message={state?.message}
-// //             />
-// //           </div>
-// //         }
-// //       </form>
-// //     </div>
-// //   )
-// // }
-
-// function PriorityForm({
-//   jsonData,
-//   hasData,
-//   screeningId
-// }:FormProps){
-//   const parsedData = hasData?JSON.parse(jsonData as string) as {
-//     priority: string;
-//   }:undefined;
-//   const [ messageState, setMessageState ] = useState(false);
-//   const [ state, action ] = useActionState(
-//     hasData?updatePatientScreening:signPatientScreening, 
-//     { message: "", status: false }
-//   )
-//   const [ isEdit, setIsEdit ] = useState(!!hasData);
-//   const { patientId }: { patientId: string } = useParams();
-//   const disableEdit = ()=> setIsEdit(true);
-
-//   useEffect(()=>{
-//     if(state?.message){
-//       setMessageState(true);
-
-//       setTimeout(()=>{
-//         if(state?.status){
-//           disableEdit();
-//           forceRefreshPage();
-//         }
-//         setMessageState(false);
-//       },state.status?2000:3000);
-//     }
-//   }, [state]);
-   
-//   return(
-//     <div>
-//       <div>
-//         <Header title="Grau de Prioridade do Atendimento" />
-//       </div>
-//       <form {...{action}} className="py-3">
-//         <input type="hidden" name="typeData" value="priority" />
-//         <input type="hidden" name="patientId" value={patientId} />
-//         <input type="hidden" name="screeningId" value={screeningId} />
-
-//         <div className="w-96">
-//           <Selection
-//             label="Prioridade"
-//             options={priorityToComponent}
-//             name="priority"
-//             required
-//             disabled={isEdit}
-//             defaultValue={parsedData?.priority}
-//           />
-//         </div>
-
-//         <div className="flex gap-3">
-//           {hasData && 
-//           <Button 
-//             cancel={!isEdit} 
-//             type="button" 
-//             onClick={!isEdit?disableEdit:()=>setIsEdit(false)}>
-//             {!isEdit?"Cancelar":"Editar"}
-//           </Button>}
-//           <Button disabled={isEdit}>{hasData?"Actualizar":"Salvar"}</Button>
-//         </div>
-//         {
-//           state?.message && messageState &&
-//           <div className="flex mt-3">
-//             <Alert
-//               type={state?.status?'success':'error'}
-//               message={state?.message}
-//             />
-//           </div>
-//         }     
-//       </form>
-//     </div>
-//   )
-// }
-
-// function StatusForm({
-//   jsonData,
-//   hasData,
-//   screeningId
-// }:FormProps){
-//   const parsedData = jsonData?JSON.parse(jsonData as string) as { detail: string }:undefined;
-
-//   const [ messageState, setMessageState ] = useState(false);
-//   const [ state, action ] = useActionState(
-//     hasData?updatePatientScreening:signPatientScreening, 
-//     { message: "", status: false }
-//   )
-//   const [ isEdit, setIsEdit ] = useState(!!hasData);
-//   const router = useRouter();
-//   const { patientId }: { patientId: string } = useParams();
-//   const disabledEdit = ()=> setIsEdit(true);
-
-//   useEffect(()=>{
-//     if(state?.message){
-//       setMessageState(true);
-
-//       setTimeout(()=>{
-//         if(state?.status){
-//           disabledEdit();
-//           router.refresh();
-//         }
-//         setMessageState(false);
-//       },state.status?2000:3000);
-//     }
-//   }, [state, router]);
-
-//   return(
-//     <div>
-//       <div>
-//         <Header title="Estado Actual do Utente" />
-//       </div>
-//       <form {...{action}} className="py-3">
-//         <input type="hidden" name="typeData" value="status" />
-//         <input type="hidden" name="patientId" value={patientId} />
-//         <input type="hidden" name="screeningId" value={screeningId} />
-
-//         <InputDetails
-//           textLabel="Estado Actual"
-//           placeholder="Descreva..."
-//           name="detail"
-//           disabled={isEdit}
-//           defaultValue={parsedData?.detail}
-//         />
-
-//         <div className="flex gap-3">
-//           {hasData && 
-//           <Button 
-//             cancel={!isEdit}
-//             type="button"
-//             onClick={!isEdit?disabledEdit:()=>setIsEdit(false)}>
-//             {!isEdit?"Cancelar":"Editar"}
-//           </Button>}
-//           <Button disabled={isEdit}>{hasData?"Actualizar":"Salvar"}</Button>
-//         </div>
-//       </form>
-//       {
-//         state?.message && messageState &&
-//         <div className="flex mt-3">
-//           <Alert
-//             type={state?.status?'success':'error'}
-//             message={state?.message}
-//           />
-//         </div>
-//       }  
-//     </div>
-//   )
-// }
-
-// function AdviceForm({  
-//   jsonData,
-//   hasData,
-//   screeningId
-// }:FormProps){
-//   const parsedData = jsonData?JSON.parse(jsonData as string) as { detail: string }:undefined;
-//   const [ state, action ] = useActionState(
-//     hasData?updatePatientScreening:signPatientScreening,
-//     { message: "", status: false});  
-//   const [ messageState, setMessageState ] = useState(false);
-//   const [ isEdit, setIsEdit ] = useState(!!hasData);
-//   const router = useRouter();
-//   const { patientId }: { patientId: string } = useParams();
-//   const disabledEdit = ()=> setIsEdit(true);
-
-//   useEffect(()=>{
-//     if(state?.message){
-//       setMessageState(true);
-
-//       setTimeout(()=>{
-//         if(state?.status){
-//           disabledEdit();
-//           router.refresh();
-//         }
-//         setMessageState(false);
-//       },state.status?2000:3000);
-//     }
-//   }, [state, router]);
-
-//   return(
-//     <div>
-//       <div>
-//         <Header title="Recomendações Médicas" />
-//       </div>
-//       <div className="grid grid-cols-2 gap-3">
-//         <div>
-//           <form {...{action}}>
-//             <input type="hidden" name="typeData" value="advice"/>
-//             <input type="hidden" name="patientId" value={patientId} />
-//             <input type="hidden" name="screeningId" value={screeningId} />
-
-//             <InputDetails
-//               textLabel="Recomendação"
-//               placeholder="Descreva..."
-//               name="detail"
-//               disabled={isEdit}
-//               defaultValue={parsedData?.detail}
-//             />
-                        
-//             <div className="flex gap-3">
-//               {hasData && 
-//               <Button 
-//                 cancel={!isEdit} 
-//                 type="button" 
-//                 onClick={!isEdit?disabledEdit:()=>setIsEdit(false)}>
-//                 {!isEdit?"Cancelar":"Editar"}
-//               </Button>}
-//               <Button disabled={isEdit}>{hasData?"Actualizar":"Salvar"}</Button>
-//             </div>
-//           </form>
-//           {
-//             state?.message && messageState &&
-//             <div className="flex mt-3">
-//               <Alert
-//                 type={state?.status?'success':'error'}
-//                 message={state?.message}
-//               />
-//             </div>
-//           }
-//         </div>
-
-//         <FinishScreening />  
-//       </div>
-//     </div>
-//   );
-// }
-
-// function FinishScreening(){
-//   const [ state, action ] = useActionState(finishScreening, { message: "", status: false });
-//   const pathname = usePathname();
-//   const [ modalState, setModalState ] = useState(false);
-//   const closeModal = ()=>setModalState(false);
-//   const formRef = useRef<HTMLFormElement>(null);
-//   const params = useParams();
-//   const router = useRouter();
-//   const [ messageState, setMessageState ] = useState(false);
-//   const [ messageError, setMessageError ] = useState("");
-//   const [ urgencyServices, setUrgencyServices ] = useState<SelectionOption[]>([]);
-
-//   const confirmScreening = ()=>{
-//     if(formRef.current?.checkValidity())
-//       formRef.current?.requestSubmit();
-//     else {
-//       setMessageError("Escolha o serviço!");
-//       setMessageState(true);
-//     }
-//     closeModal();
-//   }
-
-//   useEffect(()=>{
-//     if(messageError){
-//       setTimeout(()=>{
-//         setMessageState(false);
-//         setMessageError("");
-//       }, 2000);
-//     }
-//   }, [messageError]);
-
-//   useEffect(()=>{
-//     if(state.message){
-//       setMessageState(true);
-
-//       setTimeout(()=>{
-//         setMessageState(false);
-//         state.message = "";
-
-//         if(state.status){
-//           triggerUpdate({ target: "screening" });
-//           router.replace('/clinical/screening');
-//         }
-//       }, 2000);
-//     }
-//   }, [state, router]);
-
-//   useEffect(()=>{
-//     getUrgencyServices()
-//     .then(setUrgencyServices)
-//   }, [])
-
-//   return(
-//     <form ref={formRef} action={action} hidden={pathname.includes("urgency-bank")}>
-//       <input 
-//         type="hidden" 
-//         name="patientId" 
-//         defaultValue={params.patientId} 
-//       />
-
-//       <Selection
-//         label="Serviços de Urgências"
-//         options={urgencyServices}
-//         name="service"
-//         required
-//       />
-
-//       <Button 
-//         className="mb-3" 
-//         type="button" 
-//         onClick={()=>setModalState(true)}>
-//           Seguir
-//       </Button>
-
-//       <Modal 
-//         title="Concluir Triagem" 
-//         onClose={closeModal}
-//         onConfirm={confirmScreening}
-//         open={modalState}
-//         description="Tem certeza que deseja finalizar a triagem?" 
-//       />
-
-//       {
-//         messageState && state.message && 
-//         <Alert
-//           type={state.status?"success":"error"}
-//           message={state.message}
-//         />
-//       }
-
-//       {
-//         messageState && messageError && 
-//         <Alert
-//           type="warn"
-//           message={messageError}
-//         />
-//       }
-//     </form>
-//   )
-// }
-
-// export {
-//   ReasonForm,
-//   VitalSignalsForm,
-//   PriorityForm,
-//   StatusForm,
-//   AdviceForm,
-//   FinishScreening
-// };
+          <div className="flex gap-x-3">
+            <Button 
+              cancel 
+              type="button"
+              onClick={closeModal}
+            >
+              Cancelar
+            </Button>
+            <Button>Salvar</Button>
+          </div>
+        </form>
+      </Modal>
+    </div>
+  )
+}

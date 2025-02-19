@@ -6,12 +6,12 @@ const userSchema = new Schema({
     unique: true,
   },
   orderNumber: Number,
-  officeId: String,
-  roleId: Schema.Types.ObjectId,
+  serviceId: Schema.Types.ObjectId,
+  specialtyId: Schema.Types.ObjectId,
   categoryId: String, // do arquivo translator.ts
 }, {
   timestamps: true,
-  collection: "user",
+  collection: "users",
 });
 
 const currentLocationSchema = new Schema({

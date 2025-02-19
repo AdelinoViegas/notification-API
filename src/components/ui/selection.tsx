@@ -31,8 +31,10 @@ export default function Selection({
         {options.map((props, index)=> 
           <option 
             key={index} 
-            value={props._id?.toString()}>
-              {props.label}
+            value={props._id?.toString()}
+            // selected={rest.defaultValue === props._id?.toString()}
+          >
+            {props.label}
           </option>
         )}
       </select>

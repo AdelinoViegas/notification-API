@@ -12,6 +12,7 @@ import {
 } from "@/app/backend/api/clinical/urgency-bank-api";
 import { getUser } from "@/app/backend/api/manager/api";
 import UserClinicalCard from "@/components/user-clinical-card";
+import UserClinicalConfig from "@/components/user-clinical-config";
 
 export default async function Page({
    params 
@@ -33,10 +34,11 @@ export default async function Page({
       </div>
       
       <Card className="grid lg:grid-cols-2 gap-y-3 gap-x-10">
-        <UserClinicalCard 
+        <UserClinicalConfig userId={userId} />
+        {/* <UserClinicalCard 
           className="mt-0" 
           userId={userId} 
-        />
+        /> */}
   
         <div className="flex flex-col gap-y-6">
           <div>
