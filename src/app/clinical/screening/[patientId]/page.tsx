@@ -6,6 +6,7 @@ import { getPatient } from "@/app/backend/api/clinical/api";
 import CloseProcess from "@/components/close-process";
 import ArchiveButton from "@/components/archive-button";
 import Screening from "@/components/screening";
+import { UIComponent } from "@/components/forms/screening-ui";
 type Routes = "patient" | "reason" | "vital-signals" | "priority" | "state" | "advice";
 
 export default async function Page({
@@ -53,44 +54,20 @@ export default async function Page({
         </div>
 
         <div className="max-h-[60vh] overflow-auto px-2">
-          { r === "patient" && 
-            <PatientForm 
-              patientId={patientId} 
-            /> 
-          }
-          { r === "reason" && 
-            <Screening 
-              patientId={patientId}
-              renderComponent={r} 
-            />
-          }
-
-          { r === "vital-signals" && 
-            <Screening 
-              patientId={patientId}
-              renderComponent={r} 
-            />
-          }
-
-          { r === "priority" && 
-            <Screening 
-              patientId={patientId}
-              renderComponent={r} 
-            />
-          }
-
-          { r === "state" && 
-            <Screening 
-              patientId={patientId}
-              renderComponent={r} 
-            />
-          }
-
-          { r === "advice" && 
-            <Screening 
-              patientId={patientId}
-              renderComponent={r} 
-            />
+          { r === "patient"?                
+            (   
+              <PatientForm 
+                patientId={patientId} 
+              /> 
+            )
+             :
+            ( 
+              ["reason","vital-signals","priority","state","advice"].includes(r) && 
+              <Screening 
+                patientId={patientId}
+                renderComponent={r as UIComponent} 
+              /> 
+            )
           }
         </div>
       </Card>

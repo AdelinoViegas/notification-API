@@ -21,7 +21,7 @@ export default async function Page({
   }>
 }) {
   const { name } = await searchParams;
-  const patientRows = tableFormater(await getUnits(undefined, undefined, true, name) as PhisicalUnit[]);
+  const patientRows = tableFormater(await getUnits({ searchByName: name }) as unknown as PhisicalUnit[]);
   
   return (
     <main className="space-y-3">

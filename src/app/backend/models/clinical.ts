@@ -28,11 +28,6 @@ import {
 } from "@/app/backend/schemas/clinical/patient";
 import { 
   screeningSchema,
-  // reasonSchema,
-  // adviceSchema,
-  // prioritySchema,
-  // vitalSignalSchema,
-  // statusSchema,
   triedSchema
 } from "@/app/backend/schemas/clinical/screening";
 import { 
@@ -60,11 +55,6 @@ const screeningModel = clinical.model('Screening', screeningSchema);
 const processStateModel = clinical.model("ProcessState", processStateSchema);
 
 // screening...
-// const reasonModel = clinical.model('Reason', reasonSchema);
-// const adviceModel = clinical.model("Advice", adviceSchema);
-// const priorityModel = clinical.model("Priority", prioritySchema);
-// const statusModel = clinical.model("Status", statusSchema);
-// const vitalSignalModel = clinical.model("VitalSignal", vitalSignalSchema);
 const triedModel = clinical.model("Tried", triedSchema);
 
 //scheduling
@@ -101,11 +91,6 @@ export {
   groupModel,
   accessTypeModel,
   screeningModel,
-  // reasonModel,
-  // adviceModel,
-  // priorityModel,
-  // vitalSignalModel,
-  // statusModel,
   triedModel,
   processStateModel,
   examModel,

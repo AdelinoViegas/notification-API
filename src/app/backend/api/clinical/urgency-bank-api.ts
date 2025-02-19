@@ -189,59 +189,94 @@ async function updateUnit(prev: unknown, formData: FormData){
   }
 }
 
-async function getUnits(
-  typeId?: UnitType | UnitType[],
-  option?: boolean,
-  table?: boolean,
-  nameUnit?: string,
-){
-  if(option){
-    const formatedOptions = [];
-
-    if(Array.isArray(typeId)){
-      for(const type of typeId){
-        // const units = await unitModel.find({ unitTypeId: type });
-        for await (const unit of unitModel.find({ unitTypeId: type }))
-          formatedOptions.push({
-            _id: unit._id.toString(),
-            label: unit.name,
-          });
-      }
-    }else {
-      for await (const unit of unitModel.find({ unitTypeId: typeId })){
-        formatedOptions.push({
-          _id: unit._id.toString(),
-          label: unit.name,
-        });
-      }
-    }
-
-    return formatedOptions;
-  }
-
-  if(table){
-    const dataTables = [];
-    const units = await unitModel.find();
+async function getUnits({
+  type,
+  searchByName
+}:{
+  type?: UnitType | UnitType[];
+  searchByName?: string;
+}){
+  try{
+    const units = await unitModel.find({
+      unitTypeId: type?type:/[a-z]/gi
+    });
     
-    for(const unit of units){
-      const user = await userModel.findById({_id: unit.userId }).select({ fullname: 1 }) as {
-        fullname: string;
-      };
+    const handleUnits = units.map((item) => {
+      if(!(type instanceof Array)){
+        return {
+          _id: item._id.toString(),
+          id: item._id.toString(),
+          name: item.name,
+          unitName: item.name,
+          label: item.name,
+          userId: item.userId?.toString(),
+          createAt: item.createdAt,
+          type: unitTypes.find(props => props._id === item.unitTypeId)?.label,
+          status: "activo",
+          user: "#"
+        }
+      }
+    });
 
-      dataTables.push({
-        id: unit._id.toString(),
-        createAt: unit.createdAt,
-        unitName: unit.name,
-        type: unitTypes.find((item)=>item._id === unit.unitTypeId)?.label,
-        user: user.fullname.split(" ")[0],
-        status: "activo",
-      });
-    }
-     
-    return nameUnit?dataTables.filter(items => items.unitName.match(new RegExp(`^${nameUnit}`, 'i'))):dataTables;
+    return handleUnits;
+  }catch(e){
+    console.error(e);
+    return [];
   }
-  return await unitModel.find({ unitTypeId: typeId });
 }
+// async function getUnits(
+//   typeId?: UnitType | UnitType[],
+//   option?: boolean,
+//   table?: boolean,
+//   nameUnit?: string,
+// ){
+//   if(option){
+//     const formatedOptions = [];
+
+//     if(Array.isArray(typeId)){
+//       for(const type of typeId){
+//         // const units = await unitModel.find({ unitTypeId: type });
+//         for await (const unit of unitModel.find({ unitTypeId: type }))
+//           formatedOptions.push({
+//             _id: unit._id.toString(),
+//             label: unit.name,
+//           });
+//       }
+//     }else {
+//       for await (const unit of unitModel.find({ unitTypeId: typeId })){
+//         formatedOptions.push({
+//           _id: unit._id.toString(),
+//           label: unit.name,
+//         });
+//       }
+//     }
+
+//     return formatedOptions;
+//   }
+
+//   if(table){
+//     const dataTables = [];
+//     const units = await unitModel.find();
+    
+//     for(const unit of units){
+//       const user = await userModel.findById({_id: unit.userId }).select({ fullname: 1 }) as {
+//         fullname: string;
+//       };
+
+//       dataTables.push({
+//         id: unit._id.toString(),
+//         createAt: unit.createdAt,
+//         unitName: unit.name,
+//         type: unitTypes.find((item)=>item._id === unit.unitTypeId)?.label,
+//         user: user.fullname.split(" ")[0],
+//         status: "activo",
+//       });
+//     }
+     
+//     return nameUnit?dataTables.filter(items => items.unitName.match(new RegExp(`^${nameUnit}`, 'i'))):dataTables;
+//   }
+//   return await unitModel.find({ unitTypeId: typeId });
+// }
 
 async function getUnit(unitId: string){
   try{

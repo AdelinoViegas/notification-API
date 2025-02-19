@@ -1,15 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useActionState } from "react";
 import SpecialtyModal from "./specialty-modal";
 import Button from "@/components/ui/button";
 import InputField from "@/components/ui/input-field";
 import Selection, { SelectionOption } from "./ui/selection";
 import { getUrgencyServices } from "@/app/backend/api/clinical/urgency-bank-api";
 import { userCategory } from '@/app/backend/api/clinical/translator';
-import { getSpecialties } from "@/app/backend/api/clinical/api";
+import { getSpecialties, updateUser } from "@/app/backend/api/clinical/api";
+import { toast } from "react-toastify";
 
 export default function UserClinicalConfig({ userId }: { userId: string }){
+  const [ state, action ] = useActionState(updateUser, { message: "", status: false });
   const [ services, setServices ] = useState<SelectionOption[]>([]);
   const [ specialties, setSpecialties ] = useState<SelectionOption[]>([]);
 
@@ -19,10 +21,20 @@ export default function UserClinicalConfig({ userId }: { userId: string }){
 
     getSpecialties()
     .then(setSpecialties)
-  }, [])
+  }, []);
+
+  useEffect(()=>{
+    if(state.message){
+      if(state.status)
+        toast.success(state.message);
+      else
+        toast.error(state.message);
+    }
+  }, [state]);
+  
   return(
     <div>
-      <form>
+      <form action={action}>
         <input type="hidden" name="userId" value={userId} />
         <Selection
           label="Categoria"
@@ -49,14 +61,14 @@ export default function UserClinicalConfig({ userId }: { userId: string }){
           <Selection
             options={specialties}
             label="Especialidade"
+            name="specialtyId"
             className='w-full'
           />
           <SpecialtyModal />
         </div>
 
         <div className="flex gap-x-3">
-          <Button cancel>Cancelar</Button>
-          <Button>Salvar</Button>
+          <Button type="submit">Salvar</Button>
         </div>
       </form>
     </div>

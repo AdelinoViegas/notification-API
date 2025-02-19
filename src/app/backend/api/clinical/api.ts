@@ -45,7 +45,7 @@ async function getUsers(){
     const sysUser = await managerUserModel.findById({ _id: user.userId }).select({ password: 0 });
     const workplaces = await getGrantedUnitAccess(user.userId as unknown as string);
     const role = user?.specialtyId?(await specialtyModel.findById({ _id: user.specialtyId }))?.name:"Indefinido";
-    
+
     formatedUsers.push({
       _id: user?.userId?.toString() as string,
       id: user?.userId?.toString() as string,
@@ -134,14 +134,14 @@ async function updateUser(prev: unknown, formData: FormData){
   try{
     const userId = formData.get("userId") as string;
     const orderNumber = formData.get("orderNumber") as string;
-    const officeId = formData.get("officeId") as string;
-    const roleId = formData.get("roleId") as string;
+    const serviceId = formData.get("serviceId") as string;
+    const specialtyId = formData.get("specialty") as string;
     const categoryId = formData.get("categoryId") as string;
-
+    
     await userModel.updateOne({ userId }, {
       orderNumber,
-      officeId,
-      roleId: roleId?roleId:undefined,
+      serviceId,
+      specialtyId,
       categoryId
     });
 

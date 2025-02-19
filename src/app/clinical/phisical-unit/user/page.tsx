@@ -8,8 +8,9 @@ import { getUsers } from "@/app/backend/api/clinical/api";
 export const dynamic = "force-dynamic";
 
 export default async function Page() {
-  const userRows = tableFormater(await getUsers() as ClinicalUser[]);
   
+  const userRows = tableFormater(await getUsers() as ClinicalUser[]);
+
   return (
     <main className="space-y-3">
       <div className="mt-6">

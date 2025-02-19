@@ -12,7 +12,12 @@ import {
 } from "@/app/backend/api/clinical/urgency-bank-api";
 import { getUser } from "@/app/backend/api/manager/api";
 import UserClinicalConfig from "@/components/user-clinical-config";
-
+import { getUser as getClinicalUser } from "@/app/backend/api/clinical/api";
+type ResolvePromiseAll = [
+  SelectionOption[],
+  { fullname: string },
+  unknown
+]
 export default async function Page({
    params 
   }:{
@@ -21,9 +26,16 @@ export default async function Page({
     }> 
   }) {
   const { userId } = await params;
-  const workplaces = await getUnits("workplace", true) as SelectionOption[];
+  const [ workplaces, { fullname }, user ] = await Promise.all([
+    getUnits({ type: "workplace"}),
+    getUser(userId, true),
+    getClinicalUser(userId)
+  ]);
+
+  // const workplaces = await getUnits("workplace", true) as SelectionOption[];
   const grantedAccess = await getGrantedUnitAccess(userId);
-  const { fullname } = await getUser(userId, true);
+  // const { fullname } = await getUser(userId, true);
+  // const user = getClinicalUser(userId);
 
   return (
     <main className="space-y-3">
@@ -52,7 +64,7 @@ export default async function Page({
               
               <Selection
                 label="Areas de Trabalho"
-                options={workplaces}
+                options={workplaces as SelectionOption[]}
                 required
                 name="workplaceId"
               />
