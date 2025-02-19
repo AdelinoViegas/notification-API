@@ -6,18 +6,14 @@ import Button from "@/components/ui/button";
 import { BiTrash as TrashIcon } from "react-icons/bi";
 import { 
   getUnits, 
-  // grantUnitAccess, 
+  grantUnitAccess, 
   getGrantedUnitAccess,
   removeUnitAccess,
 } from "@/app/backend/api/clinical/urgency-bank-api";
-import { getUser } from "@/app/backend/api/manager/api";
 import UserClinicalConfig from "@/components/user-clinical-config";
-import { getUser as getClinicalUser } from "@/app/backend/api/clinical/api";
-type ResolvePromiseAll = [
-  SelectionOption[],
-  { fullname: string },
-  unknown
-]
+import { getUser as getClinicalUser, getSpecialties } from "@/app/backend/api/clinical/api";
+import { getUrgencyServices } from "@/app/backend/api/clinical/urgency-bank-api";
+
 export default async function Page({
    params 
   }:{
@@ -26,36 +22,43 @@ export default async function Page({
     }> 
   }) {
   const { userId } = await params;
-  const [ workplaces, { fullname }, user ] = await Promise.all([
+  const [ 
+    workplaces, 
+    user,
+    urgencyServices,
+    specialties,
+    grantedAccess
+  ] = await Promise.all([
     getUnits({ type: "workplace"}),
-    getUser(userId, true),
-    getClinicalUser(userId)
+    getClinicalUser(userId),
+    getUrgencyServices(),
+    getSpecialties(),
+    getGrantedUnitAccess(userId)
   ]);
-
-  // const workplaces = await getUnits("workplace", true) as SelectionOption[];
-  const grantedAccess = await getGrantedUnitAccess(userId);
-  // const { fullname } = await getUser(userId, true);
-  // const user = getClinicalUser(userId);
 
   return (
     <main className="space-y-3">
  
       <div className="mt-6">
-        <Header title={`Area de Trabalho | ${fullname}`}/>
+        <Header title={`Area de Trabalho | ${user.fullname}`}/>
       </div>
       
       <Card className="grid lg:grid-cols-2 gap-y-3 gap-x-10">
-        <UserClinicalConfig userId={userId} />
-        {/* <UserClinicalCard 
-          className="mt-0" 
-          userId={userId} 
-        /> */}
-  
+        <UserClinicalConfig 
+          userId={userId}
+          categoryId={user.categoryId}
+          specialtyId={user.specialtyId}
+          serviceId={user.serviceId} 
+          orderNumber={user.orderNumber}
+          services={urgencyServices}
+          specialties={specialties}
+        />
+
         <div className="flex flex-col gap-y-6">
           <div>
             <SubTitle className="inline-flex">Area de Trabalho</SubTitle>
             
-            <form action={'grantUnitAccess'}>
+            <form action={grantUnitAccess}>
               <input 
                 type="hidden" 
                 name="userId" 

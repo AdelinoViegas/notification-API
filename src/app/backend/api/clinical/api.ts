@@ -96,7 +96,7 @@ async function getUser(userId: string){
     orderNumber: clinicalUser?.orderNumber as number,
     specialtyId: clinicalUser?.specialtyId?.toString() as string,
     specialty: userSpecialty, 
-    serviceId: clinicalUser?.specialtyId?.toString() as string
+    serviceId: clinicalUser?.serviceId?.toString() as string
   }
 }
 
@@ -135,16 +135,16 @@ async function updateUser(prev: unknown, formData: FormData){
     const userId = formData.get("userId") as string;
     const orderNumber = formData.get("orderNumber") as string;
     const serviceId = formData.get("serviceId") as string;
-    const specialtyId = formData.get("specialty") as string;
-    const categoryId = formData.get("categoryId") as string;
-    
+    const specialtyId = formData.get("specialtyId") as string;
+    const categoryId = formData.get("categoryId") as string;  
+
     await userModel.updateOne({ userId }, {
       orderNumber,
       serviceId,
       specialtyId,
       categoryId
     });
-
+    
     return {
       message: "Actualizado com sucesso!",
       status: true,
