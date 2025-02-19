@@ -290,7 +290,7 @@ function DoneScreening({
     if(state.message){
       if(state.status)
         toast.success(state.message, { 
-          onClose: ()=>router.replace('/clinical/screeining'),
+          onClose: ()=>router.replace('/clinical/screening'),
           autoClose: 1500
         });
       else

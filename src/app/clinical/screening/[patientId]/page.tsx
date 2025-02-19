@@ -55,19 +55,21 @@ export default async function Page({
 
         <div className="max-h-[60vh] overflow-auto px-2">
           { r === "patient"?                
-            (   
               <PatientForm 
                 patientId={patientId} 
               /> 
-            )
-             :
-            ( 
-              ["reason","vital-signals","priority","state","advice"].includes(r) && 
+             : 
+              [ 
+                "reason",
+                "vital-signals",
+                "priority",
+                "state",
+                "advice"
+              ].includes(r) && 
               <Screening 
                 patientId={patientId}
                 renderComponent={r as UIComponent} 
               /> 
-            )
           }
         </div>
       </Card>

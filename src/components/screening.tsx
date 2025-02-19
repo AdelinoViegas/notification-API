@@ -11,7 +11,7 @@ export default async function Screening({
 
   const patientData = await getScreening(patientId);
   if(patientData?.message)
-    return <>Oops, algo ocorreu mal {patientData?.message}!!</>;
+    return <>Oops, algo de errado não está certo, possivelmente {patientData?.message}!!</>;
   return (
     <ScreeningUI
       ui={renderComponent} 
