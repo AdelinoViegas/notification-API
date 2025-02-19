@@ -64,7 +64,7 @@ export default function Page(){
   }, [ccgs]);
 
   const handleUnits = useCallback(async ()=>{
-    const units = await getUnits(["laboratory", "imaging"], true) as SelectionOption[];
+    const units = await getUnits({type: ["laboratory", "imaging"]}) as SelectionOption[];
     setUnits(units);
   }, []);
   

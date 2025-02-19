@@ -190,8 +190,7 @@ async function updateUnit(prev: unknown, formData: FormData){
 }
 
 async function getUnits({
-  type,
-  searchByName
+  type
 }:{
   type?: UnitType | UnitType[];
   searchByName?: string;
@@ -224,59 +223,6 @@ async function getUnits({
     return [];
   }
 }
-// async function getUnits(
-//   typeId?: UnitType | UnitType[],
-//   option?: boolean,
-//   table?: boolean,
-//   nameUnit?: string,
-// ){
-//   if(option){
-//     const formatedOptions = [];
-
-//     if(Array.isArray(typeId)){
-//       for(const type of typeId){
-//         // const units = await unitModel.find({ unitTypeId: type });
-//         for await (const unit of unitModel.find({ unitTypeId: type }))
-//           formatedOptions.push({
-//             _id: unit._id.toString(),
-//             label: unit.name,
-//           });
-//       }
-//     }else {
-//       for await (const unit of unitModel.find({ unitTypeId: typeId })){
-//         formatedOptions.push({
-//           _id: unit._id.toString(),
-//           label: unit.name,
-//         });
-//       }
-//     }
-
-//     return formatedOptions;
-//   }
-
-//   if(table){
-//     const dataTables = [];
-//     const units = await unitModel.find();
-    
-//     for(const unit of units){
-//       const user = await userModel.findById({_id: unit.userId }).select({ fullname: 1 }) as {
-//         fullname: string;
-//       };
-
-//       dataTables.push({
-//         id: unit._id.toString(),
-//         createAt: unit.createdAt,
-//         unitName: unit.name,
-//         type: unitTypes.find((item)=>item._id === unit.unitTypeId)?.label,
-//         user: user.fullname.split(" ")[0],
-//         status: "activo",
-//       });
-//     }
-     
-//     return nameUnit?dataTables.filter(items => items.unitName.match(new RegExp(`^${nameUnit}`, 'i'))):dataTables;
-//   }
-//   return await unitModel.find({ unitTypeId: typeId });
-// }
 
 async function getUnit(unitId: string){
   try{

@@ -35,7 +35,7 @@ export default async function Page({
   const { scheduleId } = await params; 
   const schedule = await getSchedulePatientExam(scheduleId);
   const cancelation = await getExamCancel(scheduleId);
-  const laboratories = await getUnits(['laboratory', 'imaging'], true) as SelectionOption[];
+  const laboratories = await getUnits({type: ["laboratory", "imaging"]}) as SelectionOption[];
   
   return (
     <main className="space-y-3">

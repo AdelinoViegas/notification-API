@@ -49,7 +49,7 @@ export default function SelectFilter({
   
   useEffect(()=>{
     if(unitType)
-      getUnits(unitType, true)
+      getUnits({ type: unitType})
       .then((data: unknown[]) => setOptionData(data as SelectionOption[]));
     else 
       getDoctors()
