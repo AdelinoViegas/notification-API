@@ -65,7 +65,7 @@ export default function ScreeningUI({
         toast.error(state.message);
     }
 
-    getScreening(patientId)
+    getScreening({ patientId, isServed: false })
     .then(data => {
       setScreeningData(data as Screening);
       setDefaultPriority(data.priority);

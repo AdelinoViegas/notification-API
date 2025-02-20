@@ -755,13 +755,22 @@ async function getPatientsInScreening({
   }
 }
 
-async function getPatientInScreening(patientId: string, isServed=false){
-  return await screeningModel.findOne({ patientId, served:isServed });
-}
-
-async function getScreening(patientId: string){
+async function getScreening({
+  patientId,
+  isServed,
+  scrId
+}:{
+  patientId: string;
+  isServed?: boolean;
+  scrId?: string;
+}){
   try{
-    const screening = await screeningModel.findOne({ patientId: patientId, served: false });
+    const screening = await (
+      scrId
+      ? screeningModel.findById({ _id: scrId })
+      : screeningModel.findOne({ patientId: patientId, served: isServed })
+    );
+
     if(!screening)
       throw new Error("Não foi encontrado nenhuma ficha", { cause: "not_found"});
     
@@ -951,7 +960,6 @@ export {
   updateResposible,
   putInScreening,
   getPatientsInScreening,
-  getPatientInScreening,
   changeArchived,
   finishScreening,
   signSpecialty,

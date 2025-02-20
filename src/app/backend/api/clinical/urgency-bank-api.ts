@@ -88,7 +88,10 @@ async function getPatient({ patientId }: {
   patientId: string;
 }){
   try{
-    const [ patient, personalData ] = await Promise.all([
+    const [ 
+      patient, 
+      personalData 
+    ] = await Promise.all([
       triedModel.findOne({ patientId, served: false }),
       mainPatient(patientId)
     ]);

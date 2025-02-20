@@ -1,8 +1,9 @@
 import TabNav from "@/components/tabnav";
 import Screening from "@/components/screening";
 import { UIComponent } from "@/components/forms/screening-ui";
+import { getPatient } from "@/app/backend/api/clinical/urgency-bank-api";
 
-type Routes = "patient" | "reason" | "vital-signals" | "priority" | "state" | "advice";
+type Routes = "reason" | "vital-signals" | "priority" | "state" | "advice";
 
 export default async function Page({
   params,
@@ -12,6 +13,10 @@ export default async function Page({
   searchParams: Promise<{ r: Routes }>;
 }){
   const [{ patientId }, { r }] = await Promise.all([ params, searchParams ]);
+  const patient = await getPatient({ patientId });
+
+  if(!patient?.screening)
+    throw new Error("Não tem ficha de triagem");
 
   return(
     <main>
@@ -42,6 +47,7 @@ export default async function Page({
             <Screening 
               patientId={patientId}
               renderComponent={r as UIComponent} 
+              scrId={patient.screening._id}
             /> 
           }
         </div>
