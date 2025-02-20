@@ -114,6 +114,7 @@ const tabComponents = [
           className="w-full"
           id="Documentação:0:documentation"
           title="123456789AB123"
+          defaultValue={"123456789AB123"}
         />
       </div>
       
@@ -170,7 +171,7 @@ const tabComponents = [
   {
     title: "Responsáveis",
     children: 
-    <div className="grid md:grid-cols-2 large:grid-cols-3 gap-3">
+    <div className="grid md:grid-cols-3 large:grid-cols-3 gap-x-3">
       <InputField
 				textLabel="Nome 1ª responsável"
 				name="responsibleName"

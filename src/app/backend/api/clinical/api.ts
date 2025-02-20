@@ -280,17 +280,21 @@ async function signPatient(prev: unknown, formData: FormData){
       externalUnitId,
     });
 
-    await patient.validate();
-    await locationDb.validate();
-    await groupDb.validate();
-    await responsiblesDb.validate();
-    await accessTypeDb.validate();
+    await Promise.all([
+      patient.validate(),
+      locationDb.validate(),
+      groupDb.validate(),
+      responsiblesDb.validate(),
+      accessTypeDb.validate()
+    ]);
     
-    await patient.save();
-    await locationDb.save();
-    await groupDb.save();
-    await responsiblesDb.save();
-    await accessTypeDb.save();
+    await Promise.all([
+      patient.save(),
+      locationDb.save(),
+      groupDb.save(),
+      responsiblesDb.save(),
+      accessTypeDb.save()
+    ]);
 
     return {
       message: "Utente resgistrado com sucesso!",
