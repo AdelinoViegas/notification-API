@@ -1,8 +1,8 @@
 import Header from "@/components/header";
-import { getPatient, getScreening } from "@/app/backend/api/clinical/api";
 import clsx from "clsx";
 import TabNav from "@/components/tabnav";
 import Card from "@/components/ui/card";
+import { getPatient } from "@/app/backend/api/clinical/urgency-bank-api";
 
 export default async function Layout({ 
   children,
@@ -14,21 +14,23 @@ export default async function Layout({
   }>
 }){
   const { patientId } = await params;
-  const patient = await getPatient(patientId); 
-  const screening =  await getScreening(patientId);
+  const patient = await getPatient({patientId}); 
   
+  if(patient?.message || !patient.screening)
+    return <>Opps, algo ocorreu mal, possivelmente {patient.message}</>;
+
   return(
     <div>
       <div className={clsx("my-4 text-center pt-3 text-white rounded-lg",
-         {"bg-red-500 animate-pulse": screening?.priority === "red"},
-         {"bg-blue-500": screening?.priority === "blue"},
-         {"bg-green-500": screening?.priority === "green"},
-         {"bg-yellow-500": screening?.priority === "yellow"},
-         {"bg-orange-600": screening?.priority === "orange"}
+        {"bg-red-500 animate-pulse": patient.screening.priority === "red"},
+        {"bg-blue-500": patient.screening.priority === "blue"},
+        {"bg-green-500": patient.screening?.priority === "green"},
+        {"bg-yellow-500": patient.screening?.priority === "yellow"},
+        {"bg-orange-600": patient.screening?.priority === "orange"}
        )}>
 			 	<Header 
           center 
-          title={patient?.personal.fullname as string}
+          title={patient.fullname}
         />
 			</div>
       
@@ -46,8 +48,11 @@ export default async function Layout({
             { path: "anamnesis", title: "Anamneses" },
             { path: "exam", title: "Exames" },
             { path: "clinical-diary", title: "Diário Clínico" },
+            { path: "prescription", title: "Receituário"},
+            { path: "dispense", title: "Alta"},
             { path: "office", title: "Consultas" },
-            { path: "surgery", title: "Cirurgias" }
+            { path: "surgery", title: "Cirurgias" },
+            { path: "transfer", title: "Transferências"},
           ]}
         />
       </div>

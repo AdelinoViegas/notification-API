@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Modal from "@/components/modal";
 import UserForm from "@/components/forms/user-form";
-import Button from "./ui/button";
+import Button from "@/components/ui/button";
 
 export default function SignUserModal(){
   const [ state, setState ] = useState(false);

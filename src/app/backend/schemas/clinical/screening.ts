@@ -81,10 +81,14 @@ const triedSchema = new Schema({
   srcId: Schema.Types.ObjectId,
   patientId: Schema.Types.ObjectId,
   userId: Schema.Types.ObjectId,
-  serviceId: Schema.Types.ObjectId
+  serviceId: Schema.Types.ObjectId,
+  served: {
+    type: Boolean,
+    default: false
+  }
 }, {
   timestamps: true,
-  collection: "tried_to_urgency_bank"
+  collection: "in_urgency_bank"
 });
 
 export {

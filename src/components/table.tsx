@@ -50,7 +50,7 @@ export default function Table({
       push(`${pathname}?${search.toString()}`);
     }
   }
-  
+
   return(
     <>
       <div className="shadow-sm border my-3 rounded-xl max-h-[32rem] lg:max-h-[32rem] auto:max-h-[65vh] overflow-y-auto scroll">

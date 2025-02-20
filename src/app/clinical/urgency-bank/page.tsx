@@ -7,6 +7,7 @@ import { orderByPriority } from "@/lib/filters";
 import Tooltip from "@/components/urgency-bank-tooltip";
 import Search from "@/components/ui/search";
 import WsUpdate from "@/components/ws-update";
+
 export const dynamic = "force-dynamic";
 
 export default async function Page({
@@ -41,13 +42,13 @@ export default async function Page({
       </div>
       
       <div className="flex justify-between items-center">
-          <Tooltip data={summary} />
-          <Search
-            className="flex items-center gap-x-3"
-            filterKey="name"
-            label="Filtar por nome"
-            placeholder="Buscar pelo nome do utente..."
-          />
+        <Tooltip data={summary} />
+        <Search
+          className="flex items-center gap-x-3"
+          filterKey="name"
+          label="Filtar por nome"
+          placeholder="Buscar pelo nome do utente..."
+        />
       </div>
 
       <Table

@@ -7,86 +7,47 @@ import React, {
 } from 'react';
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
-import Card from '@/components/ui/card';
 import Selection, { SelectionOption } from '@/components/ui/selection';
-import { 
-  signUser, 
-  getUserGroups, 
-  updateUser 
-} from '@/app/backend/api/manager/api';
-import { useParams, useRouter } from 'next/navigation';
-import Alert from '@/components/ui/alert';
+import { signUser, getUserGroups } from '@/app/backend/api/manager/api';
+import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
 
-type User = {
-  fullname: string;
-  username: string;
-  email: string;
-  tel: string;
-  userGroup: string;
-}
-
-export default function UserForm({
-  jsonData,
-}:{
-  jsonData?: string;
-}){
-  const [ state, action ] = useActionState(jsonData?updateUser:signUser, { message: "", status: false})
-  const user = jsonData?JSON.parse(jsonData) as User:undefined;
+export default function UserForm({}: { userId?: string }){
+  const [ state, action ] = useActionState(signUser, { message: "", status: false})
   const [ userGroups, setUserGroups ] = useState<SelectionOption[]>([]);
-  const [ messageState, setMessageState ] = useState(false);
   const router = useRouter();
-  const params = useParams();
-
-  const handleGroup = async()=>{
-    const groups = await getUserGroups();
-    setUserGroups(groups);
-  }
 
   useEffect(()=>{
-    handleGroup();
+    getUserGroups()
+    .then(setUserGroups)
   }, []);
 
-
   useEffect(()=>{
-    setMessageState(true)
-    setTimeout(()=>{
-      setMessageState(false);
+    if(state.message)
       if(state.status)
-        router.push('/manager/users');
-    }, 3000);
+        toast.success(state.message, { 
+          autoClose: 1500,
+          onClose: router.refresh 
+        });
+      else
+        toast.error(state.message);
   }, [state, router]);
 
   return(
-    <Card>
-      <form className='w-auto' {...{action}}>
-        <input 
-          type="hidden" 
-          name="userId" 
-          value={params.userId} 
-        />
-        
-        <InputField
-          textLabel='Nome Completo'
-          placeholder='Informe o nome completo'
-          name="fullname"
-          required
-          defaultValue={user?.fullname} 
-        />
+    <form className='w-auto px-3' {...{action}}>      
+      <InputField
+        textLabel='Nome Completo'
+        placeholder='Informe o nome completo do usuário'
+        name="fullname"
+        required
+      />
 
+      <div className='flex gap-x-3'>
         <InputField
           textLabel='Nome de Login'
-          placeholder='Neme de acesso ao sistema'
+          placeholder='Nome de acesso ao sistema'
           name="username"
           required
-          defaultValue={user?.username} 
-        />
-
-        <InputField
-          type="email"
-          placeholder='Endereço de E-mail'
-          textLabel='E-mail'
-          name="email"
-          defaultValue={user?.email} 
         />
 
         <InputField
@@ -96,53 +57,44 @@ export default function UserForm({
           name="tel"
           maxLength={9}
           required
-          defaultValue={user?.tel} 
         />
-        
-        { !jsonData &&      
-          <>
-            <InputField
-              textLabel='Senha'
-              type="password"
-              name="password"
-              placeholder='Informe a senha'
-              required
-              defaultValue={""} 
-            />
+      </div>
 
-            <InputField
-              textLabel='Confirmação da Senha'
-              type="password"
-              name="checkPassword"
-              placeholder='Confirme a senha'
-              required
-              defaultValue={""} 
-            />
-            
-            <Selection 
-              label='Grupo de Usuário'
-              options={userGroups}
-              onChange={handleGroup}
-              required
-              name="userGroupId"
-              defaultValue={""}
-            />
-          </>
-        }
-        <div className='flex gap-3'>
-          <Button cancel type="reset">Limpar</Button>
-          <Button>{jsonData?"Actualizar":"Salvar"}</Button>
-        </div>
-      </form>
-      {
-        state.message && messageState &&
-        <div className="flex mt-3">
-          <Alert
-            type={state.status?'success':'error'}
-            message={state.message}
-          />
-        </div>
-      }
-    </Card>
+      <InputField
+        type="email"
+        placeholder='Endereço de E-mail'
+        textLabel='E-mail'
+        name="email"
+      />
+      
+      <div>
+        <InputField
+          textLabel='Senha'
+          type="password"
+          name="password"
+          placeholder='Informe a senha'
+          required
+          defaultValue={""} 
+        />
+
+        <InputField
+          textLabel='Confirmação da Senha'
+          type="password"
+          name="checkPassword"
+          placeholder='Confirme a senha'
+          required
+          defaultValue={""} 
+        />
+      </div>
+
+      <Selection 
+        label='Grupo de Usuário'
+        options={userGroups}
+        required
+        name="userGroupId"
+      />
+
+      <Button>Salvar</Button>
+    </form>
   )
 }

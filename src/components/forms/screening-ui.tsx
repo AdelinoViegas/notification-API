@@ -15,7 +15,7 @@ import { insertScreening, getScreening, finishScreening } from "@/app/backend/ap
 import { toast } from "react-toastify";
 import Modal from "@/components/modal";
 import { getUrgencyServices } from "@/app/backend/api/clinical/urgency-bank-api";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 const initialState = { 
   message: "",
@@ -23,6 +23,7 @@ const initialState = {
 }
 
 export type UIComponent = "reason" | "vital-signals" | "state" | "priority" | "advice" | "all";
+
 type Screening = {
   reason: string;
   advice: string;
@@ -54,6 +55,7 @@ export default function ScreeningUI({
   const [ screeningData, setScreeningData ] = useState<Screening>();
   const [ defaultPriority, setDefaultPriority ] = useState<string>();
   const [ editable, setEditable ] = useState(false);
+  const pathname = usePathname();
   
   useEffect(()=>{
     if(state.message){
@@ -263,10 +265,12 @@ export default function ScreeningUI({
             Salvar
           </Button>
 
-          <DoneScreening 
-            disabled={ui !== "advice"}
-            patientId={patientId} 
-          />
+          { !pathname.includes("urgency-bank") && 
+            <DoneScreening 
+              disabled={ui !== "advice"}
+              patientId={patientId} 
+            />
+          }
         </div>
       </form>
     </div>

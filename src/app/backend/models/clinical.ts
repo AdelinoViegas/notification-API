@@ -53,8 +53,6 @@ const groupModel = clinical.model('PatientGroup', groupSchema);
 const accessTypeModel = clinical.model('AcessType', accesTypeSchema);
 const screeningModel = clinical.model('Screening', screeningSchema);
 const processStateModel = clinical.model("ProcessState", processStateSchema);
-
-// screening...
 const triedModel = clinical.model("Tried", triedSchema);
 
 //scheduling

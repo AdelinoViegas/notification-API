@@ -130,19 +130,23 @@ async function signUser(prev: unknown, formData: FormData){
     const userGroupId = formData.get('userGroupId') as string;
     
     if(password !== checkPassword)
-      throw new Error("As senhas informadas são diferentes!", { cause: 'not_equal'})
-    
-    const encPassword = await encryptPwd(password);
+      throw new Error("As senhas informadas são diferentes!", { cause: 'ne_pwd'})
+
     const userGroup = await getUserGroup(userGroupId);
+
+    if(userGroup?.message)
+      throw new Error(userGroup.message, { cause: "not_found_user_group"});
     
     const user = new userModel({
       fullname,
       username,
       email,
       tel,
-      password: encPassword,
-      userGroupId
+      password: await encryptPwd(password),
+      userGroupId: userGroup._id
     });
+
+    await user.save();
 
     if(userGroup.name === "clinical"){
       await userClinicalModel.create({
@@ -157,9 +161,6 @@ async function signUser(prev: unknown, formData: FormData){
         actor: await whoIsUser(),
       });
     }
-    
-    await user.validate();
-    await user.save();
    
     return {
       message: 'Usuário registrado com sucesso!',
@@ -178,29 +179,35 @@ async function signUser(prev: unknown, formData: FormData){
 
 async function getUserGroups(){
   const userGroups = await userGroupModel.find();
-  const userGroupFormated = [];
 
-  for(const userGroup of userGroups){
-    userGroupFormated.push({
-      _id: userGroup._id.toString(),
-      label: userGroup.label as string,
-      route: userGroup?.route as string,
-      name: userGroup?.name as string
-    });
-  }
-
-  return userGroupFormated;
+  return userGroups.map(item => {
+    return {
+      _id: item._id.toString() as string,
+      name: item.name as string,
+      label: item.label as string,
+      route: item.route as string
+    }
+  });
 }
 
 async function getUserGroup(groupId: string){
-  const userGroup = await userGroupModel.findById({ _id: groupId }); 
+  try{
+    const userGroup = await userGroupModel.findById({ _id: groupId }); 
+    if(!userGroup)
+      throw new Error("Este grupo de usuário não existe!", { cause: "group_not_found"});
 
-  return {
-    _id: userGroup?._id.toString() as string,
-    label: userGroup?.label as string,
-    route: userGroup?.route as string,
-    name: userGroup?.name as string
-  };
+    return {
+      _id: userGroup._id.toString() as string,
+      label: userGroup.label as string,
+      route: userGroup.route as string,
+      name: userGroup.name as string
+    };
+  }catch(e){
+    const err = e as Error;
+    return {
+      message: err.cause==="group_not_found"?err.message:"Falha no servidor!"
+    }
+  }
 }
 
 async function getUsers({ name }: { name?: string }){
@@ -508,7 +515,6 @@ async function resetUserPassword(prev: unknown, formData:FormData){
   }
 }
 
-//checkAccessPermission()
 async function verifyRouteUserPermission(targetUrl: string){
   try{
     const userId = await whoIsUser(); 

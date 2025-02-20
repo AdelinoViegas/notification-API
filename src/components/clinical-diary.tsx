@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import Accordium from "@/components/ui/accordium";
 import Modal from "@/components/modal";
 import Button from "@/components/ui/button";
@@ -8,22 +8,38 @@ import Table from "@/components/table";
 import InputField from "@/components/ui/input-field";
 import InputDetails from "@/components/ui/input-details";
 import Selection from "@/components/ui/selection";
+import { signUrgencyBank } from "@/app/backend/api/clinical/urgency-bank-api";
+import Alert from "./ui/alert";
 
 export type ClinicalDiaryProps = {
   accordiumTitle: string;
   modalTitle: string;
-  apiType: "diary" | "therapeutic" | "vital" | "annotation" | "balance";
+  apiType: "diary" | "therapeutic" | "treatment" | "vital" | "annotation" | "balance";
+  patientId: string;
 }
 
 export default function ClinicalDiary({
   accordiumTitle,
   modalTitle,
-  apiType
+  apiType,
+  patientId,
 }: ClinicalDiaryProps){
+  const [ state, action ] = useActionState(signUrgencyBank, {message: "", status: false, state: false});
   const [ modalState, setModalState ] = useState(false);
+  const [ messageState, setMessageState] = useState(false);
+  
+  useEffect(()=>{
+    if(state.message){
+      setMessageState(true);
+      
+      setTimeout(()=>{
+        setMessageState(false);
+      },2000)
+    }   
+  },[state])
   
   return(
-    <Accordium className="bg-gray-200 hover:bg-gray-300" title={accordiumTitle}>
+    <Accordium className="bg-primary/15 hover:bg-primary/20" title={accordiumTitle}>
       <div>
         <Button onClick={()=>setModalState(true)}>Novo</Button>
       </div>
@@ -38,14 +54,36 @@ export default function ClinicalDiary({
         onClose={()=>setModalState(false)}
         open={modalState}
       >
-        <form>
+        <form {...{action}}>
           <InputField 
             textLabel="Data e Hora"
             name="createAt"
             type="datetime-local" 
           />
 
-         { apiType === "balance" && <div>
+          <input
+            className="hidden"
+            type="text"
+            name="patientId"
+            defaultValue={patientId}
+          />
+
+          <input
+            className="hidden"
+            type="text"
+            name="typeClinicalDiary"
+            defaultValue={apiType}
+          />
+
+          {(apiType === "therapeutic" || apiType === "treatment") &&
+            <InputField 
+              textLabel="Assinatura"
+              placeholder="Digite a assinatura"
+              required
+            />
+          }
+
+          {apiType === "balance" && <div>
             <InputField 
               textLabel="Via de administração"
               placeholder="Local de admininstração do medicamento"
@@ -161,6 +199,16 @@ export default function ClinicalDiary({
           </div>}
 
           <Button>Salvar</Button>
+
+          {
+            state?.message && messageState &&
+            <div className="flex mt-3">
+              <Alert
+                type={state?.status?'success':'error'}
+                message={state?.message}
+              />
+            </div>
+          }
         </form>
       </Modal>
     </Accordium>

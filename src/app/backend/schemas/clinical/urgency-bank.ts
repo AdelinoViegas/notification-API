@@ -56,9 +56,82 @@ const anamnesis = new Schema({
   },*/
 },{ _id: false });
 
+const clinicalDiary = new Schema({
+  medicineDiary : {
+    date: Date,
+    description: String,
+  },
+  medicineTherapeutic: {
+    date: Date,
+    signature: String,
+    description: String,
+  },
+  medicneTreatment : {
+    date: Date,
+    description: String,
+    vitalSignals: {
+      paMax: {
+        type: Number,
+        default: 0,
+      },
+      paMin: {
+        type: Number,
+        default: 0,
+      },
+      jump: {
+        type: Number,
+        default: 0,
+      },
+      pvc: {
+        type: Number,
+        default: 0
+      },
+      imc: {
+        type: Number,
+        default: 0,
+      },
+      sp02: Number,
+      temperature: {
+        type: Number,
+        default: 0,
+      },
+      breathing: {
+        type: Number,
+        default: 0,
+      },
+      weight: {
+        type: Number,
+        default: 0,
+      },
+      height: {
+        type: Number,
+        default: 0,
+      },
+      bloodGlucose: {
+        type: Number,
+        default: 0
+      },
+    },
+  },
+  nursingNotes : {
+    date: Date,
+    description: String,
+  },
+
+  hydromineralBalance: {
+    date: Date,
+    DrugAdministrationSite: String, 
+    amount: String,
+    hidromineralBalance: String,
+    description: String,
+  }
+
+},{_id: false});
+
 const urgencyBankSchema = new Schema({
   patientId: Schema.Types.ObjectId,
   anamnesis: anamnesis,
+  clinicalDiary: clinicalDiary,
 }, {
   collection: "patient_urgency_bank",
   timestamps: true,

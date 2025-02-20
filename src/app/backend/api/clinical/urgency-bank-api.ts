@@ -31,8 +31,7 @@ import {
 import { userModel } from "@/app/backend/models/manager";
 import { getUser, patientFilters } from "@/app/backend/api/clinical/api";
 import { redirect } from "next/navigation";
-// import type { CID } from "@/lib/cid-query";
-
+import { getPatient as mainPatient } from "@/app/backend/api/clinical/api";
 type UnitType = "workplace" | "internment" | "laboratory" | "imaging";
 
 async function getPatients({ 
@@ -41,8 +40,8 @@ async function getPatients({
 }:patientFilters){
   try{
     const userId = await whoIsUser() as string;
-    const user = await clinicalUserModel.findOne({userId}).select({ serviceId: 1});
-    const patients = await triedModel.find({ urgencyServices: user?.serviceId });
+    const user = await clinicalUserModel.findOne({ userId }).select({ serviceId: 1});
+    const patients = await triedModel.find({ serviceId: user?.serviceId, served: false });
     const patientList = [];
 
     for(const patient of patients){
@@ -50,16 +49,19 @@ async function getPatients({
       
       if(!patientData) 
         throw new Error(`${patient._id.toString()} this id not found!`);
-  
-      const patientGroup = await groupModel.findOne({patientId: patientData._id});
-      const accessType = await accessTypeModel.findOne({patientId: patientData._id});
-      const priority = await screeningModel.findOne({patientId: patient.patientId, served: true })
+
+      const [ patientGroup, accessType, screening ] = await Promise.all([
+        groupModel.findOne({ patientId: patientData._id }),
+        accessTypeModel.findOne({ patientId: patientData._id }),
+        screeningModel.findById({ _id: patient.srcId })
+      ]);
+      
       let accessTypeLabel = patientAccess.find((props)=>props._id === accessType?.type)?.label;
       let groupLabel = patientGroups.find((props)=>(props._id === patientGroup?.type))?.label;
       
       accessTypeLabel = accessTypeLabel || "Indefinido";
       groupLabel = groupLabel || "Indefinido";
-
+      
       patientList.push({
         id: patientData._id.toString(),
         fullname: patientData.fullname,
@@ -67,7 +69,7 @@ async function getPatients({
         accessType: accessTypeLabel.toUpperCase(),
         createdAt: patientData.createdAt,
         group: groupLabel.toUpperCase(),
-        priorityType: priorityToComponent.find((props)=>props._id == priority?.priority)?.label,
+        priorityType: priorityToComponent.find((props)=>props._id === screening?.priority)?.label,
       });
     }
 
@@ -79,6 +81,39 @@ async function getPatients({
     const err = e as Error;
     console.log(err.message);
     return [];
+  }
+}
+
+async function getPatient({ patientId }: {
+  patientId: string;
+}){
+  try{
+    const [ patient, personalData ] = await Promise.all([
+      triedModel.findOne({ patientId, served: false }),
+      mainPatient(patientId)
+    ]);
+
+    if(!patient || !personalData?.personal.fullname)
+      throw new Error("opps!! Esta ficha não existe!", { cause: "not_found"});
+
+    const screening = await screeningModel.findById({ _id: patient.srcId });
+
+    if(!screening)
+      throw new Error("Não foi encontrado a ficha de triagem!", { cause: "not_found"});
+
+    return {
+      _id: patient._id.toString() as string,
+      fullname: personalData.personal.fullname,
+      screening: {
+        _id: screening._id.toString() as string,
+        priority: screening.priority as string
+      }
+    }
+  }catch(e){
+    const err = e as Error;
+    return {
+      message: err.cause === "not_found"?err.message: "Falha no servidor!"
+    }
   }
 }
 
@@ -508,12 +543,11 @@ async function updateExternalUnit(prev: unknown, formData: FormData){
 }
 
 async function signUrgencyBank(prev: unknown, formData:FormData){
-  try{console.log('entro na api');
-
-    const typeMedicine = formData.get("typeMedicine") as string;
-    console.log(typeMedicine);
+  try{
+    // const typeMedicine = formData.get("typeMedicine") as string;
+    
     // const patientId = formData.get("patientId") as string;
-    const state = formData.get("state") as string;
+    // const state = formData.get("state") as string;
     // const symptoms = formData.get("symptoms") as string;
     // const diseaseData = formData.get("diseaseData") as string;
     // const complementaryExams = formData.get("complementaryExams") as string;
@@ -592,10 +626,41 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
     //     }
     //   }
     // }
-  
-    // let message = "";
+    
+    const patientId = formData.get("patientId") as string;
+    const typeClinicalDiary = formData.get("typeClinicalDiary") as string;
+    const date = formData.get("createAt") as unknown as Date;
+    const description = formData.get("description") as string;
 
-    /*if(!hasPatientUrgencyBank){
+    const hasPatientUrgencyBank = await urgencyBankModel.findOne({ patientId });
+    const clinical = hasPatientUrgencyBank?.clinicalDiary;                                
+
+    
+    const clinicalDiary = {
+      medicineDiary : {
+        date: typeClinicalDiary === "diary"?(date ?? clinical?.medicineDiary?.date):clinical?.medicineDiary?.date,
+        description: typeClinicalDiary === "diary"?(description ?? clinical?.medicineDiary?.description):clinical?.medicineDiary?.description,
+      },
+      nursingNotes: {
+        date: typeClinicalDiary === "annotation"?date:clinical?.nursingNotes?.date,
+        description: typeClinicalDiary === "annotation"?description:clinical?.nursingNotes?.description,
+      },
+    }
+ 
+    let message = "";
+
+    if(!hasPatientUrgencyBank){
+      await urgencyBankModel.create({ patientId, clinicalDiary });
+      message = "Informações registradas com sucesso!";
+    }else{
+      await urgencyBankModel.updateOne({ _id: hasPatientUrgencyBank._id },{ clinicalDiary })
+      message = "Informações actualizadas com sucesso!";
+    }
+
+
+    /*let message = "";
+
+    if(!hasPatientUrgencyBank){
       await urgencyBankModel.create({ patientId, anamnesis });
       message = "Informações registradas com sucesso!";
     }else{
@@ -604,9 +669,9 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
     }*/
 
     return {
-      message: "test",
+      message,
       status: true,
-      state
+      state: false,
     }
   }catch(e: unknown){
     const err = e as Error;
@@ -751,5 +816,6 @@ export {
   getPatientUrgencyBank,
   signUrgencyService,
   getUrgencyService,
-  getUrgencyServices
+  getUrgencyServices,
+  getPatient
 };

@@ -760,7 +760,7 @@ async function getScreening(patientId: string){
     const screening = await screeningModel.findOne({ patientId: patientId, served: false });
     if(!screening)
       throw new Error("Não foi encontrado nenhuma ficha", { cause: "not_found"});
-
+    
     return {
       _id: screening?._id?.toString() as string,
       patientId,
@@ -862,6 +862,14 @@ async function finishScreening(prev: unknown, formData: FormData){
     if(!scrPatient?.priority)
       throw new Error("Escolha a prioridade do utente!", { cause: "empty"});
 
+    const patientExistInUrgency = await triedModel.findOne({
+      patientId,
+      served: false
+    });
+
+    if(patientExistInUrgency)
+      throw new Error("Este utente já se encontra no serviço de urgência!", { cause: "in_process"});
+
     await screeningModel.updateOne({ _id: scrPatient._id }, { 
       served: true,
       userId: await whoIsUser() 
@@ -886,10 +894,6 @@ async function finishScreening(prev: unknown, formData: FormData){
       status: false 
     }
   }
-}
-
-async function getTriedPatient(patientId: string){
-  return await triedModel.findOne({ patientId });
 }
 
 async function signSpecialty(prev: unknown, formData: FormData){
@@ -945,7 +949,6 @@ export {
   getPatientsInScreening,
   getPatientInScreening,
   changeArchived,
-  getTriedPatient,
   finishScreening,
   signSpecialty,
   getScreening,

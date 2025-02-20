@@ -25,6 +25,7 @@ export default function Template({ children }:{ children: React.ReactNode }){
           openModal();
       })
     }
+    console.log('permission run...')
   }, [pathname]);
   return(
     <>
