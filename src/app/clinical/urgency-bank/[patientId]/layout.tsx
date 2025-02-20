@@ -48,11 +48,7 @@ export default async function Layout({
             { path: "anamnesis", title: "Anamneses" },
             { path: "exam", title: "Exames" },
             { path: "clinical-diary", title: "Diário Clínico" },
-            { path: "prescription", title: "Receituário"},
-            { path: "dispense", title: "Alta"},
-            { path: "office", title: "Consultas" },
-            { path: "surgery", title: "Cirurgias" },
-            { path: "transfer", title: "Transferências"},
+            { path: "office", title: "Consultas" }
           ]}
         />
       </div>
