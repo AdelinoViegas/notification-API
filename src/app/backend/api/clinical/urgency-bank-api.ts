@@ -95,7 +95,7 @@ async function getPatient({ patientId }: {
       triedModel.findOne({ patientId, served: false }),
       mainPatient(patientId)
     ]);
-
+     
     if(!patient || !personalData?.personal.fullname)
       throw new Error("opps!! Esta ficha não existe!", { cause: "not_found"});
 
@@ -547,6 +547,13 @@ async function updateExternalUnit(prev: unknown, formData: FormData){
 
 async function signUrgencyBank(prev: unknown, formData:FormData){
   try{
+    const payload:{ [key: string]: string } = {};
+    for(const [key, value] of formData.entries()){
+      payload[key] = value as string;
+    }
+
+    const urgencyBank = new urgencyBankModel(payload);
+    console.log(urgencyBank);
     // const typeMedicine = formData.get("typeMedicine") as string;
     
     // const patientId = formData.get("patientId") as string;

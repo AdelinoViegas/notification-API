@@ -768,7 +768,7 @@ async function getScreening({
     const screening = await (
       scrId
       ? screeningModel.findById({ _id: scrId })
-      : screeningModel.findOne({ patientId: patientId, served: isServed })
+      : screeningModel.findOne({ patientId , served: isServed })
     );
 
     if(!screening)

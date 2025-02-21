@@ -74,7 +74,7 @@ export default function ScreeningUI({
       setEditable(false);
     })
   }, [state, patientId]);
-  
+
   return(
     <div>
       <form action={action} className="py-3">
