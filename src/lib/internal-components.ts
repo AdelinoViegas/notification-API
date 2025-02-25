@@ -391,7 +391,7 @@ function lifeStyleInternalComponent(lifeStyle: LifeStyle){
 								type: "radio",
 								props: {
 									label: "Fumante",
-									name: "tobaccoConsumption",
+									name: "tabaccoConsumption",
 									defaultChecked: lifeStyle.tabaccoConsumption === "smoker",
 									defaultValue: "smoker"
 								}
@@ -400,7 +400,7 @@ function lifeStyleInternalComponent(lifeStyle: LifeStyle){
 								type: "radio",
 								props: {
 									label: "Não fumante",
-									name: "tobaccoConsumption",
+									name: "tabaccoConsumption",
 									defaultChecked: lifeStyle.tabaccoConsumption === "non-smoker",
 									defaultValue: "non-smoker"
 								}
@@ -409,7 +409,7 @@ function lifeStyleInternalComponent(lifeStyle: LifeStyle){
 								type: "radio",
 								props: {
 									label: "Ex-fumante",
-									name: "tobaccoConsumption",
+									name: "tabaccoConsumption",
 									defaultChecked: lifeStyle.tabaccoConsumption === "ex-smoker",
 									defaultValue: "ex-smoker"
 								}

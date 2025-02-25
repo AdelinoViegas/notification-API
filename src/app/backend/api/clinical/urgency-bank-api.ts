@@ -549,134 +549,79 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
   try{
     const payload:{ [key: string]: string } = {};
     for(const [key, value] of formData.entries()){
-      payload[key] = value as string;
+        payload[key] = value as string;
     }
 
-    const urgencyBank = new urgencyBankModel(payload);
-    console.log(urgencyBank);
-    // const typeMedicine = formData.get("typeMedicine") as string;
-    
-    // const patientId = formData.get("patientId") as string;
-    // const state = formData.get("state") as string;
-    // const symptoms = formData.get("symptoms") as string;
-    // const diseaseData = formData.get("diseaseData") as string;
-    // const complementaryExams = formData.get("complementaryExams") as string;
-    // const diagnosticHypothesis = JSON.parse(formData.get("cids") as string) as CID[];
-    // const others = formData.get("others") as string;
-    // const evaluation = formData.get("evaluation") as string;
-    // const meals = formData.get("meals") as string;
-    // const typeFood = formData.get("typeFood") as string;
-    // const waterConsumption = formData.get("waterConsumption") as string;
-    // const typeWater = formData.get("typeWater") as string;
-    // const diseasesInFamily = formData.get("diseasesInFamily") as string;
-    // const description = formData.get("description") as string;
-    // const datetime = formData.get("createdAt");
-    // const currentState = formData.get("currentState") as string;
-    // const diabetes  = formData.get("diabetes");
-    // const hypertension = formData.get("hypertension");
-    // const tuberculosis = formData.get("tuberculosis"); 
-    // const respirationDiseases = formData.get("respiratoryDiseases");
-    // const malaria = formData.get("malaria");
-    // const tabaccoConsumption = formData.get("tobaccoConsumption") as string;
-    // const alcohol = formData.get('alcoholConsumption') as string;
-    // const frequency = formData.get("frequency") as string;
-    // const alcoholAmount = Number(formData.get("alcoholAmount"));
-    // const exercise = formData.get("exercise") as string;
-    // const type = formData.get("type") as string;
-    // const physicalAmount = Number(formData.get("physicalAmount"));
-    // const timeExercise = formData.get("time") as string;
-    // const hasPatientUrgencyBank = await urgencyBankModel.findOne({ patientId });
-    // const generalClinic = hasPatientUrgencyBank?.anamnesis?.generalClinic;
-    
-    // const cidCodes = diagnosticHypothesis
-    // .filter((diagnostic: CID) => !generalClinic?.diagnosticHypothesis?.includes(diagnostic.code))
-    // .map((CID: CID)=> CID.code);
-
-    // const anamnesis = {
-    //   generalClinic:{
-    //     symptoms: symptoms || generalClinic?.symptoms,
-    //     diseaseData: diseaseData || generalClinic?.diseaseData,
-    //     complementaryExams: complementaryExams || generalClinic?.complementaryExams,
-    //     diagnosticHypothesis: !!cidCodes.length?generalClinic?.diagnosticHypothesis.concat(cidCodes) ?? cidCodes:generalClinic?.diagnosticHypothesis,
-    //     others: others || generalClinic?.others,
-    //     diseasesInFamily: diseasesInFamily || generalClinic?.diseasesInFamily,
-    //     evaluation: evaluation || generalClinic?.evaluation,
-    //     eatingHabits: {
-    //       meals: meals || generalClinic?.eatingHabits?.meals,
-    //       typeFood: typeFood || generalClinic?.eatingHabits?.typeFood,
-    //       waterConsumption: waterConsumption || generalClinic?.eatingHabits?.waterConsumption,
-    //       typeWater: typeWater || generalClinic?.eatingHabits?.typeWater,
-    //     },
-    //     hospitalization: {
-    //       description: description || generalClinic?.hospitalization?.description,
-    //       dateTime: datetime || generalClinic?.hospitalization?.dateTime,
-    //       currentState: currentState || generalClinic?.hospitalization?.currentState,
-
-    //     },
-    //     diseases: {
-    //       diabetes: diabetes ?? generalClinic?.diseases?.diabetes ?? false,
-    //       hypertension: hypertension ?? generalClinic?.diseases?.hypertension ?? false,
-    //       respirationDiseases: respirationDiseases ?? generalClinic?.diseases?.respirationDiseases ?? false,
-    //       tuberculosis: tuberculosis ?? generalClinic?.diseases?.tuberculosis ?? false,
-    //       malaria: malaria ?? generalClinic?.diseases?.malaria ?? false,
-    //     },
-    //     lifeStyle: {   
-    //       tabaccoConsumption: tabaccoConsumption ?? generalClinic?.lifeStyle?.tabaccoConsumption ?? "",
-    //       alcoholConsumption: {
-    //         alcohol: alcohol ?? generalClinic?.lifeStyle?.alcoholConsumption?.alcohol ?? "",
-    //         frequency: frequency || generalClinic?.lifeStyle?.alcoholConsumption?.frequency,
-    //         amount: alcoholAmount || generalClinic?.lifeStyle?.alcoholConsumption?.amount,
-    //       },
-    //       physicalActivity: {
-    //         exercise: exercise ?? generalClinic?.lifeStyle?.physicalActivity?.exercise ?? "",
-    //         type: type || generalClinic?.lifeStyle?.physicalActivity?.type,
-    //         amount: physicalAmount || generalClinic?.lifeStyle?.physicalActivity?.amount,
-    //         timeExercise: timeExercise || generalClinic?.lifeStyle?.physicalActivity?.timeExercise,
-    //       }
-    //     }
-    //   }
-    // }
-    
     const patientId = formData.get("patientId") as string;
-    const typeClinicalDiary = formData.get("typeClinicalDiary") as string;
-    const date = formData.get("createAt") as unknown as Date;
-    const description = formData.get("description") as string;
-
     const hasPatientUrgencyBank = await urgencyBankModel.findOne({ patientId });
-    const clinical = hasPatientUrgencyBank?.clinicalDiary;                                
-
-    
-    const clinicalDiary = {
-      medicineDiary : {
-        date: typeClinicalDiary === "diary"?(date ?? clinical?.medicineDiary?.date):clinical?.medicineDiary?.date,
-        description: typeClinicalDiary === "diary"?(description ?? clinical?.medicineDiary?.description):clinical?.medicineDiary?.description,
+    const generalClinic = hasPatientUrgencyBank?.anamnesis?.generalClinic;
+    //const clinical = hasPatientUrgencyBank?.clinicalDiary;   
+   
+    /*const cidCodes = payload.diagnosticHypothesis
+    .filter((diagnostic: CID) => !generalClinic?.diagnosticHypothesis?.includes(diagnostic.code))
+    .map((CID: CID)=> CID.code);*/
+     
+    const urgencyBank = { 
+      anamnesis : {
+        generalClinic:{
+          symptoms: payload.symptoms || generalClinic?.symptoms,
+          diseaseData: payload.diseaseData || generalClinic?.diseaseData,
+          complementaryExams: payload.complementaryExams || generalClinic?.complementaryExams,
+          //diagnosticHypothesis: !!cidCodes.length?generalClinic?.diagnosticHypothesis.concat(cidCodes) ?? cidCodes:generalClinic?.diagnosticHypothesis,
+          others: payload.others || generalClinic?.others,
+          diseasesInFamily: payload.diseasesInFamily || generalClinic?.diseasesInFamily,
+          evaluation: payload.evaluation || generalClinic?.evaluation,
+          eatingHabits: {
+            meals: payload.meals || generalClinic?.eatingHabits?.meals,
+            typeFood: payload.typeFood || generalClinic?.eatingHabits?.typeFood,
+            waterConsumption: payload.waterConsumption || generalClinic?.eatingHabits?.waterConsumption,
+            typeWater: payload.typeWater || generalClinic?.eatingHabits?.typeWater,
+          },
+          diseases: {
+            diabetes: payload.diabetes?payload.diabetes === "true" || false:generalClinic?.diseases?.diabetes,
+            hypertension: payload.hypertension?payload.hypertension === "true" || false:generalClinic?.diseases?.hypertension,
+            respiratoryDiseases: payload.respiratoryDiseases?payload.respiratoryDiseases === "true" || false:generalClinic?.diseases?.respiratoryDiseases,
+            tuberculosis: payload.tuberculosis?payload.tuberculosis === "true" || false:generalClinic?.diseases?.tuberculosis,
+            malaria: payload.malaria?payload.malaria === "true" || false:generalClinic?.diseases?.malaria,
+          },
+            lifeStyle: {   
+              tabaccoConsumption: payload.tabaccoConsumption || generalClinic?.lifeStyle?.tabaccoConsumption,
+              alcoholConsumption: {
+                alcohol: payload.alcoholConsumption || generalClinic?.lifeStyle?.alcoholConsumption?.alcohol,
+                frequency: payload.frequency || generalClinic?.lifeStyle?.alcoholConsumption?.frequency,
+                amount: Number(payload.alcoholAmount) || generalClinic?.lifeStyle?.alcoholConsumption?.amount,
+            },
+              physicalActivity: {
+                exercise: payload.exercise || generalClinic?.lifeStyle?.physicalActivity?.exercise,
+                type: payload.type || generalClinic?.lifeStyle?.physicalActivity?.type,
+                amount: Number(payload.physicalAmount) || generalClinic?.lifeStyle?.physicalActivity?.amount,
+                timeExercise: payload.time || generalClinic?.lifeStyle?.physicalActivity?.timeExercise,
+            }
+          }
+        },
       },
-      nursingNotes: {
-        date: typeClinicalDiary === "annotation"?date:clinical?.nursingNotes?.date,
-        description: typeClinicalDiary === "annotation"?description:clinical?.nursingNotes?.description,
-      },
+      /*clinicalDiary: {
+        medicineDiary : {
+          date: payload.typeClinicalDiary === "diary"?(payload.createAt ?? clinical?.medicineDiary?.date):clinical?.medicineDiary?.date,
+          description: payload.typeClinicalDiary === "diary"?(payload.description ?? clinical?.medicineDiary?.description):clinical?.medicineDiary?.description,
+        },
+        nursingNotes: {
+          date: payload.typeClinicalDiary === "annotation"?(payload.createAt || clinical?.nursingNotes?.date):clinical?.nursingNotes?.date,
+          description: payload.typeClinicalDiary === "annotation"?(payload.description || clinical?.nursingNotes?.description):clinical?.nursingNotes?.description,
+        }
+      }*/
     }
- 
+    
+
     let message = "";
 
     if(!hasPatientUrgencyBank){
-      await urgencyBankModel.create({ patientId, clinicalDiary });
+      await urgencyBankModel.create({ patientId, urgencyBank });
       message = "Informações registradas com sucesso!";
     }else{
-      await urgencyBankModel.updateOne({ _id: hasPatientUrgencyBank._id },{ clinicalDiary })
+      await urgencyBankModel.updateOne({ _id: hasPatientUrgencyBank._id },{ urgencyBank })
       message = "Informações actualizadas com sucesso!";
     }
-
-
-    /*let message = "";
-
-    if(!hasPatientUrgencyBank){
-      await urgencyBankModel.create({ patientId, anamnesis });
-      message = "Informações registradas com sucesso!";
-    }else{
-      await urgencyBankModel.updateOne({ _id: hasPatientUrgencyBank._id },{ anamnesis })
-      message = "Informações actualizadas com sucesso!";
-    }*/
 
     return {
       message,
@@ -713,15 +658,10 @@ async function getPatientUrgencyBank(patientId: string){
         waterConsumption: patientData?.anamnesis?.generalClinic?.eatingHabits?.waterConsumption as string,
         typeWater: patientData?.anamnesis?.generalClinic?.eatingHabits?.typeWater as string,
       },
-      hospitalization: {
-        description: patientData?.anamnesis?.generalClinic?.hospitalization?.description as string,
-        dateTime: patientData?.anamnesis?.generalClinic?.hospitalization?.dateTime as Date,
-        currentState: patientData?.anamnesis?.generalClinic?.hospitalization?.currentState as string,
-      },
       diseases: {
         diabetes: patientData?.anamnesis?.generalClinic?.diseases?.diabetes as boolean,
         hypertension: patientData?.anamnesis?.generalClinic?.diseases?.hypertension as boolean,
-        respirationDiseases: patientData?.anamnesis?.generalClinic?.diseases?.respirationDiseases as boolean,
+        respirationDiseases: patientData?.anamnesis?.generalClinic?.diseases?.respiratoryDiseases as boolean,
         tuberculosis: patientData?.anamnesis?.generalClinic?.diseases?.tuberculosis as boolean,
         malaria: patientData?.anamnesis?.generalClinic?.diseases?.malaria as boolean,
       },

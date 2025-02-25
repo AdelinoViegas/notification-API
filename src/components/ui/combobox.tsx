@@ -98,9 +98,9 @@ export default function ComboBox(){
   
   function ElementsViews(){
     return(
-      <div>
+      <div className="max-h-48 overflow-y-auto scroll">
         {selectedCids.map((item, index)=>(
-          <div key={index} className="outline outline-gray-300 outline-1 rounded bg-gray-200 justify-between px-3 py-2 my-3 flex gap-x-3 items-center">
+          <div key={index} className="outline outline-gray-300 outline-1 rounded bg-gray-200 justify-between px-2 py-2 my-2 flex gap-x-3 items-center">
             <h2 className="font-medium text-sm">{item.code} - {item.value}</h2>
             <button 
               className="bg-red-500 text-white px-3 py-2 rounded" 
@@ -116,7 +116,7 @@ export default function ComboBox(){
   }
 
   return(
-    <div>
+    <div className="w-[500px]">
       <div className="flex gap-x-3">
         <InputField 
           type="radio" 
@@ -134,7 +134,7 @@ export default function ComboBox(){
         />
       </div>
 
-      <div className="w-full"> 
+      <div> 
         <div className="flex gap-x-3 items-center">
           <InputField
             textLabel="Buscar"
@@ -143,14 +143,19 @@ export default function ComboBox(){
             onChange={e => setSearchValue(e.target.value)}
             placeholder={searchByType === "description"?"Buscar pela descrição...":"Buscar pelo codigo..."}
           />
-          <Button type="button" onClick={handleCidSearch}>
+          <Button 
+            className="mt-6" 
+            type="button" 
+            onClick={handleCidSearch}
+          >
             <FiSearch />
           </Button>
         </div>
 
-        <div className="w-full flex gap-x-3 items-end">
+        <div className="flex gap-x-3 items-center">
           <ListBox />
-          <Button 
+          <Button
+            className="my-4" 
             type="button" 
             disabled={!selectedCid}
             onClick={addToCids}

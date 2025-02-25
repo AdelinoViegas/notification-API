@@ -15,27 +15,46 @@ const anamnesis = new Schema({
       waterConsumption: String,
       typeWater: String,
     },
-    hospitalization: {
-      description: String,
-      dateTime: Date,
-      currentState: String,
-    },
     diseases: {
-      diabetes: Boolean,
-      hypertension: Boolean,
-      respirationDiseases: Boolean,
-      tuberculosis: Boolean,
-      malaria: Boolean,
+      diabetes: {
+        type: Boolean,
+        default: false,
+      },
+      hypertension: {
+        type: Boolean,
+        default: false,
+      },
+      respiratoryDiseases: {
+        type: Boolean,
+        default: false,
+      },
+      tuberculosis:  {
+        type: Boolean,
+        default: false,
+      },
+      malaria:  {
+        type: Boolean,
+        default: false,
+      },
     },
     lifeStyle: {
-      tabaccoConsumption: String,
+      tabaccoConsumption: {
+        type: String,
+        default: "non-smoker",
+      },
       alcoholConsumption: {
-        alcohol: String,
+        alcohol: {
+          type: String,
+          default: "doesn't-consume",
+        },
         frequency: String,
         amount: Number,      
       },
       physicalActivity: {
-        exercise: String,
+        exercise: {
+          type: String,
+          default: "non-practitioner",
+        },
         type: { type: String },
         amount: Number,
         timeExercise: String,      
