@@ -43,9 +43,9 @@ async function getPatients({
     const user = await clinicalUserModel.findOne({ userId }).select({ serviceId: 1});
     const patients = await triedModel.find({ serviceId: user?.serviceId, served: false });
     const patientList = [];
-
+    
     for(const patient of patients){
-      const patientData = await patientModel.findById({_id: patient.patientId});
+      const patientData = await patientModel.findById({ _id: patient.patientId });
       
       if(!patientData) 
         throw new Error(`${patient._id.toString()} this id not found!`);
@@ -109,7 +109,11 @@ async function getPatient({ patientId }: {
       fullname: personalData.personal.fullname,
       screening: {
         _id: screening._id.toString() as string,
-        priority: screening.priority as string
+        priority: screening.priority as string,
+        reason: screening.reason as string,
+        advice: screening.advice as string,
+        state: screening.state as string,
+        vitalSignals: {}
       }
     }
   }catch(e){

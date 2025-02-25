@@ -27,6 +27,7 @@ import {
 // import { closePatientProcess } from "@/app/backend/api/clinical/process-api";
 import { getGrantedUnitAccess } from "@/app/backend/api/clinical/urgency-bank-api";
 import { validatePatientDoc, validatePatientLocation } from "@/lib/regexp";
+import { closePatientProcess } from "./process-api";
 
 type ChoosedGroup = Assured | Employee | Enterprise | undefined;
 
@@ -894,6 +895,8 @@ async function finishScreening(prev: unknown, formData: FormData){
       userId: await whoIsUser(),
       serviceId
     });
+    
+    await closePatientProcess(patientId as string, "screening");
 
     return {
       message: "Utente triado com sucesso!",

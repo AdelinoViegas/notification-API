@@ -24,6 +24,7 @@ export default async function Screening({
     <ScreeningUI
       ui={renderComponent} 
       patientId={patientId}
+      priority={patientData.priority}
     />
   )
 }

@@ -44,16 +44,88 @@ type Screening = {
   };
 }
 
+function DoneScreening({ 
+  disabled,
+  patientId 
+}: { 
+  disabled: boolean;
+  patientId: string; 
+}){
+  const [ state, action ] = useActionState(finishScreening, initialState);
+  const router = useRouter();
+  const [ modalState, setModalState ] = useState(false);
+  const closeModal = ()=>setModalState(false);
+  const [ urgecyServices, setUrgecyServices ] = useState<SelectionOption[]>([]);
+
+  useEffect(()=>{
+    if(state.message){
+      if(state.status)
+        toast.success(state.message, { 
+          onClose: ()=>router.replace('/clinical/screening'),
+          onOpen: closeModal,
+          autoClose: 1500
+        });
+      else
+        toast.error(state.message);
+    }
+  }, [state, router]);
+
+  useEffect(()=>{
+    getUrgencyServices()
+    .then(data => setUrgecyServices(data));
+  }, []);
+
+  return(
+    <div>
+      <Button 
+        type="button"
+        disabled={disabled}
+        onClick={()=>setModalState(true)}
+      >
+        Concluir
+      </Button>
+      <Modal
+        open={modalState}
+        asWindow
+        title="Concluir Triagem do Utente"
+        onClose={closeModal}
+      >
+        <form action={action}>
+          <input type="hidden" name="patientId" value={patientId} />
+          <Selection
+            label="Serviço de Urgência"
+            name="serviceId"
+            required
+            options={urgecyServices} 
+          />
+
+          <div className="flex gap-x-3">
+            <Button 
+              cancel 
+              type="button"
+              onClick={closeModal}
+            >
+              Cancelar
+            </Button>
+            <Button>Salvar</Button>
+          </div>
+        </form>
+      </Modal>
+    </div>
+  )
+}
+
 export default function ScreeningUI({
   ui,
-  patientId
+  patientId,
+  priority
 }:{
   ui: UIComponent,
   patientId: string;
+  priority?: string;
 }){
   const [ state, action ] = useActionState(insertScreening, initialState);
   const [ screeningData, setScreeningData ] = useState<Screening>();
-  const [ defaultPriority, setDefaultPriority ] = useState<string>();
   const [ editable, setEditable ] = useState(false);
   const pathname = usePathname();
   
@@ -65,10 +137,12 @@ export default function ScreeningUI({
         toast.error(state.message);
     }
 
-    getScreening({ patientId, isServed: false })
+    getScreening({ 
+      patientId, 
+      isServed: pathname.includes("urgency-bank") 
+    })
     .then(data => {
       setScreeningData(data as Screening);
-      setDefaultPriority(data.priority);
     })
     .finally(()=>{
       setEditable(false);
@@ -217,7 +291,7 @@ export default function ScreeningUI({
                 name="priority"
                 disabled={!editable}
                 required
-                defaultValue={defaultPriority}
+                defaultValue={priority}
               />
             </div>
           </>
@@ -275,73 +349,4 @@ export default function ScreeningUI({
       </form>
     </div>
   );
-}
-
-function DoneScreening({ 
-  disabled,
-  patientId 
-}: { 
-  disabled: boolean;
-  patientId: string; 
-}){
-  const [ state, action ] = useActionState(finishScreening, initialState);
-  const router = useRouter();
-  const [ modalState, setModalState ] = useState(false);
-  const closeModal = ()=>setModalState(false);
-  const [ urgecyServices, setUrgecyServices ] = useState<SelectionOption[]>([]);
-
-  useEffect(()=>{
-    if(state.message){
-      if(state.status)
-        toast.success(state.message, { 
-          onClose: ()=>router.replace('/clinical/screening'),
-          autoClose: 1500
-        });
-      else
-        toast.error(state.message);
-    }
-  }, [state, router]);
-
-  useEffect(()=>{
-    getUrgencyServices()
-    .then(data => setUrgecyServices(data))
-  }, []);
-  return(
-    <div>
-      <Button 
-        type="button"
-        disabled={disabled}
-        onClick={()=>setModalState(true)}
-      >
-        Concluir
-      </Button>
-      <Modal
-        open={modalState}
-        asWindow
-        title="Concluir Triagem do Utente"
-        onClose={closeModal}
-      >
-        <form action={action}>
-          <input type="hidden" name="patientId" value={patientId} />
-          <Selection
-            label="Serviço de Urgência"
-            name="serviceId"
-            required
-            options={urgecyServices} 
-          />
-
-          <div className="flex gap-x-3">
-            <Button 
-              cancel 
-              type="button"
-              onClick={closeModal}
-            >
-              Cancelar
-            </Button>
-            <Button>Salvar</Button>
-          </div>
-        </form>
-      </Modal>
-    </div>
-  )
 }
