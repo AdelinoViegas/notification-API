@@ -13,6 +13,8 @@
     "argon2": "^0.41.1",
     "clsx": "^2.1.1",
     "debounce": "^2.2.0",
+    "embla-carousel-autoplay": "^8.5.2",
+    "embla-carousel-react": "^8.5.2",
     "jose": "^5.9.6",
     "jspdf": "^2.5.2",
     "mongoose": "^8.9.5",

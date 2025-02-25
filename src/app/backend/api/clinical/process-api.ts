@@ -6,6 +6,7 @@ import { triggerUpdate } from "@/lib/ws-trigger";
 import { redirect } from "next/navigation";
 import { getFirstAndLastName } from "@/components/status-bar";
 import { userModel } from "@/app/backend/models/manager";
+import { getUser } from "@/app/backend/api/manager/api";
 
 async function openPatientProcess(patientId: string, location: string){
   try{
@@ -35,8 +36,10 @@ async function openPatientProcess(patientId: string, location: string){
       });
     } 
 
-    if(existProcess?.isInUse && existProcess.userId?.toString() !== await whoIsUser())
-      throw new Error("Este processo está em uso!", { cause: "busy" }); 
+    if(existProcess?.isInUse && existProcess.userId?.toString() !== await whoIsUser()){
+      const { fullname } = await getUser(existProcess.userId?.toString() as string);
+      throw new Error(`Este processo está em uso pelo Sr(a).${getFirstAndLastName(fullname as string)}!`, { cause: "busy" });
+    } 
     
   }catch(e: unknown){
     const err = e as Error;
@@ -50,17 +53,24 @@ async function openPatientProcess(patientId: string, location: string){
 
 async function closePatientProcess(patientId: string, location: string){
   try{
-    await processStateModel.updateOne({ patientId, location }, { isInUse: false });
+    await processStateModel.updateOne({ 
+      patientId, 
+      location,
+      userId: await whoIsUser(), 
+    }, { 
+      isInUse: false 
+    });
    
     return {
       message:"Utente libertado com sucesso!",
       status: true,
     }
-  }catch(err: unknown){
-    const e = err as { message: string };
+  }catch(e: unknown){
+    const err = e as Error;
+    console.log("[CRITICAL]: ", err.message);
+
     return {
-      message: "Falha",
-      detail: e.message,
+      message: "Falha crítica!",
       status: false
     }
   }

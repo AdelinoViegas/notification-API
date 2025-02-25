@@ -7,7 +7,7 @@ import Modal from '@/components/modal';
 import { HiArrowUturnLeft as ArrowUturnLeftIcon } from 'react-icons/hi2';
 import { closePatientProcess, openPatientProcess } from '@/app/backend/api/clinical/process-api';
 import { toast } from 'react-toastify';
-type Places = "laboratory" | "screening"; 
+type Places = "laboratory" | "screening" | "imaging"; 
 
 function UnlockProcessAccess({
   patientId,
@@ -48,7 +48,7 @@ function UnlockProcessAccess({
         cancel
       >
         <ArrowUturnLeftIcon className='w-5' />
-        Libertar Utente
+        {text?text:"Libertar Utente"}
       </Button>
 
       <Modal

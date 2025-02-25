@@ -4,16 +4,16 @@ import { getUser } from "@/app/backend/api/manager/api";
 import { whoIsUser } from "@/lib/web-token";
 import WorkplaceFrom from "@/components/forms/workplace-form";
 import { getGrantedUnitAccess } from "@/app/backend/api/clinical/urgency-bank-api";
-// import { redirect } from "next/navigation";
+// import { PictureSlides } from "@/components/picture-slides";
+
 export const dynamic = "force-dynamic";
 
 export default async function Page(){
   const userId = await whoIsUser() as string;
-  const units = await getGrantedUnitAccess(userId);
-  const user = await getUser(userId);
-
-  // if(!units.length || !userId)
-  //   redirect("/?nologin");
+  const [ units, user] = await Promise.all([
+    getGrantedUnitAccess(userId),
+    getUser(userId)
+  ]);
  
   return(
     <main className="bg-white h-screen flex-col lg:flex-row-reverse flex gap-3 justify-center items-center">
@@ -45,6 +45,8 @@ export default async function Page(){
           alt="hero_picture"
         />
       </div>
+
+      {/* <PictureSlides /> */}
     </main>
   );
 }
