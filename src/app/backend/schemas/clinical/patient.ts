@@ -108,7 +108,7 @@ const processStateSchema = new Schema({
   }
 }, {
   timestamps: true,
-  collection: "process_state"
+  collection: "patient_process_access"
 });
 
 const specialtyStateSchema = new Schema({

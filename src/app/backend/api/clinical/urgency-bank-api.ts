@@ -552,8 +552,7 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
         payload[key] = value as string;
     }
  
-    const patientId = formData.get("patientId") as string;
-    const hasPatientUrgencyBank = await urgencyBankModel.findOne({ patientId });
+    const hasPatientUrgencyBank = await urgencyBankModel.findOne({ patientId: payload.patientId });
     const generalClinic = hasPatientUrgencyBank?.anamnesis?.generalClinic;
     const clinicalDiary = hasPatientUrgencyBank?.clinicalDiary;
     const isDiary = payload.typeClinicalDiary === "diary"; 
@@ -616,8 +615,8 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
 
     let message = "";
 
-    if(!hasPatientUrgencyBank){
-      await urgencyBankModel.create({ patientId, urgencyBank });
+    if(!hasPatientUrgencyBank){     
+      await urgencyBankModel.create({ patientId: payload.patientId, urgencyBank });
       message = "Informações registradas com sucesso!";
     }else{
       await urgencyBankModel.updateOne({ _id: hasPatientUrgencyBank._id },{ urgencyBank });

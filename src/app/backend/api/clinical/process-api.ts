@@ -5,13 +5,8 @@ import { processStateModel, notificationModel } from "@/app/backend/models/clini
 import { triggerUpdate } from "@/lib/ws-trigger";
 import { redirect } from "next/navigation";
 import { getFirstAndLastName } from "@/components/status-bar";
-import { userModel } from "../../models/manager";
+import { userModel } from "@/app/backend/models/manager";
 
-// const NOTFICATION_FORMAT = {
-//   appointment: {
-   
-//   }
-// }
 async function openPatientProcess(patientId: string, location: string){
   try{
     const existProcess = await processStateModel.findOne({
@@ -20,14 +15,12 @@ async function openPatientProcess(patientId: string, location: string){
     });
      
     if(!existProcess){
-      const process = new processStateModel({
+      await processStateModel.create({
         patientId,
         userId: await whoIsUser(),
         location,
         isInUse: true,
       });
-      
-      await process.save();
 
       return {
         message: "Processo aberto com sucesso!",
@@ -44,16 +37,12 @@ async function openPatientProcess(patientId: string, location: string){
 
     if(existProcess?.isInUse && existProcess.userId?.toString() !== await whoIsUser())
       throw new Error("Este processo está em uso!", { cause: "busy" }); 
-  }catch(err: unknown){
-    const error = err as Error;
     
-    if(error.cause === "busy")
-      return {
-        message: error.message,
-        status: false
-      }
+  }catch(e: unknown){
+    const err = e as Error;
+    
     return {
-      message: "falha",
+      message: err?.cause === "busy"?err.message:"Erro crítico!",
       status: false
     }
   }

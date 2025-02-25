@@ -2,9 +2,7 @@ import Header from "@/components/header";
 import Card from "@/components/ui/card";
 import { getExamResult, getPatient, getPatientExams } from "@/app/backend/api/clinical/unit-api";
 import LaboratoryForm from "@/components/forms/laboratory-imaging-form";
-import CloseProcess from "@/components/close-process";
-import { openPatientProcess } from "@/app/backend/api/clinical/process-api";
-import ProcessAlert from "@/components/process-alert";
+import { MonitorAccess, UnlockProcessAccess } from "@/components/lock-unlock-monitor-process";
 
 export default async function Page({
   params
@@ -17,19 +15,24 @@ export default async function Page({
   const exams = await getPatientExams(laboratoryId);
   const savedResults = await getExamResult({ serviceResultId: laboratoryId });
   const { patientId, patientName } = await getPatient(laboratoryId);
-  const processState = await openPatientProcess(patientId, "laboratory");
 
   return(
     <main className="space-y-3">
+      <MonitorAccess
+        patientId={patientId}
+        place="laboratory"
+        basePathname="/clinical/laboratory"
+      />
+
       <div className="mt-6">
         <Header title="Exames Marcados" />
       </div>
 
       <div className="flex gap-x-3">
-        <CloseProcess
-          {...{patientId}}
-          location="laboratory"
-          path="/clinical/laboratory"
+        <UnlockProcessAccess
+          patientId={patientId}
+          place="laboratory"
+          basePathname="/clinical/laboratory"
         />
       </div>
 
@@ -41,10 +44,6 @@ export default async function Page({
           {...{exams}}
         />
       </Card>
-      {
-        (processState && !processState?.status) &&
-        <ProcessAlert path="/clinical/laboratory"/>
-      }
     </main>
   );
 }

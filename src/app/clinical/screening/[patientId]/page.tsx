@@ -3,10 +3,11 @@ import PatientForm from "@/components/forms/patient-form";
 import Card from "@/components/ui/card";
 import Header from "@/components/header";
 import { getPatient } from "@/app/backend/api/clinical/api";
-import CloseProcess from "@/components/close-process";
 import ArchiveButton from "@/components/archive-button";
 import Screening from "@/components/screening";
 import { UIComponent } from "@/components/forms/screening-ui";
+import { UnlockProcessAccess, MonitorAccess } from "@/components/lock-unlock-monitor-process";
+
 type Routes = "patient" | "reason" | "vital-signals" | "priority" | "state" | "advice";
 
 export default async function Page({
@@ -21,12 +22,19 @@ export default async function Page({
 
   return(
     <main>
+      <MonitorAccess
+        patientId={patientId}
+        place="screening"
+        basePathname="/clinical/screening" 
+      />
+
       <div className="mt-4 mb-6">
         <Header 
           center 
           title={fullname}
         />
       </div>
+      
       <Card className="max-h-[80vh]">
         <TabNav
           baseUrl="/clinical/screening"
@@ -43,11 +51,11 @@ export default async function Page({
           ]}
         />
 
-        <div className="flex gap-x-3 px-2">
-          <CloseProcess
-            {...{patientId}}
-            location="screening"
-            path="/clinical/screening"
+        <div className="flex gap-x-3">
+          <UnlockProcessAccess
+            patientId={patientId}
+            place="screening"
+            basePathname="/clinical/screening"
           />
           
           <ArchiveButton />

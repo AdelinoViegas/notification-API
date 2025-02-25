@@ -34,7 +34,7 @@ export default function ArchiveButton({ invert }:{ invert?: boolean }){
   }
    
   return(
-    <div className="my-3">
+    <div>
       <Button
         className='bg-orange-500 flex items-center gap-3'
         onClick={()=>setState(true)} 
