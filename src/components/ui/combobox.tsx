@@ -118,6 +118,11 @@ export default function ComboBox(){
   return(
     <div className="w-[500px]">
       <div className="flex gap-x-3">
+        <input
+          className="hidden"
+          name="cids"
+          defaultValue={JSON.stringify(selectedCids)}
+        />
         <InputField 
           type="radio" 
           textLabel="Por Código" 

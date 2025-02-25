@@ -9,24 +9,28 @@ import Button from "@/components/ui/button";
 import Modal from '@/components/modal';
 import { HiArchiveBoxXMark as ArchiveBoxXMarkIcon } from 'react-icons/hi2';
 import { changeArchived } from '@/app/backend/api/clinical/api';
+import { toast } from 'react-toastify';
 
 export default function ArchiveButton({ invert }:{ invert?: boolean }){
   const [ state, setState ] = useState(false);
-  const [ alertState, setAlertState ] = useState(false);
-  const [ message, setMessage ] = useState("");
-  const { replace } = useRouter();
-  const { patientId }:{ patientId: string } = useParams();
+  const router = useRouter();
+  const params = useParams<{ patientId: string }>();
 
-  const handleConfirm = async ()=>{
-    setState(false);
-    const state = await changeArchived({patientId, isArchived: !!invert});
-    setMessage(state.message);
-    setAlertState(true);
-  }
-
-  const handleClose = ()=>{
-    setAlertState(false);
-    replace("/clinical/screening");
+  const handleConfirm = ()=>{
+    changeArchived({
+      patientId: params.patientId, 
+      isArchived: !!invert
+    })
+    .then(data => {
+      if(data.status)
+        toast.success(data.message, {
+          onClose: ()=> router.replace("/clinical/screening"),
+          autoClose: 1500
+        });
+      else 
+        toast.error(data.message);
+    })
+    .finally(()=>setState(false));
   }
    
   return(
@@ -45,14 +49,6 @@ export default function ArchiveButton({ invert }:{ invert?: boolean }){
         onClose={()=>setState(false)}
         onConfirm={handleConfirm}
         open={state} 
-      />
-
-      <Modal
-        title='Utente Arquivado'
-        description={message}
-        onClose={handleClose}
-        open={alertState} 
-        alertOnly
       />
     </div>
   );

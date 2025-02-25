@@ -551,23 +551,25 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
     for(const [key, value] of formData.entries()){
         payload[key] = value as string;
     }
-
+ 
     const patientId = formData.get("patientId") as string;
     const hasPatientUrgencyBank = await urgencyBankModel.findOne({ patientId });
     const generalClinic = hasPatientUrgencyBank?.anamnesis?.generalClinic;
-    //const clinical = hasPatientUrgencyBank?.clinicalDiary;   
+    const clinicalDiary = hasPatientUrgencyBank?.clinicalDiary;
+    const isDiary = payload.typeClinicalDiary === "diary"; 
+    const isAnnotation = payload.typeClinicalDiary === "annotation";     
    
-    /*const cidCodes = payload.diagnosticHypothesis
+    /*const cidCodes = JSON.parse(payload.cids)
     .filter((diagnostic: CID) => !generalClinic?.diagnosticHypothesis?.includes(diagnostic.code))
     .map((CID: CID)=> CID.code);*/
-     
+
     const urgencyBank = { 
       anamnesis : {
         generalClinic:{
           symptoms: payload.symptoms || generalClinic?.symptoms,
           diseaseData: payload.diseaseData || generalClinic?.diseaseData,
           complementaryExams: payload.complementaryExams || generalClinic?.complementaryExams,
-          //diagnosticHypothesis: !!cidCodes.length?generalClinic?.diagnosticHypothesis.concat(cidCodes) ?? cidCodes:generalClinic?.diagnosticHypothesis,
+          //diagnosticHypothesis: !!cidCodes.length?generalClinic?.diagnosticHypothesis.concat(cidCodes):generalClinic?.diagnosticHypothesis*/,
           others: payload.others || generalClinic?.others,
           diseasesInFamily: payload.diseasesInFamily || generalClinic?.diseasesInFamily,
           evaluation: payload.evaluation || generalClinic?.evaluation,
@@ -600,18 +602,17 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
           }
         },
       },
-      /*clinicalDiary: {
+      clinicalDiary: {
         medicineDiary : {
-          date: payload.typeClinicalDiary === "diary"?(payload.createAt ?? clinical?.medicineDiary?.date):clinical?.medicineDiary?.date,
-          description: payload.typeClinicalDiary === "diary"?(payload.description ?? clinical?.medicineDiary?.description):clinical?.medicineDiary?.description,
+          date: isDiary?(payload.createAt ?? clinicalDiary?.medicineDiary?.date):clinicalDiary?.medicineDiary?.date,
+          description: isDiary?(payload.description ?? clinicalDiary?.medicineDiary?.description):clinicalDiary?.medicineDiary?.description,
         },
         nursingNotes: {
-          date: payload.typeClinicalDiary === "annotation"?(payload.createAt || clinical?.nursingNotes?.date):clinical?.nursingNotes?.date,
-          description: payload.typeClinicalDiary === "annotation"?(payload.description || clinical?.nursingNotes?.description):clinical?.nursingNotes?.description,
+          date: isAnnotation?(payload.createAt || clinicalDiary?.nursingNotes?.date):clinicalDiary?.nursingNotes?.date,
+          description: isAnnotation?(payload.description || clinicalDiary?.nursingNotes?.description):clinicalDiary?.nursingNotes?.description,
         }
-      }*/
+      }
     }
-    
 
     let message = "";
 
@@ -619,7 +620,7 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
       await urgencyBankModel.create({ patientId, urgencyBank });
       message = "Informações registradas com sucesso!";
     }else{
-      await urgencyBankModel.updateOne({ _id: hasPatientUrgencyBank._id },{ urgencyBank })
+      await urgencyBankModel.updateOne({ _id: hasPatientUrgencyBank._id },{ urgencyBank });
       message = "Informações actualizadas com sucesso!";
     }
 
@@ -648,7 +649,7 @@ async function getPatientUrgencyBank(patientId: string){
       symptoms: patientData?.anamnesis?.generalClinic?.symptoms as string,
       diseaseData: patientData?.anamnesis?.generalClinic?.diseaseData as string,
       complementaryExams: patientData?.anamnesis?.generalClinic?.complementaryExams as string,
-      diagnosticHypothesis: patientData?.anamnesis?.generalClinic?.diagnosticHypothesis as string[],
+      //diagnosticHypothesis: patientData?.anamnesis?.generalClinic?.diagnosticHypothesis as string[],
       others: patientData?.anamnesis?.generalClinic?.others as string,
       evaluation: patientData?.anamnesis?.generalClinic?.evaluation as string,
       diseasesInFamily: patientData?.anamnesis?.generalClinic?.diseasesInFamily as string,
