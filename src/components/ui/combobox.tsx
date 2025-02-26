@@ -1,7 +1,5 @@
 "use client";
-
-//import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CID, getByCode, getByName } from "@/lib/cid-query";
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
@@ -21,7 +19,7 @@ import clsx from 'clsx';
 import { FiSearch } from "react-icons/fi";
 import { IoMdAdd } from "react-icons/io";
 import { FaRegTrashAlt } from "react-icons/fa";
-import { getPatientUrgencyBank } from "@/app/backend/api/clinical/urgency-bank-api";
+// import { getPatientUrgencyBank } from "@/app/backend/api/clinical/urgency-bank-api";
 
 export default function ComboBox(){
   const [ initialCidList, setInitialCidList ] = useState<CID[]>([]);
@@ -29,7 +27,7 @@ export default function ComboBox(){
   const [ searchValue, setSearchValue ] = useState("");
   const [ selectedCids, setSelectedCids ] = useState<CID[]>([]);
   const [ selectedCid, setSelectedCid ] = useState<CID>();
-  const [ defaultValue, setDefaultValue ] = useState<string[]>();
+  const [ defaultValue ] = useState<string[]>();
   //const { patientId } = useParams();
 
  /*useEffect(()=>{

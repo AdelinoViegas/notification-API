@@ -7,7 +7,7 @@ type TableRow = {
 };
 
 export type PatientExam = {
-  id: string;
+  _id: string;
   examCode: string;
   name: string;
   category: string;
@@ -123,7 +123,7 @@ export default function tableFormater(dataListToTable: FuncTableProps[]){
       const examData = dataListToTable as PatientExam[];
       for(const data of examData){
         dataListFormated.push({
-          id: data.id,
+          id: data._id,
           row: [
             data.examCode,
             data.name,

@@ -1,4 +1,4 @@
-import { getPatientUrgencyBank } from "@/app/backend/api/clinical/urgency-bank-api";
+// import { getPatientUrgencyBank } from "@/app/backend/api/clinical/urgency-bank-api";
 import ClinicalDiary, { type ClinicalDiaryProps } from "@/components/clinical-diary";
 
 export default async function Page({
@@ -9,7 +9,7 @@ export default async function Page({
 	}>
 }){
 	const { patientId } = await params;
-	const { clinicalDiary } = await getPatientUrgencyBank(patientId);
+	// const { clinicalDiary } = await getPatientUrgencyBank(patientId);
 
 	const clinicalItems: ClinicalDiaryProps[] = [
 		{

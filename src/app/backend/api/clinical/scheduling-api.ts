@@ -130,14 +130,14 @@ async function getExams(specialtyId?: string){
       _id: data._id.toString(),
       name: data.name,
       label: data.name,
-      examCode: data.examCode,
+      examCode: data.examCode.toString(), // por causa das tabelas
       categoryId: data.categoryId?.toString() as string,
       category: category?.name as string,
       classificationId: data.classificationId?.toString() as string,
       classification: classification?.name as string,
       groupId: data.groupId?.toString() as string,
       group: group?.name as string,
-      price: data.price,
+      price: data.price.toString(), // por causa das tabelas
     });
   }
 

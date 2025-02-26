@@ -24,7 +24,7 @@ export default function ClinicalDiary({
   apiType,
   patientId,
 }: ClinicalDiaryProps){
-  const [ state, action ] = useActionState(signUrgencyBank, {message: "", status: false, state: false});
+  const [ state, action ] = useActionState(signUrgencyBank, {message: "", status: false});
   const [ modalState, setModalState ] = useState(false);
   const [ messageState, setMessageState] = useState(false);
   

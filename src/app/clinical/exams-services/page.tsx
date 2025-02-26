@@ -10,7 +10,7 @@ import CCG from "@/components/CCG";
 export const dynamic = "force-dynamic";
 
 export default async function Page() {
-  const rows = tableFormater(await getExams({ options: false }) as PatientExam[]);
+  const rows = tableFormater(await getExams() as PatientExam[]);
 
   return (
     <main className="space-y-3">
