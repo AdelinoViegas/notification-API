@@ -3,8 +3,7 @@
 import { 
   HTMLInputTypeAttribute, 
   useActionState, 
-  useEffect, 
-  useState,
+  useEffect
 } from "react";
 import { useRouter } from "next/navigation";
 import Accordium from "@/components/ui/accordium";
@@ -12,8 +11,8 @@ import Button from "@/components/ui/button";
 import InputDetails from "@/components/ui/input-details";
 import InputField from "@/components/ui/input-field";
 import Selection, { SelectionOption } from "@/components/ui/selection";
-import Alert from "@/components/ui/alert";
 import ComboBox from "@/components/ui/combobox";
+import { toast } from 'react-toastify';
 
 type InitialValue = {
   message?: string;
@@ -73,14 +72,17 @@ function Component({
   type,
 }: InternalComponent & {patientId : string} & { type?: string}){
   const [ state, action ] = useActionState(apiFn?apiFn:FallbackFn, initialState);
-  const [ messageState, setMessageState ] = useState(false);
   const router = useRouter();
 
   useEffect(()=>{
     if(state?.message){
-      setMessageState(true);
-      setTimeout(()=>setMessageState(false), 3000);
-      router.refresh();
+      if(state.status)
+        toast.success(state.message, {
+          onClose: router.refresh,
+          autoClose: 1500
+        });
+      else 
+        toast.error(state.message);
     }
   }, [state, router]);
 
@@ -117,16 +119,6 @@ function Component({
         </div>
 
         <Button>Salvar</Button>
-
-        {
-          state?.message && messageState &&
-          <div className="flex mt-3">
-            <Alert
-              type={state?.status?'success':'error'}
-              message={state?.message}
-            />
-          </div>
-        }
       </form>
     </Accordium>
   );
