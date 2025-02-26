@@ -554,27 +554,28 @@ async function updateExternalUnit(prev: unknown, formData: FormData){
 
 async function signUrgencyBank(prev: unknown, formData:FormData){
   try{
-    
     const payload:{ [key: string]: string } = {};
-    for(const [key, value] of formData.entries()){
+    
+    for(const [key, value] of formData.entries())
       payload[key] = value as string;
-    }
     
     const hasPatientUrgencyBank = await urgencyBankModel.findOne({ patientId: payload.patientId });
     const generalClinic = hasPatientUrgencyBank?.anamnesis?.generalClinic;
-    const isDiary = payload.typeClinicalDiary === "diary"; 
-    const isAnnotation = payload.typeClinicalDiary === "annotation";    
-    
-    const cidCodes = JSON.parse(payload.cids)
+    // const isDiary = payload.typeClinicalDiary === "diary"; 
+    // const isAnnotation = payload.typeClinicalDiary === "annotation";    
+
+    const cidCodes = payload?.cids
+    ? JSON.parse(payload.cids)
     .filter((diagnostic: CID) => !generalClinic?.diagnosticHypothesis?.includes(diagnostic.code))
     .map((cid: CID)=> cid.code)
+    : undefined;
 
     const  anamnesis = {
       generalClinic: {
         symptoms: payload.symptoms || generalClinic?.symptoms,
         diseaseData: payload.diseaseData || generalClinic?.diseaseData,
         complementaryExams: payload.complementaryExams || generalClinic?.complementaryExams,
-        diagnosticHypothesis: !!cidCodes.length?generalClinic?.diagnosticHypothesis.concat(cidCodes):generalClinic?.diagnosticHypothesis,
+        diagnosticHypothesis: !!cidCodes?.length?generalClinic?.diagnosticHypothesis.concat(cidCodes):generalClinic?.diagnosticHypothesis,
         others: payload.others || generalClinic?.others,
         diseasesInFamily: payload.diseasesInFamily || generalClinic?.diseasesInFamily,
         evaluation: payload.evaluation || generalClinic?.evaluation,
@@ -618,32 +619,24 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
         description: isAnnotation?payload.description:undefined,
       }
     }*/
-  
-    let message = "";
 
-    if(!hasPatientUrgencyBank){     
+    if(!hasPatientUrgencyBank)     
       await urgencyBankModel.create({ patientId: payload.patientId, anamnesis });
-      message = "Informações registradas com sucesso!";
-    }else{
+    else
       await urgencyBankModel.updateOne({ _id: hasPatientUrgencyBank._id },{ anamnesis });
-      message = "Informações actualizadas com sucesso!";
-    }
     
     return {
-      message,
-      status: true,
-      state: false,
+      message: `Informação ${!hasPatientUrgencyBank?'registrada':'actualizada'} com sucesso!`,
+      status: true
     }
   }catch(e: unknown){
     const err = e as Error;
-
+   
     return {
-      message: err.cause?err.message:"Falha na actualização!",
+      message: err.cause?err.message:"Não foi possivel realizar esta operação!",
       status: false,
-      detail: err.message,
     }
   }
-  
 }
 
 async function getPatientUrgencyBank(patientId: string){
