@@ -33,6 +33,7 @@ export default async function Page({ params }: {
   const lifeStyle = lifeStyleInternalComponent(anamnesis.generalClinic.lifeStyle);
 	const eatingHabits = eatingHabitsInternalComponent(anamnesis.generalClinic.eatingHabits);
   const family = familyInternalComponent(anamnesis?.generalClinic.diseasesInFamily);
+	const diagnosticHypothesis = anamnesis.generalClinic.diagnosticHypothesis;
 
 	const generalClinical:InternalComponent[] = [
 		symptoms,

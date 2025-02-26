@@ -1,7 +1,7 @@
 "use client";
 
-// import { useParams } from "next/navigation";
-import { useState } from "react";
+//import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { CID, getByCode, getByName } from "@/lib/cid-query";
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
@@ -21,6 +21,7 @@ import clsx from 'clsx';
 import { FiSearch } from "react-icons/fi";
 import { IoMdAdd } from "react-icons/io";
 import { FaRegTrashAlt } from "react-icons/fa";
+import { getPatientUrgencyBank } from "@/app/backend/api/clinical/urgency-bank-api";
 
 export default function ComboBox(){
   const [ initialCidList, setInitialCidList ] = useState<CID[]>([]);
@@ -28,7 +29,18 @@ export default function ComboBox(){
   const [ searchValue, setSearchValue ] = useState("");
   const [ selectedCids, setSelectedCids ] = useState<CID[]>([]);
   const [ selectedCid, setSelectedCid ] = useState<CID>();
+  const [ defaultValue, setDefaultValue ] = useState<string[]>();
+  //const { patientId } = useParams();
 
+ /*useEffect(()=>{
+  const getCids = async ()=>{
+    const { generalClinic: { diagnosticHypothesis } } = await getPatientUrgencyBank(patientId as string);
+    setDefaultValue(diagnosticHypothesis);
+    }
+    getCids();
+  },[defaultValue]);*/
+  
+  console.log(defaultValue);
   const addToCids = ()=>{
     if(!!selectedCids.find(item => item.code === selectedCid?.code)){
       toast.warn("Esta cid já foi selecionada, escolha outra!");
@@ -47,7 +59,6 @@ export default function ComboBox(){
     try{
       if(!searchValue)
         throw new Error("Escreva alguma coisa!", { cause: "empty"});
-
       const cids = await (searchByType === "code"?getByCode(searchValue):getByName(searchValue));
       if(!cids.length)
         throw new Error("Não foi encontrado nenhum registro!", { cause: "not_found" });
@@ -171,6 +182,12 @@ export default function ComboBox(){
       </div>
 
       <ElementsViews />
+
+      {/*<div className="border p-2 rounded-md">
+        defaultValue?.map((items,i)=>{
+          return <div key={i}>{items}</div>
+        })
+      </div>*/}
     </div>
   )
 }

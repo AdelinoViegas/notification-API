@@ -58,7 +58,7 @@ export default function ClinicalDiary({
           <InputField 
             textLabel="Data e Hora"
             name="createAt"
-            type="datetime-local" 
+            type="datetime-local"
           />
 
           <input

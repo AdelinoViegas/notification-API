@@ -49,7 +49,7 @@ export default function ScheduleAppointment({ patientId }: { patientId: string }
       return;
     }
     const newDoctorsList = doctorsRef.current.filter(doctor => doctor?.roleId === specialtyId) as unknown as SelectionOption[];
-    const consults = await getExams({ options: true, specialtyId }) as SelectionOption[];
+    const consults = await getExams(specialtyId) as SelectionOption[];
     setConsults(consults);
     setDoctors(newDoctorsList);
   }, []);

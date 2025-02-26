@@ -1,7 +1,9 @@
 "use server";
 
+import { redirect } from "next/navigation";
 import { whoIsUser } from "@/lib/web-token";
 import { orderByPriority } from "@/lib/filters";
+import { CID } from "@/lib/cid-query";
 import { 
   patientModel,
   groupModel,
@@ -22,16 +24,17 @@ import {
   patientAccess,
   patientGroup as patientGroups, 
 } from "@/app/backend/api/clinical/translator"; 
-import { DoctorCalendar } from "@/app/backend/api/clinical/types";
+
+import { userModel } from "@/app/backend/models/manager";
 import { 
   priorityToComponent,
   unitTypes,
   priority as priorityTranslator
 } from "@/app/backend/api/clinical/translator";
-import { userModel } from "@/app/backend/models/manager";
 import { getUser, patientFilters } from "@/app/backend/api/clinical/api";
-import { redirect } from "next/navigation";
+import { DoctorCalendar } from "@/app/backend/api/clinical/types";
 import { getPatient as mainPatient } from "@/app/backend/api/clinical/api";
+
 type UnitType = "workplace" | "internment" | "laboratory" | "imaging";
 
 async function getPatients({ 
@@ -551,82 +554,81 @@ async function updateExternalUnit(prev: unknown, formData: FormData){
 
 async function signUrgencyBank(prev: unknown, formData:FormData){
   try{
+    
     const payload:{ [key: string]: string } = {};
     for(const [key, value] of formData.entries()){
-        payload[key] = value as string;
+      payload[key] = value as string;
     }
- 
+    
     const hasPatientUrgencyBank = await urgencyBankModel.findOne({ patientId: payload.patientId });
     const generalClinic = hasPatientUrgencyBank?.anamnesis?.generalClinic;
-    const clinicalDiary = hasPatientUrgencyBank?.clinicalDiary;
     const isDiary = payload.typeClinicalDiary === "diary"; 
-    const isAnnotation = payload.typeClinicalDiary === "annotation";     
-   
-    /*const cidCodes = JSON.parse(payload.cids)
+    const isAnnotation = payload.typeClinicalDiary === "annotation";    
+    
+    const cidCodes = JSON.parse(payload.cids)
     .filter((diagnostic: CID) => !generalClinic?.diagnosticHypothesis?.includes(diagnostic.code))
-    .map((CID: CID)=> CID.code);*/
+    .map((cid: CID)=> cid.code)
 
-    const urgencyBank = { 
-      anamnesis : {
-        generalClinic:{
-          symptoms: payload.symptoms || generalClinic?.symptoms,
-          diseaseData: payload.diseaseData || generalClinic?.diseaseData,
-          complementaryExams: payload.complementaryExams || generalClinic?.complementaryExams,
-          //diagnosticHypothesis: !!cidCodes.length?generalClinic?.diagnosticHypothesis.concat(cidCodes):generalClinic?.diagnosticHypothesis*/,
-          others: payload.others || generalClinic?.others,
-          diseasesInFamily: payload.diseasesInFamily || generalClinic?.diseasesInFamily,
-          evaluation: payload.evaluation || generalClinic?.evaluation,
-          eatingHabits: {
-            meals: payload.meals || generalClinic?.eatingHabits?.meals,
-            typeFood: payload.typeFood || generalClinic?.eatingHabits?.typeFood,
-            waterConsumption: payload.waterConsumption || generalClinic?.eatingHabits?.waterConsumption,
-            typeWater: payload.typeWater || generalClinic?.eatingHabits?.typeWater,
+    const  anamnesis = {
+      generalClinic: {
+        symptoms: payload.symptoms || generalClinic?.symptoms,
+        diseaseData: payload.diseaseData || generalClinic?.diseaseData,
+        complementaryExams: payload.complementaryExams || generalClinic?.complementaryExams,
+        diagnosticHypothesis: !!cidCodes.length?generalClinic?.diagnosticHypothesis.concat(cidCodes):generalClinic?.diagnosticHypothesis,
+        others: payload.others || generalClinic?.others,
+        diseasesInFamily: payload.diseasesInFamily || generalClinic?.diseasesInFamily,
+        evaluation: payload.evaluation || generalClinic?.evaluation,
+        eatingHabits: {
+          meals: payload.meals || generalClinic?.eatingHabits?.meals,
+          typeFood: payload.typeFood || generalClinic?.eatingHabits?.typeFood,
+          waterConsumption: payload.waterConsumption || generalClinic?.eatingHabits?.waterConsumption,
+          typeWater: payload.typeWater || generalClinic?.eatingHabits?.typeWater,
+        },
+        diseases: {
+          diabetes: payload.diabetes?payload.diabetes === "true" || false:generalClinic?.diseases?.diabetes,
+          hypertension: payload.hypertension?payload.hypertension === "true" || false:generalClinic?.diseases?.hypertension,
+          respiratoryDiseases: payload.respiratoryDiseases?payload.respiratoryDiseases === "true" || false:generalClinic?.diseases?.respiratoryDiseases,
+          tuberculosis: payload.tuberculosis?payload.tuberculosis === "true" || false:generalClinic?.diseases?.tuberculosis,
+          malaria: payload.malaria?payload.malaria === "true" || false:generalClinic?.diseases?.malaria,
+        },
+        lifeStyle: {   
+            tabaccoConsumption: payload.tabaccoConsumption || generalClinic?.lifeStyle?.tabaccoConsumption,
+            alcoholConsumption: {
+              alcohol: payload.alcoholConsumption || generalClinic?.lifeStyle?.alcoholConsumption?.alcohol,
+              frequency: payload.frequency || generalClinic?.lifeStyle?.alcoholConsumption?.frequency,
+              amount: Number(payload.alcoholAmount) || generalClinic?.lifeStyle?.alcoholConsumption?.amount,
           },
-          diseases: {
-            diabetes: payload.diabetes?payload.diabetes === "true" || false:generalClinic?.diseases?.diabetes,
-            hypertension: payload.hypertension?payload.hypertension === "true" || false:generalClinic?.diseases?.hypertension,
-            respiratoryDiseases: payload.respiratoryDiseases?payload.respiratoryDiseases === "true" || false:generalClinic?.diseases?.respiratoryDiseases,
-            tuberculosis: payload.tuberculosis?payload.tuberculosis === "true" || false:generalClinic?.diseases?.tuberculosis,
-            malaria: payload.malaria?payload.malaria === "true" || false:generalClinic?.diseases?.malaria,
-          },
-            lifeStyle: {   
-              tabaccoConsumption: payload.tabaccoConsumption || generalClinic?.lifeStyle?.tabaccoConsumption,
-              alcoholConsumption: {
-                alcohol: payload.alcoholConsumption || generalClinic?.lifeStyle?.alcoholConsumption?.alcohol,
-                frequency: payload.frequency || generalClinic?.lifeStyle?.alcoholConsumption?.frequency,
-                amount: Number(payload.alcoholAmount) || generalClinic?.lifeStyle?.alcoholConsumption?.amount,
-            },
-              physicalActivity: {
-                exercise: payload.exercise || generalClinic?.lifeStyle?.physicalActivity?.exercise,
-                type: payload.type || generalClinic?.lifeStyle?.physicalActivity?.type,
-                amount: Number(payload.physicalAmount) || generalClinic?.lifeStyle?.physicalActivity?.amount,
-                timeExercise: payload.time || generalClinic?.lifeStyle?.physicalActivity?.timeExercise,
-            }
+            physicalActivity: {
+              exercise: payload.exercise || generalClinic?.lifeStyle?.physicalActivity?.exercise,
+              type: payload.type || generalClinic?.lifeStyle?.physicalActivity?.type,
+              amount: Number(payload.physicalAmount) || generalClinic?.lifeStyle?.physicalActivity?.amount,
+              timeExercise: payload.time || generalClinic?.lifeStyle?.physicalActivity?.timeExercise,
           }
-        },
-      },
-      clinicalDiary: {
-        medicineDiary : {
-          date: isDiary?(payload.createAt ?? clinicalDiary?.medicineDiary?.date):clinicalDiary?.medicineDiary?.date,
-          description: isDiary?(payload.description ?? clinicalDiary?.medicineDiary?.description):clinicalDiary?.medicineDiary?.description,
-        },
-        nursingNotes: {
-          date: isAnnotation?(payload.createAt || clinicalDiary?.nursingNotes?.date):clinicalDiary?.nursingNotes?.date,
-          description: isAnnotation?(payload.description || clinicalDiary?.nursingNotes?.description):clinicalDiary?.nursingNotes?.description,
         }
-      }
+      },
     }
-
+   
+    /*const clinicalDiary = {
+      medicineDiary: {
+        date: isDiary?payload.createAt:undefined,
+        description: isDiary?payload.description:undefined,
+      },
+      nursingNotes: {
+        date: isAnnotation?payload.createAt:undefined,
+        description: isAnnotation?payload.description:undefined,
+      }
+    }*/
+  
     let message = "";
 
     if(!hasPatientUrgencyBank){     
-      await urgencyBankModel.create({ patientId: payload.patientId, urgencyBank });
+      await urgencyBankModel.create({ patientId: payload.patientId, anamnesis });
       message = "Informações registradas com sucesso!";
     }else{
-      await urgencyBankModel.updateOne({ _id: hasPatientUrgencyBank._id },{ urgencyBank });
+      await urgencyBankModel.updateOne({ _id: hasPatientUrgencyBank._id },{ anamnesis });
       message = "Informações actualizadas com sucesso!";
     }
-
+    
     return {
       message,
       status: true,
@@ -652,7 +654,7 @@ async function getPatientUrgencyBank(patientId: string){
       symptoms: patientData?.anamnesis?.generalClinic?.symptoms as string,
       diseaseData: patientData?.anamnesis?.generalClinic?.diseaseData as string,
       complementaryExams: patientData?.anamnesis?.generalClinic?.complementaryExams as string,
-      //diagnosticHypothesis: patientData?.anamnesis?.generalClinic?.diagnosticHypothesis as string[],
+      diagnosticHypothesis: patientData?.anamnesis?.generalClinic?.diagnosticHypothesis as string[],
       others: patientData?.anamnesis?.generalClinic?.others as string,
       evaluation: patientData?.anamnesis?.generalClinic?.evaluation as string,
       diseasesInFamily: patientData?.anamnesis?.generalClinic?.diseasesInFamily as string,
@@ -684,8 +686,10 @@ async function getPatientUrgencyBank(patientId: string){
         },
       }
     },
-
-    //outras anamneses
+    clinicalDiary : {
+      medicineDiary: patientData?.clinicalDiary?.medicineDiary,
+      nursingNotes: patientData?.clinicalDiary?.nursingNotes
+    }
   }
 }
 

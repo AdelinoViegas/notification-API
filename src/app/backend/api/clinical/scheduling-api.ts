@@ -115,43 +115,91 @@ async function updateExamService(prev: unknown, formData: FormData){
   }
 } 
 
-async function getExams({ 
-  options,
-  specialtyId
-}: { 
-  options: boolean; 
-  specialtyId?: string 
-}){
-  const exams = specialtyId?await examModel.find({specialtyId}):await examModel.find();
-  const listFormated = [];
+async function getExams(specialtyId?: string){
+  // const exams = specialtyId?await examModel.find({specialtyId}):await examModel.find();
+  const exams = await (specialtyId?examModel.find({ specialtyId }):examModel.find());
+  const formatedList = [];
+  
+  for(const data of exams){
+    const [ group, category, classification ] = await Promise.all([
+      examGroupModel.findById({ _id: data.groupId }).select({ name: 1 }),
+      examCategoryModel.findById({ _id: data.categoryId }).select({ name: 1 }),
+      examClassificationModel.findById({ _id: data.classificationId }).select({ name: 1 })
+    ]);
 
-  if(options){
-    for(const item of exams)
-      listFormated.push({
-        _id: item._id.toString() as string,
-        label: item.name as string,
-      });
-
-    return listFormated;
-  }
-
-  for(const exam of exams){
-    const group = await examGroupModel.findById({ _id: exam.groupId });
-    const category = await examCategoryModel.findById({ _id: exam.categoryId });
-    const classification = await examClassificationModel.findById({ _id: exam.classificationId });
-
-    listFormated.push({
-      id: exam._id.toString(),
-      examCode: exam.examCode as unknown as string,
-      name: exam.name as string,
+    formatedList.push({
+      _id: data._id.toString(),
+      name: data.name,
+      label: data.name,
+      examCode: data.examCode,
+      categoryId: data.categoryId?.toString() as string,
       category: category?.name as string,
+      classificationId: data.classificationId?.toString() as string,
       classification: classification?.name as string,
+      groupId: data.groupId?.toString() as string,
       group: group?.name as string,
-      price: exam?.price as unknown as string,
+      price: data.price,
     });
   }
+
+  return formatedList;
+  // return exams.map(async(data) => {
+    
+  //   const [ 
+  //     group, 
+  //     category, 
+  //     classification 
+  //   ] = await Promise.all([
+  //     examGroupModel.findById({ _id: data.groupId }).select({ name: 1 }),
+  //     examCategoryModel.findById({ _id: data.categoryId }).select({ name: 1 }),
+  //     examClassificationModel.findById({ _id: data.classificationId }).select({ name: 1 })
+  //   ]);
+
+  //   return {
+  //     _id: data._id.toString(),
+  //     name: data.name,
+  //     label: data.name,
+  //     examCode: data.examCode,
+  //     categoryId: data.categoryId?.toString() as string,
+  //     category: category?.name as string,
+  //     classificationId: data.classificationId?.toString() as string,
+  //     classification: classification?.name as string,
+  //     groupId: data.groupId?.toString() as string,
+  //     group: group?.name as string,
+  //     price: data.price,
+  //   }
+  // });
+
+  // return formatedList;
+  // const listFormated = [];
+
+  // if(options){
+  //   for(const item of exams)
+  //     listFormated.push({
+  //       _id: item._id.toString() as string,
+  //       label: item.name as string,
+  //     });
+
+  //   return listFormated;
+  // }
+
+  // for(const exam of exams){
+  //   const group = await examGroupModel.findById({ _id: exam.groupId });
+  //   const category = await examCategoryModel.findById({ _id: exam.categoryId });
+  //   const classification = await examClassificationModel.findById({ _id: exam.classificationId });
+
+  //   listFormated.push({
+  //     id: exam._id.toString(),
+  //     examCode: exam.examCode as unknown as string,
+  //     name: exam.name as string,
+  //     category: category?.name as string,
+  //     classification: classification?.name as string,
+  //     group: group?.name as string,
+  //     price: exam?.price as unknown as string,
+  //   });
+  // }
   
-  return listFormated;
+  // return listFormated;
 }
 
 async function getExam(examId: string){
