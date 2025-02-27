@@ -2,4 +2,5 @@
 .next/
 public/open-files/
 public/upload_cache/
+*.deb
 
