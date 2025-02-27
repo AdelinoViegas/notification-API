@@ -58,6 +58,7 @@ export default function ClinicalDiary({
           <InputField 
             textLabel="Data e Hora"
             name="createAt"
+            required
             type="datetime-local"
           />
 
@@ -79,6 +80,7 @@ export default function ClinicalDiary({
             <InputField 
               textLabel="Assinatura"
               placeholder="Digite a assinatura"
+              name="signature"
               required
             />
           }
@@ -87,6 +89,7 @@ export default function ClinicalDiary({
             <InputField 
               textLabel="Via de administração"
               placeholder="Local de admininstração do medicamento"
+              name="local"
               required
             />
 
@@ -95,11 +98,13 @@ export default function ClinicalDiary({
                 textLabel="Quantidade"
                 placeholder="Quantidade"
                 type="number"
+                name="amount"
                 required
               />
 
               <Selection
                 label="Balanço Hidromineral"
+                name="balance"
                 required
                 options={[
                   { _id: "ingested", label: "Ingeridos" },
@@ -113,6 +118,7 @@ export default function ClinicalDiary({
             textLabel="Descrição"
             placeholder="Descreva a sua observação..."
             name="description"
+            required
           />
 
           { apiType === "vital" && <div className="grid grid-cols-2 gap-x-3">

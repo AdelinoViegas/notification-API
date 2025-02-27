@@ -34,6 +34,7 @@ import {
 import { getUser, patientFilters } from "@/app/backend/api/clinical/api";
 import { DoctorCalendar } from "@/app/backend/api/clinical/types";
 import { getPatient as mainPatient } from "@/app/backend/api/clinical/api";
+import ClinicalDiary from "@/components/clinical-diary";
 
 type UnitType = "workplace" | "internment" | "laboratory" | "imaging";
 
@@ -561,8 +562,17 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
     
     const hasPatientUrgencyBank = await urgencyBankModel.findOne({ patientId: payload.patientId });
     const generalClinic = hasPatientUrgencyBank?.anamnesis?.generalClinic;
-    // const isDiary = payload.typeClinicalDiary === "diary"; 
-    // const isAnnotation = payload.typeClinicalDiary === "annotation";    
+    const diary = hasPatientUrgencyBank?.clinicalDiary;
+    const isDiary = payload.typeClinicalDiary === "diary"; 
+    const isAnnotation = payload.typeClinicalDiary === "annotation";
+    const isTherapeutic = payload.typeClinicalDiary === "therapeutic";
+    const isTreatment = payload.typeClinicalDiary === "treatment";  
+    const isVitalSignals = payload.typeClinicalDiary === "vital";  
+    const isBalance = payload.typeClinicalDiary === "balance"; 
+
+    const w = Number(payload.weight);
+    const h = Number(payload.height);
+    const imc = (w/(h*h)).toFixed(2);
 
     const cidCodes = payload?.cids
     ? JSON.parse(payload.cids)
@@ -570,7 +580,7 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
     .map((cid: CID)=> cid.code)
     : undefined;
 
-    const  anamnesis = {
+    const anamnesis = {
       generalClinic: {
         symptoms: payload.symptoms || generalClinic?.symptoms,
         diseaseData: payload.diseaseData || generalClinic?.diseaseData,
@@ -609,21 +619,68 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
       },
     }
    
-    /*const clinicalDiary = {
-      medicineDiary: {
-        date: isDiary?payload.createAt:undefined,
-        description: isDiary?payload.description:undefined,
-      },
-      nursingNotes: {
-        date: isAnnotation?payload.createAt:undefined,
-        description: isAnnotation?payload.description:undefined,
-      }
-    }*/
+    const clinicalDiary = {
+      medicalDiary: isDiary?
+      [...diary?.medicalDiary || [],{
+        date: payload.createAt || undefined,
+        description: payload.description || undefined,
+      }]:diary?.medicalDiary,
 
-    if(!hasPatientUrgencyBank)     
-      await urgencyBankModel.create({ patientId: payload.patientId, anamnesis });
+      therapeuticDiary: isTherapeutic?
+      [...diary?.therapeuticDiary || [],{
+        date: payload.createAt || undefined,
+        signature: payload.signature || undefined,
+        description: payload.description || undefined,
+      }]:diary?.therapeuticDiary,
+
+      treatmentDiary: isTreatment?
+      [...diary?.treatmentDiary || [],{
+        date: payload.createAt || undefined,
+        signature: payload.signature || undefined,
+        description: payload.description || undefined,
+      }]:diary?.treatmentDiary,
+
+      vitalSignals: isVitalSignals?
+      [...diary?.vitalSignals || [],{
+        date: payload.createAt || undefined,
+        description: payload.description || undefined,
+        vitalSignals: {
+          paMax: Number(payload.pamax),
+          paMin: Number(payload.pamin),
+          jump: Number(payload.jump),
+          pvc: Number(payload.pvc),
+          imc,
+          sp02: Number(payload.sp02),
+          temperature: Number(payload.temperature),
+          breathing: Number(payload.breathing),
+          weight: Number(payload.weight),
+          height: Number(payload.height),
+          bloodGlucose: Number(payload.bloodGlucose),
+        }
+      }]:diary?.vitalSignals,
+
+      nursingNotes: isAnnotation?
+      [...diary?.nursingNotes || [],{
+        date: payload.createAt || undefined,
+        description: payload.description || undefined,
+      }]:diary?.nursingNotes,
+
+      hydromineralBalance: isBalance?
+      [...diary?.hydromineralBalance || [],{
+        date: payload.createAt || undefined,
+        siteOfDrugAdministration: payload.local || undefined,
+        amount: payload.amount || undefined,
+        hidromineralBalance: payload.balance || undefined,
+        description: payload.description || undefined,
+      }]:diary?.hydromineralBalance,
+    }
+
+    console.log(clinicalDiary);
+    console.log(clinicalDiary.vitalSignals)
+    /*if(!hasPatientUrgencyBank)     
+      await urgencyBankModel.create({ patientId: payload.patientId, anamnesis, clinicalDiary });
     else
-      await urgencyBankModel.updateOne({ _id: hasPatientUrgencyBank._id },{ anamnesis });
+      await urgencyBankModel.updateOne({ _id: hasPatientUrgencyBank._id },{ anamnesis, clinicalDiary });*/
     
     return {
       message: `Informação ${!hasPatientUrgencyBank?'registrada':'actualizada'} com sucesso!`,
@@ -680,7 +737,7 @@ async function getPatientUrgencyBank(patientId: string){
       }
     },
     clinicalDiary : {
-      medicineDiary: patientData?.clinicalDiary?.medicineDiary,
+      medicalDiary: patientData?.clinicalDiary?.medicalDiary,
       nursingNotes: patientData?.clinicalDiary?.nursingNotes
     }
   }

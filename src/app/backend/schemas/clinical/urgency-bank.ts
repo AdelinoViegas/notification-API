@@ -76,16 +76,21 @@ const anamnesis = new Schema({
 },{ _id: false });
 
 const clinicalDiary = new Schema({
-  medicineDiary : [{
+  medicalDiary : [{
     date: Date,
     description: String,
   }],
-  medicineTherapeutic:[{
+  therapeuticDiary:[{
     date: Date,
     signature: String,
     description: String,
   }],
-  medicneTreatment: [{
+  treatmentDiary:[{
+    date: Date,
+    signature: String,
+    description: String,
+  }],
+  vitalSignals: [{
     date: Date,
     description: String,
     vitalSignals: {
@@ -138,7 +143,7 @@ const clinicalDiary = new Schema({
   }],
   hydromineralBalance: [{
     date: Date,
-    DrugAdministrationSite: String, 
+    siteOfDrugAdministration: String, 
     amount: String,
     hidromineralBalance: String,
     description: String,

@@ -73,7 +73,7 @@ function Component({
 }: InternalComponent & {patientId : string} & { type?: string}){
   const [ state, action ] = useActionState(apiFn?apiFn:FallbackFn, initialState);
   const router = useRouter();
-
+  
   useEffect(()=>{
     if(state?.message){
       if(state.status)
