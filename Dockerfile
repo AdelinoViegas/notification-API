@@ -32,5 +32,5 @@ EXPOSE 3000   # Application port
 EXPOSE 3001   # Another app port (if required)
 
 # Start MongoDB and the application
-CMD mongod --bind_ip 0.0.0.0 & yarn start
+CMD mongod --bind_ip 0.0.0.0 --fork & yarn start
 
