@@ -552,6 +552,12 @@ async function updateExternalUnit(prev: unknown, formData: FormData){
   }
 }
 
+function handleCidsInputs(encondedData: string){
+  const data = JSON.parse(encondedData) as CID[];
+  if(!data.length)
+    throw new Error("Escolha uma hipótese!", { cause: "empty_hy" });
+  return data;
+}
 async function signUrgencyBank(prev: unknown, formData:FormData){
   try{
     const payload:{ [key: string]: string } = {};
@@ -573,16 +579,13 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
     const imc = Number((w/(h*h)).toFixed(2));
 
     const cidCodes = payload?.cids
-    ? JSON.parse(payload.cids)
-    .filter((diagnostic: CID) => !generalClinic?.diagnosticHypothesis?.includes(diagnostic.code))
-    .map((cid: CID)=> cid.code)
+    ? handleCidsInputs(payload.cids)
+      .filter((diagnostic: CID) => !generalClinic?.diagnosticHypothesis?.includes(diagnostic.code))
+      .map((cid: CID)=> cid.code)
     : undefined;
     
     if(h === 0)
       throw new Error("defina uma altura maior que 0", {cause: "Infinity"});
-    
-    if(payload.location && !cidCodes.length)
-      throw new Error("Nenhuma cid adicionada", {cause: "undefined"});
 
     const anamnesis = {
       generalClinic: {
@@ -691,16 +694,10 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
   }catch(e: unknown){
     const err = e as Error;
 
-    if(err.cause === "undefined")
-      return{
-        message: err.message,
-        status: false,
-        warn: true,
-      }
-
     return {
       message: err.cause?err.message:"Não foi possivel realizar esta operação!",
       status: false,
+      isWarn: err.cause === "empty_hy"
     }
   }
 }

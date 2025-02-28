@@ -186,12 +186,6 @@ export default function ComboBox(){
       </div>
 
       <ElementsViews />
-
-      {/*<div className="border p-2 rounded-md">
-        defaultValue?.map((items,i)=>{
-          return <div key={i}>{items}</div>
-        })
-      </div>*/}
     </div>
   )
 }

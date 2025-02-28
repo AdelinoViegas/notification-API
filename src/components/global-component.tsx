@@ -17,7 +17,7 @@ import { toast } from 'react-toastify';
 type InitialValue = {
   message?: string;
   status: boolean;
-  warn?: boolean;
+  isWarn?: boolean;
 };
 
 type SeparatedElements = {
@@ -69,9 +69,8 @@ function Component({
   className,
   childrens,
   apiFn,
-  initialState,
-  type,
-}: InternalComponent & {patientId : string} & { type?: string}){
+  initialState
+}: InternalComponent & { patientId: string }){
   const [ state, action ] = useActionState(apiFn?apiFn:FallbackFn, initialState);
   const router = useRouter();
   
@@ -82,13 +81,11 @@ function Component({
           onClose: router.refresh,
           autoClose: 1500
         });
-      else if(state.warn)
-        toast.warn(state.message, {
-          onClose: router.refresh,
-          autoClose: 1500
-        });
       else 
-        toast.error(state.message);
+        if(state?.isWarn)
+          toast.warn(state.message);
+        else
+          toast.error(state.message);
     }
   }, [state, router]);
 
@@ -99,12 +96,6 @@ function Component({
           className="hidden"
           name="patientId"
           defaultValue={patientId}
-        />
-        
-        <input
-          className="hidden"
-          name="typeMedicine"
-          defaultValue={type}
         />
 
         <div className={className}>
