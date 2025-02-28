@@ -27,16 +27,6 @@ export default function ComboBox(){
   const [ searchValue, setSearchValue ] = useState("");
   const [ selectedCids, setSelectedCids ] = useState<CID[]>([]);
   const [ selectedCid, setSelectedCid ] = useState<CID>();
-  const [ defaultValue ] = useState<string[]>();
-  //const { patientId } = useParams();
-
- /*useEffect(()=>{
-  const getCids = async ()=>{
-    const { generalClinic: { diagnosticHypothesis } } = await getPatientUrgencyBank(patientId as string);
-    setDefaultValue(diagnosticHypothesis);
-    }
-    getCids();
-  },[defaultValue]);*/
   
   const addToCids = ()=>{
     if(!!selectedCids.find(item => item.code === selectedCid?.code)){
