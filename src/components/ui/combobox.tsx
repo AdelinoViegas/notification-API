@@ -38,7 +38,6 @@ export default function ComboBox(){
     getCids();
   },[defaultValue]);*/
   
-  console.log(defaultValue);
   const addToCids = ()=>{
     if(!!selectedCids.find(item => item.code === selectedCid?.code)){
       toast.warn("Esta cid já foi selecionada, escolha outra!");
@@ -132,6 +131,13 @@ export default function ComboBox(){
           name="cids"
           defaultValue={JSON.stringify(selectedCids)}
         />
+
+        <input
+          className="hidden"
+          name="location"
+          defaultValue={"diagnosticHypothesis"}
+        />
+        
         <InputField 
           type="radio" 
           textLabel="Por Código" 

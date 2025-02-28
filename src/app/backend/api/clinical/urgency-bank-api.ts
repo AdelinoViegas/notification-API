@@ -34,7 +34,6 @@ import {
 import { getUser, patientFilters } from "@/app/backend/api/clinical/api";
 import { DoctorCalendar } from "@/app/backend/api/clinical/types";
 import { getPatient as mainPatient } from "@/app/backend/api/clinical/api";
-import ClinicalDiary from "@/components/clinical-diary";
 
 type UnitType = "workplace" | "internment" | "laboratory" | "imaging";
 
@@ -569,16 +568,21 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
     const isTreatment = payload.typeClinicalDiary === "treatment";  
     const isVitalSignals = payload.typeClinicalDiary === "vital";  
     const isBalance = payload.typeClinicalDiary === "balance"; 
-
     const w = Number(payload.weight);
     const h = Number(payload.height);
-    const imc = (w/(h*h)).toFixed(2);
+    const imc = Number((w/(h*h)).toFixed(2));
 
     const cidCodes = payload?.cids
     ? JSON.parse(payload.cids)
     .filter((diagnostic: CID) => !generalClinic?.diagnosticHypothesis?.includes(diagnostic.code))
     .map((cid: CID)=> cid.code)
     : undefined;
+    
+    if(h === 0)
+      throw new Error("defina uma altura maior que 0", {cause: "Infinity"});
+    
+    if(payload.location && !cidCodes.length)
+      throw new Error("Nenhuma cid adicionada", {cause: "undefined"});
 
     const anamnesis = {
       generalClinic: {
@@ -675,12 +679,10 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
       }]:diary?.hydromineralBalance,
     }
 
-    console.log(clinicalDiary);
-    console.log(clinicalDiary.vitalSignals)
-    /*if(!hasPatientUrgencyBank)     
+    if(!hasPatientUrgencyBank)     
       await urgencyBankModel.create({ patientId: payload.patientId, anamnesis, clinicalDiary });
     else
-      await urgencyBankModel.updateOne({ _id: hasPatientUrgencyBank._id },{ anamnesis, clinicalDiary });*/
+      await urgencyBankModel.updateOne({ _id: hasPatientUrgencyBank._id },{ anamnesis, clinicalDiary });
     
     return {
       message: `Informação ${!hasPatientUrgencyBank?'registrada':'actualizada'} com sucesso!`,
@@ -688,7 +690,14 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
     }
   }catch(e: unknown){
     const err = e as Error;
-   
+
+    if(err.cause === "undefined")
+      return{
+        message: err.message,
+        status: false,
+        warn: true,
+      }
+
     return {
       message: err.cause?err.message:"Não foi possivel realizar esta operação!",
       status: false,
@@ -735,10 +744,6 @@ async function getPatientUrgencyBank(patientId: string){
           timeExercise: patientData?.anamnesis?.generalClinic?.lifeStyle?.physicalActivity?.timeExercise as string,     
         },
       }
-    },
-    clinicalDiary : {
-      medicalDiary: patientData?.clinicalDiary?.medicalDiary,
-      nursingNotes: patientData?.clinicalDiary?.nursingNotes
     }
   }
 }

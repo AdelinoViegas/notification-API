@@ -17,6 +17,7 @@ import { toast } from 'react-toastify';
 type InitialValue = {
   message?: string;
   status: boolean;
+  warn?: boolean;
 };
 
 type SeparatedElements = {
@@ -78,6 +79,11 @@ function Component({
     if(state?.message){
       if(state.status)
         toast.success(state.message, {
+          onClose: router.refresh,
+          autoClose: 1500
+        });
+      else if(state.warn)
+        toast.warn(state.message, {
           onClose: router.refresh,
           autoClose: 1500
         });

@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
 import Accordium from "@/components/ui/accordium";
 import Modal from "@/components/modal";
@@ -8,8 +9,8 @@ import Table from "@/components/table";
 import InputField from "@/components/ui/input-field";
 import InputDetails from "@/components/ui/input-details";
 import Selection from "@/components/ui/selection";
+import { toast } from "react-toastify";
 import { signUrgencyBank } from "@/app/backend/api/clinical/urgency-bank-api";
-import Alert from "./ui/alert";
 
 export type ClinicalDiaryProps = {
   accordiumTitle: string;
@@ -26,17 +27,19 @@ export default function ClinicalDiary({
 }: ClinicalDiaryProps){
   const [ state, action ] = useActionState(signUrgencyBank, {message: "", status: false});
   const [ modalState, setModalState ] = useState(false);
-  const [ messageState, setMessageState] = useState(false);
+  const router = useRouter();
   
   useEffect(()=>{
     if(state.message){
-      setMessageState(true);
-      
-      setTimeout(()=>{
-        setMessageState(false);
-      },2000)
+      if(state.status)
+        toast.success(state.message, {
+          onClose: router.refresh,
+          autoClose: 1500
+        });
+      else 
+        toast.error(state.message);
     }   
-  },[state])
+  },[state, router])
   
   return(
     <Accordium className="bg-primary/15 hover:bg-primary/20" title={accordiumTitle}>
@@ -205,16 +208,6 @@ export default function ClinicalDiary({
           </div>}
 
           <Button>Salvar</Button>
-
-          {
-            state?.message && messageState &&
-            <div className="flex mt-3">
-              <Alert
-                type={state?.status?'success':'error'}
-                message={state?.message}
-              />
-            </div>
-          }
         </form>
       </Modal>
     </Accordium>
