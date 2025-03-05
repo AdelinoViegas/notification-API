@@ -52,7 +52,7 @@ export default function ValidateService({
   return(
     <div>
       <Button disabled={disabled} onClick={openModal}>
-        <MdAttachMoney className="size-5" />
+        <MdAttachMoney className="size-6" />
         Validar
       </Button>
 

@@ -46,7 +46,7 @@ export default function SendAppointment({
   return(
     <div>
       <Button 
-        className="flex gap-3 bg-green-600" 
+        className="flex gap-3" 
         onClick={openModal}>
         <VscSend className="size-5" />
         Enviar

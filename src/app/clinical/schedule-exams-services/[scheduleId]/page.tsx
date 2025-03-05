@@ -114,7 +114,7 @@ export default async function Page({
           <div className="flex gap-x-3 my-4">
             <Button 
               className="flex gap-x-2" >
-              <FaFilePdf/>
+              <FaFilePdf className="size-5"/>
               Visualizar
             </Button>
             

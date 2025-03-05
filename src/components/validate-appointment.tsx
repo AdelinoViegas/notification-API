@@ -53,7 +53,7 @@ export default function ValidateAppointment({
   return(
     <div>
       <Button disabled={disabled} onClick={openModal}>
-        <MdAttachMoney className="size-5" />
+        <MdAttachMoney className="size-6" />
         Validar
       </Button>
 
