@@ -9,6 +9,7 @@ import ValidateAppointment from "@/components/validate-appointment";
 import TitleAndSubtitle from "@/components/title-subtitle";
 import { angolaCurrency } from "@/lib/table-formater";
 import SendAppointment from "@/components/send-appointment";
+import { FaFilePdf } from "react-icons/fa6";
 
 export default async function Page({
   params
@@ -103,8 +104,14 @@ export default async function Page({
             </div>
           </div>
 
-          <div className="flex gap-x-3 mt-3">
-            <Button disabled>Visualizar</Button>
+          <div className="flex gap-x-3 mt-3">                        
+            <Button 
+              className="flex gap-x-2" 
+              disabled
+            >
+              <FaFilePdf className="size-5"/>
+              Visualizar
+            </Button>
 
             <RescheduleAppointment 
               scheduleId={scheduleId}

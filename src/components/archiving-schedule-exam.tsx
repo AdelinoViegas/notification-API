@@ -12,6 +12,7 @@ import { BiTrash as TrashIcon } from "react-icons/bi";
 import Modal from "@/components/modal";
 import InputDetails from "@/components/ui/input-details";
 import Alert from "@/components/ui/alert";
+import { LuArchiveRestore } from "react-icons/lu";
 
 export default function ArchivingScheduleExam({ scheduleId }: { scheduleId: string }){
   const [ state, action ] = useActionState(archivingScheduleExam, { message: "", status: false });
@@ -36,8 +37,11 @@ export default function ArchivingScheduleExam({ scheduleId }: { scheduleId: stri
   
   return(
     <div>
-      <Button onClick={()=>setModalState(true)} cancel className="gap-2 items-center">
-        <TrashIcon className="w-6" />
+      <Button 
+        onClick={()=>setModalState(true)} 
+        className="gap-2 items-center bg-slate-700"
+      >
+        <LuArchiveRestore className="size-5" />
         Arquivar
       </Button>
 

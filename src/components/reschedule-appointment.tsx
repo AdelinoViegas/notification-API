@@ -18,6 +18,7 @@ import { findDoctorCalendar } from "@/app/backend/api/clinical/scheduling-api";
 import { getDateInDashFormat } from "@/lib/date-formater";
 import { getDoctors } from "@/app/backend/api/clinical/api";
 import type { DoctorCalendarReference, DoctorDayAndTime } from "@/app/backend/api/clinical/types";
+import { GrSchedulePlay } from "react-icons/gr";
 
 export default function RescheduleAppointment({
   doctorId, 
@@ -125,8 +126,10 @@ export default function RescheduleAppointment({
   return(
     <div>
       <Button
+        className="flex gap-x-2"
         cancel={isArchived?true:false} 
         onClick={openModal}>
+        <GrSchedulePlay className="size-5"/>
         {isArchived?'Desarquivar':'Reagendar'}
       </Button>
 

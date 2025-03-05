@@ -46,8 +46,7 @@ export default function ArchivingAppointment({
     <div>
       <Button 
         onClick={()=>setModalState(true)} 
-        cancel 
-        className="gap-2 items-center">
+        className="gap-2 items-center bg-slate-700">
         <LuArchiveRestore className="size-5" />
         {isArchived?"Desarquivar":"Arquivar"}
       </Button>

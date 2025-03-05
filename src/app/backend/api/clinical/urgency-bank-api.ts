@@ -34,6 +34,8 @@ import {
 import { getUser, patientFilters } from "@/app/backend/api/clinical/api";
 import { DoctorCalendar } from "@/app/backend/api/clinical/types";
 import { getPatient as mainPatient } from "@/app/backend/api/clinical/api";
+import clinicalUserSchema from "../../schemas/manager/clinical-users";
+import ClinicalDiary from "@/components/clinical-diary";
 
 type UnitType = "workplace" | "internment" | "laboratory" | "imaging";
 
@@ -234,37 +236,43 @@ async function updateUnit(prev: unknown, formData: FormData){
   }
 }
 
-async function getUnits({
-  type
-}:{
-  type?: UnitType | UnitType[];
+async function getUnits({ 
+  type,
+  searchByName 
+}: { 
+  type?: UnitType[];
   searchByName?: string;
 }){
   try{
-    const units = await unitModel.find({
-      unitTypeId: type?type:/[a-z]/gi
-    });
-    
-    const handleUnits = units.map((item) => {
-      if(!(type instanceof Array)){
-        return {
-          _id: item._id.toString(),
-          id: item._id.toString(),
-          name: item.name,
-          unitName: item.name,
-          label: item.name,
-          userId: item.userId?.toString(),
-          createAt: item.createdAt,
-          type: unitTypes.find(props => props._id === item.unitTypeId)?.label,
-          status: "activo",
-          user: "#"
-        }
+    const units = await (
+      type
+      ?unitModel.find({ 
+        unitTypeId: { $in: type },
+        name: searchByName?new RegExp(`^${searchByName}`, "i"):/[a-z]/gi 
+      })
+      :unitModel.find({
+        name: searchByName?new RegExp(`^${searchByName}`, "i"):/[a-z]/gi
+      })
+    );
+
+    const formatedList = units.map(item => {
+      return {
+        _id: item._id.toString(),
+        id: item._id.toString(),
+        name: item.name,
+        unitName: item.name,
+        label: item.name,
+        userId: item.userId?.toString(),
+        createAt: item.createdAt,
+        type: unitTypes.find(props => props._id === item.unitTypeId)?.label,
+        status: "activo",
+        user: "#"
       }
     });
-
-    return handleUnits;
+    
+    return formatedList;
   }catch(e){
-    console.error(e);
+    console.log(e)
     return [];
   }
 }
@@ -741,6 +749,10 @@ async function getPatientUrgencyBank(patientId: string){
           timeExercise: patientData?.anamnesis?.generalClinic?.lifeStyle?.physicalActivity?.timeExercise as string,     
         },
       }
+    },
+    clinicalDiary: {
+      medicineDiary: patientData?.clinicalDiary?.medicalDiary as { date: Date, description : string}[],
+      nursingNotes: patientData?.clinicalDiary?.nursingNotes,
     }
   }
 }
