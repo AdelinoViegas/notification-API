@@ -29,7 +29,7 @@ export default async function Page({
     specialties,
     grantedAccess
   ] = await Promise.all([
-    getUnits({ type: "workplace"}),
+    getUnits({ type: ["workplace"]}),
     getClinicalUser(userId),
     getUrgencyServices(),
     getSpecialties(),

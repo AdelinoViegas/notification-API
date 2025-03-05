@@ -8,7 +8,6 @@ import {
   patientModel,
   groupModel,
   accessTypeModel,
-  // priorityModel,
   triedModel,
   unitModel,
   userModel as clinicalUserModel,
@@ -17,8 +16,7 @@ import {
   externalUnitModel,
   urgencyBankModel,
   urgencyServiceModel,
-  screeningModel,
-  // anamnesisModel,
+  screeningModel
 } from "@/app/backend/models/clinical";
 import { 
   patientAccess,
@@ -34,8 +32,6 @@ import {
 import { getUser, patientFilters } from "@/app/backend/api/clinical/api";
 import { DoctorCalendar } from "@/app/backend/api/clinical/types";
 import { getPatient as mainPatient } from "@/app/backend/api/clinical/api";
-import clinicalUserSchema from "../../schemas/manager/clinical-users";
-import ClinicalDiary from "@/components/clinical-diary";
 
 type UnitType = "workplace" | "internment" | "laboratory" | "imaging";
 

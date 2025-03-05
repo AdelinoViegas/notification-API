@@ -8,7 +8,6 @@ import {
 import { useRouter } from "next/navigation";
 import { archivingScheduleExam } from "@/app/backend/api/clinical/scheduling-api";
 import Button from "@/components/ui/button";
-import { BiTrash as TrashIcon } from "react-icons/bi";
 import Modal from "@/components/modal";
 import InputDetails from "@/components/ui/input-details";
 import Alert from "@/components/ui/alert";
