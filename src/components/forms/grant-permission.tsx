@@ -45,7 +45,7 @@ export default function GrantUserPermission({
   useEffect(()=>{
     getPermissions(userGroupId)
     .then(setPermissions)
-  }, []);
+  }, [userGroupId]);
   
   return(
     <form {...{action}} className='flex flex-col gap-3'>

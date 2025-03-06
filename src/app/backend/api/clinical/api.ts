@@ -811,12 +811,10 @@ async function getScreening({
 async function insertScreening(prev: unknown, formData: FormData){
   try{
     const userPayload:{ [key: string]: string } = {};
-    // const uiType = (formData.get('t') as string)?.trim();
     const patientId = formData.get('Id') as string;
  
-    for(const [key, value] of formData.entries()){
+    for(const [key, value] of formData.entries())
       userPayload[key] = value as string;
-    }
   
     userPayload['patientId'] = patientId;
     userPayload['t'] = userPayload['t'].trim();
@@ -837,13 +835,12 @@ async function insertScreening(prev: unknown, formData: FormData){
         _id: userPayload['scrId']
       }
       :{
-        patientId: patientId,
+        patientId,
         served: false
       }, userPayload['t'] === "vital-signals"
       ?{ 
         vitalSignals: userPayload,
-        userId: await whoIsUser(),
-        patientId
+        userId: await whoIsUser()
       }
       :userPayload
     );

@@ -375,6 +375,8 @@ async function getPermissions(userGroupId?: string){
 
     return permissionList;
   }catch(e){
+    const err = e as Error;
+    console.log(err.message);
     return [];
   }
 }
@@ -430,6 +432,9 @@ async function getUserPermissions(userId: string){
       }
     })
   }catch(e){
+    const err = e as Error;
+    console.log(err.message);
+    
     return [];
   }
 }
