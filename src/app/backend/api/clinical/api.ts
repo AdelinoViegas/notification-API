@@ -824,6 +824,10 @@ async function insertScreening(prev: unknown, formData: FormData){
     if(uiType === "vital-signals"){
       const w = Number(userPayload.weight);
       const h = Number(userPayload.height);
+
+      if(h === 0)
+        throw new Error("defina uma altura maior que 0", {cause: "Infinity"});
+
       userPayload['imc'] = (w/(h*h)).toFixed(2);
     }
 
@@ -847,7 +851,7 @@ async function insertScreening(prev: unknown, formData: FormData){
     const err = e as Error;
 
     return {
-      message: "Falha na operação "+err.message,
+      message: err.cause?err.message:"Falha na operação ",
       status: false,
       type: "error"
     }

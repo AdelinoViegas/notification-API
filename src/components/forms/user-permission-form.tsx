@@ -16,6 +16,7 @@ import {
   grantPermission,
 } from "@/app/backend/api/manager/api";
 import { triggerUpdate } from '@/lib/ws-trigger';
+import { toast } from 'react-toastify';
 
 export default function AddUserPermissionForm({
   userId, 
@@ -24,8 +25,6 @@ export default function AddUserPermissionForm({
   userId: string, 
   userGroupId: string
 }){
-
-  const [ messageState, setMessageState ] = useState(false);
   const [ state, action ] = useActionState(grantPermission, { message: '', status: false});
   const router = useRouter();
   const [ permissions, setPermissions ] = useState<SelectionOption[]>([]);
@@ -36,15 +35,17 @@ export default function AddUserPermissionForm({
   }, [userGroupId]);
 
   useEffect(()=>{
-    router.refresh();
-   
     if(state.message){
-      setMessageState(true);
-      setTimeout(()=>{
-        setMessageState(false);
-        if(state.status)
-          triggerUpdate({ target: "permissions" });
-      }, 3000);
+      if(state.status)
+        toast.success(state.message, {
+          autoClose: 1500,
+          onOpen: ()=>{
+            triggerUpdate({ target: "permissions" });
+            router.refresh();
+          }
+        })
+      else 
+        toast.error(state.message);
     }
   }, [state, router]);
 
@@ -54,8 +55,9 @@ export default function AddUserPermissionForm({
   
   return(
     <form {...{action}} className='flex flex-col gap-3'>
-      <SubTitle className='inline-flex'>Atribuição de Permissão</SubTitle>
+      <SubTitle className='inline-flex'>Todas as permissões</SubTitle>
       <div>
+        <input type='hidden' name='userId' value={userId} />
         <Selection
           label='Permissões'
           options={permissions}
@@ -64,19 +66,8 @@ export default function AddUserPermissionForm({
           onChange={handlePermission}
         />
 
-        <input type='hidden' name='userId' value={userId} />
-        <Button>Adicionar</Button>
+        <Button>Atribuir</Button>
       </div>
-
-      {
-        state.message && messageState &&
-        <div>
-          <Alert 
-            type={state.status?'success': 'error'}
-            message={state.message}
-          />
-        </div>
-      }
     </form>
   )
 }

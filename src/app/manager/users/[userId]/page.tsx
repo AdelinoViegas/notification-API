@@ -27,7 +27,7 @@ export default async function Page({ params }: { params: Promise<{ userId: strin
   
   return(
     <main className="px-2 pt-4 w-full">
-      <Header title="Ajustes da conta de Usuário" />
+      <Header title="Configuração da Conta" />
       <div className="mt-3 space-y-3 overflow-y-auto max-h-[82vh]">
         <div className="grid lg:grid-cols-2 gap-3">
           <Card className="flex flex-col justify-between">
@@ -82,7 +82,7 @@ export default async function Page({ params }: { params: Promise<{ userId: strin
             <div className="lg:w-full">
               <AddUserPermissionForm 
                 {...{userId}} 
-                userGroupId={user.userGroupId?.toString() as string} 
+                userGroupId={user.userGroupId as string} 
               />
             </div>
 
