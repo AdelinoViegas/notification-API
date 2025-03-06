@@ -811,7 +811,7 @@ async function getScreening({
 async function insertScreening(prev: unknown, formData: FormData){
   try{
     const userPayload:{ [key: string]: string } = {};
-    const uiType = (formData.get('t') as string)?.trim();
+    // const uiType = (formData.get('t') as string)?.trim();
     const patientId = formData.get('Id') as string;
  
     for(const [key, value] of formData.entries()){
@@ -819,9 +819,10 @@ async function insertScreening(prev: unknown, formData: FormData){
     }
   
     userPayload['patientId'] = patientId;
+    userPayload['t'] = userPayload['t'].trim();
     userPayload['userId'] = (await whoIsUser()) as string;
 
-    if(uiType === "vital-signals"){
+    if(userPayload['t'] === "vital-signals"){
       const w = Number(userPayload.weight);
       const h = Number(userPayload.height);
 
@@ -830,15 +831,19 @@ async function insertScreening(prev: unknown, formData: FormData){
 
       userPayload['imc'] = (w/(h*h)).toFixed(2);
     }
-
-    await screeningModel.updateOne({
-      patientId: patientId,
-      served: false
-    }, uiType==="vital-signals"
+    
+    await screeningModel.updateOne(userPayload['scrId']
+      ?{
+        _id: userPayload['scrId']
+      }
+      :{
+        patientId: patientId,
+        served: false
+      }, userPayload['t'] === "vital-signals"
       ?{ 
         vitalSignals: userPayload,
         userId: await whoIsUser(),
-        patientId,
+        patientId
       }
       :userPayload
     );

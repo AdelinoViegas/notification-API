@@ -118,11 +118,13 @@ function DoneScreening({
 export default function ScreeningUI({
   ui,
   patientId,
-  priority
+  priority,
+  scrId
 }:{
   ui: UIComponent,
   patientId: string;
   priority?: string;
+  scrId?: string;
 }){
   const [ state, action ] = useActionState(insertScreening, initialState);
   const [ screeningData, setScreeningData ] = useState<Screening>();
@@ -154,6 +156,7 @@ export default function ScreeningUI({
       <form action={action} className="py-3">
         <input type="hidden" name="t" value={ui} />
         <input type="hidden" name="Id" value={patientId} />
+        <input type="hidden" name="scrId" value={scrId} />
 
         {ui === "reason" && 
           <>
@@ -178,6 +181,7 @@ export default function ScreeningUI({
                 placeholder="0 (mmHG)"
                 defaultValue={screeningData?.vitalSignals?.paMax}
                 disabled={!editable}
+                required
               />
 
               <InputField
@@ -187,6 +191,7 @@ export default function ScreeningUI({
                 placeholder="0 (mmHG)"
                 defaultValue={screeningData?.vitalSignals?.paMin}
                 disabled={!editable}
+                required
               />
               
               <InputField
@@ -194,9 +199,9 @@ export default function ScreeningUI({
                 textLabel="PULSO (BPM)"
                 name="jump" 
                 placeholder="0 (BPM)"
-                required
                 defaultValue={screeningData?.vitalSignals?.jump}
                 disabled={!editable}
+                required
               />
 
               <InputField
@@ -204,20 +209,20 @@ export default function ScreeningUI({
                 step={0.01}
                 textLabel="TEMPERATURA (°)"
                 name="temperature"
-                required 
                 placeholder="0 graus(°)"
                 defaultValue={screeningData?.vitalSignals?.temperature}
                 disabled={!editable}
+                required
               />
 
               <InputField
                 type="number"
                 textLabel="RESPIRAÇÂO (IRPM)"
                 name="breathing" 
-                required
                 placeholder="0 (IRPM)"
                 defaultValue={screeningData?.vitalSignals?.breathing}
                 disabled={!editable}
+                required
               />
 
               <InputField
@@ -226,9 +231,9 @@ export default function ScreeningUI({
                 name="weight" 
                 placeholder="0 (kg)"
                 step={0.01}
-                required 
                 defaultValue={screeningData?.vitalSignals?.weight}
                 disabled={!editable}
+                required
               />
 
               <InputField
@@ -239,6 +244,7 @@ export default function ScreeningUI({
                 placeholder="0 (m)"
                 defaultValue={screeningData?.vitalSignals?.height}
                 disabled={!editable}
+                required
               />
 
               <InputField
