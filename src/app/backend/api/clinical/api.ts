@@ -817,7 +817,7 @@ async function insertScreening(prev: unknown, formData: FormData){
     for(const [key, value] of formData.entries()){
       userPayload[key] = value as string;
     }
-
+  
     userPayload['patientId'] = patientId;
     userPayload['userId'] = (await whoIsUser()) as string;
 

@@ -7,29 +7,38 @@ import { deleteUserPermission } from "@/app/backend/api/manager/api";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { triggerUpdate } from "@/lib/ws-trigger";
+import { toast } from "react-toastify";
 
-export const dynamic = 'force-dynamic';
-
-export default function DeleteUserPermissionForm({
-  permId,
-  permLabel
+export default function RevokeUserPermission({
+  id,
+  label
 }: {
-  permId: string;
-  permLabel: string;
+  id: string;
+  label: string;
 }){
-  const [state, action] = useActionState(deleteUserPermission, false);
+  const [state, action] = useActionState(deleteUserPermission, { message: "", status: false });
   const router = useRouter();
   
   useEffect(()=>{
-    triggerUpdate({ target: "permissions" });
-    router.refresh();
+    if(state.message){
+      if(state.status)
+        toast.success(state.message, {
+          autoClose: 1500,
+          onOpen: ()=>{
+            triggerUpdate({ target: "permissions" });
+            router.refresh();
+          }
+        })
+      else 
+        toast.error(state.message);
+    }
   }, [state, router]);
   
   return(
     <form className="bg-gray-100 hover:bg-gray-200 mt-2 mb-1 rounded-md border-2 px-2 flex gap-3 items-center" action={action}>
-      <input type="hidden" name="permId" value={permId} />
+      <input type="hidden" name="permId" value={id} />
       <div className="w-full capitalize font-medium">
-        <p>{permLabel}</p>
+        <p>{label}</p>
       </div>
       <div className="-mt-3 mb-1">
         <Button type="submit" cancel>

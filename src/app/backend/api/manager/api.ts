@@ -353,24 +353,28 @@ async function signPermission(prev: unknown, formData: FormData){
 
 async function getPermissions(userGroupId?: string){
   try{
-    const permissions = [];
-    const dbPermissions = await (userGroupId?permissionModel.find({ userGroupId }):permissionModel.find());
+    const permissions = await (
+      userGroupId
+      ? permissionModel.find({ userGroupId })
+      : permissionModel.find()
+    );
 
+    const permissionList = [];
 
-    for(const permission of dbPermissions){
+    for(const permission of permissions){
       const userGroup = await getUserGroup(permission?.userGroupId?.toString() as string);
-      permissions.push({
+      permissionList.push({
         _id: permission._id.toString(),
         label: permission.label as string,
         route: permission.route as string,
-        userGroupId: userGroup._id,
-        userGroupLabel: userGroup.label,
+        userGroupId: userGroup._id as string,
+        userGroupLabel: userGroup.label as string,
         detail: permission.detail as string,
       });
     }
-    return permissions;
-  }catch(e: unknown){
-    console.log(e);
+
+    return permissionList;
+  }catch(e){
     return [];
   }
 }
@@ -431,9 +435,24 @@ async function getUserPermissions(userId: string){
 }
 
 async function deleteUserPermission(prev: unknown, formData: FormData){
-  const permId = String(formData.get('permId'));
-  await accessPermissionModel.deleteOne({_id: permId});
-  return true;
+  try{
+    const permissionId = formData.get('permId');
+    if(!permissionId)
+      throw new Error("Preecha todos os campos!", { cause: "empty" });
+
+    await accessPermissionModel.deleteOne({ _id: permissionId });
+
+    return {
+      message: "Permissão removida com sucesso!",
+      status: true
+    }
+  }catch(e){
+    const err = e as Error;
+    return {
+      message: err.cause?err.message:"Falha ao remover a permissão!",
+      status: false
+    }
+  }
 }
 
 async function updatePermission(prev: unknown, formData: FormData){

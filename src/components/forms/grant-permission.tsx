@@ -3,12 +3,10 @@
 import { 
   useState,
   useEffect,
-  useActionState,
-  useCallback
+  useActionState
 } from 'react';
 import { useRouter } from 'next/navigation';
 import Button from '@/components/ui/button';
-import Alert from '@/components/ui/alert';
 import SubTitle from '@/components/ui/subtitle';
 import Selection, { SelectionOption } from '@/components/ui/selection';
 import { 
@@ -18,7 +16,7 @@ import {
 import { triggerUpdate } from '@/lib/ws-trigger';
 import { toast } from 'react-toastify';
 
-export default function AddUserPermissionForm({
+export default function GrantUserPermission({
   userId, 
   userGroupId
 }: {
@@ -26,13 +24,8 @@ export default function AddUserPermissionForm({
   userGroupId: string
 }){
   const [ state, action ] = useActionState(grantPermission, { message: '', status: false});
-  const router = useRouter();
   const [ permissions, setPermissions ] = useState<SelectionOption[]>([]);
-
-  const handlePermission = useCallback(async ()=>{
-    const perms = await getPermissions(userGroupId);
-    setPermissions(perms);
-  }, [userGroupId]);
+  const router = useRouter();
 
   useEffect(()=>{
     if(state.message){
@@ -50,8 +43,9 @@ export default function AddUserPermissionForm({
   }, [state, router]);
 
   useEffect(()=>{
-    handlePermission();
-  }, [handlePermission]);
+    getPermissions(userGroupId)
+    .then(setPermissions)
+  }, []);
   
   return(
     <form {...{action}} className='flex flex-col gap-3'>
@@ -63,7 +57,6 @@ export default function AddUserPermissionForm({
           options={permissions}
           name="permissionId" 
           required
-          onChange={handlePermission}
         />
 
         <Button>Atribuir</Button>
