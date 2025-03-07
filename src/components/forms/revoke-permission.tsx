@@ -1,9 +1,8 @@
 'use client';
 
 import { useActionState } from "react";
-import Button from "@/components/ui/button";
 import { BiTrash as TrashIcon } from "react-icons/bi";
-import { deleteUserPermission } from "@/app/backend/api/manager/api";
+import { revokePermission } from "@/app/backend/api/manager/api";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { triggerUpdate } from "@/lib/ws-trigger";
@@ -16,7 +15,7 @@ export default function RevokeUserPermission({
   id: string;
   label: string;
 }){
-  const [state, action] = useActionState(deleteUserPermission, { message: "", status: false });
+  const [state, action] = useActionState(revokePermission, { message: "", status: false });
   const router = useRouter();
   
   useEffect(()=>{
@@ -35,16 +34,14 @@ export default function RevokeUserPermission({
   }, [state, router]);
   
   return(
-    <form className="bg-gray-100 hover:bg-gray-200 mt-2 mb-1 rounded-md border-2 px-2 flex gap-3 items-center" action={action}>
-      <input type="hidden" name="permId" value={id} />
-      <div className="w-full capitalize font-medium">
-        <p>{label}</p>
-      </div>
-      <div className="-mt-3 mb-1">
-        <Button type="submit" cancel>
-          <TrashIcon className="w-5 h-5" />
-        </Button>
+    <form className="my-2" action={action}>
+      <input type="hidden" name="id" value={id} />
+      <div className="flex gap-x-3 items-center justify-between bg-gray-200 px-2 py-1 rounded outline outline-1 outline-gray-300">
+        <h2 className="text-sm font-medium">{label}</h2>
+        <button type="submit" className="p-2 rounded bg-red-500 text-white">
+          <TrashIcon className="size-5" />
+        </button>
       </div>
     </form>
-  );
+  )
 }

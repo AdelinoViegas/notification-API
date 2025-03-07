@@ -439,13 +439,14 @@ async function getUserPermissions(userId: string){
   }
 }
 
-async function deleteUserPermission(prev: unknown, formData: FormData){
+async function revokePermission(prev: unknown, formData: FormData){
   try{
-    const permissionId = formData.get('permId');
-    if(!permissionId)
+    const id = formData.get('id');
+
+    if(!id)
       throw new Error("Preecha todos os campos!", { cause: "empty" });
 
-    await accessPermissionModel.deleteOne({ _id: permissionId });
+    await accessPermissionModel.deleteOne({ _id: id });
 
     return {
       message: "Permissão removida com sucesso!",
@@ -589,7 +590,7 @@ export {
   getPermission,
   grantPermission,
   getUserPermissions,
-  deleteUserPermission,
+  revokePermission,
   updatePermission,
   getGrantedPermission,
   resetUserPassword,
