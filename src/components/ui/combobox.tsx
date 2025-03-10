@@ -41,14 +41,23 @@ export default function ComboBox({ defaultValue }:{ defaultValue: string }){
     try{
       if(!searchValue)
         throw new Error("Escreva alguma coisa!", { cause: "empty"});
+      
       const cids = await (searchByType === "code"?getByCode(searchValue):getByName(searchValue));
+      
       if(!cids.length)
         throw new Error("Não foi encontrado nenhum registro!", { cause: "not_found" });
+      
+      if(cids.length > 100)
+        throw new Error(`Foram encontrados muitos registros, estreite a busca por favor!`, { cause: "too_many" });
+
       setInitialCidList(cids);
       toast.success(`Foram encontrados um total de ${cids.length} registros.`);
     }catch(e){
       const err = e as Error;
-      toast.error(err.message);
+      if(err.cause === "too_many")
+        toast.warn(err.message)
+      else
+        toast.error(err.message);
     }
   }
 
@@ -111,12 +120,12 @@ export default function ComboBox({ defaultValue }:{ defaultValue: string }){
   useEffect(()=>{ 
     if(defaultValue){
       const items = JSON.parse(defaultValue) as string[];
-      if(items.length){
+
+      if(items.length)
         getByCodes(items)
         .then(setSelectedCids)
-      }
     }
-  }, []);
+  }, [defaultValue]);
 
   return(
     <div className="w-[500px]">

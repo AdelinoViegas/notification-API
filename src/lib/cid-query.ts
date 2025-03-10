@@ -7,7 +7,7 @@ export type CID = {
 
 async function getByCode(code: string): Promise<CID[]>{
   const data = await (await fetch(CID_URL)).json() as CID[];
-  const result = data.find(item => item.code === code.trim());
+  const result = data.find(item => item.code === code.trim().toUpperCase());
   return result?[{ code: result?.code, value: result?.value }]:[];
 }
 

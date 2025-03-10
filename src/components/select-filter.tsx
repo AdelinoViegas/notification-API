@@ -54,7 +54,7 @@ export default function SelectFilter({
     else 
       getDoctors()
       .then((data: unknown[]) => setOptionData(data as SelectionOption[]));
-  }, []);
+  }, [unitType]);
   
   return (
     <form ref={formRef} className="flex items-center gap-3">

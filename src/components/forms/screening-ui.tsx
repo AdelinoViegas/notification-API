@@ -153,7 +153,7 @@ export default function ScreeningUI({
     .finally(()=>{
       setEditable(false);
     })
-  }, [state, patientId, pathname]);
+  }, [state, patientId, pathname, router]);
 
   return(
     <div>
