@@ -26,7 +26,7 @@ export default async function Page({ params }: {
 	const symptoms = symptomsInternalComponent(anamnesis.generalClinic.symptoms);
 	const diseaseInGeneralClinic = diseaseInGeneralClinicComponent(anamnesis.generalClinic?.diseaseData);
 	const complementaryExams = examsInternalComponent(anamnesis?.generalClinic?.complementaryExams);
-	const diagnostic = diagnosticInternalComponent();
+	const diagnostic = diagnosticInternalComponent(JSON.stringify(anamnesis.generalClinic.diagnosticHypothesis));
 	const diseases = diseasesInternalComponent(anamnesis.generalClinic.diseases);
   const others = othersComponent(anamnesis?.generalClinic?.others);
 	const evaluation = evaluationInternalComponent(anamnesis?.generalClinic.evaluation);
@@ -56,8 +56,7 @@ export default async function Page({ params }: {
 
 			<div className="flex flex-col gap-y-3 pt-8">
 				<GlobalComponent
-				  type="clinicaGeral"
-				  {...{patientId}}
+					itemId={patientId}
 					title="CLINICA GERAL"
 					components={generalClinical} 
 				/>

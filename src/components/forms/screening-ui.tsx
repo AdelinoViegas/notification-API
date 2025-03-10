@@ -129,12 +129,16 @@ export default function ScreeningUI({
   const [ state, action ] = useActionState(insertScreening, initialState);
   const [ screeningData, setScreeningData ] = useState<Screening>();
   const [ editable, setEditable ] = useState(false);
+  const router = useRouter();
   const pathname = usePathname();
   
   useEffect(()=>{
     if(state.message){
       if(state.status)
-        toast.success(state.message);
+        toast.success(state.message, {
+          autoClose: 1500,
+          onOpen: router.refresh
+        });
       else
         toast.error(state.message);
     }
@@ -173,7 +177,7 @@ export default function ScreeningUI({
 
         {ui === "vital-signals" && 
           <>
-            <div className="grid md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-4">
               <InputField
                 type="number"
                 textLabel="P.A MÁXIMA (mmHG)"

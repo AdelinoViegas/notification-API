@@ -44,7 +44,6 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     '/manager/:path*',
-    '/clinical/:path*',
-    // '/workplace/:path*'
+    '/clinical/:path*'
   ],
 }
