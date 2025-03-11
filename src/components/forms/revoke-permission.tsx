@@ -5,7 +5,7 @@ import { BiTrash as TrashIcon } from "react-icons/bi";
 import { revokePermission } from "@/app/backend/api/manager/api";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { triggerUpdate } from "@/lib/ws-trigger";
+
 import { toast } from "react-toastify";
 
 export default function RevokeUserPermission({
@@ -24,7 +24,6 @@ export default function RevokeUserPermission({
         toast.success(state.message, {
           autoClose: 1500,
           onOpen: ()=>{
-            triggerUpdate({ target: "permissions" });
             router.refresh();
           }
         })

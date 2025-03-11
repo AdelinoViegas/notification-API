@@ -22,7 +22,7 @@ import { getDoctors, getSpecialties } from "@/app/backend/api/clinical/api";
 import { getDateInDashFormat } from "@/lib/date-formater";
 import { Types } from "mongoose";
 import type { DoctorCalendarReference, DoctorDayAndTime } from "@/app/backend/api/clinical/types";
-import { triggerUpdate } from "@/lib/ws-trigger";
+
 
 type DoctorRole = {
   _id: string;
@@ -120,8 +120,6 @@ export default function ScheduleAppointment({ patientId }: { patientId: string }
       setMessageState(false);
 
       if(state.status){
-        triggerUpdate({ target: "appointment" });
-        triggerUpdate({ target: "patient" });
         formRef.current?.reset();
         setDoctorDays([]);
       }

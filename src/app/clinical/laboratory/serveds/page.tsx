@@ -3,7 +3,6 @@ import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
 import SelectFilter from "@/components/select-filter";
-import WsUpdate from "@/components/ws-update";
 import { getPatients } from "@/app/backend/api/clinical/unit-api";
 import { Services, tableLaboratory } from "@/lib/table-formater";
 import Pagination from "@/components/pagination";
@@ -33,7 +32,7 @@ export default async function Page({
   const patientRows = tableLaboratory(patientsData.patients as Services[]); 
   return (
     <main className="space-y-3">
-      <WsUpdate target="laboratory" />
+      
       
       <div className="mt-6">
         <Header title="Atendidos"/>

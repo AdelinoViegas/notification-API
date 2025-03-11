@@ -19,7 +19,7 @@ import {
 import InputDetails from "@/components/ui/input-details";
 import { BiTrash as TrashIcon } from "react-icons/bi";
 import SubTitle from "@/components/ui/subtitle";
-import { triggerUpdate } from "@/lib/ws-trigger";
+
 import clsx from "clsx";
 import { toast } from 'react-toastify';
 
@@ -77,8 +77,6 @@ export default function RequestExams({
       if(state.status)
         toast.success(state.message, {
           onOpen: ()=> {
-            triggerUpdate({ target: "schedule-exams" });
-            triggerUpdate({ target: "patient" });
             formRef.current?.reset();
             setExamCart([]);
             setItem("");

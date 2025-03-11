@@ -13,7 +13,7 @@ import {
   getPermissions,
   grantPermission,
 } from "@/app/backend/api/manager/api";
-import { triggerUpdate } from '@/lib/ws-trigger';
+
 import { toast } from 'react-toastify';
 
 export default function GrantUserPermission({
@@ -33,7 +33,6 @@ export default function GrantUserPermission({
         toast.success(state.message, {
           autoClose: 1500,
           onOpen: ()=>{
-            triggerUpdate({ target: "permissions" });
             router.refresh();
           }
         })

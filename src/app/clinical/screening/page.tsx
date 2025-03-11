@@ -6,7 +6,6 @@ import Button from "@/components/ui/button";
 import Search from "@/components/ui/search";
 import tableFormater from "@/lib/table-formater";
 import { getPatientsInScreening } from "@/app/backend/api/clinical/api";
-import WsUpdate from "@/components/ws-update";
 import Pagination from "@/components/pagination";
 import { PiArchiveDuotone } from "react-icons/pi";
 
@@ -31,7 +30,7 @@ export default async function Page({
   
   return (
     <main className="space-y-3">
-      <WsUpdate target="screening" />
+      
       <div className="mt-6">
         <Header title="Triagem"/>
       </div>

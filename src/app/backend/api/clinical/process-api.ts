@@ -2,7 +2,7 @@
 
 import { whoIsUser } from "@/lib/web-token";
 import { processStateModel, notificationModel } from "@/app/backend/models/clinical";
-import { triggerUpdate } from "@/lib/ws-trigger";
+
 import { redirect } from "next/navigation";
 import { getFirstAndLastName } from "@/components/status-bar";
 import { userModel } from "@/app/backend/models/manager";
@@ -98,7 +98,6 @@ async function signNotification({
     targetDataId: dataId
   });
 
-  triggerUpdate({target: "notification"});
 }
 
 async function getNotifications(){
@@ -163,7 +162,6 @@ async function readNotification({ notifyId }: { notifyId: string }){
     isReaded: true,
     readByUsers: notification.readByUsers,
   })
-  triggerUpdate({ target: "notification" });
 }
 /**
  * @params {dataId} ObjecId da informação que deve fazer parte de uma rota onde tem tabela 
@@ -187,8 +185,6 @@ async function deleteNotificaion({ notifyId }: { notifyId: string }){
     },
     visible: false,
   });
-
-  triggerUpdate({ target: "notification", signal: "delete" });
 }
 
 export{

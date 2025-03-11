@@ -5,7 +5,6 @@ import Alert from "@/components/ui/alert";
 import Link from "next/link";
 import Button from "@/components/ui/button";
 import Search from "@/components/ui/search";
-import WsUpdate from "@/components/ws-update";
 import { getPatients } from "@/app/backend/api/clinical/office-api";
 import { TiInputChecked } from "react-icons/ti";
 
@@ -24,7 +23,7 @@ export default async function Page({
 
   return (
     <main className="space-y-3">
-      <WsUpdate target="office" />
+      
       
       <div className="mt-6">
         <Header title="Consultas Marcadas"/>

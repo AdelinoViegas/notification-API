@@ -7,7 +7,7 @@ import {
 import { useParams } from "next/navigation";
 import Button from "@/components/ui/button";
 import { putInScreening } from "@/app/backend/api/clinical/api";
-import { triggerUpdate } from "@/lib/ws-trigger";
+
 import { toast } from "react-toastify";
 
 export default function SendToScreening(){
@@ -17,13 +17,7 @@ export default function SendToScreening(){
   useEffect(()=>{
     if(state.message){
       if(state.status)
-        toast.success(state.message, {
-          onClose: ()=>{
-            triggerUpdate({ target: "screening" });
-            triggerUpdate({ target: "patient" });
-          },
-          autoClose: 1500
-        })
+        toast.success(state.message, { autoClose: 1500 })
       else
         toast.warn(state.message)
     }

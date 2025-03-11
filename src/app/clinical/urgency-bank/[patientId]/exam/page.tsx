@@ -3,7 +3,6 @@ import RequestExams from "@/components/forms/request-exam";
 import Accordium from "@/components/ui/accordium";
 import Table from "@/components/table";
 import { TableFormatter } from "@/lib/table-formater";
-import WsUpdate from "@/components/ws-update";
 
 export default async function Page({ params }: {
   params: Promise<{ patientId: string }>
@@ -14,7 +13,7 @@ export default async function Page({ params }: {
  
   return(
     <main>
-      <WsUpdate target="laboratory" />
+      
 
       <Accordium title="Solicitação de Exames">
         <RequestExams {...{patientId}} isFullWindow />

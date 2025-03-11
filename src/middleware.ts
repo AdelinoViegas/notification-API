@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 
 export async function middleware(){
+  if(process.env.ENV === "development")
+    console.log('requested');
   return NextResponse.next();
 }
 // import { NextResponse, NextRequest } from 'next/server'

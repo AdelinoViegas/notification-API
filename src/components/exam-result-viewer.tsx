@@ -3,7 +3,7 @@ import Card from "./ui/card";
 import { FileHandler } from "@/lib/client-files";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
 import Link from "next/link";
-import WsUpdate from "@/components/ws-update";
+
 type ExamResult = {
   name: string;
   plainText?: string;
@@ -21,8 +21,6 @@ export default function ExamResultViewer({
 }){
   return(
     <Card>
-      <WsUpdate target="office-exam-results" />
-
       <h2 className="text-primary font-medium text-lg">Histórico de Exames realizados</h2>
       <div className="h-96 overflow-auto px-3">
         { results.reverse().map((item, i)=>(

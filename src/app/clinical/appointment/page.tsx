@@ -7,7 +7,6 @@ import { getScheduleAppointments } from "@/app/backend/api/clinical/scheduling-a
 import Link from "next/link";
 import Button from "@/components/ui/button";
 import Search from "@/components/ui/search";
-import WsUpdate from "@/components/ws-update";
 import { PiArchiveDuotone } from "react-icons/pi";
 import { TiInputChecked } from "react-icons/ti";
 
@@ -27,8 +26,6 @@ export default async function Page({
 
   return (
     <main className="space-y-3">
-      <WsUpdate target="appointment" />
-      
       <div className="mt-6">
         <Header title="Consultas Agendadas"/>
       </div>

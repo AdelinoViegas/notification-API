@@ -6,7 +6,6 @@ import Alert from "@/components/ui/alert";
 import { orderByPriority } from "@/lib/filters";
 import Tooltip from "@/components/urgency-bank-tooltip";
 import Search from "@/components/ui/search";
-import WsUpdate from "@/components/ws-update";
 
 export const dynamic = "force-dynamic";
 
@@ -29,7 +28,7 @@ export default async function Page({
 
   return(
     <main className="space-y-3">
-      <WsUpdate target="urgency-bank" />
+     
       <div className="mt-6">
         <Header title="Banco de Urgência"/>
       </div>

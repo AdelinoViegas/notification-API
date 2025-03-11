@@ -10,7 +10,7 @@ import Modal from "@/components/modal";
 import Button from "@/components/ui/button";
 import Alert from "@/components/ui/alert";
 import { sendPatientToOffice } from "@/app/backend/api/clinical/office-api";
-import { triggerUpdate } from "@/lib/ws-trigger";
+
 import { VscSend } from "react-icons/vsc";
 
 export default function SendAppointment({
@@ -33,8 +33,6 @@ export default function SendAppointment({
       setTimeout(()=>{
         if(state.status){
           setMessageState(false);
-          triggerUpdate({ target: "office"});
-          triggerUpdate({ target: "appointment"});
           closeModal();
           router.replace('/clinical/appointment');
         }
