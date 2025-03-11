@@ -11,7 +11,7 @@ import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
 import Alert from "@/components/ui/alert";
 import { updatePaymentData } from "@/app/backend/api/clinical/unit-api";
-import { triggerUpdate } from "@/lib/ws-trigger";
+
 import { MdAttachMoney } from "react-icons/md";
 
 export default function ValidateService({
@@ -40,8 +40,6 @@ export default function ValidateService({
 
       setTimeout(()=>{
         if(state.status){
-          triggerUpdate({ target: "laboratory"});
-          triggerUpdate({ target: "schedule-exams-services"});
           router.replace('/clinical/schedule-exams-services');
         }
         setMessageState(false);

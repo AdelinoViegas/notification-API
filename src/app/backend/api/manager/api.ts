@@ -234,7 +234,7 @@ async function getUsers({ name }: { name?: string }){
 
 async function getUser(userId: string, adminCall?: boolean){
   try{
-    const user = await userModel.findById({_id: userId}).select({ password: 0 });
+    const user = await userModel.findById({ _id: userId }).select({ password: 0 });
     if(!user)
       throw new Error("Usuário inexistente!", { cause: "user_not_found"});
 
@@ -258,15 +258,16 @@ async function getUser(userId: string, adminCall?: boolean){
       userGroupId: userGroup._id.toString(),
       isActive: user.isActive,
       session: {
-        isActive: userSession?.isActive,
-        locationId: userSession?.locationId?.toString(),
+        isActive: userSession?.isActive as boolean,
+        locationId: userSession?.locationId?.toString() as string,
         createdAt: userSession?.createdAt as Date
       }
     };
   }catch(e: unknown){
     const err = e as Error;
+
     return {
-      message: err.message,
+      message: err.cause?err.message:"Falha crítica!",
       status: false
     };
   }
@@ -352,74 +353,112 @@ async function signPermission(prev: unknown, formData: FormData){
 
 async function getPermissions(userGroupId?: string){
   try{
-    const permissions = [];
-    const dbPermissions = await (userGroupId?permissionModel.find({ userGroupId }):permissionModel.find());
+    const permissions = await (
+      userGroupId
+      ? permissionModel.find({ userGroupId })
+      : permissionModel.find()
+    );
 
+    const permissionList = [];
 
-    for(const permission of dbPermissions){
+    for(const permission of permissions){
       const userGroup = await getUserGroup(permission?.userGroupId?.toString() as string);
-      permissions.push({
+      permissionList.push({
         _id: permission._id.toString(),
         label: permission.label as string,
         route: permission.route as string,
-        userGroupId: userGroup._id,
-        userGroupLabel: userGroup.label,
+        userGroupId: userGroup._id as string,
+        userGroupLabel: userGroup.label as string,
         detail: permission.detail as string,
       });
     }
-    return permissions;
-  }catch(e: unknown){
-    console.log(e);
+
+    return permissionList;
+  }catch(e){
+    const err = e as Error;
+    console.log(err.message);
     return [];
   }
 }
 
 async function getPermission(permId: string){
-  return await permissionModel.findOne({_id: permId});
+  const permission = await permissionModel.findOne({ _id: permId });
+
+  return {
+    _id: permission?._id.toString() as string,
+    label: permission?.label as string,
+    userGroupId: permission?.userGroupId?.toString() as string,
+    detail: permission?.detail as string,
+    route: permission?.route as string,
+  }
 }
 
 async function grantPermission(prev: unknown, formData:FormData){
   try{
-    const userId = String(formData.get('userId'));
-    const permissionId = String(formData.get('permissionId'));
+    const userId = formData.get('userId');
+    const permissionId = formData.get('permissionId');
     
     const perm = await accessPermissionModel.findOne({
       permissionId,
-      userId,
+      userId
     });
 
     if(perm)
-      return{
-        message: 'Esta permissão já foi atribuida!',
-        status: false
-      }
+      throw new Error("Esta permissão já atribuída ao usuário!", { cause: "granted"});
 
-    const userPerm = new accessPermissionModel({userId, permissionId})
-
-    await userPerm.save();
+    await accessPermissionModel.create({userId, permissionId})
 
     return {
-      message: 'Adicionado permissão ao usuario!',
-      status: true,
+      message: 'Permissão atribuída com sucesso!',
+      status: true
     }
-  }catch(err: unknown){
+  }catch(e: unknown){
+    const err = e as Error;
 
     return {
-      message: 'Falha!',
-      status: false,
-      detail: err
+      message: err.cause?err.message:"Falha crítica!",
+      status: false
     }
   }
 }
 
 async function getUserPermissions(userId: string){
-  return await accessPermissionModel.find({userId});
+  try{
+    return (await accessPermissionModel.find({ userId })).map(item => {
+      return {
+        _id: item._id.toString(),
+        userId: item.userId?.toString() as string,
+        permissionId: item.permissionId?.toString() as string
+      }
+    })
+  }catch(e){
+    const err = e as Error;
+    console.log(err.message);
+    
+    return [];
+  }
 }
 
-async function deleteUserPermission(prev: unknown, formData: FormData){
-  const permId = String(formData.get('permId'));
-  await accessPermissionModel.deleteOne({_id: permId});
-  return true;
+async function revokePermission(prev: unknown, formData: FormData){
+  try{
+    const id = formData.get('id');
+
+    if(!id)
+      throw new Error("Preecha todos os campos!", { cause: "empty" });
+
+    await accessPermissionModel.deleteOne({ _id: id });
+
+    return {
+      message: "Permissão removida com sucesso!",
+      status: true
+    }
+  }catch(e){
+    const err = e as Error;
+    return {
+      message: err.cause?err.message:"Falha ao remover a permissão!",
+      status: false
+    }
+  }
 }
 
 async function updatePermission(prev: unknown, formData: FormData){
@@ -551,7 +590,7 @@ export {
   getPermission,
   grantPermission,
   getUserPermissions,
-  deleteUserPermission,
+  revokePermission,
   updatePermission,
   getGrantedPermission,
   resetUserPassword,

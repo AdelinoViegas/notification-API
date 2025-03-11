@@ -14,7 +14,7 @@ import Modal from '@/components/modal';
 import { TiInputChecked } from 'react-icons/ti';
 import { finishExam } from '@/app/backend/api/clinical/unit-api';
 import Alert from '@/components/ui/alert';
-import { triggerUpdate } from '@/lib/ws-trigger';
+
 
 export default function FinishAnalysis({
   resultId,
@@ -40,8 +40,6 @@ export default function FinishAnalysis({
         setMessage("");
         if(state.status){
           closeModal();
-          triggerUpdate({ target: "office-exam-results"});
-          triggerUpdate({ target: "laboratory" });
           router.replace(`/clinical/${state.type}`);
         }
       }, 2000);

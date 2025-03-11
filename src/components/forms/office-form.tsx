@@ -12,7 +12,7 @@ import Button from "@/components/ui/button";
 import Alert from "@/components/ui/alert";
 import { signConsutation, uploadExternalExamFile } from "@/app/backend/api/clinical/office-api";
 import { useRouter } from "next/navigation";
-import { triggerUpdate } from "@/lib/ws-trigger";
+
 import { resultsConsult } from "@/app/backend/api/clinical/types";
 import { FileHandler } from "@/lib/client-files";
 import { toast, ToastContainer } from "react-toastify";
@@ -35,7 +35,6 @@ function VitalSignalsInOffice({
 
       setTimeout(()=>{
         if(state?.status){
-          triggerUpdate({ target: "office" }); 
           router.refresh();        
         }
         setMessageState(false);
@@ -181,7 +180,6 @@ function CurrentDataInOffice({
 
       setTimeout(()=>{
         if(state?.status){
-          triggerUpdate({ target: "office" }); 
           router.refresh();        
         }
         setMessageState(false);

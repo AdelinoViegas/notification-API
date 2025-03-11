@@ -811,30 +811,36 @@ async function getScreening({
 async function insertScreening(prev: unknown, formData: FormData){
   try{
     const userPayload:{ [key: string]: string } = {};
-    const uiType = (formData.get('t') as string)?.trim();
     const patientId = formData.get('Id') as string;
  
-    for(const [key, value] of formData.entries()){
+    for(const [key, value] of formData.entries())
       userPayload[key] = value as string;
-    }
-
+  
     userPayload['patientId'] = patientId;
+    userPayload['t'] = userPayload['t'].trim();
     userPayload['userId'] = (await whoIsUser()) as string;
 
-    if(uiType === "vital-signals"){
+    if(userPayload['t'] === "vital-signals"){
       const w = Number(userPayload.weight);
       const h = Number(userPayload.height);
+
+      if(h === 0)
+        throw new Error("defina uma altura maior que 0", {cause: "Infinity"});
+
       userPayload['imc'] = (w/(h*h)).toFixed(2);
     }
-
-    await screeningModel.updateOne({
-      patientId: patientId,
-      served: false
-    }, uiType==="vital-signals"
+    
+    await screeningModel.updateOne(userPayload['scrId']
+      ?{
+        _id: userPayload['scrId']
+      }
+      :{
+        patientId,
+        served: false
+      }, userPayload['t'] === "vital-signals"
       ?{ 
         vitalSignals: userPayload,
-        userId: await whoIsUser(),
-        patientId,
+        userId: await whoIsUser()
       }
       :userPayload
     );
@@ -847,7 +853,7 @@ async function insertScreening(prev: unknown, formData: FormData){
     const err = e as Error;
 
     return {
-      message: "Falha na operação "+err.message,
+      message: err.cause?err.message:"Falha na operação ",
       status: false,
       type: "error"
     }

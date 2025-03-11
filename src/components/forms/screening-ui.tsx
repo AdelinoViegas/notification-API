@@ -118,21 +118,27 @@ function DoneScreening({
 export default function ScreeningUI({
   ui,
   patientId,
-  priority
+  priority,
+  scrId
 }:{
   ui: UIComponent,
   patientId: string;
   priority?: string;
+  scrId?: string;
 }){
   const [ state, action ] = useActionState(insertScreening, initialState);
   const [ screeningData, setScreeningData ] = useState<Screening>();
   const [ editable, setEditable ] = useState(false);
+  const router = useRouter();
   const pathname = usePathname();
   
   useEffect(()=>{
     if(state.message){
       if(state.status)
-        toast.success(state.message);
+        toast.success(state.message, {
+          autoClose: 1500,
+          onOpen: router.refresh
+        });
       else
         toast.error(state.message);
     }
@@ -147,13 +153,14 @@ export default function ScreeningUI({
     .finally(()=>{
       setEditable(false);
     })
-  }, [state, patientId, pathname]);
+  }, [state, patientId, pathname, router]);
 
   return(
     <div>
       <form action={action} className="py-3">
         <input type="hidden" name="t" value={ui} />
         <input type="hidden" name="Id" value={patientId} />
+        <input type="hidden" name="scrId" value={scrId} />
 
         {ui === "reason" && 
           <>
@@ -170,7 +177,7 @@ export default function ScreeningUI({
 
         {ui === "vital-signals" && 
           <>
-            <div className="grid md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-4">
               <InputField
                 type="number"
                 textLabel="P.A MÁXIMA (mmHG)"
@@ -178,6 +185,7 @@ export default function ScreeningUI({
                 placeholder="0 (mmHG)"
                 defaultValue={screeningData?.vitalSignals?.paMax}
                 disabled={!editable}
+                required
               />
 
               <InputField
@@ -187,6 +195,7 @@ export default function ScreeningUI({
                 placeholder="0 (mmHG)"
                 defaultValue={screeningData?.vitalSignals?.paMin}
                 disabled={!editable}
+                required
               />
               
               <InputField
@@ -194,9 +203,9 @@ export default function ScreeningUI({
                 textLabel="PULSO (BPM)"
                 name="jump" 
                 placeholder="0 (BPM)"
-                required
                 defaultValue={screeningData?.vitalSignals?.jump}
                 disabled={!editable}
+                required
               />
 
               <InputField
@@ -204,20 +213,20 @@ export default function ScreeningUI({
                 step={0.01}
                 textLabel="TEMPERATURA (°)"
                 name="temperature"
-                required 
                 placeholder="0 graus(°)"
                 defaultValue={screeningData?.vitalSignals?.temperature}
                 disabled={!editable}
+                required
               />
 
               <InputField
                 type="number"
                 textLabel="RESPIRAÇÂO (IRPM)"
                 name="breathing" 
-                required
                 placeholder="0 (IRPM)"
                 defaultValue={screeningData?.vitalSignals?.breathing}
                 disabled={!editable}
+                required
               />
 
               <InputField
@@ -226,9 +235,9 @@ export default function ScreeningUI({
                 name="weight" 
                 placeholder="0 (kg)"
                 step={0.01}
-                required 
                 defaultValue={screeningData?.vitalSignals?.weight}
                 disabled={!editable}
+                required
               />
 
               <InputField
@@ -239,6 +248,7 @@ export default function ScreeningUI({
                 placeholder="0 (m)"
                 defaultValue={screeningData?.vitalSignals?.height}
                 disabled={!editable}
+                required
               />
 
               <InputField

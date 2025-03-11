@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import Modal from "@/components/modal";
 import Button from "@/components/ui/button";
 import Alert from "@/components/ui/alert";
-import { triggerUpdate } from "@/lib/ws-trigger";
+
 import { VscSend } from "react-icons/vsc";
 import { sendPatientToUnit } from "@/app/backend/api/clinical/unit-api";
 
@@ -31,8 +31,6 @@ export default function SendAppointment({
 
       setTimeout(()=>{
         if(state.status){
-          triggerUpdate({ target: "laboratory"});
-          triggerUpdate({ target: "schedule-exams-services"});
           router.replace('/clinical/schedule-exams-services');
         }
         setMessageState(false);

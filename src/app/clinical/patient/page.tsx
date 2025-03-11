@@ -6,7 +6,6 @@ import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
 import tableFormater from "@/lib/table-formater";
 import { getPatients } from "@/app/backend/api/clinical/api";
-import WsUpdate from "@/components/ws-update";
 import Pagination from "@/components/pagination";
 import { PiArchiveDuotone } from "react-icons/pi";
 import { BiPlus as PlusIcon } from "react-icons/bi";
@@ -32,7 +31,7 @@ export default async function Page({
   
   return (
     <main className="space-y-3">
-      <WsUpdate target="patient" />
+      
       <div className="mt-6">
         <Header title="Utentes"/>
       </div>

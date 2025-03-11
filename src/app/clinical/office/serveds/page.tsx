@@ -3,7 +3,6 @@ import Table from "@/components/table";
 import { type DoctorOffice, tableOffice } from "@/lib/table-formater";
 import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
-import WsUpdate from "@/components/ws-update";
 import { getPatients } from "@/app/backend/api/clinical/office-api";
 
 export const dynamic = "force-dynamic";
@@ -21,7 +20,7 @@ export default async function Page({
 
   return (
     <main className="space-y-3">
-      <WsUpdate target="office" />
+      
       
       <div className="mt-6">
         <Header title="Consultas Realizadas"/>

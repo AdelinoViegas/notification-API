@@ -11,7 +11,7 @@ import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
 import Alert from "@/components/ui/alert";
 import { updatePaymentData } from "@/app/backend/api/clinical/office-api";
-import { triggerUpdate } from "@/lib/ws-trigger";
+
 import { MdAttachMoney } from "react-icons/md";
 
 export default function ValidateAppointment({
@@ -40,8 +40,6 @@ export default function ValidateAppointment({
 
       setTimeout(()=>{
         if(state.status){
-          triggerUpdate({ target: "office"});
-          triggerUpdate({ target: "appointment"});
           closeModal();
           router.replace('/clinical/appointment');
         }

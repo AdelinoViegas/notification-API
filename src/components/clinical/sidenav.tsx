@@ -3,7 +3,6 @@ import NavLink from '@/components/clinical/nav-link';
 import { getGrantedPermission } from '@/app/backend/api/manager/api';
 import { clinicalRoutes } from '@/components/routes';
 import LogoutButton from '@/components/logout-button';
-import WsUpdate from '@/components/ws-update';
 import Image from 'next/image';
 
 export default async function SideNav(){
@@ -11,8 +10,6 @@ export default async function SideNav(){
 
   return(
     <div className="bg-white border-r flex sm:h-full flex-col px-3 py-4 md:px-2">
-      <WsUpdate target="permissions" />
-
       <Link
         className="rounded-md mb-2 flex h-20 items-end justify-start bg-gradient-to-r from-primary to-sky-500 p-4 md:h-auto"
         href={"/clinical"}

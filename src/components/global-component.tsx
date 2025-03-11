@@ -27,9 +27,9 @@ type SeparatedElements = {
 }
 
 type Props = {
-  patientId: string;
   title: string;
   components: InternalComponent[];
+  itemId?: string;
 };
 
 type TypeUI = HTMLInputTypeAttribute | "select" | "textarea" | "combobox";
@@ -41,6 +41,7 @@ type InternalComponent = {
   sections?: string[];
   apiFn?: (prev:unknown, formData:FormData)=>Promise<InitialValue>;
   initialState?: InitialValue;
+  itemId?: string;
 };
 
 type UIComponent = {
@@ -64,13 +65,13 @@ type Children = {
 };
 
 function Component({
-  patientId,
+  itemId,
   title,
   className,
   childrens,
   apiFn,
   initialState
-}: InternalComponent & { patientId: string }){
+}: InternalComponent){
   const [ state, action ] = useActionState(apiFn?apiFn:FallbackFn, initialState);
   const router = useRouter();
   
@@ -95,7 +96,7 @@ function Component({
         <input
           className="hidden"
           name="patientId"
-          defaultValue={patientId}
+          defaultValue={itemId}
         />
 
         <div className={className}>
@@ -121,24 +122,16 @@ function Component({
   );
 }
 
-export default function GlobalComponent({
-  patientId, 
+export default function GlobalComponent({ 
+  itemId,
   title, 
-  components,
-  type,
-}: Props & {type?: string}){
+  components
+}: Props){
   return(
     <Accordium className="bg-gray-200 hover:bg-gray-300" title={title}>
-      {components.map((item, i)=> <Component {...{type}} {...{patientId}} {...item} key={i} />)}
+      {components.map((item, i)=> <Component {...{itemId}} {...item} key={i} />)}
     </Accordium>
   );
-}
-// função de fundo dos components, caso ainda n tenha um função de backend para preencher
-async function FallbackFn(): Promise<InitialValue> {
-  return {
-    status: true,
-    message: "Isto é apenas um teste!"
-  }
 }
 
 function RenderUIElement({ items }: { items: UIComponent[]}){
@@ -162,7 +155,7 @@ function RenderUIElement({ items }: { items: UIComponent[]}){
       )
     else if (item.type === "combobox")
       return(
-        <ComboBox key={key} />
+        <ComboBox key={key} defaultValue={item.props.defaultValue as string} />
       )
     else
       return(
@@ -174,6 +167,14 @@ function RenderUIElement({ items }: { items: UIComponent[]}){
         />
       );
   })
+}
+
+// função de fallback
+async function FallbackFn(): Promise<InitialValue> {
+  return {
+    status: true,
+    message: "Isto é apenas um teste!"
+  }
 }
 
 export type {

@@ -14,7 +14,7 @@ import tabComponents from "@/components/tab-components";
 import clsx from "clsx";
 import { signPatient } from "@/app/backend/api/clinical/api";
 import { GrLinkNext } from "react-icons/gr";
-import { triggerUpdate } from "@/lib/ws-trigger";
+
 import { validatePatientDoc, validatePatientLocation } from "@/lib/regexp";
 import { toast } from "react-toastify";
 
@@ -73,12 +73,11 @@ export default function SignPatientForm(){
 					autoClose: 1500,
 					onClose: ()=>{
 						router.replace('/clinical/patient');
-						triggerUpdate({ target: "patient" });
 					}
 				});
 			else
 				toast.error(state.message);
-  }, [state, router, triggerUpdate]);
+  }, [state, router]);
 
 	return(
 		<main>

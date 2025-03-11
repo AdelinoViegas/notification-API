@@ -562,6 +562,7 @@ function handleCidsInputs(encondedData: string){
     throw new Error("Escolha uma hipótese!", { cause: "empty_hy" });
   return data;
 }
+
 async function signUrgencyBank(prev: unknown, formData:FormData){
   try{
     const payload:{ [key: string]: string } = {};

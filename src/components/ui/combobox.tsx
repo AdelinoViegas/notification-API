@@ -1,6 +1,6 @@
 "use client";
-import { useState } from "react";
-import { CID, getByCode, getByName } from "@/lib/cid-query";
+import { useState, useEffect } from "react";
+import { CID, getByCode, getByCodes, getByName } from "@/lib/cid-query";
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
 import { toast } from "react-toastify";
@@ -12,16 +12,11 @@ import {
 } from '@headlessui/react';
 import { BiCheck, BiChevronDown } from "react-icons/bi";
 import clsx from 'clsx';
-// import { getPatientUrgencyBank } from "@/app/backend/api/clinical/urgency-bank-api";
-// import SubTitle from "./subtitle";
-// import InputDetails from "./input-details";
-// import { getPatientUrgencyBank } from "@/app/backend/api/clinical/urgency-bank-api";
 import { FiSearch } from "react-icons/fi";
 import { IoMdAdd } from "react-icons/io";
 import { FaRegTrashAlt } from "react-icons/fa";
-// import { getPatientUrgencyBank } from "@/app/backend/api/clinical/urgency-bank-api";
 
-export default function ComboBox(){
+export default function ComboBox({ defaultValue }:{ defaultValue: string }){
   const [ initialCidList, setInitialCidList ] = useState<CID[]>([]);
   const [ searchByType, setSearchByType ] = useState<"code"|"description">("description");
   const [ searchValue, setSearchValue ] = useState("");
@@ -46,14 +41,23 @@ export default function ComboBox(){
     try{
       if(!searchValue)
         throw new Error("Escreva alguma coisa!", { cause: "empty"});
+      
       const cids = await (searchByType === "code"?getByCode(searchValue):getByName(searchValue));
+      
       if(!cids.length)
         throw new Error("Não foi encontrado nenhum registro!", { cause: "not_found" });
+      
+      if(cids.length > 100)
+        throw new Error(`Foram encontrados muitos registros, estreite a busca por favor!`, { cause: "too_many" });
+
       setInitialCidList(cids);
       toast.success(`Foram encontrados um total de ${cids.length} registros.`);
     }catch(e){
       const err = e as Error;
-      toast.error(err.message);
+      if(err.cause === "too_many")
+        toast.warn(err.message)
+      else
+        toast.error(err.message);
     }
   }
 
@@ -112,6 +116,16 @@ export default function ComboBox(){
       </div>
     )
   }
+
+  useEffect(()=>{ 
+    if(defaultValue){
+      const items = JSON.parse(defaultValue) as string[];
+
+      if(items.length)
+        getByCodes(items)
+        .then(setSelectedCids)
+    }
+  }, [defaultValue]);
 
   return(
     <div className="w-[500px]">

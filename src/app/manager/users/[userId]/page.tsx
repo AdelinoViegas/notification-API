@@ -3,8 +3,8 @@ import {
   getUserGroup 
 } from "@/app/backend/api/manager/api";
 import UserStatusButton from "@/components/user-status-button";
-import AddUserPermissionForm from "@/components/forms/user-permission-form";
-import UserPermissions from "@/components/user-permissions";
+import GrantUserPermission from "@/components/forms/grant-permission";
+import GrantedUserPermission from "@/components/granted-permission";
 import UserPassword from "@/components/user-password";
 import Link from "next/link";
 import Button from "@/components/ui/button";
@@ -27,7 +27,7 @@ export default async function Page({ params }: { params: Promise<{ userId: strin
   
   return(
     <main className="px-2 pt-4 w-full">
-      <Header title="Ajustes da conta de Usuário" />
+      <Header title="Configuração da Conta" />
       <div className="mt-3 space-y-3 overflow-y-auto max-h-[82vh]">
         <div className="grid lg:grid-cols-2 gap-3">
           <Card className="flex flex-col justify-between">
@@ -80,14 +80,14 @@ export default async function Page({ params }: { params: Promise<{ userId: strin
 
           <div className="p-3 md:flex-col lg:flex-row flex gap-9 bg-white border rounded-xl">
             <div className="lg:w-full">
-              <AddUserPermissionForm 
+              <GrantUserPermission 
                 {...{userId}} 
-                userGroupId={user.userGroupId?.toString() as string} 
+                userGroupId={user.userGroupId as string} 
               />
             </div>
 
             <div className="lg:w-full">
-              <UserPermissions {...{userId}} />
+              <GrantedUserPermission {...{userId}} />
             </div>
           </div>
         </div>

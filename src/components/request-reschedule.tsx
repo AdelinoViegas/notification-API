@@ -15,7 +15,7 @@ import Modal from '@/components/modal';
 import { requestReschedule } from '@/app/backend/api/clinical/office-api';
 import Alert from '@/components/ui/alert';
 import { MdOutlineMoreTime } from "react-icons/md";
-import { triggerUpdate } from '@/lib/ws-trigger';
+
 
 export default function RequestReschedule(){
   const [ state, action ] = useActionState(requestReschedule, { message: "", status: false });
@@ -37,7 +37,6 @@ export default function RequestReschedule(){
       setTimeout(()=>{
         setMessage("");
         if(state.status){
-          triggerUpdate({ target: "appointment" });
           closeModal();
           router.replace("/clinical/office");
         }
