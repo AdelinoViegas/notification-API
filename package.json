@@ -6,7 +6,8 @@
     "dev": "node src/ws.mjs 2>/dev/null& next dev --turbopack",
     "build": "next build",
     "start": "node src/ws.mjs 2>/dev/null& next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "build:ws": "tsc -p tsconfig.workers.json"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",
