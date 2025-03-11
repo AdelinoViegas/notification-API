@@ -1,6 +1,7 @@
 import SideNav from "@/components/sidenav";
 import type { Metadata } from "next";
 import StatusLoginUser from "@/components/status-bar";
+export const dynamic = "force-dynamic";
 
 export const metadata:Metadata = {
   title: 'Administrador'

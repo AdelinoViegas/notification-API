@@ -11,7 +11,6 @@ export default function Refresh(){
     worker.current = new window.Worker('/services/refresh-data.js');
     worker.current.onmessage = ()=> {
       router.refresh();
-      console.log('reloaded');
     };  
   }, []);
 

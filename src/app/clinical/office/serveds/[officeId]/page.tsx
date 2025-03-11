@@ -67,7 +67,7 @@ export default async function Page({
 
           <div className="my-8">
             <SubTitle className="inline-flex">Exame Físico</SubTitle>
-            <p className="mx-3">{consult.currentStates?.phisicalExam}</p>
+            <p className="mt-1 mx-3">{consult.currentStates?.phisicalExam}</p>
           </div>
 
           <div className="my-8">

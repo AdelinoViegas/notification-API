@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "node src/ws.mjs 2>/dev/null& next dev --turbopack",
-    "build": "next build",
-    "start": "node src/ws.mjs 2>/dev/null& next start",
+    "dev": "next dev --turbopack && tsc -p tsconfig.workers.json --watch",
+    "build": "next build && tsc -p tsconfig.workers.json",
+    "start": "next start",
     "lint": "next lint",
     "build:ws": "tsc -p tsconfig.workers.json"
   },
