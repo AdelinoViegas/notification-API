@@ -200,7 +200,7 @@ export default function CalendarForm({
         />
       </div>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-6 items-center gap-3">
+      <div className="grid md:grid-cols-2 lg:grid-cols-6 items-center gap-3 mb-4">
         <Selection
           label="Escolha o medico"
           options={doctors}
@@ -226,7 +226,7 @@ export default function CalendarForm({
           id="room"
         />
 
-        <Button type="button" onClick={addCart}>Adicionar</Button>
+        <Button className="mt-6" type="button" onClick={addCart}>Adicionar</Button>
       </div>
 
       { 
@@ -237,7 +237,7 @@ export default function CalendarForm({
       }
 
       <SubTitle className="inline-flex">Tabela dos dias...</SubTitle>
-      <div className="w-full mt-3">
+      <div className="w-full mt-4">
         <div className="grid grid-cols-7 gap-2 border-b font-medium px-3 bg-primary/25 py-3 rounded-t-md">
           <p className="col-span-2">Nome</p>
           <p>Dia</p>
