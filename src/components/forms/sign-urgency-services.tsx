@@ -6,6 +6,7 @@ import Button from "@/components/ui/button";
 import InputField from "@/components/ui/input-field";
 import { signUrgencyService } from "@/app/backend/api/clinical/urgency-bank-api";
 import { toast } from "react-toastify";
+import { MdLocalHospital } from "react-icons/md";
 
 export default function SignUrgencyService(){
   const [ state, action ] = useActionState(signUrgencyService, { message: "", status: false });
@@ -23,7 +24,13 @@ export default function SignUrgencyService(){
 
   return(
     <div>
-      <Button onClick={()=>setModalState(true)}>Novo Serviço</Button>
+      <Button 
+        className="flex gap-x-1"
+        onClick={()=>setModalState(true)}
+      >
+        <MdLocalHospital className="w-6"/>  
+        Novo Serviço
+      </Button>
       <Modal
         open={modalState}
         onClose={closeModal}

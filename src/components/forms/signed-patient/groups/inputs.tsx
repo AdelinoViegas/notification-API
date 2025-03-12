@@ -4,6 +4,7 @@ import type {
   Assured,
   Employee
 } from "@/app/backend/api/clinical/types";
+import InputDetails from "@/components/ui/input-details";
 
 type AssuredProps = {
   disabled: boolean;
@@ -56,11 +57,11 @@ function AssuredInputs({
         disabled={disabled}
       />
 
-      <InputField
+      <InputDetails
         name="detail"
         textLabel="Detalhes"
-        required
         placeholder="Escreva detalhes da asseguradora"
+        required
         defaultValue={detail}
         disabled={disabled}
       />
