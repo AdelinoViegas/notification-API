@@ -40,7 +40,7 @@ onmessage = function (e) { return __awaiter(void 0, void 0, void 0, function () 
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                if (!(e.data !== '/')) return [3, 3];
+                if (!(e.data !== '/' && e.data !== "/workplace" && !e.data.includes("/manager"))) return [3, 3];
                 return [4, fetch("/v1?p=".concat(btoa(e.data)))];
             case 1:
                 res = _a.sent();
