@@ -57,10 +57,10 @@ async function whoIsUser(){
       const { data } = await decryptAndVerifyJWT(String(token));
       return data?.userId;
     }
-    throw new Error('sem login valido');
+    throw new Error('sem login!', {cause: "no_login"});
   }catch(err: unknown){
     const error = err as Error;
-    console.log(error.message);
+    console.log("erro: ", error.message);
     redirect('/?exit');
   }
 }

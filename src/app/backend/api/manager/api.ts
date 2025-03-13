@@ -422,6 +422,37 @@ async function grantPermission(prev: unknown, formData:FormData){
   }
 }
 
+async function checkUserPermission(pathname: string){
+  try{
+    if(typeof pathname !== "string" || !pathname)
+      throw new Error("chamada inválida!", { cause: "invalid_callback"});
+
+    const resolved = await permissionModel.findOne({ route: pathname }).select({ _id: 1 });
+    if(!resolved)
+      throw new Error("Permissão inválida", { cause: "not_found" });
+    
+    const grantedAccess = await accessPermissionModel.findOne({ 
+      userId: await whoIsUser(),
+      permissionId: resolved._id 
+    });
+    
+    if(!grantedAccess)
+      throw new Error("Acesso negado", { cause: "access_danied"});
+
+    return {
+      message: "acesso permitido!",
+      status: true
+    };
+  }catch(e){
+    const err = e as Error;
+
+    return {
+      message: err.cause?err.message:"Erro crítico!",
+      status: false
+    };
+  }
+}
+
 async function getUserPermissions(userId: string){
   try{
     return (await accessPermissionModel.find({ userId })).map(item => {
@@ -595,6 +626,7 @@ export {
   getGrantedPermission,
   resetUserPassword,
   verifyRouteUserPermission,
-  logout
+  logout,
+  checkUserPermission
 };
 
