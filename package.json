@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack && tsc -p tsconfig.workers.json --watch",
+    "dev": "tsc -p tsconfig.workers.json && next dev --turbopack",
     "build": "next build && tsc -p tsconfig.workers.json",
     "start": "next start",
     "lint": "next lint",

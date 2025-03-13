@@ -32,11 +32,3 @@ export async function GET(request: NextRequest){
     }, { status: 403 })
   }
 }
-
-// export async function POST(request: NextRequest){
-//   try{
-    
-//   }catch(e: unknown){
-
-//   }
-// }
