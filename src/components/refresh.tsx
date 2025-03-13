@@ -16,14 +16,16 @@ export default function Refresh(){
     middlewareWorker.current = new window.Worker("/ws/middleware.js");
 
     worker.current.onmessage = ()=> {
-      middlewareWorker.current?.postMessage(pathname);
+      console.log(pathname)
+      if(pathname !== "/")
+        middlewareWorker.current?.postMessage(pathname);
       router.refresh();
     };  
 
     middlewareWorker.current.onmessage = (ev: MessageEvent<{ status: boolean }>)=>{
       if(!ev.data.status){
         toast.warn("Permissão negada!");
-        logout()
+        logout();
       }
     }
   }, []);
