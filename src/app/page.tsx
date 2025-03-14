@@ -3,7 +3,7 @@
 import { 
   useEffect,
   useActionState, 
-  Suspense
+  /*Suspense*/
 } from 'react';
 import Button from '@/components/ui/button';
 import Image from 'next/image';
@@ -12,7 +12,7 @@ import { login } from '@/app/backend/api/manager/api';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'react-toastify';
 
-function Login(){
+export default function Login(){
   const [ state, action, isPending ] = useActionState(login, { message: '', status: false });
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -43,53 +43,55 @@ function Login(){
   }, [searchParams, router]);
 
   return(
-    <form action={action} className="rounded-xl px-10 py-6 md:bg-white/90 md:border md:w-96">
-    <div className="flex flex-col">
-      <div className='flex justify-center mb-6'>
-        <Image 
-          src="/logo_name.webp" 
-          alt="Master Logo"
-          priority={true} 
-          width={300}
-          height={300}
-          className='w-48'
-        />
-      </div>
-    
-      <div className="w-full">
-        <div>
-          <InputField 
-            textLabel='Nome de usuário'
-            placeholder='Informe o seu nome de usuário'
-            name='username'
-            disabled={isPending || state.status} 
-            required
+    <main className="h-screen bg-[url(/background.webp)] bg-no-repeat bg-cover bg-center flex justify-center items-center">
+      <form action={action} className="rounded-xl px-10 py-6 md:bg-white/90 md:border md:w-96">
+      <div className="flex flex-col">
+        <div className='flex justify-center mb-6'>
+          <Image 
+            src="/logo_name.webp" 
+            alt="Master Logo"
+            priority={true} 
+            width={300}
+            height={300}
+            className='w-48'
           />
-
-          <InputField
-            textLabel='Senha'
-            type='password'
-            placeholder='Informe sua senha'
-            name="password"
-            disabled={isPending || state.status} 
-            required
-          />
-        
         </div>
-        <Button 
-          disabled={isPending || state.status} 
-          type='submit' 
-          className='w-full'
-        >
-          {isPending || state.status? "Aguarde...": "Entrar"}
-        </Button>
+      
+        <div className="w-full">
+          <div>
+            <InputField 
+              textLabel='Nome de usuário'
+              placeholder='Informe o seu nome de usuário'
+              name='username'
+              disabled={isPending || state.status} 
+              required
+            />
+
+            <InputField
+              textLabel='Senha'
+              type='password'
+              placeholder='Informe sua senha'
+              name="password"
+              disabled={isPending || state.status} 
+              required
+            />
+          
+          </div>
+          <Button 
+            disabled={isPending || state.status} 
+            type='submit' 
+            className='w-full'
+          >
+            {isPending || state.status? "Aguarde...": "Entrar"}
+          </Button>
+        </div>
       </div>
-    </div>
-  </form>
+    </form>
+  </main>
   )
 }
 
-export default function Page(){
+{/*export default function Page(){
   return(
     <main className="h-screen bg-[url(/background.webp)] bg-no-repeat bg-cover bg-center flex justify-center items-center">
       <Suspense>
@@ -97,5 +99,5 @@ export default function Page(){
       </Suspense>
     </main>
   );
-}
+}*/}
 
