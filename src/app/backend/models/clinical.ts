@@ -1,4 +1,4 @@
-import { clinical } from "@/app/backend/models/con";
+import { clinical } from "@/app/backend/models/connection";
 import { 
   userSchema, 
   currentLocationSchema, 
