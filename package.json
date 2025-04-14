@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "tsc -p tsconfig.workers.json && next dev --turbopack",
-    "build": "next build && tsc -p tsconfig.workers.json",
+    "build": "next build && yarn build:ws",
     "start": "next start",
     "lint": "next lint",
     "build:ws": "tsc -p tsconfig.workers.json"

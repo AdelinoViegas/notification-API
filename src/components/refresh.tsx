@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { logout } from "@/app/backend/api/manager/api";
 import { toast } from "react-toastify";
+
 export default function Refresh(){
   const worker = useRef<Worker>(null);
   const middlewareWorker = useRef<Worker>(null);

@@ -3,7 +3,7 @@
 import { 
   useEffect,
   useActionState, 
-  /*Suspense*/
+  Suspense
 } from 'react';
 import Button from '@/components/ui/button';
 import Image from 'next/image';
@@ -12,7 +12,7 @@ import { login } from '@/app/backend/api/manager/api';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'react-toastify';
 
-export default function Login(){
+function Login(){
   const [ state, action, isPending ] = useActionState(login, { message: '', status: false });
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -90,14 +90,13 @@ export default function Login(){
   </main>
   )
 }
-
-{/*export default function Page(){
+export default function Page(){
   return(
-    <main className="h-screen bg-[url(/background.webp)] bg-no-repeat bg-cover bg-center flex justify-center items-center">
+    <main>
       <Suspense>
         <Login />
       </Suspense>
     </main>
   );
-}*/}
+}
 
