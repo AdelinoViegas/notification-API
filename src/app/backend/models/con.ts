@@ -1,7 +1,7 @@
 import { createConnection } from "mongoose";
-
-const clinical = createConnection(`${process.env.MONGO_PUBLIC_URL}/clinical`);
-const kernel = createConnection(`${process.env.MONGO_PUBLIC_URL}/manager`);
+debugger;
+const clinical = createConnection(`${process.env.MONGO_URL}`, { dbName: "clinical" });
+const kernel = createConnection(`${process.env.MONGO_URL}`, { dbName: "manager" });
 
 export { kernel, clinical }
 

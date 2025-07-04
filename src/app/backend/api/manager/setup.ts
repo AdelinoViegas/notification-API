@@ -85,6 +85,7 @@ const userGroups = [
 ];
 
 export default async function masterAutoSetup(){
+  debugger;
   try{    
     const isConfigureded = await userModel.findOne({username: 'admin'});
     if(isConfigureded)
