@@ -1,4 +1,4 @@
-import { clinical } from "@/app/backend/models/con";
+import { createConnection } from "mongoose";
 import { 
   userSchema, 
   currentLocationSchema, 
@@ -42,6 +42,8 @@ import {
   urgencyBankSchema, 
   urgencyService 
 } from "@/app/backend/schemas/clinical/urgency-bank";
+
+const clinical = createConnection(`${process.env.MONGO_URL}`, { dbName: "master_clinical" });
 
 const userModel = clinical.model('User', userSchema);
 const currentLocationModel = clinical.model("CurrentLocation", currentLocationSchema);
