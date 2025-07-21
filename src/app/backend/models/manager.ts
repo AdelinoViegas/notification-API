@@ -1,4 +1,4 @@
-const kernel = createConnection(`${process.env.MONGO_URL}`, { dbName: "master_admin" });
+const kernel = createConnection(`${process.env.MONGO_URL}`, { dbName: "master_admin_erp" });
 import { userSchema, loginAccessTokensSchema} from "@/app/backend/schemas/manager/users";
 import userGroupSchema from "@/app/backend/schemas/manager/user-groups";
 import accessLimitSchema from "@/app/backend/schemas/manager/access-limit";
