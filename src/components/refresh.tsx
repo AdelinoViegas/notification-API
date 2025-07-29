@@ -3,8 +3,8 @@
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
-import { logout } from "@/app/backend/api/manager/api";
-import { toast } from "react-toastify";
+// import { logout } from "@/app/backend/api/manager/api";
+// import { toast } from "react-toastify";
 
 export default function Refresh(){
   const worker = useRef<Worker>(null);
@@ -22,12 +22,12 @@ export default function Refresh(){
       router.refresh();
     };  
 
-    middlewareWorker.current.onmessage = (ev: MessageEvent<{ status: boolean }>)=>{
-      if(!ev.data.status){
-        toast.warn("Permissão negada!");
-        logout();
-      }
-    }
+    // middlewareWorker.current.onmessage = (ev: MessageEvent<{ status: boolean }>)=>{
+    //   if(!ev.data.status){
+    //     toast.warn("Permissão negada!");
+    //     logout();
+    //   }
+    // }
   }, []);
 
   return<></>;

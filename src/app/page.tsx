@@ -17,18 +17,21 @@ function Login(){
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // useEffect(()=>{
-  //   if(state.message)
-  //     if(state.status)
-  //       toast.success(state.message, { 
-  //         onClose: ()=>{
-  //           router.replace(state?.module === "/clinical"?"/workplace":state?.module as string)
-  //       },
-  //       autoClose: 1500
-  //     });
-  //     else
-  //       toast.error(state.message);
-  // }, [state, router]);
+  useEffect(()=>{
+    if(state.message)
+      if(state.status)
+        toast.success(state.message, { 
+          onClose: ()=>{
+            router.replace(state?.module === "/clinical"
+              ?"/workplace"
+              :state?.module as string
+            )
+        },
+        autoClose: 1500
+      });
+      else
+        toast.error(state.message);
+  }, [state]);
 
   useEffect(()=>{
     // if(searchParams.has('danied')){
