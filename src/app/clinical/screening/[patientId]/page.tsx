@@ -19,7 +19,7 @@ export default async function Page({
 }){
   const [{ patientId }, { r }] = await Promise.all([ params, searchParams ]);
   const { personal: { fullname } } = await getPatient(patientId);
-  
+
   return(
     <main>
       <MonitorAccess
