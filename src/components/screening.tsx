@@ -1,5 +1,7 @@
 import { getScreening } from "@/app/backend/api/clinical/api";
 import ScreeningUI, { UIComponent } from "@/components/forms/screening-ui";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default async function Screening({ 
   patientId,
@@ -17,8 +19,11 @@ export default async function Screening({
     : getScreening({ patientId, isServed: false })
   );
 
-  if(patientData?.message)
-    return <>Oops, algo de errado não está certo, possivelmente {patientData?.message}!!</>;
+  if(patientData?.message){
+    const router = useRouter();
+    router.replace("/clinical/screening");
+    return <>Não é possivel ver esta informação!</>;
+  }
   
   return (
     <ScreeningUI
