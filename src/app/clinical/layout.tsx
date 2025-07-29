@@ -1,6 +1,6 @@
 import SideNav from "@/components/clinical/sidenav";
-import StatusLoginUser from "@/components/status-bar";
 import Container from "@/components/container";
+import Userbar from "@/components/userbar";
 
 export default async function Layout({
   children
@@ -12,10 +12,8 @@ export default async function Layout({
     <main className="md:flex h-screen">
       <SideNav />
       <div className="w-full">
-        <StatusLoginUser />
-        <Container>
-          {children}
-        </Container>
+        <Userbar />
+        <Container>{children}</Container>
       </div>
     </main>
   );
