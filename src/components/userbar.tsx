@@ -2,7 +2,6 @@
 // import { whoIsUser } from "@/lib/web-token";
 // import DropDown from "@/components/drop-down";
 // // import Notification from "@/components/notification";
-import { BiUser } from "react-icons/bi";
 import { FaUserCircle } from "react-icons/fa";
 
 import { getUser } from "@/app/backend/api/manager/api"
@@ -17,9 +16,13 @@ import { whoIsUser } from "@/lib/web-token";
 //   return `${names[0]} ${names[names.length - 1]}`;
 // }
 
-export const getFirstAndLastName = (fullname: string) => fullname 
-  ? fullname.trim().split(" ")[0]
-  : "Sem nome"
+export const getFirstAndLastName = (fullname: string) => {
+  if(!fullname)
+    return "Sem nome";
+  return fullname.split(" ").length >= 2
+  ? [fullname.split(" ")[0], fullname.split(" ").slice(-1)].join(" ")
+  : fullname
+}
 
 // export default async function StatusLoginUser(){
 //   const userId = await whoIsUser();
@@ -66,7 +69,7 @@ export default async function Userbar(){
   return(
     <div className="flex justify-between px-8 py-4">
       <h2 className="font-bold">HOSPITAL DA SOCOMPSER</h2>
-      <div className="flex gap-x-2 items-center ring ring-1 px-3 py-2 ring-gray-300 rounded">
+      <div className="flex gap-x-2 items-center ring ring-1 px-3 py-2 ring-gray-300 rounded-lg">
         <FaUserCircle className="size-8 text-gray-500" />
         <p>{getFirstAndLastName(user?.fullname as string)}</p>
       </div>

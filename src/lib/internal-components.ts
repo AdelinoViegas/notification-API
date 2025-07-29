@@ -105,7 +105,7 @@ function examsInternalComponent(defaultValue: string){
 
 function diagnosticInternalComponent(defaultValue: string){
 	return {
-		title: "Hipótese de Diagnóstico",
+		title: "Hipótese de Diagnóstico (CID)",
 		apiFn: signUrgencyBank,
 		initialState: { message: "", status: false },
 		childrens: [
