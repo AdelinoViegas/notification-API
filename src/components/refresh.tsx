@@ -17,7 +17,6 @@ export default function Refresh(){
     middlewareWorker.current = new window.Worker("/ws/middleware.js");
 
     worker.current.onmessage = ()=> {
-      console.log(pathname)
       if(pathname !== "/")
         middlewareWorker.current?.postMessage(pathname);
       router.refresh();
