@@ -25,7 +25,7 @@ export default async function SideNav(){
 
           <div>
             <h2 className='text-xl md:text-3xl uppercase font-semibold font-sans'>Master <span className='text-sm'>&reg;</span></h2>
-            <p className='text-xs font-nomo font-medium'>Sistema de Gestão Integrado</p>
+            <p className='text-xs font-nomo font-medium'>Sistema Integrado de Gestão</p>
           </div>
         </div>
       </Link>
