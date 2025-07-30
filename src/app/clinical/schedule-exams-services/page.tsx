@@ -9,6 +9,7 @@ import Button from "@/components/ui/button";
 import Search from "@/components/ui/search";
 import { TiInputChecked } from "react-icons/ti";
 import { PiArchiveDuotone } from "react-icons/pi";
+import Refresh from "@/components/refresh";
 
 export const dynamic = "force-dynamic";
 
@@ -25,6 +26,7 @@ export default async function Page({
  
   return (
     <main className="space-y-3">
+      <Refresh />
       <div className="mt-6">
         <Header title="Exames/Serviços Agendados"/>
       </div>

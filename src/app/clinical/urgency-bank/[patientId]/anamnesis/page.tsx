@@ -40,11 +40,11 @@ export default async function Page({ params }: {
 		complementaryExams,
 		diagnostic,
 		diseases,
-		others,
 		evaluation,
 		lifeStyle,
 		eatingHabits,
 		family,
+		others,
 	];
 
   return(

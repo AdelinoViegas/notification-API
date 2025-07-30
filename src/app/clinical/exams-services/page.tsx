@@ -6,6 +6,7 @@ import SignExam from "@/components/sign-exam";
 import { PatientExam } from "@/lib/table-formater";
 import { getExams } from "@/app/backend/api/clinical/scheduling-api";
 import CCG from "@/components/CCG";
+import Refresh from "@/components/refresh";
 
 export const dynamic = "force-dynamic";
 
@@ -14,6 +15,7 @@ export default async function Page() {
 
   return (
     <main className="space-y-3">
+      <Refresh />
       <div className="mt-6">
         <Header title="Exames/Serviços Cadastradas"/>
       </div>

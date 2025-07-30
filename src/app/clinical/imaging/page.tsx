@@ -9,6 +9,7 @@ import { getPatients } from "@/app/backend/api/clinical/unit-api";
 import { Services, tableLaboratory } from "@/lib/table-formater";
 import SelectFilter from "@/components/select-filter";
 import Pagination from "@/components/pagination";
+import Refresh from "@/components/refresh";
 export const dynamic = "force-dynamic";
 
 export default async function Page({
@@ -33,7 +34,7 @@ export default async function Page({
   const patientRows = tableLaboratory(patientsData.patients as Services[]); 
   return (
     <main className="space-y-3">
-      
+      <Refresh />
       
       <div className="mt-6">
         <Header title="Imagiologia"/>
