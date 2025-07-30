@@ -152,7 +152,7 @@ function diseasesInternalComponent(diseases: Diseases){
 								props: {
 									label: "Não",
 									name: "diabetes",
-									defaultChecked: !(diseases.diabetes === null) && !diseases.diabetes,
+									defaultChecked: !(diseases.diabetes === null || diseases.diabetes === undefined) && !diseases.diabetes,
 									defaultValue: false
 								}
 							},
@@ -180,7 +180,7 @@ function diseasesInternalComponent(diseases: Diseases){
 								props: {
 									label: "Não",
 									name: "hypertension",
-									defaultChecked: !(diseases.hypertension === null) && diseases.hypertension,
+									defaultChecked: !(diseases.hypertension === null || diseases.hypertension === undefined) && !diseases.hypertension,
 									defaultValue: false
 								}
 							},
@@ -208,7 +208,7 @@ function diseasesInternalComponent(diseases: Diseases){
 								props: {
 									label: "Não",
 									name: "respiratoryDiseases",
-									defaultChecked: !(diseases.respirationDiseases === null) && !diseases.respirationDiseases,
+									defaultChecked: !(diseases.respirationDiseases === null || diseases.respirationDiseases === undefined) && !diseases.respirationDiseases,
 									defaultValue: false							
 								}
 							},
@@ -236,7 +236,7 @@ function diseasesInternalComponent(diseases: Diseases){
 								props: {
 									label: "Não",
 									name: "tuberculosis",
-									defaultChecked: !(diseases.tuberculosis === null) && !diseases.tuberculosis,
+									defaultChecked: !(diseases.tuberculosis === null || diseases.tuberculosis === undefined) && !diseases.tuberculosis,
 									defaultValue: false
 								}
 							},
@@ -264,7 +264,7 @@ function diseasesInternalComponent(diseases: Diseases){
 								props: {
 									label: "Não",
 									name: "malaria",
-									defaultChecked: !(diseases.malaria === null) && !diseases.malaria,
+									defaultChecked: !(diseases.malaria === null || diseases.malaria === undefined) && !diseases.malaria,
 									defaultValue: false
 								}
 							},
