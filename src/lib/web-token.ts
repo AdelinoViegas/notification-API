@@ -55,12 +55,12 @@ async function whoIsUser(){
     if((await cookies()).has(String(process.env.MASTER_HEADER_AUTH))){
       const token = (await cookies()).get(String(process.env.MASTER_HEADER_AUTH))?.value;
       const { data } = await decryptAndVerifyJWT(String(token));
+      if(!data) throw new Error("");
       return data?.userId;
     }
     throw new Error('sem login!', {cause: "no_login"});
-  }catch(err: unknown){
-    const error = err as Error;
-    console.log("erro: ", error.message);
+  }catch{
+    console.log("sessão terminada!");
     redirect('/?exit');
   }
 }

@@ -7,7 +7,7 @@ import Modal from '@/components/modal';
 import { HiArrowUturnLeft as ArrowUturnLeftIcon } from 'react-icons/hi2';
 import { closePatientProcess, openPatientProcess } from '@/app/backend/api/clinical/process-api';
 import { toast } from 'react-toastify';
-type Places = "laboratory" | "screening" | "imaging"; 
+type Places = "laboratory" | "screening" | "imaging" | "urgency"; 
 
 function UnlockProcessAccess({
   patientId,
@@ -82,7 +82,7 @@ function MonitorAccess({
         });
       }
     })
-  });
+  }, []);
 
   return<></>;
 }

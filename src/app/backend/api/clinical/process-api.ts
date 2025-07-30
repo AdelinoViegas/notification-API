@@ -2,13 +2,15 @@
 
 import { whoIsUser } from "@/lib/web-token";
 import { processStateModel, notificationModel } from "@/app/backend/models/clinical";
-
 import { redirect } from "next/navigation";
 import { getFirstAndLastName } from "@/components/userbar";
 import { userModel } from "@/app/backend/models/manager";
 import { getUser } from "@/app/backend/api/manager/api";
 
-async function openPatientProcess(patientId: string, location: string){
+type WorkLocation = "screening" | "urgency" | "laboratory" | "imaging" ;
+
+
+async function openPatientProcess(patientId: string, location: WorkLocation){
   try{
     const existProcess = await processStateModel.findOne({
       patientId, 
@@ -51,7 +53,7 @@ async function openPatientProcess(patientId: string, location: string){
   }
 }
 
-async function closePatientProcess(patientId: string, location: string){
+async function closePatientProcess(patientId: string, location: WorkLocation){
   try{
     await processStateModel.updateOne({ 
       patientId, 
