@@ -21,23 +21,28 @@ const anamnesis = new Schema({
     diseases: {
       diabetes: {
         type: Boolean,
-        default: false,
+        required: false,
+        default: null,
       },
       hypertension: {
         type: Boolean,
-        default: false,
+        required: false,
+        default: null,
       },
       respiratoryDiseases: {
         type: Boolean,
-        default: false,
+        required: false,
+        default: null,
       },
       tuberculosis:  {
         type: Boolean,
-        default: false,
+        required: false,
+        default: null,
       },
       malaria:  {
         type: Boolean,
-        default: false,
+        required: false,
+        default: null,
       },
     },
     lifeStyle: {

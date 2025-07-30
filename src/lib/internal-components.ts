@@ -152,7 +152,7 @@ function diseasesInternalComponent(diseases: Diseases){
 								props: {
 									label: "Não",
 									name: "diabetes",
-									defaultChecked: !diseases.diabetes,
+									defaultChecked: !(diseases.diabetes === null) && !diseases.diabetes,
 									defaultValue: false
 								}
 							},
@@ -180,7 +180,7 @@ function diseasesInternalComponent(diseases: Diseases){
 								props: {
 									label: "Não",
 									name: "hypertension",
-									defaultChecked: !diseases.hypertension,
+									defaultChecked: !(diseases.hypertension === null) && diseases.hypertension,
 									defaultValue: false
 								}
 							},
@@ -208,7 +208,7 @@ function diseasesInternalComponent(diseases: Diseases){
 								props: {
 									label: "Não",
 									name: "respiratoryDiseases",
-									defaultChecked: !diseases.respirationDiseases,
+									defaultChecked: !(diseases.respirationDiseases === null) && !diseases.respirationDiseases,
 									defaultValue: false							
 								}
 							},
@@ -236,7 +236,7 @@ function diseasesInternalComponent(diseases: Diseases){
 								props: {
 									label: "Não",
 									name: "tuberculosis",
-									defaultChecked: !diseases.tuberculosis,
+									defaultChecked: !(diseases.tuberculosis === null) && !diseases.tuberculosis,
 									defaultValue: false
 								}
 							},
@@ -264,7 +264,7 @@ function diseasesInternalComponent(diseases: Diseases){
 								props: {
 									label: "Não",
 									name: "malaria",
-									defaultChecked: !diseases.malaria,
+									defaultChecked: !(diseases.malaria === null) && !diseases.malaria,
 									defaultValue: false
 								}
 							},
