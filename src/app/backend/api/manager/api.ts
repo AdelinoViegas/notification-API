@@ -525,7 +525,6 @@ async function updatePermission(prev: unknown, formData: FormData){
 async function getGrantedPermission(routes: Route[]){
   try{
     const user = await whoIsUser();
-    console.log(user);
     const grantedPermissions = await accessPermissionModel.find({userId: user});
     const grantedAccessPermissions = [];
     

@@ -78,6 +78,11 @@ async function closePatientProcess(patientId: string, location: WorkLocation){
   }
 }
 
+// async function getPatientState(id: string){
+//   const process = await processStateModel({ patientId: id, isInUse: true });
+  
+// }
+
 async function signNotification({
   title,
   sinopse,

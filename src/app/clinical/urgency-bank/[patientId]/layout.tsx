@@ -4,7 +4,6 @@ import TabNav from "@/components/tabnav";
 import Card from "@/components/ui/card";
 import { getPatient } from "@/app/backend/api/clinical/urgency-bank-api";
 import { MonitorAccess, UnlockProcessAccess } from "@/components/lock-unlock-monitor-process";
-import { toast } from "react-toastify";
 import { redirect } from "next/navigation";
 
 export default async function Layout({ 

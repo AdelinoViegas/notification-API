@@ -30,8 +30,7 @@ function UnlockProcessAccess({
     .then(data => {
       if(data.status)
         toast.success(data.message, { 
-          autoClose: 1500,
-          onClose: ()=> router.replace(basePathname)
+          onOpen: () => router.replace(basePathname)
         });
       else 
         toast.error(data.message);

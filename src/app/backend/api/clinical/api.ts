@@ -455,8 +455,11 @@ async function updatePersonalInfo(prev:unknown, formData: FormData){
     const err = e as Error & { code: number };
 
     return {
-      message: err.code?"Desculpe, já existe um utente com o este documento!":err.cause?err.message:
-      "Falha na actualização, contacte o seu administrador!",
+      message: err.code
+        ? "Desculpe, já existe um utente com o este documento!"
+        :err.cause 
+        ? err.message:
+        "Falha na actualização, contacte o seu administrador!",
       status: false, 
     }
   }

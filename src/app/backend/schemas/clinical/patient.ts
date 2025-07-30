@@ -4,6 +4,7 @@ import {
   Responsables, 
   Group, 
 } from "@/app/backend/api/clinical/types";
+import { processStateModel } from "../../models/clinical";
 
 const patientSchema = new Schema({
   fullname: {
@@ -34,6 +35,16 @@ const patientSchema = new Schema({
 }, {
   collection: "patients",
   timestamps: true,
+});
+
+patientSchema.pre("updateOne", async function(){
+  const doc = await processStateModel.findOne({ 
+    patientId: this.getFilter()._id, 
+    isInUse: true 
+  }).select({ _id: 1 });
+  
+  if(doc) 
+    throw new Error("Este paciente está em processo de antendimento!", { cause: "in_use" });
 });
 
 const demographySchema = new Schema({
