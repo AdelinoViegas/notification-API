@@ -1,5 +1,6 @@
 import jsPDF from "jspdf";
-import { PatientRecord, ScreeningRecord } from "@/components/pdf-button";
+import { AppointmentRecord, PatientRecord, ScreeningRecord } from "@/components/pdf-button";
+
 const doc = new jsPDF();
 
 function patientRecord({
@@ -638,7 +639,164 @@ function screeningRecord({
   doc.output('dataurlnewwindow', { filename: 'ficha_de_triagem.pdf' });
 }
 
+
+function appointmentRecord({
+  patientName,
+  age, 
+  gender,
+  date,
+  hour,
+  consultationType,
+  consultationPrice,
+}: AppointmentRecord){
+  const margin = { x: 10, y: 10};
+  margin.y = 7;
+  doc.setTextColor("#000000");
+  doc.setFontSize(9);
+  doc.text("SOCOMPSER", margin.x, margin.y+10);
+  
+  margin.y = 10;
+  margin.x *= 20;
+  doc.setFontSize(10);
+
+  [
+    "Rua Manuel GG Diogo Nº 225",
+    "geral@socompser.co.ao",
+    "Maianga-Luanda",
+    "+244 222 222 222"
+  ].forEach((line, index) => {
+    doc.text(line, margin.x, margin.y + 10 + (index * 5.2), { align: 'right' });
+  });
+  
+  margin.x = 70;
+  margin.y *= 4.2;
+  doc.setFontSize(9);
+  doc.setFont("Helvetica","bold")
+  doc.text('GUIA DE AGENDAMENTO DE CONSULTA', margin.x, margin.y);
+
+ 
+  margin.x = 10;
+  margin.y *= 1.4;
+ 
+  doc.setFont("Helvetica", "bold");
+  doc.setFillColor("#ececec");
+  doc.rect(margin.x, margin.y-4, 190, 6, 'F');
+  doc.text('1.Dados do utente', margin.x+1, margin.y);
+  
+  margin.x = 10;
+  margin.y += 10;
+
+  doc.rect(margin.x, margin.y-14, 190, 28, 'S');
+ 
+  margin.y += 3;
+  margin.x = 10;
+  doc.setFontSize(9);
+  doc.setFont("Helvetica", "bold");
+  doc.text("COD: ", margin.x*16, margin.y, {align: 'right'});
+  doc.setFont("Helvetica", "normal");
+  doc.text('4@@@1543454545', margin.x*19, margin.y, {align: 'right'});
+
+  margin.y += 6;
+  margin.x = 10;
+  doc.setFontSize(9);
+  doc.setFont("Helvetica", "bold");
+  doc.text("Nome Completo: ", margin.x+1, margin.y);
+  doc.setFont("Helvetica", "normal");
+  doc.text(patientName, margin.x*3.8, margin.y);
+
+  margin.x *= 12.1;
+  doc.setFontSize(9);
+  doc.setFont("Helvetica", "bold");
+  doc.text("Idade: ", margin.x+1, margin.y);
+  doc.setFont("Helvetica", "normal");
+  doc.text(`${age}`, margin.x*1.099, margin.y);
+
+  margin.x *= 1.24;
+  doc.setFontSize(9);
+  doc.setFont("Helvetica", "bold");
+  doc.text("Sexo: ", margin.x+1, margin.y);
+  doc.setFont("Helvetica", "normal");
+  doc.text(gender, margin.x*1.07, margin.y);
+  
+  margin.x = 10;
+  margin.y *= 1.21;
+ 
+  doc.setFont("Helvetica", "bold");
+  doc.setFillColor("#ececec");
+  doc.rect(margin.x, margin.y-4, 190, 6, 'F');
+  doc.text('2.Dados da consulta', margin.x+1, margin.y);
+  
+  margin.x = 10;
+  margin.y += 10;
+
+  doc.setFontSize(9);
+  doc.setFont("Helvetica", "normal");
+  doc.text("Data/hota da consulta", margin.x*1.1, margin.y,);
+  doc.setFont("Helvetica", "normal");
+  doc.text(`${date} ${hour}`, margin.x*19.9, margin.y, {align: 'right'});
+
+  margin.x = 10;
+  margin.y += 10;
+  
+  doc.setFont("Helvetica", "bold");
+  doc.setFillColor("#ececec");
+  doc.rect(margin.x, margin.y-4, 190, 6, 'F');
+  doc.text('2.Descrição da consulta', margin.x+1, margin.y);
+  doc.text('Valor', margin.x*19.9, margin.y, {align: 'right'});
+  
+  margin.x = 10;
+  margin.y += 10;
+ 
+  doc.setFont("Helvetica", "normal");
+  doc.text(`${consultationType}....................................................................................................`, margin.x+1, margin.y);
+  doc.text(`${consultationPrice} kz`, margin.x*19.9, margin.y, {align: 'right'});
+  
+  margin.y += 55;
+  doc.setFont("Helvetica", "bold");
+  doc.text('Total da consulta...........................................', margin.x+1, margin.y);
+  doc.text(`${consultationPrice} kz`, margin.x*19.9, margin.y, {align: 'right'});
+  
+  margin.y += 8;
+  doc.text('Contravalor(usd)..............................................................', margin.x+1, margin.y);
+  doc.text('10,00', margin.x*19.9, margin.y, {align: 'right'});
+  
+  doc.rect(margin.x, margin.y-97, 190, 100, 'S');
+
+  margin.y += 18;
+  doc.setFont("Helvetica", "bold");
+  doc.text('Obs.', margin.x*1, margin.y);
+  doc.setFont("Helvetica", "normal");
+  doc.text('Apresentar esta guia na data da consulta', margin.x*1.8, margin.y);
+  
+  margin.y += 8;
+  doc.setFont("Helvetica", "bold");
+  doc.setFillColor("#fff205");
+  doc.rect(margin.x, margin.y-4, 45, 6, 'F');
+  doc.setTextColor("#ff0000");
+  doc.text('Impressão A4 e A5', margin.x+1, margin.y);
+  
+  margin.x = 10;
+  margin.y += 44;
+  
+  doc.setFont("Helvetica", "normal");
+  
+  doc.setTextColor("#000000");
+   [
+    "Processado por Master",
+    "Sistema Integrado de Gestão - ERP.",
+    "Reservados todos os Direitos do Desenvolvedor",
+  ].forEach((line, index) => {
+    doc.text(line, margin.x, margin.y + 10 + (index * 5.2));
+  });
+
+  doc.text('Usuário: Akapa Gomes',margin.x*9, margin.y+20);
+  doc.text('master.socompser.co.ao',margin.x*20, margin.y+6, { align: 'right'});
+
+  doc.output('dataurlnewwindow', { filename: 'ficha_de_triagem.pdf' });
+}
+
 export {
   patientRecord,
-  screeningRecord
+  screeningRecord,
+  appointmentRecord
 }
