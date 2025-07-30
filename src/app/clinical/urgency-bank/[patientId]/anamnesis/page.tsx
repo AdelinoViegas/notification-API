@@ -46,12 +46,12 @@ export default async function Page({ params }: {
 		family,
 		others,
 	];
-
+	
   return(
 		<main className="relative">
 			<div className="flex gap-x-3">
 				<Button>Visualizar</Button>
-				<Hospitalization/>
+				<Hospitalization id={anamnesis.id} />
 			</div>
 
 			<div className="flex flex-col gap-y-3 pt-8">

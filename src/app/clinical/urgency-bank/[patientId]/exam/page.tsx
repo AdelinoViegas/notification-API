@@ -13,8 +13,6 @@ export default async function Page({ params }: {
  
   return(
     <main>
-      
-
       <Accordium title="Solicitação de Exames">
         <RequestExams {...{patientId}} isFullWindow />
       </Accordium>

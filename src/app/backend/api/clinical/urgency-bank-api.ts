@@ -16,7 +16,8 @@ import {
   externalUnitModel,
   urgencyBankModel,
   urgencyServiceModel,
-  screeningModel
+  screeningModel,
+  patientHospitalizedModel
 } from "@/app/backend/models/clinical";
 import { 
   patientAccess,
@@ -32,6 +33,7 @@ import {
 import { getUser, patientFilters } from "@/app/backend/api/clinical/api";
 import { DoctorCalendar } from "@/app/backend/api/clinical/types";
 import { getPatient as mainPatient } from "@/app/backend/api/clinical/api";
+import { closePatientProcess } from "./process-api";
 
 type UnitType = "workplace" | "internment" | "laboratory" | "imaging";
 
@@ -46,14 +48,14 @@ async function getPatients({
     const patientList = [];
     
     for(const patient of patients){
-      const patientData = await patientModel.findById({ _id: patient.patientId });
+      const urgency = await patientModel.findById({ _id: patient.patientId });
       
-      if(!patientData) 
+      if(!urgency) 
         throw new Error(`${patient._id.toString()} this id not found!`);
 
       const [ patientGroup, accessType, screening ] = await Promise.all([
-        groupModel.findOne({ patientId: patientData._id }),
-        accessTypeModel.findOne({ patientId: patientData._id }),
+        groupModel.findOne({ patientId: urgency._id }),
+        accessTypeModel.findOne({ patientId: urgency._id }),
         screeningModel.findById({ _id: patient.srcId })
       ]);
       
@@ -64,11 +66,11 @@ async function getPatients({
       groupLabel = groupLabel || "Indefinido";
       
       patientList.push({
-        id: patientData._id.toString(),
-        fullname: patientData.fullname,
-        registerNumber: patientData.registerNumber,
+        id: urgency._id.toString(),
+        fullname: urgency.fullname,
+        registerNumber: urgency.registerNumber,
         accessType: accessTypeLabel.toUpperCase(),
-        createdAt: patientData.createdAt,
+        createdAt: urgency.createdAt,
         group: groupLabel.toUpperCase(),
         priorityType: priorityToComponent.find((props)=>props._id === screening?.priority)?.label,
       });
@@ -708,48 +710,49 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
 }
 
 async function getPatientUrgencyBank(patientId: string){
-  const patientData = await urgencyBankModel.findOne({ patientId });
+  const urgency = await urgencyBankModel.findOne({ patientId, served: false });
 
   return {
+    id: urgency?._id.toString() as string,
     generalClinic:{
-      symptoms: patientData?.anamnesis?.generalClinic?.symptoms as string,
-      diseaseData: patientData?.anamnesis?.generalClinic?.diseaseData as string,
-      complementaryExams: patientData?.anamnesis?.generalClinic?.complementaryExams as string,
-      diagnosticHypothesis: patientData?.anamnesis?.generalClinic?.diagnosticHypothesis as string[],
-      others: patientData?.anamnesis?.generalClinic?.others as string,
-      evaluation: patientData?.anamnesis?.generalClinic?.evaluation as string,
-      diseasesInFamily: patientData?.anamnesis?.generalClinic?.diseasesInFamily as string,
+      symptoms: urgency?.anamnesis?.generalClinic?.symptoms as string,
+      diseaseData: urgency?.anamnesis?.generalClinic?.diseaseData as string,
+      complementaryExams: urgency?.anamnesis?.generalClinic?.complementaryExams as string,
+      diagnosticHypothesis: urgency?.anamnesis?.generalClinic?.diagnosticHypothesis as string[],
+      others: urgency?.anamnesis?.generalClinic?.others as string,
+      evaluation: urgency?.anamnesis?.generalClinic?.evaluation as string,
+      diseasesInFamily: urgency?.anamnesis?.generalClinic?.diseasesInFamily as string,
       eatingHabits: {
-        meals: patientData?.anamnesis?.generalClinic?.eatingHabits?.meals as string,
-        typeFood: patientData?.anamnesis?.generalClinic?.eatingHabits?.typeFood as string,
-        waterConsumption: patientData?.anamnesis?.generalClinic?.eatingHabits?.waterConsumption as string,
-        typeWater: patientData?.anamnesis?.generalClinic?.eatingHabits?.typeWater as string,
+        meals: urgency?.anamnesis?.generalClinic?.eatingHabits?.meals as string,
+        typeFood: urgency?.anamnesis?.generalClinic?.eatingHabits?.typeFood as string,
+        waterConsumption: urgency?.anamnesis?.generalClinic?.eatingHabits?.waterConsumption as string,
+        typeWater: urgency?.anamnesis?.generalClinic?.eatingHabits?.typeWater as string,
       },
       diseases: {
-        diabetes: patientData?.anamnesis?.generalClinic?.diseases?.diabetes as boolean,
-        hypertension: patientData?.anamnesis?.generalClinic?.diseases?.hypertension as boolean,
-        respirationDiseases: patientData?.anamnesis?.generalClinic?.diseases?.respiratoryDiseases as boolean,
-        tuberculosis: patientData?.anamnesis?.generalClinic?.diseases?.tuberculosis as boolean,
-        malaria: patientData?.anamnesis?.generalClinic?.diseases?.malaria as boolean,
+        diabetes: urgency?.anamnesis?.generalClinic?.diseases?.diabetes as boolean,
+        hypertension: urgency?.anamnesis?.generalClinic?.diseases?.hypertension as boolean,
+        respirationDiseases: urgency?.anamnesis?.generalClinic?.diseases?.respiratoryDiseases as boolean,
+        tuberculosis: urgency?.anamnesis?.generalClinic?.diseases?.tuberculosis as boolean,
+        malaria: urgency?.anamnesis?.generalClinic?.diseases?.malaria as boolean,
       },
       lifeStyle: {
-        tabaccoConsumption: patientData?.anamnesis?.generalClinic?.lifeStyle?.tabaccoConsumption as string,
+        tabaccoConsumption: urgency?.anamnesis?.generalClinic?.lifeStyle?.tabaccoConsumption as string,
         alcoholConsumption: {
-          alcohol: patientData?.anamnesis?.generalClinic?.lifeStyle?.alcoholConsumption?.alcohol as string,
-          frequency: patientData?.anamnesis?.generalClinic?.lifeStyle?.alcoholConsumption?.frequency as string,
-          amount: patientData?.anamnesis?.generalClinic?.lifeStyle?.alcoholConsumption?.amount as number,      
+          alcohol: urgency?.anamnesis?.generalClinic?.lifeStyle?.alcoholConsumption?.alcohol as string,
+          frequency: urgency?.anamnesis?.generalClinic?.lifeStyle?.alcoholConsumption?.frequency as string,
+          amount: urgency?.anamnesis?.generalClinic?.lifeStyle?.alcoholConsumption?.amount as number,      
         },
         physicalActivity: {
-          exercise: patientData?.anamnesis?.generalClinic?.lifeStyle?.physicalActivity?.exercise as string,
-          type: patientData?.anamnesis?.generalClinic?.lifeStyle?.physicalActivity?.type as string,
-          amount: patientData?.anamnesis?.generalClinic?.lifeStyle?.physicalActivity?.amount as number,
-          timeExercise: patientData?.anamnesis?.generalClinic?.lifeStyle?.physicalActivity?.timeExercise as string,     
+          exercise: urgency?.anamnesis?.generalClinic?.lifeStyle?.physicalActivity?.exercise as string,
+          type: urgency?.anamnesis?.generalClinic?.lifeStyle?.physicalActivity?.type as string,
+          amount: urgency?.anamnesis?.generalClinic?.lifeStyle?.physicalActivity?.amount as number,
+          timeExercise: urgency?.anamnesis?.generalClinic?.lifeStyle?.physicalActivity?.timeExercise as string,     
         },
       }
     },
     clinicalDiary: {
-      medicineDiary: patientData?.clinicalDiary?.medicalDiary as { date: Date, description : string}[],
-      nursingNotes: patientData?.clinicalDiary?.nursingNotes,
+      medicineDiary: urgency?.clinicalDiary?.medicalDiary as { date: Date, description : string}[],
+      nursingNotes: urgency?.clinicalDiary?.nursingNotes,
     }
   }
 }
@@ -814,7 +817,47 @@ async function getUrgencyService(serviceId: string){
   }
 }
 
+async function finishHospitalization(prev: unknown, form: FormData){
+  try{
+    const urgencyId = form.get("urgencyId") as string;
+    const description = form.get("description");
+    const donedAt = form.get("donedAt") as string;
+    const patientState = form.get("patientState") as string;
+
+    const urgency = await urgencyBankModel.findById({ _id: urgencyId });
+
+    const tried = await triedModel.findOneAndUpdate({ _id: urgency?.triedId }, {
+      served: true
+    });
+
+    await urgencyBankModel.updateOne({ _id: urgencyId }, {
+      served: true
+    });
+
+    await patientHospitalizedModel.create({
+      urgencyId: urgency?._id,
+      userId: await whoIsUser(),
+      description,
+      donedAt,
+      patientState,
+    });
+
+    await closePatientProcess(tried?.patientId?.toString() as string, "urgency")
+
+    return {
+      message: "Patiente internado com sucesso!",
+      status: true
+    }
+  }catch {
+    return {
+      message: "Não foi possivel finalizar!",
+      status: false
+    }
+  }
+}
+
 export {
+  finishHospitalization,
   getPatients,
   signUnit,
   getUnits,

@@ -160,8 +160,13 @@ const clinicalDiary = new Schema({
 
 const urgencyBankSchema = new Schema({
   patientId: Schema.Types.ObjectId,
+  triedId: Schema.Types.ObjectId,
   anamnesis: anamnesis,
   clinicalDiary: clinicalDiary,
+  served: {
+    type: Boolean,
+    default: false
+  }
 }, {
   collection: "patient_urgency_bank",
   timestamps: true,
@@ -184,7 +189,18 @@ const urgencyService = new Schema({
   timestamps: true
 });
 
+const patientHospitalizedSchema = new Schema({
+  urgencyId: Schema.Types.ObjectId,
+  userId: Schema.Types.ObjectId,
+  description: String,
+  donedAt: Date,
+  patientState: String
+}, {
+  timestamps: true
+});
+
 export {
   urgencyBankSchema,
-  urgencyService
+  urgencyService,
+  patientHospitalizedSchema
 }

@@ -546,9 +546,7 @@ async function getGrantedPermission(routes: Route[]){
     }
 
     return grantedAccessPermissions;
-  }catch(err: unknown){
-    const e = err as Error;
-    console.log(e);
+  }catch { 
     return [];
   }
 }

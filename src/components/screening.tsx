@@ -19,7 +19,6 @@ export default async function Screening({
 
   if(patientData?.message){
     redirect("/clinical/screening");
-    return <>Não é possivel ver esta informação!</>;
   }
   
   return (

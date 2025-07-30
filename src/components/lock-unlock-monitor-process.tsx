@@ -7,7 +7,7 @@ import Modal from '@/components/modal';
 import { HiArrowUturnLeft as ArrowUturnLeftIcon } from 'react-icons/hi2';
 import { closePatientProcess, openPatientProcess } from '@/app/backend/api/clinical/process-api';
 import { toast } from 'react-toastify';
-type Places = "laboratory" | "screening" | "imaging"; 
+type Places = "laboratory" | "screening" | "imaging" | "urgency"; 
 
 function UnlockProcessAccess({
   patientId,
@@ -30,8 +30,7 @@ function UnlockProcessAccess({
     .then(data => {
       if(data.status)
         toast.success(data.message, { 
-          autoClose: 1500,
-          onClose: ()=> router.replace(basePathname)
+          onOpen: () => router.replace(basePathname)
         });
       else 
         toast.error(data.message);
@@ -82,7 +81,7 @@ function MonitorAccess({
         });
       }
     })
-  });
+  }, []);
 
   return<></>;
 }
