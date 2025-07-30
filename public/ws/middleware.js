@@ -1,2 +1,4 @@
 "use strict";
-onmessage = function (e) { return postMessage(true); };
+
+onmessage = function () { return postMessage(true); };
+

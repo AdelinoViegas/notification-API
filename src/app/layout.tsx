@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import './globals.css';
 import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer } from "react-toastify";
+import { Bounce, ToastContainer } from "react-toastify";
 import localFont from 'next/font/local';
-import Refresh from "@/components/refresh";
 
 const local = localFont({ 
   src: [
@@ -38,8 +37,18 @@ export default function RootLayout({
   return (
     <html lang="pt-ao">
       <body className={`${local.className} antialiased`}>
-        <Refresh />
-        <ToastContainer />
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={true}
+          newestOnTop={false}
+          closeOnClick={false}
+          rtl={false}
+          draggable
+          pauseOnHover
+          theme="light"
+          transition={Bounce}
+        />
         {children}
       </body>
     </html>
