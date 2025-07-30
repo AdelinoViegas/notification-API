@@ -9,6 +9,7 @@ import { getPatients } from "@/app/backend/api/clinical/api";
 import Pagination from "@/components/pagination";
 import { PiArchiveDuotone } from "react-icons/pi";
 import { BiPlus as PlusIcon } from "react-icons/bi";
+import Refresh from "@/components/refresh";
 
 export const dynamic = "force-dynamic";
 
@@ -31,7 +32,7 @@ export default async function Page({
   
   return (
     <main className="space-y-3">
-      
+      <Refresh />
       <div className="mt-6">
         <Header title="Utentes"/>
       </div>
