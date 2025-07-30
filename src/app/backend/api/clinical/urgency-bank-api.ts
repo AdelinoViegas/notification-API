@@ -33,6 +33,7 @@ import {
 import { getUser, patientFilters } from "@/app/backend/api/clinical/api";
 import { DoctorCalendar } from "@/app/backend/api/clinical/types";
 import { getPatient as mainPatient } from "@/app/backend/api/clinical/api";
+import { closePatientProcess } from "./process-api";
 
 type UnitType = "workplace" | "internment" | "laboratory" | "imaging";
 
@@ -825,8 +826,7 @@ async function finishHospitalization(prev: unknown, form: FormData){
 
     const urgency = await urgencyBankModel.findById({ _id: urgencyId });
 
-    console.log([...form.entries()]);
-    await triedModel.updateOne({ _id: urgency?.triedId }, {
+    const tried = await triedModel.findOneAndUpdate({ _id: urgency?.triedId }, {
       served: true
     });
 
@@ -840,7 +840,9 @@ async function finishHospitalization(prev: unknown, form: FormData){
       description,
       donedAt,
       patientState,
-    })
+    });
+
+    await closePatientProcess(tried?.patientId?.toString() as string, "urgency")
 
     return {
       message: "Patiente internado com sucesso!",
