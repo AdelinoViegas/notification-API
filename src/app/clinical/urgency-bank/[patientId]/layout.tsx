@@ -3,7 +3,9 @@ import clsx from "clsx";
 import TabNav from "@/components/tabnav";
 import Card from "@/components/ui/card";
 import { getPatient } from "@/app/backend/api/clinical/urgency-bank-api";
-import { MonitorAccess } from "@/components/lock-unlock-monitor-process";
+import { MonitorAccess, UnlockProcessAccess } from "@/components/lock-unlock-monitor-process";
+import { toast } from "react-toastify";
+import { redirect } from "next/navigation";
 
 export default async function Layout({ 
   children,
@@ -17,12 +19,19 @@ export default async function Layout({
   const { patientId } = await params;
   const patient = await getPatient({patientId}); 
   
-  if(patient?.message || !patient.screening)
-    return <>Opps, algo ocorreu mal, possivelmente {patient.message}</>;
-
+  if(patient?.message || !patient.screening){
+    redirect("/clinical/urgency-bank");
+  }
+    
   return(
     <div>
       <MonitorAccess
+        patientId={patientId}
+        place="urgency"
+        basePathname="/clinical/urgency-bank" 
+      />
+
+      <UnlockProcessAccess
         patientId={patientId}
         place="urgency"
         basePathname="/clinical/urgency-bank" 

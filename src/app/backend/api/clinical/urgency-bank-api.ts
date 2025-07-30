@@ -817,17 +817,17 @@ async function getUrgencyService(serviceId: string){
 
 async function finishHospitalization(prev: unknown, form: FormData){
   try{
-    const urgencyId = form.get("urgencyId") as string;
-    const description = form.get("description");
-    const donedAt = form.get("donedAt") as string;
-    const patientState = form.get("patientState") as string;
+    // const urgencyId = form.get("urgencyId") as string;
+    // const description = form.get("description");
+    // const donedAt = form.get("donedAt") as string;
+    // const patientState = form.get("patientState") as string;
     console.log([...form.entries()]);
     throw new Error("");
 
-    return {
-      message: "Patiente internado com sucesso!",
-      status: true
-    }
+    // return {
+    //   message: "Patiente internado com sucesso!",
+    //   status: true
+    // }
   }catch {
     return {
       message: "Não foi possivel finalizar!",
