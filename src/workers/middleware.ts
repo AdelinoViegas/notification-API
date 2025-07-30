@@ -6,4 +6,4 @@
 //   }
 // }
 
-onmessage = e => postMessage(true);
+onmessage = () => postMessage(true);

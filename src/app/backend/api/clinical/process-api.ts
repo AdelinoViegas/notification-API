@@ -4,7 +4,7 @@ import { whoIsUser } from "@/lib/web-token";
 import { processStateModel, notificationModel } from "@/app/backend/models/clinical";
 
 import { redirect } from "next/navigation";
-import { getFirstAndLastName } from "@/components/status-bar";
+import { getFirstAndLastName } from "@/components/userbar";
 import { userModel } from "@/app/backend/models/manager";
 import { getUser } from "@/app/backend/api/manager/api";
 
