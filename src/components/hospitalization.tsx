@@ -34,6 +34,7 @@ export default function Hospitalization({ id }: { id: string }){
       <Button 
         onClick={openModal}
         className="bg-slate-700"
+        disabled={!id}
       >
         Internamento
       </Button>
@@ -58,6 +59,7 @@ export default function Hospitalization({ id }: { id: string }){
               type="datetime-local"
               textLabel="Data e Hora"
               name="createdAt"
+              required
             />
 
             <InputField
@@ -65,6 +67,7 @@ export default function Hospitalization({ id }: { id: string }){
               textLabel="Estado ao internar"
               placeholder="Estado antes do internamento"
               name="currentState"
+              required
             />
           </div>
 

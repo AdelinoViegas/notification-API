@@ -18,6 +18,7 @@ import {
   screeningModel,
   triedModel,
   specialtyModel,
+  urgencyBankModel,
 } from "@/app/backend/models/clinical";
 import { 
   patientAccess,
@@ -898,12 +899,17 @@ async function finishScreening(prev: unknown, formData: FormData){
       userId: await whoIsUser() 
     });
 
-    await triedModel.create({
+    const tried = await triedModel.create({
       srcId: scrPatient?._id,
       patientId,
       userId: await whoIsUser(),
       serviceId
     });
+
+    await urgencyBankModel.create({
+      triedId: tried?._id,
+      patientId
+    })
     
     await closePatientProcess(patientId as string, "screening");
 

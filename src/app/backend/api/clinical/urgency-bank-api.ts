@@ -16,7 +16,8 @@ import {
   externalUnitModel,
   urgencyBankModel,
   urgencyServiceModel,
-  screeningModel
+  screeningModel,
+  patientHospitalizedModel
 } from "@/app/backend/models/clinical";
 import { 
   patientAccess,
@@ -709,7 +710,7 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
 
 async function getPatientUrgencyBank(patientId: string){
   const urgency = await urgencyBankModel.findOne({ patientId, served: false });
-  
+
   return {
     id: urgency?._id.toString() as string,
     generalClinic:{
@@ -817,17 +818,34 @@ async function getUrgencyService(serviceId: string){
 
 async function finishHospitalization(prev: unknown, form: FormData){
   try{
-    // const urgencyId = form.get("urgencyId") as string;
-    // const description = form.get("description");
-    // const donedAt = form.get("donedAt") as string;
-    // const patientState = form.get("patientState") as string;
-    console.log([...form.entries()]);
-    throw new Error("");
+    const urgencyId = form.get("urgencyId") as string;
+    const description = form.get("description");
+    const donedAt = form.get("donedAt") as string;
+    const patientState = form.get("patientState") as string;
 
-    // return {
-    //   message: "Patiente internado com sucesso!",
-    //   status: true
-    // }
+    const urgency = await urgencyBankModel.findById({ _id: urgencyId });
+
+    console.log([...form.entries()]);
+    await triedModel.updateOne({ _id: urgency?.triedId }, {
+      served: true
+    });
+
+    await urgencyBankModel.updateOne({ _id: urgencyId }, {
+      served: true
+    });
+
+    await patientHospitalizedModel.create({
+      urgencyId: urgency?._id,
+      userId: await whoIsUser(),
+      description,
+      donedAt,
+      patientState,
+    })
+
+    return {
+      message: "Patiente internado com sucesso!",
+      status: true
+    }
   }catch {
     return {
       message: "Não foi possivel finalizar!",

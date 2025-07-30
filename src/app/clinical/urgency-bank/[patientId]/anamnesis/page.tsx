@@ -46,7 +46,6 @@ export default async function Page({ params }: {
 		family,
 		others,
 	];
-	console.log(anamnesis.id);
 	
   return(
 		<main className="relative">

@@ -160,6 +160,7 @@ const clinicalDiary = new Schema({
 
 const urgencyBankSchema = new Schema({
   patientId: Schema.Types.ObjectId,
+  triedId: Schema.Types.ObjectId,
   anamnesis: anamnesis,
   clinicalDiary: clinicalDiary,
   served: {

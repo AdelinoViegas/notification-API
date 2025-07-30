@@ -4,7 +4,7 @@ import {
   Responsables, 
   Group, 
 } from "@/app/backend/api/clinical/types";
-import { processStateModel } from "../../models/clinical";
+import { processStateModel } from "@/app/backend/models/clinical";
 
 const patientSchema = new Schema({
   fullname: {
