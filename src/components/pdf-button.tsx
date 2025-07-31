@@ -18,11 +18,11 @@ export type PatientRecord = {
   personal: Personal;
   demography: Demography;
   responsibles: Responsable[];
-  group: {
+  groupType?: {
     type: string,
     group: Assured | Employee | Enterprise | undefined
   };
-  acess: accessProps;
+  acess?: accessProps;
 };
 
 export type ScreeningRecord = {

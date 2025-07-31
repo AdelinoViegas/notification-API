@@ -8,9 +8,9 @@ function patientRecord({
   personal,
   demography,
   responsibles,
-  group,
+  groupType,
   acess,
-}: PatientRecord){
+}: PatientRecord){ 
   const margin = { x: 10, y: 10 };
 
   doc.setFontSize(10);
@@ -56,21 +56,21 @@ function patientRecord({
   doc.setFont("Helvetica", "bold");
   doc.text("Nome Completo: ", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text(personal?.fullname, margin.x*3.97, margin.y);
+  doc.text(personal?.fullname || '', margin.x*3.97, margin.y);
 
   margin.y += 6;
 
   doc.setFont("Helvetica", "bold");
   doc.text("Data de Nascimento: ", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text(String(personal?.birthDate?.toLocaleDateString('pt')), margin.x*4.62, margin.y);
+  doc.text(String(personal?.birthDate?.toLocaleDateString('pt') || ''), margin.x*4.62, margin.y);
 
   margin.x *= 7.22;
 
   doc.setFont("Helvetica", "bold");
   doc.text("B.I/Certidão/P.Porte:", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text(personal?.documentation, margin.x*1.49, margin.y);
+  doc.text(personal?.documentation || '', margin.x*1.49, margin.y);
   
   margin.y += 6;
   margin.x = 10;
@@ -78,28 +78,28 @@ function patientRecord({
   doc.setFont("Helvetica", "bold");
   doc.text("Estado Civil: ", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text(String(personal?.civilState), margin.x*3.28, margin.y);
+  doc.text(String(personal?.civilState || ''), margin.x*3.28, margin.y);
 
   margin.x *= 6.20;
 
   doc.setFont("Helvetica", "bold");
   doc.text("Idade:", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text(String(personal?.age), margin.x*1.18, margin.y);
+  doc.text(String(personal?.age || ''), margin.x*1.18, margin.y);
   
   margin.x *= 1.38;
   
   doc.setFont("Helvetica", "bold");
   doc.text("Sexo: ", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text(String(personal?.gender).toUpperCase()[0], margin.x*1.12, margin.y);
+  doc.text(personal.gender?String(personal?.gender).toUpperCase()[0]:'', margin.x*1.12, margin.y);
   
   margin.x *= 1.22;
   
   doc.setFont("Helvetica", "bold");
   doc.text("Telefone: ", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text(String(personal?.tel), margin.x*1.16, margin.y);
+  doc.text(String(personal?.tel || ''), margin.x*1.16, margin.y);
   
   margin.y += 14;
   margin.x = 10;
@@ -114,21 +114,21 @@ function patientRecord({
   doc.setFont("Helvetica", "bold");
   doc.text("Nacionalidade:", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text(String(demography?.nationality), margin.x*3.65, margin.y);
+  doc.text(String(demography?.nationality || ''), margin.x*3.65, margin.y);
   
   margin.x *= 7.70;
   
   doc.setFont("Helvetica", "bold");
   doc.text("Naturalidade: ", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text(String(demography?.naturality), margin.x*1.31, margin.y);
+  doc.text(String(demography?.naturality || ''), margin.x*1.31, margin.y);
 
   margin.x *= 1.95;
 
   doc.setFont("Helvetica", "bold");
   doc.text("Província: ", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text(String(demography?.province), margin.x*1.124, margin.y);
+  doc.text(String(demography?.province || ''), margin.x*1.124, margin.y);
 
   margin.y += 6;
   margin.x = 10;
@@ -136,21 +136,21 @@ function patientRecord({
   doc.setFont("Helvetica", "bold");
   doc.text("Morada Actual:", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text(demography.actualLocation, margin.x*3.72, margin.y);
+  doc.text(demography.actualLocation || '', margin.x*3.72, margin.y);
   
   margin.x *= 10.11;
 
   doc.setFont("Helvetica", "bold");
   doc.text("Rua:", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text((String(demography?.street) === "undefined")?"":String(demography?.street), margin.x*1.087, margin.y);
+  doc.text(String(demography?.street || ''), margin.x*1.087, margin.y);
   
   margin.x *= 1.49;
   
   doc.setFont("Helvetica", "bold");
   doc.text("Casa Nª: ", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text((String(demography?.homeNumber) === "undefined")?"":String(demography?.homeNumber), margin.x*1.104, margin.y);
+  doc.text(String(demography?.homeNumber || ''), margin.x*1.104, margin.y);
 
   margin.y += 14;
   margin.x = 10;
@@ -166,21 +166,21 @@ function patientRecord({
   doc.setFont("Helvetica", "bold");
   doc.text("Nome Completo:", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text("Xeila Carla Luíz da Silva Ribeiro", margin.x*4, margin.y);
+  doc.text(responsibles[0].name, margin.x*4, margin.y);
   
   margin.x *= 10.2;
   
   doc.setFont("Helvetica", "bold");
   doc.text("Parentesco: ", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text("sobrinho/a", margin.x*1.21, margin.y);
+  doc.text(responsibles[0].kinship, margin.x*1.21, margin.y);
 
   margin.x *= 1.482;
 
   doc.setFont("Helvetica", "bold");
   doc.text("Telefone: ", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text("987453621", margin.x*1.114, margin.y);
+  doc.text(responsibles[0].tel, margin.x*1.114, margin.y);
 
   margin.y += 6;
   margin.x = 10;
@@ -188,21 +188,21 @@ function patientRecord({
   doc.setFont("Helvetica", "bold");
   doc.text("Nome Completo:", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text("Júlio Patrício Gustavo Terêncio", margin.x*4, margin.y);
+  doc.text(responsibles[1]?.name || '', margin.x*4, margin.y);
   
   margin.x *= 10.2;
   
   doc.setFont("Helvetica", "bold");
   doc.text("Parentesco: ", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text("sobrinho/a", margin.x*1.21, margin.y);
+  doc.text(responsibles[1]?.kinship || '', margin.x*1.21, margin.y);
 
   margin.x *= 1.484;
 
   doc.setFont("Helvetica", "bold");
   doc.text("Telefone: ", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text("974495621", margin.x*1.115, margin.y);
+  doc.text(responsibles[1]?.tel || '', margin.x*1.115, margin.y);
 
   margin.y += 14;
   margin.x = 10;
@@ -218,7 +218,7 @@ function patientRecord({
   doc.setFont("Helvetica", "bold");
   doc.text("a ) Particular:", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text("particular", margin.x*3.4, margin.y);
+  doc.text('particular', margin.x*3.4, margin.y);
 
   margin.y += 10;
   margin.x = 10;
@@ -232,21 +232,21 @@ function patientRecord({
   doc.setFont("Helvetica", "bold");
   doc.text("Nome da Empresa:", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text("Agrilc XrT Lda", margin.x*4.368, margin.y);
+  doc.text('Particular', margin.x*4.368, margin.y);
   
   margin.x *= 7.6;
   
   doc.setFont("Helvetica", "bold");
   doc.text("Nª de Passe: ", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text("12450", margin.x*1.295, margin.y);
+  doc.text("Empresa", margin.x*1.295, margin.y);
 
   margin.x *= 1.54;
 
   doc.setFont("Helvetica", "bold");
   doc.text("Função: ", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text("Gestor de Projectos", margin.x*1.128, margin.y);
+  doc.text("Empresa", margin.x*1.128, margin.y);
 
   margin.y += 10;
   margin.x = 10;
@@ -698,14 +698,14 @@ function appointmentRecord({
   doc.setFont("Helvetica", "bold");
   doc.text("Nome Completo: ", margin.x+1, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text(patientName, margin.x*3.8, margin.y);
+  doc.text(patientName || '', margin.x*3.8, margin.y);
 
   margin.x *= 12.1;
   doc.setFontSize(9);
   doc.setFont("Helvetica", "bold");
   doc.text("Idade: ", margin.x+1, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text(`${age}`, margin.x*1.099, margin.y);
+  doc.text(`${age  || ''}`, margin.x*1.099, margin.y);
 
   margin.x *= 1.24;
   doc.setFontSize(9);
@@ -729,7 +729,7 @@ function appointmentRecord({
   doc.setFont("Helvetica", "normal");
   doc.text("Data/hota da consulta", margin.x*1.1, margin.y,);
   doc.setFont("Helvetica", "normal");
-  doc.text(`${date} ${hour}`, margin.x*19.9, margin.y, {align: 'right'});
+  doc.text(`${date  || ''} ${hour  || ''}`, margin.x*19.9, margin.y, {align: 'right'});
 
   margin.x = 10;
   margin.y += 10;
@@ -744,13 +744,13 @@ function appointmentRecord({
   margin.y += 10;
  
   doc.setFont("Helvetica", "normal");
-  doc.text(`${consultationType}....................................................................................................`, margin.x+1, margin.y);
-  doc.text(`${consultationPrice} kz`, margin.x*19.9, margin.y, {align: 'right'});
+  doc.text(`${consultationType  || ''}....................................................................................................`, margin.x+1, margin.y);
+  doc.text(`${consultationPrice  || ''} kz`, margin.x*19.9, margin.y, {align: 'right'});
   
   margin.y += 55;
   doc.setFont("Helvetica", "bold");
   doc.text('Total da consulta...........................................', margin.x+1, margin.y);
-  doc.text(`${consultationPrice} kz`, margin.x*19.9, margin.y, {align: 'right'});
+  doc.text(`${consultationPrice  || ''} kz`, margin.x*19.9, margin.y, {align: 'right'});
   
   margin.y += 8;
   doc.text('Contravalor(usd)..............................................................', margin.x+1, margin.y);

@@ -19,7 +19,7 @@ export default async function Page({
 }){ 
   const { scheduleId } = await params;
   const schedule = await getScheduleAppointment(scheduleId);
-
+  console.log(schedule);
   return (
     <main className="space-y-3">
       <div className="mt-6">
@@ -110,7 +110,7 @@ export default async function Page({
               args={{    
                 patientName: schedule.patient,
                 age: schedule.age,
-                gender: schedule.gender === "masculine"?"masculino":"femenino",
+                gender: schedule.gender,
                 date: schedule.date.pt,
                 hour: schedule.hour,
                 consultationType: schedule.consult.name,

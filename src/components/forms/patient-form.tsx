@@ -6,10 +6,10 @@ import ResponsiblesForm from "@/components/forms/signed-patient/responsibles-for
 import GroupForm from "@/components/forms/signed-patient/group-form";
 import AcessForm from "@/components/forms/signed-patient/access-form";
 import { getPatient } from "@/app/backend/api/clinical/api";
-import type { Responsable } from "@/app/backend/api/clinical/types";
+import type { Assured, Employee, Enterprise, Responsable } from "@/app/backend/api/clinical/types";
 import PDFButton, { PatientRecord } from "@/components/pdf-button";
 import { getExternalUnits } from "@/app/backend/api/clinical/urgency-bank-api";
-import { getDateInSlashFormat } from "@/lib/date-formater";
+import { civilState, gender, kinshipDegree, patientGroup } from "@/app/backend/api/clinical/translator";
 
 export default async function PatientForm({patientId}:{patientId: string}){
 	const patient = await getPatient(patientId);
@@ -26,14 +26,14 @@ export default async function PatientForm({patientId}:{patientId: string}){
 		responsibles
   } = patient;
 	const firstAndSecond = responsibles?.responsibles as Responsable[];
-  console.log(externalUnits);
+
   const dataTopdf:PatientRecord = {
     personal: {
       fullname: personal.fullname,
       birthDate: personal.birthDate,
       age: personal.age,
-      civilState: personal.civilState,
-      gender: personal.gender === "masculine"?"masculino":"femenino", 
+      civilState: (civilState.find( value => value._id === personal.civilState))?.label,
+      gender: personal.gender === "femenine"?"femenino":personal.gender === "masculine"?"masculino":'',
       tel: personal.tel,
       documentation: personal.documentation,
       lang: personal.lang,
@@ -49,19 +49,15 @@ export default async function PatientForm({patientId}:{patientId: string}){
     responsibles: [
       {
         name: firstAndSecond[0].name,
-        kinship: firstAndSecond[0].kinship,
+        kinship: (kinshipDegree.find( value => value._id === firstAndSecond[0].kinship))?.label as string,  
         tel: firstAndSecond[0].tel,
       },
       {
         name: firstAndSecond[1]?.name,
-        kinship: firstAndSecond[1]?.kinship,
+        kinship: (kinshipDegree.find( value => value._id === firstAndSecond[1]?.kinship))?.label as string,  
         tel: firstAndSecond[1]?.tel,
       }
     ],
-    group: {
-      type: group.type,
-      group: group.group
-    },
     acess: {
       type: accessType.type,
       hospital: 'hospital',
