@@ -14,6 +14,11 @@ import {
 } from "@/app/backend/api/clinical/types";
 import { FaFilePdf } from "react-icons/fa";
 
+export type Group = {
+  type: string;
+  group?: Assured | Employee | Enterprise
+}
+
 export type PatientRecord = {
   personal: Personal;
   demography: Demography;
@@ -23,13 +28,14 @@ export type PatientRecord = {
     group: Assured | Employee | Enterprise | undefined
   };
   acess?: accessProps;
+  group: string;
 };
 
 export type ScreeningRecord = {
-  reason:string,
-  vitalsSignal:VitalSignalType,
-  status:string,
-  advice:string,
+  reason: string,
+  vitalsSignal: VitalSignalType,
+  status: string,
+  advice: string,
 };
 
 export type AppointmentRecord = {
