@@ -623,15 +623,17 @@ async function scheduleAppointment(prev: unknown, formData: FormData){
 
 async function getScheduleAppointment(scheduleId:string){
   const schedule = await scheduleAppointmentModel.findById({_id:scheduleId});
-  const patient = await patientModel.findById({_id:schedule?.patientId}).select({fullname:1});
+  const patient = await patientModel.findById({_id:schedule?.patientId}).select({fullname:1, age:1, gender:1});
   const doctor = await getUser(schedule?.doctorId?.toString() as string);
   const user = await getUser(schedule?.userId?.toString() as string);
   const consult = await examModel.findById({ _id: schedule?.consultId });
 
   return {
-    patient: patient?.fullname,
-    doctor: doctor.fullname,
-    doctorId: doctor._id,
+    patient: patient?.fullname as string,
+    age: patient?.age as number,
+    gender: patient?.gender as string,
+    doctor: doctor.fullname as string,
+    doctorId: doctor._id as string,
     responsable: user.fullname as string,
     consult: {
       name: consult?.name as string,

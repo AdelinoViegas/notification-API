@@ -6,9 +6,10 @@ import ResponsiblesForm from "@/components/forms/signed-patient/responsibles-for
 import GroupForm from "@/components/forms/signed-patient/group-form";
 import AcessForm from "@/components/forms/signed-patient/access-form";
 import { getPatient } from "@/app/backend/api/clinical/api";
-import type { Responsable } from "@/app/backend/api/clinical/types";
-// import PDFButton from "@/components/pdf-button";
+import type { Assured, Employee, Enterprise, Responsable } from "@/app/backend/api/clinical/types";
+import PDFButton, { PatientRecord } from "@/components/pdf-button";
 import { getExternalUnits } from "@/app/backend/api/clinical/urgency-bank-api";
+import { civilState, gender, kinshipDegree, patientGroup } from "@/app/backend/api/clinical/translator";
 
 export default async function PatientForm({patientId}:{patientId: string}){
 	const patient = await getPatient(patientId);
@@ -25,6 +26,43 @@ export default async function PatientForm({patientId}:{patientId: string}){
 		responsibles
   } = patient;
 	const firstAndSecond = responsibles?.responsibles as Responsable[];
+
+  const dataTopdf:PatientRecord = {
+    personal: {
+      fullname: personal.fullname,
+      birthDate: personal.birthDate,
+      age: personal.age,
+      civilState: (civilState.find( value => value._id === personal.civilState))?.label,
+      gender: personal.gender === "femenine"?"femenino":personal.gender === "masculine"?"masculino":'',
+      tel: personal.tel,
+      documentation: personal.documentation,
+      lang: personal.lang,
+    },
+    demography: {
+      nationality: demography.nationality,
+      naturality: demography.naturality,
+      province: demography.province,
+      actualLocation: demography.actualLocation,
+      street: demography.street,
+      homeNumber: demography.homeNumber,
+    },
+    responsibles: [
+      {
+        name: firstAndSecond[0].name,
+        kinship: (kinshipDegree.find( value => value._id === firstAndSecond[0].kinship))?.label as string,  
+        tel: firstAndSecond[0].tel,
+      },
+      {
+        name: firstAndSecond[1]?.name,
+        kinship: (kinshipDegree.find( value => value._id === firstAndSecond[1]?.kinship))?.label as string,  
+        tel: firstAndSecond[1]?.tel,
+      }
+    ],
+    acess: {
+      type: accessType.type,
+      hospital: 'hospital',
+    }
+  }
 
 	return(
 		<main>
@@ -85,6 +123,12 @@ export default async function PatientForm({patientId}:{patientId: string}){
 					/>
 				</Accordium>
 			</div>
+
+      <PDFButton
+        label="Ficha-Utente"
+        type="patientRecord"
+        args={dataTopdf}
+      />
 		</main>
 	)
 }

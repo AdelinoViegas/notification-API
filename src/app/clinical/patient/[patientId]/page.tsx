@@ -24,7 +24,7 @@ export default async function Page({
 		<div>
 			<div className="mt-4 mb-6">
 				<Header title="Utente Registrado">
-					<SendToScreening />
+          <SendToScreening />
 				</Header>
 			</div>
 		

@@ -2,14 +2,13 @@ import Header from "@/components/header";
 import Card from "@/components/ui/card";
 import { getScheduleAppointment } from "@/app/backend/api/clinical/scheduling-api";
 import SubTitle from "@/components/ui/subtitle";
-import Button from "@/components/ui/button";
 import ArchivingAppointment from "@/components/archiving-appointment";
 import RescheduleAppointment from "@/components/reschedule-appointment";
 import ValidateAppointment from "@/components/validate-appointment";
 import TitleAndSubtitle from "@/components/title-subtitle";
 import { angolaCurrency } from "@/lib/table-formater";
 import SendAppointment from "@/components/send-appointment";
-import { FaFilePdf } from "react-icons/fa6";
+import PDFButton from "@/components/pdf-button";
 
 export default async function Page({
   params
@@ -20,7 +19,7 @@ export default async function Page({
 }){ 
   const { scheduleId } = await params;
   const schedule = await getScheduleAppointment(scheduleId);
-
+  console.log(schedule);
   return (
     <main className="space-y-3">
       <div className="mt-6">
@@ -104,14 +103,20 @@ export default async function Page({
             </div>
           </div>
 
-          <div className="flex gap-x-3 mt-3">                        
-            <Button 
-              className="flex gap-x-2" 
-              disabled
-            >
-              <FaFilePdf className="size-5"/>
-              Visualizar
-            </Button>
+          <div className="flex gap-x-3 mt-3"> 
+            <PDFButton
+              label="Visualizar"
+              type="appointmentRecord"
+              args={{    
+                patientName: schedule.patient,
+                age: schedule.age,
+                gender: schedule.gender,
+                date: schedule.date.pt,
+                hour: schedule.hour,
+                consultationType: schedule.consult.name,
+                consultationPrice: schedule.consult.price,
+              }}
+            />                       
 
             <RescheduleAppointment 
               scheduleId={scheduleId}

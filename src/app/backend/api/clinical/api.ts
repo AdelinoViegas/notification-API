@@ -409,7 +409,7 @@ async function getPatient(patientId: string){
       },
       group: {
         _id: group?._id.toString() as string,
-        type: group?.type,
+        type: group?.type as string,
         group: group?.group
       },
       accessType: {
