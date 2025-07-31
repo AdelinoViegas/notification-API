@@ -6,10 +6,10 @@ import ResponsiblesForm from "@/components/forms/signed-patient/responsibles-for
 import GroupForm from "@/components/forms/signed-patient/group-form";
 import AcessForm from "@/components/forms/signed-patient/access-form";
 import { getPatient } from "@/app/backend/api/clinical/api";
-import type { Assured, Employee, Enterprise, Responsable } from "@/app/backend/api/clinical/types";
+import type { Responsable } from "@/app/backend/api/clinical/types";
 import PDFButton, { PatientRecord } from "@/components/pdf-button";
 import { getExternalUnits } from "@/app/backend/api/clinical/urgency-bank-api";
-import { civilState, gender, kinshipDegree, patientGroup } from "@/app/backend/api/clinical/translator";
+import { civilState, kinshipDegree } from "@/app/backend/api/clinical/translator";
 
 export default async function PatientForm({patientId}:{patientId: string}){
 	const patient = await getPatient(patientId);
@@ -27,7 +27,7 @@ export default async function PatientForm({patientId}:{patientId: string}){
   } = patient;
 	const firstAndSecond = responsibles?.responsibles as Responsable[];
 
-  const dataTopdf:PatientRecord = {
+  const dataTopdf: PatientRecord = {
     personal: {
       fullname: personal.fullname,
       birthDate: personal.birthDate,
