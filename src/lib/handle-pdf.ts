@@ -274,21 +274,21 @@ function patientRecord({
   doc.setFont("Helvetica", "bold");
   doc.text("Nª de Passe:", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text(employee?.passNumber, margin.x*3.25, margin.y);
+  doc.text(employee?.passNumber ?? "", margin.x*3.25, margin.y);
   
   margin.x *= 5.3;
   
   doc.setFont("Helvetica", "bold");
   doc.text("Função: ", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text(employee?.role, margin.x*1.28, margin.y);
+  doc.text(employee?.role ?? "", margin.x*1.28, margin.y);
 
   margin.x *= 2.22;
 
   doc.setFont("Helvetica", "bold");
   doc.text("Área de Serviço: ", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text(employee?.workArea, margin.x*1.25, margin.y);
+  doc.text(employee?.workArea ?? "", margin.x*1.25, margin.y);
 
   margin.y += 10;
   margin.x = 10;
@@ -302,21 +302,21 @@ function patientRecord({
   doc.setFont("Helvetica", "bold");
   doc.text("Nome da Asseguradora:", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text("Nossa Seguros", margin.x*5.22, margin.y);
+  doc.text(assured.name ?? "", margin.x*5.22, margin.y);
   
   margin.x *= 8.58;
   
   doc.setFont("Helvetica", "bold");
   doc.text("Nª da Apólice: ", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text("215410", margin.x*1.296, margin.y);
+  doc.text(assured.apolice.toString() ?? "", margin.x*1.296, margin.y);
 
   margin.x *= 1.51;
 
   doc.setFont("Helvetica", "bold");
   doc.text("Nª de Telefone: ", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text("971203521", margin.x*1.21, margin.y);
+  doc.text(assured.tel ?? "", margin.x*1.21, margin.y);
  
   margin.y += 6;
   margin.x = 10;
