@@ -1,15 +1,13 @@
 import jsPDF from "jspdf";
 import { AppointmentRecord, PatientRecord, ScreeningRecord } from "@/components/pdf-button";
-import { getDateInSlashFormat } from "./date-formater";
+// import { getDateInSlashFormat } from "./date-formater";
 
 const doc = new jsPDF();
 
 function patientRecord({
   personal,
   demography,
-  responsibles,
-  groupType,
-  acess,
+  responsibles
 }: PatientRecord){ 
   const margin = { x: 10, y: 10 };
 
