@@ -6,14 +6,23 @@ import {
   Patient as Personal,
   Demography,
   VitalSignalType,
+  Responsable,
+  Assured,
+  Employee,
+  Enterprise,
+  accessProps,
 } from "@/app/backend/api/clinical/types";
 import { FaFilePdf } from "react-icons/fa";
 
 export type PatientRecord = {
   personal: Personal;
   demography: Demography;
-  // responsibles: Responsable[];
-  // group: Assured | Employee | Enterprise;
+  responsibles: Responsable[];
+  group: {
+    type: string,
+    group: Assured | Employee | Enterprise | undefined
+  };
+  acess: accessProps;
 };
 
 export type ScreeningRecord = {
@@ -43,11 +52,14 @@ export default function PDFButton({
   label: string;
   args: Arguments;
   type: "patientRecord" | "screeningRecord" | "appointmentRecord";
-}){
+}){ 
   switch(type){
     case "patientRecord":
       return (
-        <Button onClick={()=>patientRecord(args as PatientRecord)}>{label}</Button>
+        <Button className="flex gap-x-2" onClick={()=>patientRecord(args as PatientRecord)}>
+          <FaFilePdf className="size-5"/>
+          {label}
+        </Button>
       );
     case "screeningRecord": 
       return (

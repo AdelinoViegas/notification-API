@@ -110,7 +110,7 @@ export default async function Page({
               args={{    
                 patientName: schedule.patient,
                 age: schedule.age,
-                gender: schedule.gender === "masculine"?"masculino":"Femenino",
+                gender: schedule.gender === "masculine"?"masculino":"femenino",
                 date: schedule.date.pt,
                 hour: schedule.hour,
                 consultationType: schedule.consult.name,

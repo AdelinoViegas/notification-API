@@ -7,8 +7,9 @@ import GroupForm from "@/components/forms/signed-patient/group-form";
 import AcessForm from "@/components/forms/signed-patient/access-form";
 import { getPatient } from "@/app/backend/api/clinical/api";
 import type { Responsable } from "@/app/backend/api/clinical/types";
-// import PDFButton from "@/components/pdf-button";
+import PDFButton, { PatientRecord } from "@/components/pdf-button";
 import { getExternalUnits } from "@/app/backend/api/clinical/urgency-bank-api";
+import { getDateInSlashFormat } from "@/lib/date-formater";
 
 export default async function PatientForm({patientId}:{patientId: string}){
 	const patient = await getPatient(patientId);
@@ -25,6 +26,47 @@ export default async function PatientForm({patientId}:{patientId: string}){
 		responsibles
   } = patient;
 	const firstAndSecond = responsibles?.responsibles as Responsable[];
+  console.log(externalUnits);
+  const dataTopdf:PatientRecord = {
+    personal: {
+      fullname: personal.fullname,
+      birthDate: personal.birthDate,
+      age: personal.age,
+      civilState: personal.civilState,
+      gender: personal.gender === "masculine"?"masculino":"femenino", 
+      tel: personal.tel,
+      documentation: personal.documentation,
+      lang: personal.lang,
+    },
+    demography: {
+      nationality: demography.nationality,
+      naturality: demography.naturality,
+      province: demography.province,
+      actualLocation: demography.actualLocation,
+      street: demography.street,
+      homeNumber: demography.homeNumber,
+    },
+    responsibles: [
+      {
+        name: firstAndSecond[0].name,
+        kinship: firstAndSecond[0].kinship,
+        tel: firstAndSecond[0].tel,
+      },
+      {
+        name: firstAndSecond[1]?.name,
+        kinship: firstAndSecond[1]?.kinship,
+        tel: firstAndSecond[1]?.tel,
+      }
+    ],
+    group: {
+      type: group.type,
+      group: group.group
+    },
+    acess: {
+      type: accessType.type,
+      hospital: 'hospital',
+    }
+  }
 
 	return(
 		<main>
@@ -85,6 +127,12 @@ export default async function PatientForm({patientId}:{patientId: string}){
 					/>
 				</Accordium>
 			</div>
+
+      <PDFButton
+        label="Ficha-Utente"
+        type="patientRecord"
+        args={dataTopdf}
+      />
 		</main>
 	)
 }
