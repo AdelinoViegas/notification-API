@@ -8,7 +8,6 @@ const instance = axios.create({
 });
 
 export async function userState(token: string){
-  console.log(token.length);
   instance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   const res = await instance.get("/users/myProfile/status");
   return res.status === 200;

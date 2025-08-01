@@ -5,7 +5,6 @@ import { RESTproxy } from "./rest-proxy";
 import { useSearchParams, useRouter } from "next/navigation";
 
 export default function Auth(){
-  
   const search = useSearchParams();
   const token = ["h", "p", "s"].map(e => search.get(e)).join('.');
   const router = useRouter();
@@ -17,6 +16,6 @@ export default function Auth(){
 
   }, [token]);
   return(
-    <>test {token.length} </>
+    <>Autenticando ...</>
   )
 }
