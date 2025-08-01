@@ -27,10 +27,10 @@ import {
   userCategory
 } from "@/app/backend/api/clinical/translator"; 
 // import { closePatientProcess } from "@/app/backend/api/clinical/process-api";
-import { getGrantedUnitAccess } from "@/app/backend/api/clinical/urgency-bank-api";
+// import { getGrantedUnitAccess } from "@/app/backend/api/clinical/urgency-bank-api";
 import { validatePatientDoc } from "@/lib/regexp";
 import { closePatientProcess } from "./process-api";
-import { getUsers as gUsers } from "../admin";
+import { getUsers as RESTgetUsers } from "../admin";
 
 type ChoosedGroup = Assured | Employee | Enterprise | undefined;
 
@@ -54,7 +54,7 @@ async function allowUpdate(id: string){
 }
 
 async function getUsers(){  
-  const users = await gUsers();
+  const users = await RESTgetUsers();
 
   const clinicalUsers = users.map(user => ({
     id: user._id,
@@ -63,7 +63,7 @@ async function getUsers(){
     categoryId: "doctor",
     role: "Ind",
     roleId: "test",
-    workplaces: [],
+    workplaces: 0,
     ...user
   }));
 
