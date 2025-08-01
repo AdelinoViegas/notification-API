@@ -19,6 +19,7 @@ import {
   triedModel,
   specialtyModel,
   urgencyBankModel,
+  processStateModel,
 } from "@/app/backend/models/clinical";
 import { 
   patientAccess,
@@ -37,6 +38,20 @@ export type patientFilters = {
   registerNumber?: string;
   priority?: string;
   page?: number;
+}
+
+// funções auxiliares
+
+async function allowUpdate(id: string){
+  const doc = await processStateModel.findOne({ 
+    patientId: id, 
+    isInUse: true 
+  }).select({ _id: 1 });
+  
+  const userId = await whoIsUser();
+
+  if(doc && doc.userId?.toString() !== userId) 
+    throw new Error("Paciente está em processo de antendimento!", { cause: "in_use" });
 }
 
 async function getUsers(){  
@@ -436,6 +451,8 @@ async function updatePersonalInfo(prev:unknown, formData: FormData){
 
     if(!validatePatientDoc(documentation))
       throw new Error("Formato do documento inválido!", { cause: "incorrect" });
+
+    await allowUpdate(patientId);
 
     await patientModel.updateOne({_id: patientId}, {
       fullname,

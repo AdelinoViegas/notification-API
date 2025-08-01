@@ -305,9 +305,9 @@ async function schedulePatientExam(prev: unknown, formData: FormData){
     const exams = formData.get('exams')?JSON.parse(formData.get("exams") as string) as string[]:[];
     
     if(!exams.length)
-      throw new Error("Escolha os exames desejado!", { cause: "empty_exams" });
+      throw new Error("Escolha os exames desejado!", { cause: "empty" });
 
-    const schedule = new scheduleExamModel({
+    await scheduleExamModel.create({
       patientId,
       laboratoryId,
       dateTime: dateTime?dateTime:new Date(),
@@ -316,23 +316,18 @@ async function schedulePatientExam(prev: unknown, formData: FormData){
       userId: await whoIsUser()
     });
 
-    await patientModel.updateOne({_id: patientId }, { served: true });
-    await schedule.save();
-
     return {
-      message: "Exame agendado com sucesso!",
+      message: "Agendado com sucesso!",
       status: true,
     }
   }catch(err: unknown){
     const e = err as Error;
-    if(e.cause === "empty_exams")
-      return {
-        message: e.message,
-        status: false,
-      }
+    
     return {
-      message: "Falha no agendamento!",
-      status: false,
+      message: e.cause
+        ? e.message
+        : "Desculpe, não foi possivel realizar a operação!",
+      status: false
     }
   }
 }

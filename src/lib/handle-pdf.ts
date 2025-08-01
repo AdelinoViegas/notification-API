@@ -18,7 +18,6 @@ function patientRecord({
   personal,
   demography,
   responsibles,
-  groupType,
   group
 }: PatientRecord){ 
   const margin = { x: 10, y: 10 };
@@ -232,7 +231,7 @@ function patientRecord({
   doc.setFont("Helvetica", "bold");
   doc.text("a ) Particular:", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text('particular', margin.x*3.4, margin.y);
+  doc.text(patientGroup?.type === "personal" ? "Particular" :"", margin.x*3.4, margin.y);
 
   margin.y += 10;
   margin.x = 10;
@@ -246,21 +245,21 @@ function patientRecord({
   doc.setFont("Helvetica", "bold");
   doc.text("Nome da Empresa:", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text('Particular', margin.x*4.368, margin.y);
+  doc.text(enterprise?.name ?? "", margin.x*4.368, margin.y);
   
   margin.x *= 7.6;
   
   doc.setFont("Helvetica", "bold");
   doc.text("Nª de Passe: ", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text("Empresa", margin.x*1.295, margin.y);
+  doc.text(enterprise?.passNumber ?? "", margin.x*1.295, margin.y);
 
   margin.x *= 1.54;
 
   doc.setFont("Helvetica", "bold");
   doc.text("Função: ", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text("Empresa", margin.x*1.128, margin.y);
+  doc.text(enterprise?.role ?? "", margin.x*1.128, margin.y);
 
   margin.y += 10;
   margin.x = 10;
@@ -309,7 +308,7 @@ function patientRecord({
   doc.setFont("Helvetica", "bold");
   doc.text("Nª da Apólice: ", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text(assured.apolice.toString() ?? "", margin.x*1.296, margin.y);
+  doc.text(assured?.apolice?.toString() ?? "", margin.x*1.296, margin.y);
 
   margin.x *= 1.51;
 
