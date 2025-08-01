@@ -4,24 +4,30 @@ import {
   useEffect, 
   useActionState 
 } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Button from "@/components/ui/button";
 import { putInScreening } from "@/app/backend/api/clinical/api";
-
+import {  } from "next/navigation";
 import { toast } from "react-toastify";
 
 export default function SendToScreening(){
   const [ state, action ] = useActionState(putInScreening, { message: "", status: false });
   const urlParams:{ patientId: string } = useParams();
-  
+  const router = useRouter();
+
   useEffect(()=>{
     if(state.message){
       if(state.status)
-        toast.success(state.message, { autoClose: 1500 })
+        toast.success(state.message, { 
+          autoClose: 1500,
+          onClose: ()=>{
+						router.replace('/clinical/patient');
+					}
+        });
       else
         toast.warn(state.message)
     }
-  }, [state]);
+  }, [state, router]);
 
   return(
     <div>

@@ -1,7 +1,7 @@
 "use client";
 
 import Button from "./ui/button";
-import { appointmentRecord, patientRecord, screeningRecord } from "@/lib/handle-pdf";
+import { appointmentRecord, patientRecord, scheduleExamsRecord, screeningRecord } from "@/lib/handle-pdf";
 import { 
   Patient as Personal,
   Demography,
@@ -48,7 +48,20 @@ export type AppointmentRecord = {
   consultationPrice: number,
 }
 
-export type Arguments = PatientRecord | ScreeningRecord | AppointmentRecord;
+export type ScheduleExamsRecord = {
+  patientName: string,
+  age?: number,
+  gender?: string,
+  date?: string,
+  exams?: {
+    id: string,
+    name: string,
+    price: number,
+  }[],
+  examsTotalPrice: string | number,
+}
+
+export type Arguments = PatientRecord | ScreeningRecord | AppointmentRecord | ScheduleExamsRecord;
 
 export default function PDFButton({
   label,
@@ -57,7 +70,7 @@ export default function PDFButton({
 }: {
   label: string;
   args: Arguments;
-  type: "patientRecord" | "screeningRecord" | "appointmentRecord";
+  type: "patientRecord" | "screeningRecord" | "appointmentRecord" | "scheduleExamsRecord";
 }){ 
   switch(type){
     case "patientRecord":
@@ -74,6 +87,13 @@ export default function PDFButton({
     case "appointmentRecord": 
       return (
         <Button className="flex gap-x-2"  onClick={()=>appointmentRecord(args as AppointmentRecord)}>
+          <FaFilePdf className="size-5"/>
+          {label}
+        </Button>
+      );
+    case "scheduleExamsRecord": 
+      return (
+        <Button className="flex gap-x-2"  onClick={()=>scheduleExamsRecord(args as ScheduleExamsRecord)}>
           <FaFilePdf className="size-5"/>
           {label}
         </Button>

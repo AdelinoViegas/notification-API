@@ -52,5 +52,4 @@ export default function WorkplaceFrom({
       </form>
     </div>
   );
-
 }
