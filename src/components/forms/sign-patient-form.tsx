@@ -15,7 +15,7 @@ import clsx from "clsx";
 import { signPatient } from "@/app/backend/api/clinical/api";
 import { GrLinkNext } from "react-icons/gr";
 
-import { validatePatientDoc, validatePatientLocation } from "@/lib/regexp";
+import { validatePatientDoc } from "@/lib/regexp";
 import { toast } from "react-toastify";
 
 type InputElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
@@ -50,11 +50,6 @@ export default function SignPatientForm(){
 					if(elementIdValue[2] === "documentation" && !validatePatientDoc(element.value)){
 						setCurrentTab(Number(elementIdValue[1]));
 						throw new Error(`O documento não corresponde a um formato válido!`, { cause: "incorrect"});
-					}
-
-					if(elementIdValue[2] === "demography" && !validatePatientLocation(element.value)){
-						setCurrentTab(Number(elementIdValue[1]));
-						throw new Error("O localização actual não corresponde ao formato válido!", { cause: "incorrect"});
 					}
 				}
 			});

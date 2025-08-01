@@ -28,7 +28,7 @@ import {
 } from "@/app/backend/api/clinical/translator"; 
 // import { closePatientProcess } from "@/app/backend/api/clinical/process-api";
 import { getGrantedUnitAccess } from "@/app/backend/api/clinical/urgency-bank-api";
-import { validatePatientDoc, validatePatientLocation } from "@/lib/regexp";
+import { validatePatientDoc } from "@/lib/regexp";
 import { closePatientProcess } from "./process-api";
 
 type ChoosedGroup = Assured | Employee | Enterprise | undefined;
@@ -322,9 +322,11 @@ async function signPatient(prev: unknown, formData: FormData){
     console.log(err.message);
 
     return {
-      message: err.cause?err.message:
-      err.code?"Desculpe já existe um utente com o este Nº de BI":
-      "Falha no registro do utente",
+      message: err.cause
+        ? err.message
+        : err.code
+          ? "Desculpe já existe um utente com o este Nº de BI"
+          :"Falha no registro do utente",
       status: false,
     }
   }
@@ -495,9 +497,7 @@ async function updateDemography(prev: unknown, formData: FormData){
     const street = formData.get("street");
     const homeNumber = formData.get("homeNumber");
     const referencePoint = formData.get("referencePoint");
-    if(!validatePatientLocation(actualLocation))
-      throw new Error("Formato da localização actual inválida!", { cause: "incorrect" });
-    // para update basta apenas a chamada do metodo que já actualiza os dados no banco 
+    
     await demographyModel.updateOne({ _id: demographyId }, {
       nationality,
       naturality,

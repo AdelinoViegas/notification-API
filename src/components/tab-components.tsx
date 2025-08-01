@@ -32,7 +32,7 @@ function AccesTypeForm(){
     <div className="grid md:grid-cols-3 gap-3">
       <Selection
         name="accessType"
-        label="Escolha o grupo de utentes"
+        label="Tipo de acesso"
         options={patientAccess}
         onChange={(e)=>setType(e.target.value)}
       />
@@ -41,7 +41,7 @@ function AccesTypeForm(){
         type === "transferred" &&
         <div className="col-span-2 flex gap-3 items-center">
           <Selection
-            label="Escolha o grupo de utentes"
+            label="Unidade Externa"
             options={externalUnits}
             name="externalUnitId"
             className="grow"
