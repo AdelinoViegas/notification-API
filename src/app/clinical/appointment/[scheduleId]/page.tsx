@@ -19,7 +19,7 @@ export default async function Page({
 }){ 
   const { scheduleId } = await params;
   const schedule = await getScheduleAppointment(scheduleId);
-  console.log(schedule);
+
   return (
     <main className="space-y-3">
       <div className="mt-6">

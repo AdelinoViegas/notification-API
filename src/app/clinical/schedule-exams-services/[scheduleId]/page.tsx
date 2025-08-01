@@ -5,13 +5,12 @@ import RescheduleExam from "@/components/reschedule-exam";
 import { getUnits } from "@/app/backend/api/clinical/urgency-bank-api";
 import { SelectionOption } from "@/components/ui/selection";
 import SubTitle from "@/components/ui/subtitle";
-import Button from "@/components/ui/button";
 import ArchivingScheduleExam from "@/components/archiving-schedule-exam";
 import { angolaCurrency } from "@/lib/table-formater";
 import TitleAndSubtitle from "@/components/title-subtitle";
 import SendScheduleExam from "@/components/send-schedule-exam";
 import ValidateService from "@/components/validate-services";
-import { FaFilePdf } from "react-icons/fa6";
+import PDFButton from "@/components/pdf-button";
 
 export default async function Page({
   params
@@ -112,11 +111,18 @@ export default async function Page({
             </div>
           </div>
           <div className="flex gap-x-3 my-4">
-            <Button 
-              className="flex gap-x-2" >
-              <FaFilePdf className="size-5"/>
-              Visualizar
-            </Button>
+            <PDFButton
+              label="Visualizar"
+              type="scheduleExamsRecord"
+              args={{
+                patientName: schedule.patient,
+                age: schedule.age,
+                gender: schedule.gender,
+                date: schedule.createdAt,
+                exams: schedule.exams,
+                examsTotalPrice: schedule.examPrice
+              }}
+            />   
             
             <RescheduleExam 
               detail={schedule?.detail as string} 
