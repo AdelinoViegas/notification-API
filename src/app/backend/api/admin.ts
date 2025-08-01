@@ -25,4 +25,12 @@ export async function getUsers(): Promise<User[]>{
   return res.data.data;
 }
 
-export async function getUser(){}
+export async function getUser(id: string){
+  const res = await instance.get<User>("/users/user", {
+    params: {
+      id
+    }
+  });
+
+  return res.data;
+}
