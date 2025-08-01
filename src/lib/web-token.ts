@@ -1,4 +1,5 @@
-'use server';
+"use server";
+
 import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
@@ -67,7 +68,7 @@ async function whoIsUser(){
       if(!data) throw new Error("");
       return data?.userId;
     }
-    throw new Error('sem login!', {cause: "no_login"});
+    throw new Error('sem login!', { cause: "no_login" });
   }catch{
     console.log("sessão terminada!");
     redirect('/?exit');
