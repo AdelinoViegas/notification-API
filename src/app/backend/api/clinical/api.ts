@@ -1,7 +1,7 @@
 'use server';
 
 import { whoIsUser } from "@/lib/web-token";
-import { userModel as managerUserModel } from '@/app/backend/models/manager';
+// import { userModel as managerUserModel } from '@/app/backend/models/manager';
 import {
   Responsable,
   Assured,
@@ -19,16 +19,21 @@ import {
   triedModel,
   specialtyModel,
   urgencyBankModel,
+  processStateModel,
 } from "@/app/backend/models/clinical";
 import { 
   patientAccess,
   patientGroup as patientGroups,
-  userCategory
+  // userCategory
 } from "@/app/backend/api/clinical/translator"; 
 // import { closePatientProcess } from "@/app/backend/api/clinical/process-api";
-import { getGrantedUnitAccess } from "@/app/backend/api/clinical/urgency-bank-api";
-import { validatePatientDoc, validatePatientLocation } from "@/lib/regexp";
+// import { getGrantedUnitAccess } from "@/app/backend/api/clinical/urgency-bank-api";
+import { validatePatientDoc } from "@/lib/regexp";
 import { closePatientProcess } from "./process-api";
+import { 
+  getUsers as RESTgetUsers,
+  getUser as RESTgetUser 
+} from "../admin";
 
 type ChoosedGroup = Assured | Employee | Enterprise | undefined;
 
@@ -39,29 +44,51 @@ export type patientFilters = {
   page?: number;
 }
 
+async function allowUpdate(id: string){
+  const doc = await processStateModel.findOne({ 
+    patientId: id, 
+    isInUse: true 
+  }).select({ _id: 1 });
+  
+  const userId = await whoIsUser();
+
+  if(doc && doc.userId?.toString() !== userId) 
+    throw new Error("Paciente está em processo de antendimento!", { cause: "in_use" });
+}
+
 async function getUsers(){  
-  const users = await userModel.find();
-  const formatedUsers = [];
+  const users = await RESTgetUsers();
 
-  for(const user of users){
-    const sysUser = await managerUserModel.findById({ _id: user.userId }).select({ password: 0 });
-    const workplaces = await getGrantedUnitAccess(user.userId as unknown as string);
-    const role = user?.specialtyId?(await specialtyModel.findById({ _id: user.specialtyId }))?.name:"Indefinido";
+  const clinicalUsers = users.map(user => ({
+    id: user._id,
+    createdAt: new Date(),
+    category: "Indefinido",
+    categoryId: "doctor",
+    role: "Ind",
+    roleId: "test",
+    workplaces: 0,
+    ...user
+  }));
 
-    formatedUsers.push({
-      _id: user?.userId?.toString() as string,
-      id: user?.userId?.toString() as string,
-      fullname: sysUser?.fullname as string,
-      createdAt: user?.createdAt as Date,
-      category: user?.categoryId?userCategory.find(item => item._id == user?.categoryId)?.label:"Indefinido",
-      categoryId: user.categoryId?.toString() as string,
-      role: role,
-      roleId: user.specialtyId?.toString() as string,
-      workplaces: workplaces.length,
-    });
-  }
+  return clinicalUsers;
+  // for (const user of users){
+  //   const workplaces = await getGrantedUnitAccess(user.userId as unknown as string);
+  //   const role = user?.specialtyId?(await specialtyModel.findById({ _id: user.specialtyId }))?.name:"Indefinido";
 
-  return formatedUsers;
+  //   formatedUsers.push({
+  //     _id: user?.userId?.toString() as string,
+  //     id: user?.userId?.toString() as string,
+  //     fullname: sysUser?.fullname as string,
+  //     createdAt: user?.createdAt as Date,
+  //     category: user?.categoryId?userCategory.find(item => item._id == user?.categoryId)?.label:"Indefinido",
+  //     categoryId: user.categoryId?.toString() as string,
+  //     role: role,
+  //     roleId: user.specialtyId?.toString() as string,
+  //     workplaces: workplaces.length,
+  //   });
+  // }
+
+  // return formatedUsers;
 }
 
 async function getDoctors(){
@@ -85,21 +112,31 @@ async function getDoctors(){
   return doctors;
 }
 
-async function getUser(userId: string){
-  const clinicalUser = await userModel.findOne({ userId });
-  const user = await managerUserModel.findById({ _id: userId }).select({ fullname: 1 });
-  const userSpecialty = clinicalUser?.specialtyId?(await specialtyModel.findById({ _id: clinicalUser?.specialtyId }))?.name:"";
+async function getUser(id: string){
+  const user = await RESTgetUser(id);
 
   return {
-    _id: user?._id.toString() as string,
-    fullname: user?.fullname as string,
-    category:  userCategory.find(item => item._id == clinicalUser?.categoryId)?.label,
-    categoryId: clinicalUser?.categoryId?.toString() as string,
-    orderNumber: clinicalUser?.orderNumber as number,
-    specialtyId: clinicalUser?.specialtyId?.toString() as string,
-    specialty: userSpecialty, 
-    serviceId: clinicalUser?.serviceId?.toString() as string
+    category: "Ind",
+    categoryId: "test",
+    specialtyId: "test",
+    orderNumber: 123456,
+    serviceId: "test",
+    ...user
   }
+  // const clinicalUser = await userModel.findOne({ userId });
+  // const user = await managerUserModel.findById({ _id: userId }).select({ fullname: 1 });
+  // const userSpecialty = clinicalUser?.specialtyId?(await specialtyModel.findById({ _id: clinicalUser?.specialtyId }))?.name:"";
+
+  // return {
+  //   _id: user?._id.toString() as string,
+  //   fullname: user?.fullname as string,
+  //   category:  userCategory.find(item => item._id == clinicalUser?.categoryId)?.label,
+  //   categoryId: clinicalUser?.categoryId?.toString() as string,
+  //   orderNumber: clinicalUser?.orderNumber as number,
+  //   specialtyId: clinicalUser?.specialtyId?.toString() as string,
+  //   specialty: userSpecialty, 
+  //   serviceId: clinicalUser?.serviceId?.toString() as string
+  // }
 }
 
 async function signUser(prev: unknown, formData: FormData){
@@ -307,9 +344,11 @@ async function signPatient(prev: unknown, formData: FormData){
     console.log(err.message);
 
     return {
-      message: err.cause?err.message:
-      err.code?"Desculpe já existe um utente com o este Nº de BI":
-      "Falha no registro do utente",
+      message: err.cause
+        ? err.message
+        : err.code
+          ? "Desculpe já existe um utente com o este Nº de BI"
+          :"Falha no registro do utente",
       status: false,
     }
   }
@@ -437,6 +476,8 @@ async function updatePersonalInfo(prev:unknown, formData: FormData){
     if(!validatePatientDoc(documentation))
       throw new Error("Formato do documento inválido!", { cause: "incorrect" });
 
+    await allowUpdate(patientId);
+
     await patientModel.updateOne({_id: patientId}, {
       fullname,
       birthDate,
@@ -478,9 +519,7 @@ async function updateDemography(prev: unknown, formData: FormData){
     const street = formData.get("street");
     const homeNumber = formData.get("homeNumber");
     const referencePoint = formData.get("referencePoint");
-    if(!validatePatientLocation(actualLocation))
-      throw new Error("Formato da localização actual inválida!", { cause: "incorrect" });
-    // para update basta apenas a chamada do metodo que já actualiza os dados no banco 
+    
     await demographyModel.updateOne({ _id: demographyId }, {
       nationality,
       naturality,

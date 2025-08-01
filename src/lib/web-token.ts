@@ -4,6 +4,15 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 const privateKey = new TextEncoder().encode(String(process.env.JWT_SECRET_KEY));
+const systemKey = new TextEncoder().encode(process.env.JWT_SECRET_ADMIN_KEY);
+
+export async function genWebToken(){
+  return new SignJWT({ id: "", jti: "test"})
+    .setProtectedHeader({ alg: "HS384" })
+    .setIssuedAt()
+    .setIssuer('urn:master-clinical:issuer')
+    .sign(systemKey)
+}
 
 async function authJWT({
   userId,
