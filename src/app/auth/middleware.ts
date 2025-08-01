@@ -21,9 +21,17 @@ export async function middleware(extToken?: string){
     if(!token)
       throw new Error("Impossivel de autenticar!");
 
+    if(!(await cookies()).has(process.env.MASTER_HEADER_AUTH as string))
+      (await cookies()).set({
+        name: process.env.MASTER_HEADER_AUTH as string,
+        value: token,
+        priority: "high",
+        sameSite: "strict"
+      });
+
     const res = await userState(token);
-    console.log(res);
+    return res;
   }catch{
-    redirect(process.env.LOGIN_URL as string);
+    return false;
   }
 }
