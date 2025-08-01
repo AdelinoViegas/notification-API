@@ -1,5 +1,15 @@
 import jsPDF from "jspdf";
-import { AppointmentRecord, PatientRecord, ScreeningRecord } from "@/components/pdf-button";
+import type { 
+  AppointmentRecord, 
+  PatientRecord, 
+  ScreeningRecord, 
+  Group 
+} from "@/components/pdf-button";
+import type { 
+  Assured,
+  Employee,
+  Enterprise
+} from "@/app/backend/api/clinical/types";
 // import { getDateInSlashFormat } from "./date-formater";
 
 const doc = new jsPDF();
@@ -7,9 +17,14 @@ const doc = new jsPDF();
 function patientRecord({
   personal,
   demography,
-  responsibles
+  responsibles,
+  group
 }: PatientRecord){ 
   const margin = { x: 10, y: 10 };
+  const patientGroup = JSON.parse(group) as Group; 
+  const assured = patientGroup?.group as Assured;
+  const employee = patientGroup?.group as Employee;
+  const enterprise = patientGroup?.group as Enterprise; 
 
   doc.setFontSize(10);
   doc.addImage('/logo.png', 'PNG', margin.x, margin.y, 19, 24);
@@ -216,7 +231,7 @@ function patientRecord({
   doc.setFont("Helvetica", "bold");
   doc.text("a ) Particular:", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text('particular', margin.x*3.4, margin.y);
+  doc.text(patientGroup?.type === "personal" ? "Particular" :"", margin.x*3.4, margin.y);
 
   margin.y += 10;
   margin.x = 10;
@@ -230,21 +245,21 @@ function patientRecord({
   doc.setFont("Helvetica", "bold");
   doc.text("Nome da Empresa:", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text('Particular', margin.x*4.368, margin.y);
+  doc.text(enterprise?.name ?? "", margin.x*4.368, margin.y);
   
   margin.x *= 7.6;
   
   doc.setFont("Helvetica", "bold");
   doc.text("Nª de Passe: ", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text("Empresa", margin.x*1.295, margin.y);
+  doc.text(enterprise?.passNumber ?? "", margin.x*1.295, margin.y);
 
   margin.x *= 1.54;
 
   doc.setFont("Helvetica", "bold");
   doc.text("Função: ", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text("Empresa", margin.x*1.128, margin.y);
+  doc.text(enterprise?.role ?? "", margin.x*1.128, margin.y);
 
   margin.y += 10;
   margin.x = 10;
@@ -258,21 +273,21 @@ function patientRecord({
   doc.setFont("Helvetica", "bold");
   doc.text("Nª de Passe:", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text("145720", margin.x*3.25, margin.y);
+  doc.text(employee?.passNumber ?? "", margin.x*3.25, margin.y);
   
   margin.x *= 5.3;
   
   doc.setFont("Helvetica", "bold");
   doc.text("Função: ", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text("Desenvolvedor Fullstack", margin.x*1.28, margin.y);
+  doc.text(employee?.role ?? "", margin.x*1.28, margin.y);
 
   margin.x *= 2.22;
 
   doc.setFont("Helvetica", "bold");
   doc.text("Área de Serviço: ", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text("Secção-A", margin.x*1.25, margin.y);
+  doc.text(employee?.workArea ?? "", margin.x*1.25, margin.y);
 
   margin.y += 10;
   margin.x = 10;
@@ -286,21 +301,21 @@ function patientRecord({
   doc.setFont("Helvetica", "bold");
   doc.text("Nome da Asseguradora:", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text("Nossa Seguros", margin.x*5.22, margin.y);
+  doc.text(assured.name ?? "", margin.x*5.22, margin.y);
   
   margin.x *= 8.58;
   
   doc.setFont("Helvetica", "bold");
   doc.text("Nª da Apólice: ", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text("215410", margin.x*1.296, margin.y);
+  doc.text(assured?.apolice?.toString() ?? "", margin.x*1.296, margin.y);
 
   margin.x *= 1.51;
 
   doc.setFont("Helvetica", "bold");
   doc.text("Nª de Telefone: ", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text("971203521", margin.x*1.21, margin.y);
+  doc.text(assured.tel ?? "", margin.x*1.21, margin.y);
  
   margin.y += 6;
   margin.x = 10;
@@ -316,7 +331,7 @@ function patientRecord({
   doc.setFont("Helvetica", "bold");
   doc.setFillColor("#ececec");
   doc.rect(margin.x, margin.y-4, 190, 6, 'F');
-  doc.text('4.Tipo de Acesso', margin.x, margin.y);
+  doc.text('5.Tipo de Acesso', margin.x, margin.y);
 
   margin.y += 10;
   margin.x = 10;

@@ -61,7 +61,8 @@ export default async function PatientForm({patientId}:{patientId: string}){
     acess: {
       type: accessType.type,
       hospital: 'hospital',
-    }
+    },
+    group: JSON.stringify(group)
   }
 
 	return(
