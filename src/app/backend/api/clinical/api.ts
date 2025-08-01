@@ -30,6 +30,7 @@ import {
 import { getGrantedUnitAccess } from "@/app/backend/api/clinical/urgency-bank-api";
 import { validatePatientDoc } from "@/lib/regexp";
 import { closePatientProcess } from "./process-api";
+import { getUsers as gUsers } from "../admin";
 
 type ChoosedGroup = Assured | Employee | Enterprise | undefined;
 
@@ -39,8 +40,6 @@ export type patientFilters = {
   priority?: string;
   page?: number;
 }
-
-// funções auxiliares
 
 async function allowUpdate(id: string){
   const doc = await processStateModel.findOne({ 
@@ -55,6 +54,7 @@ async function allowUpdate(id: string){
 }
 
 async function getUsers(){  
+   console.log(await gUsers());
   const users = await userModel.find();
   const formatedUsers = [];
 
