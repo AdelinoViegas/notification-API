@@ -9,7 +9,6 @@ import type {
 import type { 
   Assured,
   Employee,
-  Enterprise
 } from "@/app/backend/api/clinical/types";
 // import { getDateInSlashFormat } from "./date-formater";
 
@@ -19,14 +18,13 @@ function patientRecord({
   personal,
   demography,
   responsibles,
-  groupType,
   group
 }: PatientRecord){ 
   const margin = { x: 10, y: 10 };
   const patientGroup = JSON.parse(group) as Group; 
   const assured = patientGroup?.group as Assured;
   const employee = patientGroup?.group as Employee;
-  const enterprise = patientGroup?.group as Enterprise; 
+  /*const enterprise = patientGroup?.group as Enterprise;*/ 
 
   doc.setFontSize(10);
   doc.addImage('/logo.png', 'PNG', margin.x, margin.y, 19, 24);
