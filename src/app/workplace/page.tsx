@@ -16,8 +16,8 @@ export default async function Page(){
   ]);
  
   return(
-    <main className="bg-white h-screen flex-col lg:flex-row md-flex-row-reverse flex gap-3 items-center">
-      <div className="h-screen  max-w-[60%]">
+    <main className="flex bg-white h-[100%] flex-col-reverse lg:flex-row gap-3 items-center">
+      <div className="hidden md:block h-screen w-full lg:h-screen lg:max-w-[60%] shadow-md shadow-black rounded-t-3xl lg:rounded-none lg:rounded-r-3xl">
         <Carousel
          images={[
           {
@@ -29,7 +29,7 @@ export default async function Page(){
         ]}
         />
       </div>
-      <div className="px-3 py-2 mt-32 mx-auto lg:mt-0 ">
+      <div className="px-3 py-2 mt-32 mb-10 mx-auto lg:mt-0 lg:mb:0 w-full">
         <div className="flex flex-col gap-3 items-center">
           <Image 
             src={"/banner.png"}

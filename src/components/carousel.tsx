@@ -10,8 +10,6 @@ import "swiper/css/effect-fade";
 type ImageProps = {
   name: string,
   className?: string,
-  width?: number,
-  height?: number,
   alt?: string
 }
 
@@ -37,10 +35,9 @@ export default function Carousel({images}: CarouselProps){
             <Image
               className={
                 props.className ??
-                'rounded-t-3xl lg:rounded-none lg:rounded-r-3xl shadow-lg shadow-black w-full h-full'
+                'rounded-t-3xl lg:rounded-none lg:rounded-r-3xl w-full h-full'
               }
-              width={props.width ?? 500}
-              height={props.height ?? 500}
+              fill
               src={props.name}
               alt={props.alt ?? 'Image'}
             />
