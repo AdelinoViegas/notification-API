@@ -4,7 +4,7 @@ import {
   useEffect, 
   useActionState 
 } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Button from "@/components/ui/button";
 import { putInScreening } from "@/app/backend/api/clinical/api";
 import { useRouter } from "next/navigation";
@@ -24,7 +24,7 @@ export default function SendToScreening(){
       else
         toast.warn(state.message)
     }
-  }, [state]);
+  }, [state, router]);
 
   return(
     <div>

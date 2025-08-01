@@ -389,7 +389,7 @@ async function getSchedulePatientExams({
 async function getSchedulePatientExam(scheduleId: string){
   try{
     const schedule = await scheduleExamModel.findById({ _id: scheduleId });
-    const patient = await patientModel.findById({ _id: schedule?.patientId }).select({ fullname: 1 });
+    const patient = await patientModel.findById({ _id: schedule?.patientId }).select({ fullname: 1, age:1, gender:1});
     const unit = await unitModel.findById({ _id: schedule?.laboratoryId }).select({ name: 1});
     const user = await userModel.findById({ _id: schedule?.userId }).select({fullname: 1});
     const exams = [];
@@ -410,9 +410,11 @@ async function getSchedulePatientExam(scheduleId: string){
     }
 
     return {
-      patient: patient?.fullname,
-      laboratory: unit?.name,
-      user: user?.fullname,
+      patient: patient?.fullname as string,
+      age: patient?.age as number,
+      gender: patient?.gender as string,
+      laboratory: unit?.name as string,
+      user: user?.fullname as string,
       exams,
       examPrice: totalPrice?totalPrice:"0",
       detail: schedule?.detail,
