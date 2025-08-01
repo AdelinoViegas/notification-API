@@ -1,18 +1,22 @@
-import { redirect } from "next/navigation";
-import { middleware } from "./middleware";
+"use client";
 
-export default async function Auth({ 
-  searchParams
-}:{
-  searchParams: Promise<{ t: string }>
-}){
+import { useEffect } from "react";
+import { RESTproxy } from "./rest-proxy";
+import { useSearchParams, useRouter } from "next/navigation";
 
-  const { t } = await searchParams;
+export default function Auth(){
+  
+  const search = useSearchParams();
+  const token = ["h", "p", "s"].map(e => search.get(e)).join('.');
+  const router = useRouter();
 
-  if(!t) 
-    redirect(process.env.LOGIN_URL as string);
+  useEffect(()=>{
+    RESTproxy(token, true)
+    .then()
+    .finally(()=>router.replace("/clinical"))
 
-  await middleware(t);
-
-  return redirect("/clinical");
+  }, [token]);
+  return(
+    <>test {token.length} </>
+  )
 }

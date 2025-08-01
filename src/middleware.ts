@@ -1,9 +1,10 @@
 import { NextResponse, NextRequest } from 'next/server'
-import { middleware as RESTMiddle } from './app/auth/middleware' 
+import { RESTproxy } from './app/auth/rest-proxy' 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
-  if(await RESTMiddle())
+  if(await RESTproxy())
     return NextResponse.next();
+
   return NextResponse.redirect(new URL('/', process.env.LOGIN_URL));
 }
  

@@ -1,7 +1,6 @@
 "use server";
 
 import axios from "axios";
-import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 
 const instance = axios.create({ 
@@ -9,29 +8,30 @@ const instance = axios.create({
 });
 
 export async function userState(token: string){
+  console.log(token.length);
   instance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   const res = await instance.get("/users/myProfile/status");
   return res.status === 200;
 }
 
-export async function middleware(extToken?: string){
+export async function RESTproxy(extToken?: string, set = false){
   try{
-    const token = extToken ?? (await cookies()).get(process.env.MASTER_HEADER_AUTH as string)?.value;
+    const cache = await cookies();
+    const token = extToken || cache.get(process.env.COOKIE_AUTH_HEADER as string)?.value;
 
     if(!token)
       throw new Error("Impossivel de autenticar!");
 
-    if(!(await cookies()).has(process.env.MASTER_HEADER_AUTH as string))
-      (await cookies()).set({
-        name: process.env.MASTER_HEADER_AUTH as string,
+    if(set){
+      cache.set({
+        name: process.env.COOKIE_AUTH_HEADER as string,
         value: token,
-        priority: "high",
-        sameSite: "strict"
+        httpOnly: true
       });
+    }
 
-    const res = await userState(token);
-    return res;
-  }catch{
+    return await userState(token);
+  }catch {
     return false;
   }
 }
