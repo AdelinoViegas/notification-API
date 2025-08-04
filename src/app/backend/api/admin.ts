@@ -8,6 +8,14 @@ interface User {
   group: { name: string }
 }
 
+interface UserRole {
+  _id: string;
+  role: {
+    name: string;
+    description: string;
+  }
+}
+
 const instance = axios.create({ 
   baseURL: process.env.ADMIN_SRV_URL,
   headers: {
@@ -17,9 +25,7 @@ const instance = axios.create({
 
 export async function getUsers(): Promise<User[]>{
   const res = await instance.get("/users", {
-    params: {
-      g: "clinico"
-    }
+    params: { g: "clinico" }
   });
 
   return res.data.data;
@@ -27,10 +33,16 @@ export async function getUsers(): Promise<User[]>{
 
 export async function getUser(id: string){
   const res = await instance.get<User>("/users/user", {
-    params: {
-      id
-    }
+    params: { id }
   });
 
   return res.data;
+}
+
+export async function getUserRoles(id: string){
+  const res = await instance.get<{ data: UserRole[] }>("/users/roles", {
+    params: { id }
+  });
+
+  return res.data.data;
 }

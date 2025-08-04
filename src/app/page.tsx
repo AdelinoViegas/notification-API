@@ -9,7 +9,7 @@ import Button from '@/components/ui/button';
 import Image from 'next/image';
 import InputField from '@/components/ui/input-field';
 import { login } from '@/app/backend/api/manager/api';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { redirect, useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'react-toastify';
 
 function Login(){
@@ -94,6 +94,8 @@ function Login(){
   )
 }
 export default function Page(){
+  redirect("/clinical");
+  
   return(
     <main>
       <Suspense>

@@ -1,18 +1,27 @@
 "use server";
 
-import { SignJWT, jwtVerify } from 'jose';
+import { SignJWT, jwtVerify, type JWTPayload } from 'jose';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 const privateKey = new TextEncoder().encode(String(process.env.JWT_SECRET_KEY));
-const systemKey = new TextEncoder().encode(process.env.JWT_SECRET_ADMIN_KEY);
+const adminKey = new TextEncoder().encode(process.env.JWT_SECRET_ADMIN_KEY);
+
+interface DecPayload extends JWTPayload {
+  id: string;
+}
 
 export async function genWebToken(){
   return new SignJWT({ id: "", jti: "test"})
     .setProtectedHeader({ alg: "HS384" })
     .setIssuedAt()
     .setIssuer('urn:master-clinical:issuer')
-    .sign(systemKey)
+    .sign(adminKey)
+}
+
+async function decAdminJWT(token: string){
+  const { payload } = await jwtVerify<DecPayload>(token, adminKey);
+  return payload.id;
 }
 
 async function authJWT({
@@ -61,17 +70,30 @@ async function decryptAndVerifyJWT(token: string){
 }
 
 async function whoIsUser(){
+  // try{
+  //   if((await cookies()).has(String(process.env.MASTER_HEADER_AUTH))){
+  //     const token = (await cookies()).get(String(process.env.MASTER_HEADER_AUTH))?.value;
+  //     const { data } = await decryptAndVerifyJWT(String(token));
+  //     if(!data) throw new Error("");
+  //     return data?.userId;
+  //   }
+  //   throw new Error('sem login!', { cause: "no_login" });
+  // }catch{
+  //   console.log("sessão terminada!");
+  //   redirect('/?exit');
+  // }
   try{
-    if((await cookies()).has(String(process.env.MASTER_HEADER_AUTH))){
-      const token = (await cookies()).get(String(process.env.MASTER_HEADER_AUTH))?.value;
-      const { data } = await decryptAndVerifyJWT(String(token));
-      if(!data) throw new Error("");
-      return data?.userId;
-    }
-    throw new Error('sem login!', { cause: "no_login" });
-  }catch{
-    console.log("sessão terminada!");
-    redirect('/?exit');
+    const cache = await cookies();
+    const token = cache.get(process.env.COOKIE_AUTH_HEADER as string);
+    
+    if(!token)
+      throw new Error("sem cookies");
+    
+    const userId = await decAdminJWT(token.value);
+    console.log("jwt: ", userId);
+    return userId;
+  }catch { 
+    redirect("/clinical");
   }
 }
 

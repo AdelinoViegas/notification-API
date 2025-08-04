@@ -10,5 +10,8 @@ export async function middleware() {
 }
  
 export const config: NextConfig = {
-  matcher: '/clinical/:path*',
+  matcher: [
+    "/clinical/:path*",
+    "/workplace:path*"
+  ],
 }

@@ -12,7 +12,7 @@ export default function Auth(){
   useEffect(()=>{
     RESTproxy(token, true)
     .then()
-    .finally(()=>router.replace("/clinical"))
+    .finally(()=>router.replace("/workplace"))
 
   }, [token]);
   return(
