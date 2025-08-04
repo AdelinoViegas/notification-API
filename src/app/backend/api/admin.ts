@@ -61,11 +61,11 @@ export async function getGrantedRoles(){
           navLinks.push(route);
       }
     }
-
-    console.log("from admin api.ts: ", roles, navLinks);
+    
     return navLinks;
   }catch(e){
-    console.log("Error: ", e.response.data)
+    const err = e as Error;
+    console.log("Error: ", err)
     return [];
   }
 }

@@ -28,51 +28,35 @@ export const clinicalIcons = [
     Icon: FaUserDoctor
   },
   {
-    href: "/clinical/urgency-bank",
     route: 'urgency-bank',
-    label: 'Banco de Urgência',
     Icon: PiAmbulance
   },
   {
-    href: "/clinical/schedule-exams-services",
     route: 'schedule-exams-services',
-    label: 'Exames Agendados',
     Icon: RiCalendarScheduleLine
   },
   {
-    href: "/clinical/phisical-unit",
     route: 'phisical-unit',
-    label: 'Unidades Físicas',
     Icon: FaRegHospital
   },
   {
-    href: "/clinical/exams-services",
     route: 'exams-services',
-    label: 'Exames/Serviços Cadastrados',
     Icon: GrDocumentText
   },
   {
-    href: "/clinical/appointment",
     route: 'appointment',
-    label: 'Consultas Agendadas',
     Icon: RiCalendarScheduleLine
   },
   {
-    href: "/clinical/doctor-calendar",
     route: 'doctor-calendar',
-    label: 'Calendário dos Medicos',
     Icon: BsCalendar2Week
   },
   {
-    href: "/clinical/laboratory",
     route: 'laboratory',
-    label: 'Laboratório',
     Icon: GrTest
   },
   {
-    href: "/clinical/imaging",
     route: 'imaging',
-    label: 'Laboratório',
     Icon: FaRadiationAlt
   }
 ];
