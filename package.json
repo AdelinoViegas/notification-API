@@ -7,7 +7,7 @@
     "build": "yarn setup && next build",
     "start": "next start",
     "lint": "next lint",
-    "setup": "node clinical-setup.js"
+    "setup": "node clinical-setup.mjs"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",
