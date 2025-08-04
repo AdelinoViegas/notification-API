@@ -523,43 +523,6 @@ async function updatePermission(prev: unknown, formData: FormData){
   }
 }
 
-async function getGrantedPermission(routes: Route[]){
-  // try{
-  //   const user = await whoIsUser();
-  //   const grantedPermissions = await accessPermissionModel.find({userId: user});
-  //   const grantedAccessPermissions = [];
-    
-  //   for(const grantedPermission of grantedPermissions){
-  //     const permission = await permissionModel.findById({_id: grantedPermission.permissionId });
-  //     const hasAccessPermission = routes.find((route)=>{
-  //       if(route.route === permission?.route){
-  //         route.label = permission?.label as string; // usa o label do banco
-  //         return route;
-  //       }
-  //     });
-
-  //     if(hasAccessPermission)
-  //       grantedAccessPermissions.push({
-  //         href: hasAccessPermission.href,
-  //         label: hasAccessPermission.label,
-  //         route: hasAccessPermission.route,
-  //       });
-  //   }
-
-  //   return grantedAccessPermissions;
-  // }catch { 
-  //   return [];
-  // }
-
-  try{
-    const userId = await whoIsUser();
-    const res = await getUserRoles();
-    console.log("api")
-  }catch{
-    return []
-  }
-}
-
 async function resetUserPassword(prev: unknown, formData:FormData){
   try{
     const userId = formData.get('userId');
@@ -630,7 +593,6 @@ export {
   getUserPermissions,
   revokePermission,
   updatePermission,
-  getGrantedPermission,
   resetUserPassword,
   verifyRouteUserPermission,
   logout,

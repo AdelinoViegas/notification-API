@@ -70,18 +70,6 @@ async function decryptAndVerifyJWT(token: string){
 }
 
 async function whoIsUser(){
-  // try{
-  //   if((await cookies()).has(String(process.env.MASTER_HEADER_AUTH))){
-  //     const token = (await cookies()).get(String(process.env.MASTER_HEADER_AUTH))?.value;
-  //     const { data } = await decryptAndVerifyJWT(String(token));
-  //     if(!data) throw new Error("");
-  //     return data?.userId;
-  //   }
-  //   throw new Error('sem login!', { cause: "no_login" });
-  // }catch{
-  //   console.log("sessão terminada!");
-  //   redirect('/?exit');
-  // }
   try{
     const cache = await cookies();
     const token = cache.get(process.env.COOKIE_AUTH_HEADER as string);
@@ -90,7 +78,6 @@ async function whoIsUser(){
       throw new Error("sem cookies");
     
     const userId = await decAdminJWT(token.value);
-    console.log("jwt: ", userId);
     return userId;
   }catch { 
     redirect("/clinical");

@@ -11,8 +11,7 @@ export default function Auth(){
 
   useEffect(()=>{
     RESTproxy(token, true)
-    .then()
-    .finally(()=>router.replace("/workplace"))
+    .then(()=>router.replace("/workplace"))
 
   }, [token]);
   return(

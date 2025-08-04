@@ -1,7 +1,5 @@
 import Link from 'next/link';
 import NavLink from '@/components/clinical/nav-link';
-// import { getGrantedPermission } from '@/app/backend/api/manager/api';
-// import { clinicalRoutes } from '@/components/routes';
 import LogoutButton from '@/components/logout-button';
 import Image from 'next/image';
 import { getGrantedRoles } from '@/app/backend/api/admin';

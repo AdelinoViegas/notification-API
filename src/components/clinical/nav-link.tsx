@@ -16,7 +16,6 @@ export default function NavLink({ routes }:{ routes: Route[] }){
       {routes.map((item, index)=>{
         const urlString = pathname.split('/')[2]; 
         const currentRoute = !!(item.href.split('/').includes(urlString) && urlString);
-        // const HeroIcon = clinicalRoutes.find((props)=>props.route === item.route)?.Icon as HeroIcon;
         const Icon = icons.get(item.route)?.Icon;
 
         return(
