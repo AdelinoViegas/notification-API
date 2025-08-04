@@ -3,6 +3,8 @@
 import Header from "@/components/header";
 import { MyAreaChart, MyBarChart, MyLineChart, MyPieChart, MyRadarChart } from "@/components/charts";
 
+export const dynamic = "force-dynamic";
+
 export default function Page(){
   return(
     <main>

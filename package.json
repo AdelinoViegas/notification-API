@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "yarn build:ts && next dev --turbopack",
-    "build": "next build && yarn build:ws",
+    "dev": "yarn setup && next dev --turbopack",
+    "build": "yarn setup && next build && yarn build:ws",
     "start": "next start",
     "lint": "next lint",
     "build:ws": "tsc -p tsconfig.workers.json",

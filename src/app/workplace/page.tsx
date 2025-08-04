@@ -21,12 +21,8 @@ export default async function Page(){
       <div className="hidden md:block h-screen w-full lg:h-screen lg:max-w-[60%] shadow-md shadow-black rounded-t-3xl lg:rounded-none lg:rounded-r-3xl">
         <Carousel
          images={[
-          {
-            name:"/slide1.jpg"
-          },
-          {
-            name:"/slide2.jpg"
-          }
+          { name:"/slide1.jpg" },
+          { name:"/slide2.jpg" }
         ]}
         />
       </div>

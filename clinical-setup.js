@@ -32,20 +32,31 @@ const unitSchema = new Schema({
   timestamps: true,
 });
 
+const workplaceSchema = new Schema({
+  userId: Schema.Types.ObjectId,
+  workplaceId: Schema.Types.ObjectId,
+  actor: Schema.Types.ObjectId, 
+}, {
+  collection: 'user_workplace_access',
+  timestamps: true,
+});
+
 
 // models 
 const unitModel = con.model("Unit", unitSchema);
+const workplaceModel = con.model("Workplace", workplaceSchema);
 
 const main = async ()=>{
   try{
     const data = await unitModel.findOne();
     
     if(!data){
-      await unitModel.create({
-      name: "central",
-      unitTypeId: "workplace",
-    });
-
+      const central = await unitModel.create({
+        name: "Central",
+        unitTypeId: "workplace",
+      });
+      
+      await workplaceModel.create({ workplaceId: central._id });
       console.log("[+] clinical service configured!");
     }
     console.log("[*] master configured!");

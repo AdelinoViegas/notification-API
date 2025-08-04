@@ -1,21 +1,12 @@
 import axios from "axios";
 import { genWebToken, getUserToken } from "@/lib/web-token";
 import { clinicalRoutes } from '@/components/routes';
+import type { 
+  MyProfile, 
+  User, 
+  UserRole 
+} from "@/app/backend/api/types";
 
-interface User {
-  _id: string;
-  fullname: string;
-  username: string;
-  group: { name: string }
-}
-
-interface UserRole {
-  _id: string;
-  role: {
-    name: string;
-    path: string;
-  }
-}
 
 const instance = axios.create({ 
   baseURL: process.env.ADMIN_SRV_URL,
@@ -44,9 +35,16 @@ export async function getUser(id: string){
   return res.data;
 }
 
+// chamadas do usuário
 export async function getUserRoles(){
   clientInstance.defaults.headers.common["Authorization"] = `Bearer ${await getUserToken()}`
   const res = await clientInstance.get<UserRole[]>("/users/myProfile/roles");
+  return res.data;
+}
+
+export async function getMyProfile(){
+  clientInstance.defaults.headers.common["Authorization"] = `Bearer ${await getUserToken()}`
+  const res = await clientInstance.get<MyProfile>("/users/myProfile");
   return res.data;
 }
 
