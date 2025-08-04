@@ -25,16 +25,16 @@ import {
 
 // Dados simulados
 const data = [
-  { name: "Page A", uv: 4000, pv: 2400, amt: 2400 },
-  { name: "Page B", uv: 3000, pv: 1398, amt: 2210 },
-  { name: "Page C", uv: 2000, pv: 9800, amt: 2290 },
-  { name: "Page D", uv: 2780, pv: 3908, amt: 2000 },
-  { name: "Page E", uv: 1890, pv: 4800, amt: 2181 },
+  { name: "Jan", uv: 4000, pv: 2400, amt: 2400 },
+  { name: "Fev", uv: 3000, pv: 1398, amt: 2210 },
+  { name: "Mar", uv: 2000, pv: 9800, amt: 2290 },
+  { name: "Maio", uv: 2780, pv: 3908, amt: 2000 },
+  { name: "Abr", uv: 1890, pv: 4800, amt: 2181 },
 ];
 
 const pieData = [
-  { name: "UV", value: data.reduce((acc, d) => acc + d.uv, 0) },
-  { name: "PV", value: data.reduce((acc, d) => acc + d.pv, 0) },
+  { name: "Utentes Registrados", value: data.reduce((acc, d) => acc + d.uv, 0) },
+  { name: "Utentes Atendidos", value: data.reduce((acc, d) => acc + d.pv, 0) },
 ];
 
 const radarData = data.map((d) => ({
@@ -65,7 +65,7 @@ export function MyBarChart() {
 // LineChart
 export function MyLineChart() {
   return (
-    <ResponsiveContainer width="100%" height={400}>
+    <ResponsiveContainer width="100%" height={"100%"}>
       <LineChart data={data}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="name" />

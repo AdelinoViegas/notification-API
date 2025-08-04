@@ -9,11 +9,10 @@ import {
   externalResultsModel,
 } from "@/app/backend/models/clinical";
 import { officeModel } from "@/app/backend/models/clinical";
-import { whoIsUser } from "@/lib/web-token";
+import { getUserId } from "@/lib/web-token";
 import { findDoctorCalendar } from "@/app/backend/api/clinical/scheduling-api";
 import { getDateInSlashFormat } from "@/lib/date-formater";
 import { userModel } from "@/app/backend/models/manager";
-import { signNotification } from "./process-api";
 import { FileHandler } from "@/lib/client-files";
 import { ServerFileHandler } from "@/lib/server-files";
 
@@ -82,7 +81,7 @@ async function sendPatientToOffice(prev: unknown, formData: FormData){
     // if(!service?.price){
     //   await officeModel.create({
     //     scheduleId,
-    //     userId: await whoIsUser(),
+    //     userId: await getUserId(),
     //   });
   
     // }else{
@@ -91,7 +90,7 @@ async function sendPatientToOffice(prev: unknown, formData: FormData){
 
     //   await officeModel.create({
     //     scheduleId,
-    //     userId: await whoIsUser(),
+    //     userId: await getUserId(),
     //   });
     // }
 
@@ -103,7 +102,7 @@ async function sendPatientToOffice(prev: unknown, formData: FormData){
     
     await officeModel.create({
       scheduleId,
-      userId: await whoIsUser(),
+      userId: await getUserId(),
     });
 
     await scheduleAppointmentModel.updateOne({_id: scheduleId}, { served: true });
@@ -146,7 +145,7 @@ async function getPatients({
       await scheduleAppointmentModel.findOne({ _id: appointment.scheduleId }):
       await scheduleAppointmentModel.findOne({ 
         _id: appointment.scheduleId,
-        doctorId: await whoIsUser(),
+        doctorId: await getUserId(),
       });
 
       if(!scheduledAppointment)
@@ -341,18 +340,6 @@ async function requestReschedule(prev: unknown, formData: FormData){
       doctorReschedule: true
     });
 
-    const scheduleAppoint = await scheduleAppointmentModel.findById({ _id: patientInOffice?.scheduleId });
-    const patient = await patientModel.findById({ _id: scheduleAppoint?.patientId }).select({ fullname: 1 });
-    const userDoctor = await userModel.findById({ _id: await whoIsUser() }).select({ fullname: 1 });
-     
-    await signNotification({
-      title: "Pedido de remarcação",
-      sinopse: `O Dr.${userDoctor?.fullname} pediu um reagendamento para o utente Sr(a).${patient?.fullname}`,
-      target: "appointment",
-      type: "",
-      dataId: scheduleAppoint?._id.toString(),
-    });
-
     return {
       message: 'Solicitação enviada com sucesso!',
       status: true,
@@ -415,7 +402,7 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
         mimeType: file.type,
         binaryData: Buffer.from(await file.arrayBuffer())
       },
-      userId: await whoIsUser()
+      userId: await getUserId()
     });
 
     return {

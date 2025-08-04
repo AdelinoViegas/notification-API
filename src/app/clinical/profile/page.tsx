@@ -4,14 +4,14 @@ import { redirect } from "next/navigation";
 import Button from "@/components/ui/button";
 import Header from "@/components/header";
 import InputField from "@/components/ui/input-field";
-import { whoIsUser } from "@/lib/web-token";
+import { getUserId } from "@/lib/web-token";
 import { getUser } from "@/app/backend/api/manager/api";
 //import { getUser as getClinicalUser } from "@/app/backend/api/clinical/api";
 
 export const dynamic = "force-dynamic";
 
 export default async function Page(){
-  const userId = await whoIsUser();
+  const userId = await getUserId();
   if(!userId) 
     redirect('/');
   const user = await getUser(userId); 

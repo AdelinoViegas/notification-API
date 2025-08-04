@@ -7,7 +7,6 @@ import {
   accessPermissionModel,
   loginAccessTokensModel
 } from "@/app/backend/models/manager";
-import type { Route } from "@/app/backend/api/manager/types";
 import { cookies, headers } from "next/headers";
 import { getUserAccessLimit } from "@/lib/access-limit";
 import { 
@@ -17,7 +16,7 @@ import {
 import masterAutoSetup from "@/app/backend/api/manager/setup";
 import { 
   authJWT, 
-  whoIsUser 
+  getUserId 
 } from "@/lib/web-token";
 import { redirect } from "next/navigation";
 import { exitFromWorkplace } from "@/app/backend/api/clinical/workplace-api";
@@ -110,7 +109,7 @@ async function login(prev: unknown, formData: FormData){
 
 async function logout(){
   if((await cookies()).has(String(process.env.MASTER_HEADER_AUTH))){
-    const userId = await whoIsUser();
+    const userId = await getUserId();
     await loginAccessTokensModel.updateOne({ userId, inUse: true }, {  inUse: false });
 
     await exitFromWorkplace();
@@ -158,7 +157,7 @@ async function signUser(prev: unknown, formData: FormData){
       await workplaceModel.create({
         userId: user._id,
         workplaceId: unitWorkplace?._id,
-        actor: await whoIsUser(),
+        actor: await getUserId(),
       });
     }
    
@@ -432,7 +431,7 @@ async function checkUserPermission(pathname: string){
       throw new Error("Permissão inválida", { cause: "not_found" });
     
     const grantedAccess = await accessPermissionModel.findOne({ 
-      userId: await whoIsUser(),
+      userId: await getUserId(),
       permissionId: resolved._id 
     });
     
@@ -522,35 +521,6 @@ async function updatePermission(prev: unknown, formData: FormData){
   }
 }
 
-async function getGrantedPermission(routes: Route[]){
-  try{
-    const user = await whoIsUser();
-    const grantedPermissions = await accessPermissionModel.find({userId: user});
-    const grantedAccessPermissions = [];
-    
-    for(const grantedPermission of grantedPermissions){
-      const permission = await permissionModel.findById({_id: grantedPermission.permissionId });
-      const hasAccessPermission = routes.find((route)=>{
-        if(route.route === permission?.route){
-          route.label = permission?.label as string; // usa o label do banco
-          return route;
-        }
-      });
-
-      if(hasAccessPermission)
-        grantedAccessPermissions.push({
-          href: hasAccessPermission.href,
-          label: hasAccessPermission.label,
-          route: hasAccessPermission.route,
-        });
-    }
-
-    return grantedAccessPermissions;
-  }catch { 
-    return [];
-  }
-}
-
 async function resetUserPassword(prev: unknown, formData:FormData){
   try{
     const userId = formData.get('userId');
@@ -585,7 +555,7 @@ async function resetUserPassword(prev: unknown, formData:FormData){
 
 async function verifyRouteUserPermission(targetUrl: string){
   try{
-    const userId = await whoIsUser(); 
+    const userId = await getUserId(); 
     const requestedUrl = targetUrl.split('/')[2];
 
     if(userId){
@@ -621,7 +591,6 @@ export {
   getUserPermissions,
   revokePermission,
   updatePermission,
-  getGrantedPermission,
   resetUserPassword,
   verifyRouteUserPermission,
   logout,

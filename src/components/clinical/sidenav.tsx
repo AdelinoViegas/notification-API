@@ -1,12 +1,11 @@
 import Link from 'next/link';
 import NavLink from '@/components/clinical/nav-link';
-import { getGrantedPermission } from '@/app/backend/api/manager/api';
-import { clinicalRoutes } from '@/components/routes';
 import LogoutButton from '@/components/logout-button';
 import Image from 'next/image';
+import { getGrantedRoles } from '@/app/backend/api/admin';
 
 export default async function SideNav(){
-  const permissionGranteds = await getGrantedPermission(clinicalRoutes);
+  const routes = await getGrantedRoles();
 
   return(
     <div className="bg-white border-r flex sm:h-full flex-col px-3 py-4 md:px-2">
@@ -31,7 +30,7 @@ export default async function SideNav(){
       </Link>
 
       <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
-        <NavLink routes={permissionGranteds} />
+        <NavLink routes={routes} />
         <div className="hidden h-auto w-full grow md:block rounded-md" />
         <LogoutButton />
       </div>

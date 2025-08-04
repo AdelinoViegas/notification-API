@@ -81,7 +81,7 @@ function MonitorAccess({
         });
       }
     })
-  }, [patientId, place]);
+  }, []);
 
   return<></>;
 }

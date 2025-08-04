@@ -6,7 +6,7 @@ import Button from "@/components/ui/button";
 import InputField from "@/components/ui/input-field";
 import Selection, { SelectionOption } from "./ui/selection";
 import { userCategory } from '@/app/backend/api/clinical/translator';
-import { updateUser } from "@/app/backend/api/clinical/api";
+import { addUser } from "@/app/backend/api/clinical/api";
 import { toast } from "react-toastify";
 
 export default function UserClinicalConfig({ 
@@ -26,7 +26,7 @@ export default function UserClinicalConfig({
   services: SelectionOption[];
   specialties: SelectionOption[];
 }){
-  const [ state, action ] = useActionState(updateUser, { message: "", status: false });
+  const [ state, action ] = useActionState(addUser, { message: "", status: false });
 
   useEffect(()=>{
     if(state.message){
@@ -41,7 +41,7 @@ export default function UserClinicalConfig({
   return(
     <div>
       <form action={action}>
-        <input type="hidden" name="userId" value={userId} />
+        <input type="hidden" name="id" value={userId} />
         <Selection
           label="Categoria"
           name="categoryId"
