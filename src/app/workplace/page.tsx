@@ -1,18 +1,19 @@
 import Image from "next/image";
 import Header from "@/components/header";
-import { getUser } from "@/app/backend/api/manager/api";
+// import { getUser } from "@/app/backend/api/manager/api";
 import { whoIsUser } from "@/lib/web-token";
 import WorkplaceFrom from "@/components/forms/workplace-form";
 import { getGrantedUnitAccess } from "@/app/backend/api/clinical/urgency-bank-api";
 import Carousel from "@/components/carousel";
+import { getUser } from "../backend/api/admin";
 
 export const dynamic = "force-dynamic";
 
 export default async function Page(){
-  const userId = await whoIsUser() as string;
+  const id = await whoIsUser();
   const [ units, user] = await Promise.all([
-    getGrantedUnitAccess(userId),
-    getUser(userId)
+    getGrantedUnitAccess(id),
+    getUser(id)
   ]);
  
   return(

@@ -14,23 +14,17 @@ import { FaRadiationAlt } from "react-icons/fa";
 
 import type { Route } from "@/app/backend/api/manager/types";
 
-const clinicalRoutes:Route[] = [
+export const clinicalIcons = [
   {
-    href: "/clinical/patient",
     route: 'patient',
-    label: 'Utentes',
     Icon: FiUsers,
   },
   {
-    href: "/clinical/screening",
     route: 'screening',
-    label: 'Triagem',
     Icon: LuStethoscope
   },
   {
-    href: "/clinical/office",
     route: 'office',
-    label: 'Consultório',
     Icon: FaUserDoctor
   },
   {
@@ -80,6 +74,64 @@ const clinicalRoutes:Route[] = [
     route: 'imaging',
     label: 'Laboratório',
     Icon: FaRadiationAlt
+  }
+];
+
+const clinicalRoutes = [
+  {
+    href: "/clinical/patient",
+    route: 'patient',
+    label: 'Utentes',
+  },
+  {
+    href: "/clinical/screening",
+    route: 'screening',
+    label: 'Triagem',
+  },
+  {
+    href: "/clinical/office",
+    route: 'office',
+    label: 'Consultório',
+  },
+  {
+    href: "/clinical/urgency-bank",
+    route: 'urgency-bank',
+    label: 'Banco de Urgência',
+  },
+  {
+    href: "/clinical/schedule-exams-services",
+    route: 'schedule-exams-services',
+    label: 'Exames Agendados',
+  },
+  {
+    href: "/clinical/phisical-unit",
+    route: 'phisical-unit',
+    label: 'Unidades Físicas',
+  },
+  {
+    href: "/clinical/exams-services",
+    route: 'exams-services',
+    label: 'Exames/Serviços Cadastrados',
+  },
+  {
+    href: "/clinical/appointment",
+    route: 'appointment',
+    label: 'Consultas Agendadas',
+  },
+  {
+    href: "/clinical/doctor-calendar",
+    route: 'doctor-calendar',
+    label: 'Calendário dos Medicos',
+  },
+  {
+    href: "/clinical/laboratory",
+    route: 'laboratory',
+    label: 'Laboratório',
+  },
+  {
+    href: "/clinical/imaging",
+    route: 'imaging',
+    label: 'Laboratório',
   }
 ];
 

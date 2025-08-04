@@ -97,6 +97,12 @@ async function whoIsUser(){
   }
 }
 
+export async function getUserToken(){
+  const cache = await cookies();
+  const token = cache.get(process.env.COOKIE_AUTH_HEADER as string);
+  return token?.value;
+}
+
 export {
   decryptAndVerifyJWT,
   authJWT,

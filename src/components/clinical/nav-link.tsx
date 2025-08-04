@@ -3,18 +3,21 @@
 import Link from "next/link";
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
-import { type Route, HeroIcon } from '@/app/backend/api/manager/types';
-import { clinicalRoutes } from '@/components/routes';
+import { type Route } from '@/app/backend/api/manager/types';
+import { clinicalIcons } from '@/components/routes';
 
 export default function NavLink({ routes }:{ routes: Route[] }){
   const pathname = usePathname();
+  const icons = new Map<string, typeof clinicalIcons[number]>();
+  clinicalIcons.forEach(e => icons.set(e.route, e));
 
   return(
     <>
       {routes.map((item, index)=>{
         const urlString = pathname.split('/')[2]; 
         const currentRoute = !!(item.href.split('/').includes(urlString) && urlString);
-        const HeroIcon = clinicalRoutes.find((props)=>props.route === item.route)?.Icon as HeroIcon;
+        // const HeroIcon = clinicalRoutes.find((props)=>props.route === item.route)?.Icon as HeroIcon;
+        const Icon = icons.get(item.route)?.Icon;
 
         return(
           <Link
@@ -25,7 +28,7 @@ export default function NavLink({ routes }:{ routes: Route[] }){
               'text-blue-500 font-bold bg-blue-100 border-blue-300': currentRoute
             }
             )}>
-            <HeroIcon fontSize={25} />
+            {!!Icon && <Icon fontSize={25} />}
             <p className="hidden md:block">{item.label}</p>
           </Link>
         );

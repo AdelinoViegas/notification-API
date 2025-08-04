@@ -1,5 +1,6 @@
 import axios from "axios";
-import { genWebToken } from "@/lib/web-token";
+import { genWebToken, getUserToken } from "@/lib/web-token";
+import { clinicalRoutes } from '@/components/routes';
 
 interface User {
   _id: string;
@@ -12,7 +13,7 @@ interface UserRole {
   _id: string;
   role: {
     name: string;
-    description: string;
+    path: string;
   }
 }
 
@@ -21,6 +22,10 @@ const instance = axios.create({
   headers: {
     Authorization: `Bearer ${await genWebToken()}`
   } 
+});
+
+const clientInstance = axios.create({ 
+  baseURL: process.env.ADMIN_SRV_URL
 });
 
 export async function getUsers(): Promise<User[]>{
@@ -39,10 +44,28 @@ export async function getUser(id: string){
   return res.data;
 }
 
-export async function getUserRoles(id: string){
-  const res = await instance.get<{ data: UserRole[] }>("/users/roles", {
-    params: { id }
-  });
+export async function getUserRoles(){
+  clientInstance.defaults.headers.common["Authorization"] = `Bearer ${await getUserToken()}`
+  const res = await clientInstance.get<UserRole[]>("/users/myProfile/roles");
+  return res.data;
+}
 
-  return res.data.data;
+export async function getGrantedRoles(){
+  try{
+    const roles = await getUserRoles();
+    const navLinks = [];
+
+    for (const role of roles){
+      for (const route of clinicalRoutes){
+        if(route.route === role.role.path)
+          navLinks.push(route);
+      }
+    }
+
+    console.log("from admin api.ts: ", roles, navLinks);
+    return navLinks;
+  }catch(e){
+    console.log("Error: ", e.response.data)
+    return [];
+  }
 }
