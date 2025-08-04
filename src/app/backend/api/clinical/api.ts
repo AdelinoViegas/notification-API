@@ -114,13 +114,14 @@ async function getDoctors(){
 
 async function getUser(id: string){
   const user = await RESTgetUser(id);
+  const clinical = await userModel.findOne({ userId: id });
 
   return {
-    category: "Ind",
-    categoryId: "test",
-    specialtyId: "test",
-    orderNumber: 123456,
-    serviceId: "test",
+    category: clinical?.categoryId?.toString() as string,
+    categoryId: clinical?.categoryId?.toString() as string,
+    specialtyId: clinical?.specialtyId?.toString() as string,
+    orderNumber: clinical?.orderNumber as number,
+    serviceId: clinical?.serviceId?.toString() as string,
     ...user
   }
   // const clinicalUser = await userModel.findOne({ userId });
@@ -139,62 +140,47 @@ async function getUser(id: string){
   // }
 }
 
-async function signUser(prev: unknown, formData: FormData){
+
+async function addUser(prev: unknown, formData: FormData){
   try{
-    const userId = formData.get("userId") as string;
+    const id = formData.get("id") as string;
     const orderNumber = formData.get("orderNumber") as string;
     const officeId = formData.get("officeId") as string;
     const roleId = formData.get("roleId") as string;
     const categoryId = formData.get("categoryId") as string;
+    const specialtyId = formData.get("specialtyId");
+    const serviceId = formData.get("serviceId");
 
-    await userModel.create({
-      userId,
+    const hasUser = await userModel.findOneAndUpdate({ userId: id }, {
       orderNumber,
       officeId,
       roleId,
       categoryId,
-    });
-
-    return {
-      message: "Usuário clínico registrado!",
-      status: true,
-    };
-  }catch(e: unknown){
-    const err = e as Error & {code: number};
-    console.log(err.code)
-    return {
-      message: "Falha no registro",
-      status: false
-    }
-  }
-}
-
-async function updateUser(prev: unknown, formData: FormData){
-  try{
-    const userId = formData.get("userId") as string;
-    const orderNumber = formData.get("orderNumber") as string;
-    const serviceId = formData.get("serviceId") as string;
-    const specialtyId = formData.get("specialtyId") as string;
-    const categoryId = formData.get("categoryId") as string;  
-
-    await userModel.updateOne({ userId }, {
-      orderNumber,
-      serviceId,
       specialtyId,
-      categoryId
+      serviceId
     });
-    
-    return {
-      message: "Actualizado com sucesso!",
-      status: true,
-    };
-  }catch(e: unknown){
-    const err = e as Error;
+
+    if(!hasUser)
+      await userModel.create({
+        userId: id,
+        orderNumber,
+        officeId,
+        roleId,
+        categoryId,
+        specialtyId,
+        serviceId
+      });
 
     return {
-      message: "Falha na actualização!",
-      status: false,
-      detail: err.message, 
+      message: !!hasUser
+        ? "Usuário actualizado com sucesso!"
+        :"Usuário registrado com sucesso!",
+      status: true,
+    };
+  }catch {
+    return {
+      message: "Não foi possivel registrar!",
+      status: false
     }
   }
 }
@@ -1004,8 +990,6 @@ export {
   getUsers,
   getUser,
   getDoctors,
-  signUser,
-  updateUser,
   signPatient,
   getPatients,
   getPatient,
@@ -1021,5 +1005,6 @@ export {
   finishScreening,
   signSpecialty,
   getScreening,
-  insertScreening
+  insertScreening,
+  addUser
 };

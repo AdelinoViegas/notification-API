@@ -1,6 +1,7 @@
 import { Schema } from "mongoose";
+import type { ClinicalUser } from "./types";
 
-const userSchema = new Schema({
+const userSchema = new Schema<ClinicalUser>({
   userId: {
     type: Schema.Types.ObjectId,
     unique: true,
@@ -9,6 +10,7 @@ const userSchema = new Schema({
   serviceId: Schema.Types.ObjectId,
   specialtyId: Schema.Types.ObjectId,
   categoryId: String, // do arquivo translator.ts
+  officeId: Schema.Types.ObjectId
 }, {
   timestamps: true,
   collection: "users",
