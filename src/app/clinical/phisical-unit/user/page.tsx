@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 export default async function Page() {
   
   const userRows = tableFormater(await getUsers() as ClinicalUser[]);
-
+  console.log(getUsers());
   return (
     <main className="space-y-3">
       <div className="mt-6">
@@ -24,7 +24,7 @@ export default async function Page() {
         />
       </div>
   
-      <Table
+      {/*<Table
         baseRowLink="/clinical/phisical-unit/user"
         columns={[
           "Data de Registo", 
@@ -34,7 +34,7 @@ export default async function Page() {
           "Nº de Areas de Trabalho"
         ]} 
         rows={userRows}
-      />
+      />*/}
     </main>
   );
 }

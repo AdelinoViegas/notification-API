@@ -7,7 +7,6 @@ import {
 import { useParams, useRouter } from "next/navigation";
 import Button from "@/components/ui/button";
 import { putInScreening } from "@/app/backend/api/clinical/api";
-import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
 export default function SendToScreening(){
