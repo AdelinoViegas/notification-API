@@ -33,7 +33,7 @@ import { closePatientProcess } from "./process-api";
 import { 
   getUsers as RESTgetUsers,
   getUser as RESTgetUser 
-} from "../admin";
+} from "@/app/backend/api/admin";
 
 type ChoosedGroup = Assured | Employee | Enterprise | undefined;
 

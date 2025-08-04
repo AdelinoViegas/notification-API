@@ -44,7 +44,9 @@ import {
   patientHospitalizedSchema 
 } from "@/app/backend/schemas/clinical/urgency-bank";
 
-const clinical = createConnection(`${process.env.MONGO_URL}`, { dbName: "master_clinical" });
+const clinical = createConnection(process.env.MONGO_URL as string, {
+  dbName: process.env.CLINICAL_DB_NAME
+});
 
 const userModel = clinical.model('User', userSchema);
 const currentLocationModel = clinical.model("CurrentLocation", currentLocationSchema);
@@ -58,7 +60,7 @@ const screeningModel = clinical.model('Screening', screeningSchema);
 const processStateModel = clinical.model("ProcessState", processStateSchema);
 const triedModel = clinical.model("Tried", triedSchema);
 
-//scheduling
+//agendamentos (schedulings)
 const examModel = clinical.model("ExamService", examSchema);
 const examGroupModel = clinical.model("ExamGroup", examGroupSchema);
 const examCategoryModel = clinical.model('ExamCategory', examCategorySchema);
@@ -79,7 +81,7 @@ const notificationModel = clinical.model("Notification", notificationSchema);
 const serviceResultModel = clinical.model("ServiceResult", serviceResultSchema);
 const externalResultsModel = clinical.model('ExternalResults', externalResultSchema);
 
-//urgency-bank
+// banco de urgencia
 const urgencyBankModel = clinical.model("UrgencyBank", urgencyBankSchema);
 const urgencyServiceModel = clinical.model('UrgencyService', urgencyService);
 const patientHospitalizedModel = clinical.model("PatientHospitalized", patientHospitalizedSchema);

@@ -1,7 +1,3 @@
-import { 
-  FaUserSecret as UsersIcon,
-  FaKey as KeyIcon 
-} from "react-icons/fa6";
 import { LuStethoscope } from "react-icons/lu";
 import { PiAmbulance } from "react-icons/pi";
 import { FiUsers } from "react-icons/fi";
@@ -11,8 +7,6 @@ import { BsCalendar2Week } from "react-icons/bs";
 import { GrDocumentText } from "react-icons/gr";
 import { GrTest } from "react-icons/gr";
 import { FaRadiationAlt } from "react-icons/fa";
-
-import type { Route } from "@/app/backend/api/manager/types";
 
 export const clinicalIcons = [
   {
@@ -119,18 +113,16 @@ const clinicalRoutes = [
   }
 ];
 
-const managerRoutes:Route[] = [
+const managerRoutes = [
   {
     href: '/manager/users',
     route: '/manager/users',
     label: 'Usuários',
-    Icon: UsersIcon,
   },
   {
     href: '/manager/permissions',
     route: '/manager/users',
     label: 'Permissões',
-    Icon: KeyIcon,
   }
 ];
 

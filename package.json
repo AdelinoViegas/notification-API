@@ -3,11 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "tsc -p tsconfig.workers.json && next dev --turbopack",
+    "dev": "yarn build:ts && next dev --turbopack",
     "build": "next build && yarn build:ws",
     "start": "next start",
     "lint": "next lint",
-    "build:ws": "tsc -p tsconfig.workers.json"
+    "build:ws": "tsc -p tsconfig.workers.json",
+    "setup": "node clinical-setup.js"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",
@@ -24,8 +25,8 @@
     "react-dom": "19.0.0",
     "react-icons": "^5.4.0",
     "react-toastify": "^10.0.6",
-    "swiper": "^11.2.10",
-    "recharts": "^3.1.0"
+    "recharts": "^3.1.0",
+    "swiper": "^11.2.10"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -34,6 +35,7 @@
     "@types/react": "19.0.7",
     "@types/react-dom": "19.0.3",
     "@types/validator": "^13.12.2",
+    "dotenv": "^17.2.1",
     "eslint": "^9",
     "eslint-config-next": "15.1.5",
     "postcss": "^8",
