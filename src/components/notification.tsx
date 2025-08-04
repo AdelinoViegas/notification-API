@@ -14,7 +14,7 @@
 // import { IoMdOpen } from "react-icons/io";
 // import clsx from "clsx";
 // import { getDataAndHoursFormat } from "@/lib/date-formater";
-// import { whoIsUser } from "@/lib/web-token";
+// import { getUserId } from "@/lib/web-token";
 // import { TbMessage2 } from "react-icons/tb";
 // type Notification = {
 //   _id: string;
@@ -76,7 +76,7 @@
 //         throw new Error();
 
 //       const lastNotification = notify.notifications[notify.notifications.length - 1];
-//       const currentUserId = await whoIsUser();
+//       const currentUserId = await getUserId();
       
 //       if(lastNotification.creator._id !== currentUserId)
 //         await playSound();

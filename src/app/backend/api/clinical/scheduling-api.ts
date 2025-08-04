@@ -1,6 +1,6 @@
 "use server";
 
-import { whoIsUser } from "@/lib/web-token";
+import { getUserId } from "@/lib/web-token";
 import { 
   getDataAndHoursFormat, 
   getDateInSlashFormat 
@@ -313,7 +313,7 @@ async function schedulePatientExam(prev: unknown, formData: FormData){
       dateTime: dateTime?dateTime:new Date(),
       exams,
       detail,
-      userId: await whoIsUser()
+      userId: await getUserId()
     });
 
     return {
@@ -442,7 +442,7 @@ async function archivingScheduleExam(prev: unknown, formData: FormData){
     const cancel = new examCancelModel({
       scheduleId,
       reason,
-      userId: (await whoIsUser()) as string, 
+      userId: (await getUserId()) as string, 
     });
 
     await scheduleExamModel.updateOne({ _id: scheduleId }, { canceled: true });
@@ -501,7 +501,7 @@ async function signExamResult(prev: unknown, formData: FormData){
     const id = formData.get("scheduleId") as string;
     const scheduleId = await scheduleExamModel.findById({ _id:id }).select({_id:1});
     const detail = formData.get("result") as string; 
-    const userId = await whoIsUser();
+    const userId = await getUserId();
     //const resultExists = await examResultModel.findOne({scheduleId})
 
     const examResult = new examResultModel({
@@ -595,7 +595,7 @@ async function scheduleAppointment(prev: unknown, formData: FormData){
       doctorDay,
       doctorTime,
       consultId,
-      userId: await whoIsUser(),
+      userId: await getUserId(),
       patientId,
       detail,
     });
@@ -734,7 +734,7 @@ async function rescheduleAppointment(prev: unknown, formData: FormData){
       
       await scheduleAppointmentModel.updateOne({ _id: scheduleId }, { 
         doctorTime, 
-        userId: await whoIsUser(),
+        userId: await getUserId(),
         canceled: isArchived?false:true, 
         doctorReschedule: false,
       });
@@ -760,7 +760,7 @@ async function rescheduleAppointment(prev: unknown, formData: FormData){
         doctorDay,
         doctorTime,
         canceled: isArchived?false:true,
-        userId: await whoIsUser(),
+        userId: await getUserId(),
         doctorReschedule: false,
       });
     }
@@ -801,7 +801,7 @@ async function archivingScheduleAppointment(prev: unknown, formData: FormData){
       canceled: true,
       archiving: {
         reason,
-        userId: await whoIsUser(),
+        userId: await getUserId(),
       } 
     });
 
@@ -835,7 +835,7 @@ async function unArchiving(prev: unknown, formData: FormData){
     const canceledAppointment = new appointmentCancelModel({ 
       scheduleId, 
       reason, 
-      userId: await whoIsUser(),
+      userId: await getUserId(),
     });
 
     await canceledAppointment.save();

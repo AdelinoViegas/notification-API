@@ -1,6 +1,6 @@
 'use server';
 
-import { whoIsUser } from "@/lib/web-token";
+import { getUserId } from "@/lib/web-token";
 // import { userModel as managerUserModel } from '@/app/backend/models/manager';
 import {
   Responsable,
@@ -50,7 +50,7 @@ async function allowUpdate(id: string){
     isInUse: true 
   }).select({ _id: 1 });
   
-  const userId = await whoIsUser();
+  const userId = await getUserId();
 
   if(doc && doc.userId?.toString() !== userId) 
     throw new Error("Paciente está em processo de antendimento!", { cause: "in_use" });
@@ -206,7 +206,7 @@ async function signPatient(prev: unknown, formData: FormData){
       tel: patientTel,
       documentation: patientDocument,
       lang: language,
-      userId: await whoIsUser()
+      userId: await getUserId()
     });
 
     // locations info
@@ -674,7 +674,7 @@ async function putInScreening(prev: unknown, formData: FormData){
     
     await screeningModel.create({
       patientId: patient?._id,
-      userId: await whoIsUser()
+      userId: await getUserId()
     });
 
     return {
@@ -847,7 +847,7 @@ async function insertScreening(prev: unknown, formData: FormData){
   
     userPayload['patientId'] = patientId;
     userPayload['t'] = userPayload['t'].trim();
-    userPayload['userId'] = (await whoIsUser()) as string;
+    userPayload['userId'] = (await getUserId()) as string;
 
     if(userPayload['t'] === "vital-signals"){
       const w = Number(userPayload.weight);
@@ -869,7 +869,7 @@ async function insertScreening(prev: unknown, formData: FormData){
       }, userPayload['t'] === "vital-signals"
       ?{ 
         vitalSignals: userPayload,
-        userId: await whoIsUser()
+        userId: await getUserId()
       }
       :userPayload
     );
@@ -921,13 +921,13 @@ async function finishScreening(prev: unknown, formData: FormData){
 
     await screeningModel.updateOne({ _id: scrPatient._id }, { 
       served: true,
-      userId: await whoIsUser() 
+      userId: await getUserId() 
     });
 
     const tried = await triedModel.create({
       srcId: scrPatient?._id,
       patientId,
-      userId: await whoIsUser(),
+      userId: await getUserId(),
       serviceId
     });
 

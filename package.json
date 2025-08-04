@@ -4,10 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "yarn setup && next dev --turbopack",
-    "build": "yarn setup && next build && yarn build:ws",
+    "build": "yarn setup && next build",
     "start": "next start",
     "lint": "next lint",
-    "build:ws": "tsc -p tsconfig.workers.json",
     "setup": "node clinical-setup.js"
   },
   "dependencies": {

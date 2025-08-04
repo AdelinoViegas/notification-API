@@ -1,3 +1,5 @@
+"use server";
+
 import axios from "axios";
 import { genWebToken, getUserToken } from "@/lib/web-token";
 import { clinicalRoutes } from '@/components/routes';
@@ -6,7 +8,6 @@ import type {
   User, 
   UserRole 
 } from "@/app/backend/api/types";
-
 
 const instance = axios.create({ 
   baseURL: process.env.ADMIN_SRV_URL,

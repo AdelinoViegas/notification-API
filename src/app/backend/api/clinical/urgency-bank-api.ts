@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { whoIsUser } from "@/lib/web-token";
+import { getUserId } from "@/lib/web-token";
 import { orderByPriority } from "@/lib/filters";
 import { CID } from "@/lib/cid-query";
 import { 
@@ -42,7 +42,7 @@ async function getPatients({
   priority 
 }:patientFilters){
   try{
-    const userId = await whoIsUser() as string;
+    const userId = await getUserId() as string;
     const user = await clinicalUserModel.findOne({ userId }).select({ serviceId: 1});
     const patients = await triedModel.find({ serviceId: user?.serviceId, served: false });
     const patientList = [];
@@ -132,7 +132,7 @@ async function signUnit(prev: unknown, formData: FormData){
 
     const name = formData.get("name") as string;
     const type = formData.get("unitTypeId") as UnitType;
-    const userId = await whoIsUser();
+    const userId = await getUserId();
 
     switch(type){
       case "internment": {
@@ -186,7 +186,7 @@ async function updateUnit(prev: unknown, formData: FormData){
     const unitId = formData.get("unitId");
     const name = formData.get("name") as string;
     const type = formData.get("unitTypeId") as UnitType;
-    const userId = await whoIsUser();
+    const userId = await getUserId();
 
     switch(type){
       case "internment": {
@@ -309,7 +309,7 @@ async function signDoctorCalender(prev: unknown, formData: FormData){
       description,
       month,
       doctors,
-      userId: await whoIsUser(),
+      userId: await getUserId(),
       maxSchedule,
       signatureDateTo: calendarSignature.toISOString().split('T')[0],
     });
@@ -340,7 +340,7 @@ async function updateDoctorCalender(prev: unknown, formData: FormData){
     await doctorCalendarModel.updateOne({ _id: calendarId }, {
       description,
       doctors,
-      userId: await whoIsUser(),
+      userId: await getUserId(),
     });
 
     return {
@@ -418,7 +418,7 @@ async function grantUnitAccess(formData: FormData){
     const workplaceAccess = new workplaceModel({
       userId,
       workplaceId,
-      actor: await whoIsUser(),
+      actor: await getUserId(),
     });
 
     await workplaceAccess.save();
@@ -469,7 +469,7 @@ async function signExternalUnit(prev: unknown, formData: FormData){
       street,
       municipality,
       province,
-      userId: await whoIsUser()
+      userId: await getUserId()
     });
 
     await externalUnit.save();
@@ -541,7 +541,7 @@ async function updateExternalUnit(prev: unknown, formData: FormData){
       street,
       municipality,
       province,
-      userId: await whoIsUser()
+      userId: await getUserId()
     });
 
     return {
@@ -767,7 +767,7 @@ async function signUrgencyService(prev:unknown, formData:FormData){
 
     await urgencyServiceModel.create({  
       label,
-      userId: await whoIsUser() 
+      userId: await getUserId() 
     });
 
     return {
@@ -837,7 +837,7 @@ async function finishHospitalization(prev: unknown, form: FormData){
 
     await patientHospitalizedModel.create({
       urgencyId: urgency?._id,
-      userId: await whoIsUser(),
+      userId: await getUserId(),
       description,
       donedAt,
       patientState,

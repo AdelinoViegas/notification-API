@@ -1,8 +1,7 @@
 import { createConnection } from "mongoose";
 import { 
   userSchema, 
-  currentLocationSchema, 
-  notificationSchema
+  currentLocationSchema
 } from "@/app/backend/schemas/clinical/user";
 import { 
   examSchema, 
@@ -77,7 +76,6 @@ const specialtyModel = clinical.model("Expeciality",specialtyStateSchema);
 const externalUnitModel = clinical.model('ExternalUnit', externalUnitSchema);
 const officeModel = clinical.model('Office', officeSchema);
 const scheduleServiceModel = clinical.model("Services", scheduleServiceSchema);
-const notificationModel = clinical.model("Notification", notificationSchema);
 const serviceResultModel = clinical.model("ServiceResult", serviceResultSchema);
 const externalResultsModel = clinical.model('ExternalResults', externalResultSchema);
 
@@ -113,7 +111,6 @@ export {
   externalUnitModel,
   officeModel,
   scheduleServiceModel,
-  notificationModel,
   serviceResultModel,
   externalResultsModel,
   urgencyBankModel,

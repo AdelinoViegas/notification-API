@@ -69,7 +69,7 @@ async function decryptAndVerifyJWT(token: string){
   }
 }
 
-async function whoIsUser(){
+async function getUserId(){
   try{
     const cache = await cookies();
     const token = cache.get(process.env.COOKIE_AUTH_HEADER as string);
@@ -93,5 +93,5 @@ export async function getUserToken(){
 export {
   decryptAndVerifyJWT,
   authJWT,
-  whoIsUser
+  getUserId
 }

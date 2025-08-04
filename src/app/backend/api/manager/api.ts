@@ -16,7 +16,7 @@ import {
 import masterAutoSetup from "@/app/backend/api/manager/setup";
 import { 
   authJWT, 
-  whoIsUser 
+  getUserId 
 } from "@/lib/web-token";
 import { redirect } from "next/navigation";
 import { exitFromWorkplace } from "@/app/backend/api/clinical/workplace-api";
@@ -109,7 +109,7 @@ async function login(prev: unknown, formData: FormData){
 
 async function logout(){
   if((await cookies()).has(String(process.env.MASTER_HEADER_AUTH))){
-    const userId = await whoIsUser();
+    const userId = await getUserId();
     await loginAccessTokensModel.updateOne({ userId, inUse: true }, {  inUse: false });
 
     await exitFromWorkplace();
@@ -157,7 +157,7 @@ async function signUser(prev: unknown, formData: FormData){
       await workplaceModel.create({
         userId: user._id,
         workplaceId: unitWorkplace?._id,
-        actor: await whoIsUser(),
+        actor: await getUserId(),
       });
     }
    
@@ -431,7 +431,7 @@ async function checkUserPermission(pathname: string){
       throw new Error("Permissão inválida", { cause: "not_found" });
     
     const grantedAccess = await accessPermissionModel.findOne({ 
-      userId: await whoIsUser(),
+      userId: await getUserId(),
       permissionId: resolved._id 
     });
     
@@ -555,7 +555,7 @@ async function resetUserPassword(prev: unknown, formData:FormData){
 
 async function verifyRouteUserPermission(targetUrl: string){
   try{
-    const userId = await whoIsUser(); 
+    const userId = await getUserId(); 
     const requestedUrl = targetUrl.split('/')[2];
 
     if(userId){
