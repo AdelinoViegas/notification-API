@@ -1,7 +1,7 @@
 'use server';
 
 import { whoIsUser } from "@/lib/web-token";
-import { userModel as managerUserModel } from '@/app/backend/models/manager';
+// import { userModel as managerUserModel } from '@/app/backend/models/manager';
 import {
   Responsable,
   Assured,
@@ -24,12 +24,16 @@ import {
 import { 
   patientAccess,
   patientGroup as patientGroups,
-  userCategory
+  // userCategory
 } from "@/app/backend/api/clinical/translator"; 
 // import { closePatientProcess } from "@/app/backend/api/clinical/process-api";
-import { getGrantedUnitAccess } from "@/app/backend/api/clinical/urgency-bank-api";
+// import { getGrantedUnitAccess } from "@/app/backend/api/clinical/urgency-bank-api";
 import { validatePatientDoc } from "@/lib/regexp";
 import { closePatientProcess } from "./process-api";
+import { 
+  getUsers as RESTgetUsers,
+  getUser as RESTgetUser 
+} from "../admin";
 
 type ChoosedGroup = Assured | Employee | Enterprise | undefined;
 
@@ -39,8 +43,6 @@ export type patientFilters = {
   priority?: string;
   page?: number;
 }
-
-// funções auxiliares
 
 async function allowUpdate(id: string){
   const doc = await processStateModel.findOne({ 
@@ -55,28 +57,38 @@ async function allowUpdate(id: string){
 }
 
 async function getUsers(){  
-  const users = await userModel.find();
-  const formatedUsers = [];
+  const users = await RESTgetUsers();
 
-  for(const user of users){
-    const sysUser = await managerUserModel.findById({ _id: user.userId }).select({ password: 0 });
-    const workplaces = await getGrantedUnitAccess(user.userId as unknown as string);
-    const role = user?.specialtyId?(await specialtyModel.findById({ _id: user.specialtyId }))?.name:"Indefinido";
+  const clinicalUsers = users.map(user => ({
+    id: user._id,
+    createdAt: new Date(),
+    category: "Indefinido",
+    categoryId: "doctor",
+    role: "Ind",
+    roleId: "test",
+    workplaces: 0,
+    ...user
+  }));
 
-    formatedUsers.push({
-      _id: user?.userId?.toString() as string,
-      id: user?.userId?.toString() as string,
-      fullname: sysUser?.fullname as string,
-      createdAt: user?.createdAt as Date,
-      category: user?.categoryId?userCategory.find(item => item._id == user?.categoryId)?.label:"Indefinido",
-      categoryId: user.categoryId?.toString() as string,
-      role: role,
-      roleId: user.specialtyId?.toString() as string,
-      workplaces: workplaces.length,
-    });
-  }
+  return clinicalUsers;
+  // for (const user of users){
+  //   const workplaces = await getGrantedUnitAccess(user.userId as unknown as string);
+  //   const role = user?.specialtyId?(await specialtyModel.findById({ _id: user.specialtyId }))?.name:"Indefinido";
 
-  return formatedUsers;
+  //   formatedUsers.push({
+  //     _id: user?.userId?.toString() as string,
+  //     id: user?.userId?.toString() as string,
+  //     fullname: sysUser?.fullname as string,
+  //     createdAt: user?.createdAt as Date,
+  //     category: user?.categoryId?userCategory.find(item => item._id == user?.categoryId)?.label:"Indefinido",
+  //     categoryId: user.categoryId?.toString() as string,
+  //     role: role,
+  //     roleId: user.specialtyId?.toString() as string,
+  //     workplaces: workplaces.length,
+  //   });
+  // }
+
+  // return formatedUsers;
 }
 
 async function getDoctors(){
@@ -100,21 +112,31 @@ async function getDoctors(){
   return doctors;
 }
 
-async function getUser(userId: string){
-  const clinicalUser = await userModel.findOne({ userId });
-  const user = await managerUserModel.findById({ _id: userId }).select({ fullname: 1 });
-  const userSpecialty = clinicalUser?.specialtyId?(await specialtyModel.findById({ _id: clinicalUser?.specialtyId }))?.name:"";
+async function getUser(id: string){
+  const user = await RESTgetUser(id);
 
   return {
-    _id: user?._id.toString() as string,
-    fullname: user?.fullname as string,
-    category:  userCategory.find(item => item._id == clinicalUser?.categoryId)?.label,
-    categoryId: clinicalUser?.categoryId?.toString() as string,
-    orderNumber: clinicalUser?.orderNumber as number,
-    specialtyId: clinicalUser?.specialtyId?.toString() as string,
-    specialty: userSpecialty, 
-    serviceId: clinicalUser?.serviceId?.toString() as string
+    category: "Ind",
+    categoryId: "test",
+    specialtyId: "test",
+    orderNumber: 123456,
+    serviceId: "test",
+    ...user
   }
+  // const clinicalUser = await userModel.findOne({ userId });
+  // const user = await managerUserModel.findById({ _id: userId }).select({ fullname: 1 });
+  // const userSpecialty = clinicalUser?.specialtyId?(await specialtyModel.findById({ _id: clinicalUser?.specialtyId }))?.name:"";
+
+  // return {
+  //   _id: user?._id.toString() as string,
+  //   fullname: user?.fullname as string,
+  //   category:  userCategory.find(item => item._id == clinicalUser?.categoryId)?.label,
+  //   categoryId: clinicalUser?.categoryId?.toString() as string,
+  //   orderNumber: clinicalUser?.orderNumber as number,
+  //   specialtyId: clinicalUser?.specialtyId?.toString() as string,
+  //   specialty: userSpecialty, 
+  //   serviceId: clinicalUser?.serviceId?.toString() as string
+  // }
 }
 
 async function signUser(prev: unknown, formData: FormData){
