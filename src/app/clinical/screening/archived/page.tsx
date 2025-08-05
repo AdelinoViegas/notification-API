@@ -1,4 +1,3 @@
-import Header from "@/components/header";
 import Table from "@/components/table";
 import { getPatientsInScreening } from "@/app/backend/api/clinical/api";
 import tableFormater from "@/lib/table-formater";
@@ -28,10 +27,6 @@ export default async function Page({
   
   return (
     <main className="space-y-3">
-      <div className="mt-6">
-        <Header title="Utentes Arquivados"/>
-      </div>
-
       <div className="flex flex-col lg:flex-row gap-3 items-center">
         <Alert 
           type="info" 

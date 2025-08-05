@@ -2,7 +2,6 @@
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import Button from "@/components/ui/button";
-import Header from "@/components/header";
 import InputField from "@/components/ui/input-field";
 import { getUserId } from "@/lib/web-token";
 import { getUser } from "@/app/backend/api/manager/api";
@@ -19,10 +18,6 @@ export default async function Page(){
 
   return(
     <main className="space-y-3">
-      <div className="mt-6">
-        <Header title="Meu Perfil" />
-      </div>
-
       <div className="lg:flex-row lg:gap-6 lg:p-8 px-4 py-3 items-center rounded-xl border bg-white flex flex-col gap-3">
         <div className="inline-flex flex-col items-center">
           <Image

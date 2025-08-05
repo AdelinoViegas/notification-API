@@ -84,7 +84,7 @@ const clinicalRoutes = [
   {
     href: "/clinical/phisical-unit",
     route: 'phisical-unit',
-    label: 'Unidades Físicas',
+    label: 'Gestão da Unidade',
   },
   {
     href: "/clinical/exams-services",
@@ -99,7 +99,7 @@ const clinicalRoutes = [
   {
     href: "/clinical/doctor-calendar",
     route: 'doctor-calendar',
-    label: 'Calendário dos Medicos',
+    label: 'Escala de Trabalho',
   },
   {
     href: "/clinical/laboratory",
@@ -109,7 +109,7 @@ const clinicalRoutes = [
   {
     href: "/clinical/imaging",
     route: 'imaging',
-    label: 'Laboratório',
+    label: 'Imagiologia',
   }
 ];
 
