@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "yarn setup && next dev --turbopack",
     "build": "yarn setup && next build",
-    "start": "next start",
+    "start": "yarn setup && next start",
     "lint": "next lint",
     "setup": "node clinical-setup.mjs"
   },
