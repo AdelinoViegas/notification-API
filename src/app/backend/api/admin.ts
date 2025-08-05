@@ -1,12 +1,13 @@
 "use server";
 
-import axios from "axios";
+import axios, { type AxiosError } from "axios";
 import { genWebToken, getUserToken } from "@/lib/web-token";
 import { clinicalRoutes } from '@/components/routes';
 import type { 
   MyProfile, 
   User, 
-  UserRole 
+  UserRole,
+  DefaultResponse
 } from "@/app/backend/api/types";
 
 const instance = axios.create({ 
@@ -49,6 +50,12 @@ export async function getMyProfile(){
   return res.data;
 }
 
+export async function logout(){
+  clientInstance.defaults.headers.common["Authorization"] = `Bearer ${await getUserToken()}`
+  const res = await clientInstance.delete<DefaultResponse>("/auth/logout");
+  return res.data;
+}
+
 export async function getGrantedRoles(){
   try{
     const roles = await getUserRoles();
@@ -70,5 +77,11 @@ export async function getGrantedRoles(){
     const err = e as Error;
     console.log("Error: ", err)
     return [];
+  }
+}
+
+declare module "next" {
+  export interface Error extends AxiosError {
+    
   }
 }

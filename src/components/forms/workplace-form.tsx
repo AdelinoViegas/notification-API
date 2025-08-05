@@ -11,6 +11,7 @@ import { enterIntoWorkplace } from "@/app/backend/api/clinical/workplace-api";
 import { logout } from "@/app/backend/api/manager/api";
 import { HiArrowUturnLeft as ArrowUturnLeftIcon} from "react-icons/hi2";
 import { toast } from "react-toastify";
+import LogoutButton from "../logout-button";
 
 export default function WorkplaceFrom({
   units
@@ -38,7 +39,12 @@ export default function WorkplaceFrom({
           name="workplaceId"
           required
         />
-        <div className="flex justify-between">
+        <div className="flex justify-between items-end">
+          <LogoutButton
+            baseUrl={process.env.LOGIN_URL as string}
+            className="bg-red-500 text-white flex gap-x-2 items-center px-3 py-2 rounded-lg hover:bg-red-400" 
+          />
+{/*           
           <Button 
             type="button"
             cancel
@@ -46,7 +52,7 @@ export default function WorkplaceFrom({
             className="gap-3 items-center w-32">
             <ArrowUturnLeftIcon className="size-6" />
             Sair
-          </Button>
+          </Button> */}
           <Button className="w-32">Continuar</Button>
         </div>
       </form>
