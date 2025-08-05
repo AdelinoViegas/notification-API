@@ -94,11 +94,8 @@ export default function UnitForm({ jsonData }: UnitProps){
     setMessageState(true)
     setTimeout(()=>{
       setMessageState(false);
-      if(state.status)
-        router.replace("/clinical/phisical-unit");
     }, 3000);
   }, [state, router]);
-  
   
   return(
     <div className="px-8 py-4 pb-8 mt-3 border rounded-xl bg-white">
