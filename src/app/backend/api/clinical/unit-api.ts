@@ -210,7 +210,10 @@ async function signExamResult(prev:unknown, formData:FormData){
     if(file.size && !FileHandler.validMaxSize(file))
       throw new Error("Tamanho do arquivo superior!", { cause: "max_file_size"});
     
-    const fileRenamed = [randomUUID().toString(), FileHandler.getExtension(file.name)].join(".");
+    const fileRenamed = [
+      randomUUID().toString(), 
+      FileHandler.getExtension(file.name)
+    ].join(".");
 
     await readUploadedFile({ serviceId, resultId });
 
@@ -232,47 +235,50 @@ async function signExamResult(prev:unknown, formData:FormData){
         }],
         userId: await getUserId()
       });
-    }else{
-      if(!resultService.exams.find(item => item.serviceId?.toString() === serviceId)){
-        resultService.exams.push({
-          serviceId,
-          results: {
-            file: {
-              name: fileRenamed,
-              size: file.size,
-              mimeType: file.type,
-              binaryData: Buffer.from(await file.arrayBuffer())
-            },
-            plainText,
-          },
-          userId: await getUserId(),
-        });
+    }
 
-        await serviceResultModel.updateOne({ _id: resultService._id}, {
-          exams: resultService.exams,
-        });
-      }else{
-        const filter = resultService.exams.filter(item => item.serviceId?.toString() !== serviceId)
-        const filterServiceResult = new serviceResultModel({ exams: filter });
+    if(!!resultService){
+      console.log(resultService)
+      // if(!resultService.exams.find(item => item.serviceId?.toString() === serviceId)){
+      //   resultService.exams.push({
+      //     serviceId,
+      //     results: {
+      //       file: {
+      //         name: fileRenamed,
+      //         size: file.size,
+      //         mimeType: file.type,
+      //         binaryData: Buffer.from(await file.arrayBuffer())
+      //       },
+      //       plainText,
+      //     },
+      //     userId: await getUserId(),
+      //   });
+
+      //   await serviceResultModel.updateOne({ _id: resultService._id}, {
+      //     exams: resultService.exams,
+      //   });
+      // }else{
+      //   const filter = resultService.exams.filter(item => item.serviceId?.toString() !== serviceId)
+      //   const filterServiceResult = new serviceResultModel({ exams: filter });
         
-        filterServiceResult.exams.push({
-          serviceId,
-          results: {
-            file: {
-              name: fileRenamed,
-              size: file.size,
-              mimeType: file.type,
-              binaryData: Buffer.from(await file.arrayBuffer())
-            },
-            plainText,
-          },
-          userId: await getUserId(),
-        });
+      //   filterServiceResult.exams.push({
+      //     serviceId,
+      //     results: {
+      //       file: {
+      //         name: fileRenamed,
+      //         size: file.size,
+      //         mimeType: file.type,
+      //         binaryData: Buffer.from(await file.arrayBuffer())
+      //       },
+      //       plainText,
+      //     },
+      //     userId: await getUserId(),
+      //   });
 
-        await serviceResultModel.updateOne({ _id: resultService._id}, {
-          exams: filterServiceResult.exams,
-        });
-      }
+      //   await serviceResultModel.updateOne({ _id: resultService._id}, {
+      //     exams: filterServiceResult.exams,
+      //   });
+      // }
     }
       
     return {
