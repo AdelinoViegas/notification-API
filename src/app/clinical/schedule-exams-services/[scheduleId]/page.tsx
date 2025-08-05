@@ -143,7 +143,6 @@ export default async function Page({
             />
 
             <SendScheduleExam scheduleId={scheduleId} />
-
             <ArchivingScheduleExam scheduleId={scheduleId} />
           </div>
         </Card>
