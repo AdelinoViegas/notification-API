@@ -14,6 +14,7 @@ import { getDataAndHoursFormat } from "@/lib/date-formater";
 import { Types } from "mongoose";
 import { FileHandler } from "@/lib/client-files";
 import { ServerFileHandler } from "@/lib/server-files";
+import { randomUUID } from "node:crypto";
 
 async function updatePaymentData(prev: unknown, formData: FormData){
   try{
@@ -194,7 +195,6 @@ async function getPatientExams(laboratoryId: string){
 async function signExamResult(prev:unknown, formData:FormData){
   const serviceId = formData.get("serviceId") as string;
   const resultId = formData.get("resultId") as string;
-  // const sourceType = formData.get("sourceType");
   const file = formData.get("file") as File;
   const plainText = formData.get("plainText") as string;
 
@@ -210,6 +210,8 @@ async function signExamResult(prev:unknown, formData:FormData){
     if(file.size && !FileHandler.validMaxSize(file))
       throw new Error("Tamanho do arquivo superior!", { cause: "max_file_size"});
     
+    const fileRenamed = [randomUUID().toString(), FileHandler.getExtension(file.name)].join(".");
+
     await readUploadedFile({ serviceId, resultId });
 
     if(!resultService){
@@ -219,7 +221,7 @@ async function signExamResult(prev:unknown, formData:FormData){
           serviceId,
           results: {
             file: {
-              name: file.name,
+              name: fileRenamed,
               size: file.size,
               mimeType: file.type,
               binaryData: Buffer.from(await file.arrayBuffer())
@@ -236,7 +238,7 @@ async function signExamResult(prev:unknown, formData:FormData){
           serviceId,
           results: {
             file: {
-              name: file.name,
+              name: fileRenamed,
               size: file.size,
               mimeType: file.type,
               binaryData: Buffer.from(await file.arrayBuffer())
@@ -257,7 +259,7 @@ async function signExamResult(prev:unknown, formData:FormData){
           serviceId,
           results: {
             file: {
-              name: file.name,
+              name: fileRenamed,
               size: file.size,
               mimeType: file.type,
               binaryData: Buffer.from(await file.arrayBuffer())
@@ -274,7 +276,7 @@ async function signExamResult(prev:unknown, formData:FormData){
     }
       
     return {
-      message: "Resultado cadastrado com sucesso!",
+      message: "Registo salvo!",
       status: true,
       serviceId
     }
@@ -282,7 +284,7 @@ async function signExamResult(prev:unknown, formData:FormData){
     const error = err as Error;
 
     return {
-      message: error.cause?error.message:"Falha Interna!",
+      message: error.cause?error.message:"Operação impossivel!",
       status: false,
       serviceId
     }
