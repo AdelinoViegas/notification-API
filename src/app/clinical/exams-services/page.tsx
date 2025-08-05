@@ -1,4 +1,3 @@
-import Header from "@/components/header";
 import Table from "@/components/table";
 import tableFormater from "@/lib/table-formater";
 import Alert from "@/components/ui/alert";
@@ -16,9 +15,6 @@ export default async function Page() {
   return (
     <main className="space-y-3">
       <Refresh />
-      <div className="mt-6">
-        <Header title="Exames/Serviços Cadastradas"/>
-      </div>
 
       <div className="flex flex-col lg:flex-row gap-x-2 gap-3 pb-4 justify-between">
         <SignExam />

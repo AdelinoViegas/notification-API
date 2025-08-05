@@ -1,4 +1,3 @@
-import Header from "@/components/header";
 import Button from "@/components/ui/button";
 import Link from "next/link";
 import Table from "@/components/table";
@@ -33,9 +32,6 @@ export default async function Page({
   return (
     <main className="space-y-3">
       <Refresh />
-      <div className="mt-6">
-        <Header title="Utentes"/>
-      </div>
       
       <div className="flex gap-x-2">
         <Link href="patient/sign" >

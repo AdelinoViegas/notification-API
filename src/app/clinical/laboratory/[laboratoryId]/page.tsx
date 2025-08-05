@@ -1,4 +1,3 @@
-import Header from "@/components/header";
 import Card from "@/components/ui/card";
 import { getExamResult, getPatient, getPatientExams } from "@/app/backend/api/clinical/unit-api";
 import LaboratoryForm from "@/components/forms/laboratory-imaging-form";
@@ -23,10 +22,6 @@ export default async function Page({
         place="laboratory"
         basePathname="/clinical/laboratory"
       />
-
-      <div className="mt-6">
-        <Header title="Exames Marcados" />
-      </div>
 
       <div className="flex gap-x-3">
         <UnlockProcessAccess

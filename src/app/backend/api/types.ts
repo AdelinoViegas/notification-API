@@ -19,3 +19,8 @@ export interface MyProfile {
   email: string;
   group: { name: string }
 }
+
+export interface DefaultResponse {
+  message: string;
+  status: string;
+}

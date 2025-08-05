@@ -1,4 +1,3 @@
-import Header from "@/components/header";
 import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
@@ -34,10 +33,6 @@ export default async function Page({
     <main className="space-y-3">
       
       
-      <div className="mt-6">
-        <Header title="Atendidos"/>
-      </div>
-
       <div className="lg:flex justify-between items-center">
         <Alert 
           type="info" 

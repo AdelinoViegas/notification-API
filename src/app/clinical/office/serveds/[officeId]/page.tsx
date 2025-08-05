@@ -1,4 +1,3 @@
-import Header from "@/components/header";
 import Card from "@/components/ui/card";
 import SubTitle from "@/components/ui/subtitle";
 import TitleAndSubtitle from "@/components/title-subtitle";
@@ -21,7 +20,6 @@ export default async function Page({
   return(
     <main className="space-y-3">
       <div className="mt-6">
-        <Header title="Informações da Consulta Realizada" />
       </div>
 
       <div className="overflow-auto h-[80vh] scroll overflow-auto">

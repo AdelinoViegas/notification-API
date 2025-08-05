@@ -1,4 +1,3 @@
-import Header from "@/components/header";
 import Table from "@/components/table";
 import { type DoctorOffice, tableOffice } from "@/lib/table-formater";
 import Alert from "@/components/ui/alert";
@@ -26,10 +25,6 @@ export default async function Page({
     <main className="space-y-3">
       <Refresh />
       
-      <div className="mt-6">
-        <Header title="Consultas Marcadas"/>
-      </div>
-
       <div className="flex gap-3">
         <Link href="/clinical/office/serveds">
           <Button className="flex gap-x-2">

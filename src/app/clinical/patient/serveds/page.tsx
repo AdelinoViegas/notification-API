@@ -1,4 +1,3 @@
-import Header from "@/components/header";
 import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
 import tableFormater from "@/lib/table-formater";
@@ -28,10 +27,6 @@ export default async function Page({
   
   return(
     <main>
-      <div className="mt-6">
-        <Header title="Utentes Atendidos"/>
-      </div>
-
       <div className="flex justify-between lg:flex-row gap-3 items-center">
         <Alert 
           type="info" 

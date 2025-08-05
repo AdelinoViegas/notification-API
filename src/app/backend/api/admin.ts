@@ -6,7 +6,8 @@ import { clinicalRoutes } from '@/components/routes';
 import type { 
   MyProfile, 
   User, 
-  UserRole 
+  UserRole,
+  DefaultResponse
 } from "@/app/backend/api/types";
 
 const instance = axios.create({ 
@@ -49,6 +50,12 @@ export async function getMyProfile(){
   return res.data;
 }
 
+export async function logout(){
+  clientInstance.defaults.headers.common["Authorization"] = `Bearer ${await getUserToken()}`
+  const res = await clientInstance.delete<DefaultResponse>("/auth/logout");
+  return res.data;
+}
+
 export async function getGrantedRoles(){
   try{
     const roles = await getUserRoles();
@@ -57,7 +64,11 @@ export async function getGrantedRoles(){
     for (const role of roles){
       for (const route of clinicalRoutes){
         if(route.route === role.role.path)
-          navLinks.push(route);
+          navLinks.push({
+            label: role.role.name, // vem da api admin
+            href: route.href,
+            route: route.route
+          });
       }
     }
     

@@ -1,4 +1,3 @@
-import Header from "@/components/header";
 import Table from "@/components/table";
 import { ScheduleAppointment, tableAppointments } from "@/lib/table-formater";
 import Search from "@/components/ui/search";
@@ -23,10 +22,6 @@ export default async function Page({
   
   return (
     <main className="space-y-3">
-
-      <div className="mt-6">
-        <Header title="Consultas Arquivadas"/>
-      </div>
 
       <Search
         className="flex items-center gap-3"

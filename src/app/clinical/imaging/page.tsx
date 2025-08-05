@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Header from "@/components/header";
 import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
 import Button from "@/components/ui/button";
@@ -36,10 +35,6 @@ export default async function Page({
     <main className="space-y-3">
       <Refresh />
       
-      <div className="mt-6">
-        <Header title="Imagiologia"/>
-      </div>
-
       <Link href="/clinical/imaging/serveds">
         <Button className="flex gap-3">
           <TiInputChecked className="size-5" />
