@@ -57,7 +57,11 @@ export async function getGrantedRoles(){
     for (const role of roles){
       for (const route of clinicalRoutes){
         if(route.route === role.role.path)
-          navLinks.push(route);
+          navLinks.push({
+            label: role.role.name, // vem da api admin
+            href: route.href,
+            route: route.route
+          });
       }
     }
     
