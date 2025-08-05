@@ -62,6 +62,7 @@ const main = async ()=>{
     console.log("[*] master configured!");
   }catch(e){
     console.log("[-] failed setup database: ", e);
+    console.lgo("[*] Check the database connection and try again...");
   }finally{
     process.exit();
   }

@@ -7,7 +7,7 @@ const fileTypes = [
   "video/mp4"
 ];
 
-const MAX_FILE_SIZE = Math.pow(1024, 2); // 1MB
+const MAX_FILE_SIZE = Math.pow(1024, 2); // 2MB
 
 export class FileHandler{
   static validdateFileType(file: File){

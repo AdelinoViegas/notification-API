@@ -9,11 +9,12 @@ import {
   serviceResultModel
 } from "@/app/backend/models/clinical";
 import { getUserId } from "@/lib/web-token";
-import { userModel } from "@/app/backend/models/manager";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
 import { Types } from "mongoose";
 import { FileHandler } from "@/lib/client-files";
 import { ServerFileHandler } from "@/lib/server-files";
+import { randomUUID } from "node:crypto";
+import { getUser } from "@/app/backend/api/admin";
 
 async function updatePaymentData(prev: unknown, formData: FormData){
   try{
@@ -141,12 +142,13 @@ async function getPatients({
     for(const service of services.slice(numberOfItems - 10, numberOfItems)){
       const scheduledService = await scheduleExamModel.findById({ _id: service.scheduleId });
       const patient = await patientModel.findById({_id: scheduledService?.patientId }).select({ fullname: 1});
-    
+      const user = await getUser(service?.userId?.toString() as string);
+
       patients.push({
         id: service._id.toString() as string,
         patient: patient?.fullname as string,
         markedDatatime: getDataAndHoursFormat(scheduledService?.dateTime as Date),
-        user: (await userModel.findById({ _id: service?.userId }).select({ fullname: 1 }))?.fullname as string,
+        user: user.fullname,
         nameLaboratory: (await unitModel.findById({ _id: scheduledService?.laboratoryId }))?.name as string,
         unitId: scheduledService?.laboratoryId?.toString() as string
       });
@@ -194,12 +196,11 @@ async function getPatientExams(laboratoryId: string){
 async function signExamResult(prev:unknown, formData:FormData){
   const serviceId = formData.get("serviceId") as string;
   const resultId = formData.get("resultId") as string;
-  // const sourceType = formData.get("sourceType");
   const file = formData.get("file") as File;
   const plainText = formData.get("plainText") as string;
 
   try{
-    const resultService = await serviceResultModel.findOne({ resultId });
+    const results = await serviceResultModel.findOne({ resultId });
 
     if(!plainText && !file.size)
       throw new Error("Resultados vazios não são permitidos!", { cause: "empty_fields"});
@@ -210,16 +211,21 @@ async function signExamResult(prev:unknown, formData:FormData){
     if(file.size && !FileHandler.validMaxSize(file))
       throw new Error("Tamanho do arquivo superior!", { cause: "max_file_size"});
     
+    const fileRenamed = [
+      randomUUID().toString(), 
+      FileHandler.getExtension(file.name)
+    ].join(".");
+
     await readUploadedFile({ serviceId, resultId });
 
-    if(!resultService){
+    if(!results){
       await serviceResultModel.create({
         resultId,
         exams: [{
           serviceId,
           results: {
             file: {
-              name: file.name,
+              name: fileRenamed,
               size: file.size,
               mimeType: file.type,
               binaryData: Buffer.from(await file.arrayBuffer())
@@ -230,51 +236,65 @@ async function signExamResult(prev:unknown, formData:FormData){
         }],
         userId: await getUserId()
       });
-    }else{
-      if(!resultService.exams.find(item => item.serviceId?.toString() === serviceId)){
-        resultService.exams.push({
-          serviceId,
-          results: {
-            file: {
-              name: file.name,
-              size: file.size,
-              mimeType: file.type,
-              binaryData: Buffer.from(await file.arrayBuffer())
-            },
-            plainText,
-          },
-          userId: await getUserId(),
-        });
+    }
 
-        await serviceResultModel.updateOne({ _id: resultService._id}, {
-          exams: resultService.exams,
-        });
+    if(!!results){
+      const allExams = new Map<string, typeof results.exams[number]>();
+      results.exams.forEach(props => allExams.set(props.serviceId?.toString() as string, props)); // carregando os exames
+
+      if(allExams.has(serviceId)){
+        const exam = allExams.get(serviceId);
+        // verificar as entradas do user se tem arquivo ou texto ou os dois
+        if(file.size && plainText && exam?.results){
+          exam.results.file = {
+            name: fileRenamed,
+            size: file.size,
+            mimeType: file.type,
+            binaryData: Buffer.from(await file.arrayBuffer())
+          };
+          exam.results.plainText = plainText;
+        }else if(!file.size && plainText && exam?.results){
+          exam.results.plainText = plainText;
+        }else if(file.size && !plainText && exam?.results){
+          exam.results.file = {
+            name: fileRenamed,
+            size: file.size,
+            mimeType: file.type,
+            binaryData: Buffer.from(await file.arrayBuffer())
+          }
+        }
+
+        if(exam)
+          allExams.set(serviceId, exam);
       }else{
-        const filter = resultService.exams.filter(item => item.serviceId?.toString() !== serviceId)
-        const filterServiceResult = new serviceResultModel({ exams: filter });
-        
-        filterServiceResult.exams.push({
-          serviceId,
-          results: {
-            file: {
-              name: file.name,
-              size: file.size,
-              mimeType: file.type,
-              binaryData: Buffer.from(await file.arrayBuffer())
+        const newResults = new serviceResultModel({
+          resultId,
+          exams: [{
+            serviceId,
+            results: {
+              file: {
+                name: fileRenamed,
+                size: file.size,
+                mimeType: file.type,
+                binaryData: Buffer.from(await file.arrayBuffer())
+              },
+              plainText
             },
-            plainText,
-          },
-          userId: await getUserId(),
+            userId: await getUserId(),
+          }],
+          userId: await getUserId()
         });
 
-        await serviceResultModel.updateOne({ _id: resultService._id}, {
-          exams: filterServiceResult.exams,
-        });
+        allExams.set(serviceId, newResults.exams[0]);
       }
+
+      await serviceResultModel.updateOne({ _id:  results._id }, {
+        exams: Array.from(allExams.values())
+      });
     }
       
     return {
-      message: "Resultado cadastrado com sucesso!",
+      message: "Informações salvas!",
       status: true,
       serviceId
     }
@@ -282,7 +302,7 @@ async function signExamResult(prev:unknown, formData:FormData){
     const error = err as Error;
 
     return {
-      message: error.cause?error.message:"Falha Interna!",
+      message: error.cause?error.message:"Operação impossivel!",
       status: false,
       serviceId
     }

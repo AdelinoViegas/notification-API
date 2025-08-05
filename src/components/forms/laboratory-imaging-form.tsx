@@ -82,9 +82,6 @@ export default function LaboratoryImagingForm({
 
   return(
     <div className="overflow-auto max-h-[75vh] px-3">
-      {/* <ToastContainer
-        theme="colored" 
-      /> */}
       <p className="font-medium mb-5 uppercase">{patientName}</p>
 
       {exams.map((item, i)=>(

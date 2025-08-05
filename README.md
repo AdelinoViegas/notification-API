@@ -23,10 +23,33 @@ Clone o repositório e instale as dependências com `yarn`:
 git clone https://github.com/mr0xff/web-master-erp.git
 cd web-master-erp
 yarn install
+yarn build
+yarn setup # para configurar o banco de dados do serviço clinico
 yarn start
 ```
 
 > Atenção: este módulo depende da configuração correta dos serviços de backend, incluindo autenticação e permissões. Certifique-se de que a API está configurada e rodando.
+
+# Dependências Externas
+
+Este módulo depende de dois serviços principais:
+
+- **API do serviço Administrador** (`ADMIN_SRV_URL`)  
+  Endpoint: `http://localhost:3000/v1`  
+  Responsável pela autenticação, controle de acesso e gestão de usuários. [Saber mais](https://github.com/mr0xff/api-master-admin)
+
+- **Frontend do Serviço Administrador** (`LOGIN_URL`)  
+  URL: `http://localhost:5173/`  
+  Redirecionamento para login de sessão e autenticação.
+  [Saber mais](https://github.com/mr0xff/web-master-admin)
+
+
+Esses valores devem ser configurados nas variáveis de ambiente da aplicação clínica.
+
+## Servidores
+
+- Local: http://localhost:3001/clinical
+- Produção: https://web-master-erp-production.up.railway.app/clinical
 
 ## Estrutura de Rotas
 
@@ -90,25 +113,6 @@ Subseções por paciente:
 - `/clinical/doctor-calendar` – Visualização e assinatura da agenda médica
 - `/clinical/phisical-unit` – Gestão de unidades físicas (clínicas, hospitais, usuários)
 - `/clinical/profile` – Página do perfil do profissional de saúde
-
-## Dependências Externas
-
-Este módulo depende de dois serviços principais:
-
-- **API do Módulo Administrador** (`ADMIN_SRV_URL`)  
-  Endpoint: `http://localhost:3000/v1`  
-  Responsável pela autenticação, controle de acesso e gestão de usuários.
-
-- **Interface de Login do Módulo Administrador** (`LOGIN_URL`)  
-  URL: `http://localhost:5173/`  
-  Redirecionamento para login de sessão e autenticação.
-
-Esses valores devem ser configurados nas variáveis de ambiente da aplicação clínica.
-
-## Servidores
-
-- Local: http://localhost:3001/clinical
-- Produção: https://web-master-erp-production.up.railway.app/clinical
 
 ## Licença
 
