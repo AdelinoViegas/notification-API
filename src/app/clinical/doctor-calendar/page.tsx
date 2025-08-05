@@ -1,5 +1,4 @@
 import Alert from "@/components/ui/alert";
-import Header from "@/components/header";
 import Table from "@/components/table";
 import Button from "@/components/ui/button";
 import Link from "next/link";
@@ -14,10 +13,6 @@ export default async function Page(){
 
   return(
     <main className="space-y-3">
-      
-      <div className="mt-6">
-        <Header title="Calendário de Trabalho"/>
-      </div>
 
       <div className="flex gap-3">
         <Link href="/clinical/doctor-calendar/sign">

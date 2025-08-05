@@ -1,4 +1,3 @@
-import Header from "@/components/header";
 import Table from "@/components/table";
 import { type DoctorOffice, tableOffice } from "@/lib/table-formater";
 import Alert from "@/components/ui/alert";
@@ -22,10 +21,6 @@ export default async function Page({
     <main className="space-y-3">
       
       
-      <div className="mt-6">
-        <Header title="Consultas Realizadas"/>
-      </div>
-
       <div className="flex items-center justify-between lg:flex-row gap-3 items-center">
         <Alert 
           type="info" 

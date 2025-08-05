@@ -1,6 +1,6 @@
 "use server";
 
-import axios, { type AxiosError } from "axios";
+import axios from "axios";
 import { genWebToken, getUserToken } from "@/lib/web-token";
 import { clinicalRoutes } from '@/components/routes';
 import type { 
@@ -77,11 +77,5 @@ export async function getGrantedRoles(){
     const err = e as Error;
     console.log("Error: ", err)
     return [];
-  }
-}
-
-declare module "next" {
-  export interface Error extends AxiosError {
-    
   }
 }

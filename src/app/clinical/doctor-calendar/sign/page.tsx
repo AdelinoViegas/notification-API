@@ -1,5 +1,4 @@
 import Card from "@/components/ui/card";
-import Header from "@/components/header";
 import CalendarForm from "@/components/forms/calendar-form";
 import { getUsers } from "@/app/backend/api/clinical/api";
 
@@ -18,9 +17,6 @@ export default async function Page(){
 
   return(
     <main className="space-y-3">
-      <div className="mt-6">
-        <Header title="Cadastrar Calendário"/>
-      </div>
       
       <Card>
         <CalendarForm doctors={doctorListFormated} />

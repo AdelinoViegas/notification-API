@@ -1,4 +1,3 @@
-import Header from "@/components/header";
 import Table from "@/components/table";
 import { tableAppointments } from "@/lib/table-formater";
 import Alert from "@/components/ui/alert";

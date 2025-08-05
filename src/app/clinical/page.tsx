@@ -1,4 +1,3 @@
-import Header from "@/components/header";
 import MyCharts from "@/components/mycharts";
 
 export const dynamic = "force-dynamic";

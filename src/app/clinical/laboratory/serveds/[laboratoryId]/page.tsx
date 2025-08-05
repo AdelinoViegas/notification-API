@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Header from "@/components/header";
 import Card from "@/components/ui/card";
 import SubTitle from "@/components/ui/subtitle";
 import Accordium from "@/components/ui/accordium";
@@ -22,7 +21,6 @@ export default async function Page({
   return(
     <main className="space-y-3">
       <div className="mt-6">
-        <Header title="Informações dos Exames Feitos" />
       </div>
 
       <Card>
