@@ -28,10 +28,6 @@ export default async function Page({
   return (
     <main className="space-y-3">
       <Refresh />
-      <div className="mt-6">
-        <Header title="Consultas Agendadas"/>
-      </div>
-
        <div className="flex gap-x-3">
         <Link href="/clinical/appointment/serveds">
           <Button className="flex gap-3">
