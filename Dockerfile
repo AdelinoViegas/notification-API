@@ -6,6 +6,9 @@ RUN yarn build
 
 FROM node:22-alpine
 
+RUN apk add --no-cache alpine-conf && \
+  setup-timezone -z Africa/Luanda
+
 WORKDIR /app
 
 COPY --from=builder /app/package.json ./

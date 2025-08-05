@@ -3,7 +3,8 @@
 import { getUserId } from "@/lib/web-token";
 import { processStateModel } from "@/app/backend/models/clinical";
 import { getFirstAndLastName } from "@/components/userbar";
-import { getUser } from "@/app/backend/api/manager/api";
+// import { getUser } from "@/app/backend/api/manager/api";
+import { getUser } from "@/app/backend/api/admin";
 
 type WorkLocation = "screening" | "urgency" | "laboratory" | "imaging" ;
 
