@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "tsc -p tsconfig.workers.json && next dev --turbopack",
-    "build": "next build && yarn build:ws",
-    "start": "next start",
+    "dev": "yarn setup && next dev --turbopack",
+    "build": "yarn setup && next build",
+    "start": "yarn setup && next start",
     "lint": "next lint",
-    "build:ws": "tsc -p tsconfig.workers.json"
+    "setup": "node clinical-setup.mjs"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",
@@ -29,10 +29,12 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@types/amqplib": "^0.10.7",
     "@types/node": "^20",
     "@types/react": "19.0.7",
     "@types/react-dom": "19.0.3",
     "@types/validator": "^13.12.2",
+    "dotenv": "^17.2.1",
     "eslint": "^9",
     "eslint-config-next": "15.1.5",
     "postcss": "^8",

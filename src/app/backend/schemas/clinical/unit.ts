@@ -9,6 +9,12 @@ const unitSchema = new Schema({
   unitTypeId: {
     type: String,
     required: true,
+    enum: [
+      "workplace", 
+      "internment",
+      "laboratory",
+      "imaging"
+    ]
   },
   wing: String,
   nursing: String,

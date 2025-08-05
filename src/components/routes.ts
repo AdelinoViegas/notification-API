@@ -1,7 +1,3 @@
-import { 
-  FaUserSecret as UsersIcon,
-  FaKey as KeyIcon 
-} from "react-icons/fa6";
 import { LuStethoscope } from "react-icons/lu";
 import { PiAmbulance } from "react-icons/pi";
 import { FiUsers } from "react-icons/fi";
@@ -12,89 +8,121 @@ import { GrDocumentText } from "react-icons/gr";
 import { GrTest } from "react-icons/gr";
 import { FaRadiationAlt } from "react-icons/fa";
 
-import type { Route } from "@/app/backend/api/manager/types";
+export const clinicalIcons = [
+  {
+    route: 'patient',
+    Icon: FiUsers,
+  },
+  {
+    route: 'screening',
+    Icon: LuStethoscope
+  },
+  {
+    route: 'office',
+    Icon: FaUserDoctor
+  },
+  {
+    route: 'urgency-bank',
+    Icon: PiAmbulance
+  },
+  {
+    route: 'schedule-exams-services',
+    Icon: RiCalendarScheduleLine
+  },
+  {
+    route: 'phisical-unit',
+    Icon: FaRegHospital
+  },
+  {
+    route: 'exams-services',
+    Icon: GrDocumentText
+  },
+  {
+    route: 'appointment',
+    Icon: RiCalendarScheduleLine
+  },
+  {
+    route: 'doctor-calendar',
+    Icon: BsCalendar2Week
+  },
+  {
+    route: 'laboratory',
+    Icon: GrTest
+  },
+  {
+    route: 'imaging',
+    Icon: FaRadiationAlt
+  }
+];
 
-const clinicalRoutes:Route[] = [
+const clinicalRoutes = [
   {
     href: "/clinical/patient",
     route: 'patient',
     label: 'Utentes',
-    Icon: FiUsers,
   },
   {
     href: "/clinical/screening",
     route: 'screening',
     label: 'Triagem',
-    Icon: LuStethoscope
   },
   {
     href: "/clinical/office",
     route: 'office',
     label: 'Consultório',
-    Icon: FaUserDoctor
   },
   {
     href: "/clinical/urgency-bank",
     route: 'urgency-bank',
     label: 'Banco de Urgência',
-    Icon: PiAmbulance
   },
   {
     href: "/clinical/schedule-exams-services",
     route: 'schedule-exams-services',
     label: 'Exames Agendados',
-    Icon: RiCalendarScheduleLine
   },
   {
     href: "/clinical/phisical-unit",
     route: 'phisical-unit',
     label: 'Unidades Físicas',
-    Icon: FaRegHospital
   },
   {
     href: "/clinical/exams-services",
     route: 'exams-services',
     label: 'Exames/Serviços Cadastrados',
-    Icon: GrDocumentText
   },
   {
     href: "/clinical/appointment",
     route: 'appointment',
     label: 'Consultas Agendadas',
-    Icon: RiCalendarScheduleLine
   },
   {
     href: "/clinical/doctor-calendar",
     route: 'doctor-calendar',
     label: 'Calendário dos Medicos',
-    Icon: BsCalendar2Week
   },
   {
     href: "/clinical/laboratory",
     route: 'laboratory',
     label: 'Laboratório',
-    Icon: GrTest
   },
   {
     href: "/clinical/imaging",
     route: 'imaging',
     label: 'Laboratório',
-    Icon: FaRadiationAlt
   }
 ];
 
-const managerRoutes:Route[] = [
+const managerRoutes = [
   {
     href: '/manager/users',
     route: '/manager/users',
     label: 'Usuários',
-    Icon: UsersIcon,
   },
   {
     href: '/manager/permissions',
     route: '/manager/users',
     label: 'Permissões',
-    Icon: KeyIcon,
   }
 ];
 

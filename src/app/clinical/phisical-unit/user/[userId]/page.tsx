@@ -11,14 +11,14 @@ import {
   removeUnitAccess,
 } from "@/app/backend/api/clinical/urgency-bank-api";
 import UserClinicalConfig from "@/components/user-clinical-config";
-import { getUser as getClinicalUser, getSpecialties } from "@/app/backend/api/clinical/api";
+import { getUser, getSpecialties } from "@/app/backend/api/clinical/api";
 import { getUrgencyServices } from "@/app/backend/api/clinical/urgency-bank-api";
 
 export default async function Page({
    params 
   }:{
     params: Promise<{
-       userId: string 
+      userId: string 
     }> 
   }) {
   const { userId } = await params;
@@ -30,7 +30,7 @@ export default async function Page({
     grantedAccess
   ] = await Promise.all([
     getUnits({ type: ["workplace"]}),
-    getClinicalUser(userId),
+    getUser(userId),
     getUrgencyServices(),
     getSpecialties(),
     getGrantedUnitAccess(userId)
