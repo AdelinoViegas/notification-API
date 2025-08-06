@@ -897,7 +897,11 @@ async function getPrescriptions(id?: string){
     const filter = mongoose.omitUndefined({ _id: id });
     const prescriptions = await prescriptionModel.find(filter);
 
-    return prescriptions;
+    return prescriptions.map(e => ({ 
+      _id: e._id?.toString() as string,
+      makedAt: e.makedAt,
+      description: e.description
+    }));
   }catch {
     return [];
   }

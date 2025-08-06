@@ -7,11 +7,22 @@ import InputField from "@/components/ui/input-field";
 import { addPrescription } from "@/app/backend/api/clinical/urgency-bank-api";
 import { toast } from "react-toastify";
 
-export default function Prescription({}: {}){
+export default function Prescription({
+  buttonText,
+  buttonClass,
+  date,
+  description,
+  id
+}:{
+  buttonText?: string;
+  buttonClass?: string;
+  id?: string;
+  date?: string;
+  description?: string;
+}){
   const [ state, action ] = useActionState(addPrescription, { message: "", status: false }); 
   const [ modal, setModal ] = useState(false);
   
-
   useEffect(()=>{
     if(state.message)
       if(state.status)
@@ -22,7 +33,8 @@ export default function Prescription({}: {}){
   }, [state]);
   return(
     <div>
-      <Button onClick={()=>setModal(true)}>Novo</Button>
+      {!buttonText && <Button onClick={()=>setModal(true)}>Novo</Button>}
+      {!!buttonText && <button className={buttonClass} onClick={()=>setModal(true)}>{buttonText}</button>}
 
       <Modal
         open={modal}
@@ -31,18 +43,20 @@ export default function Prescription({}: {}){
         title="Novo Receituario"
       >
         <form action={action}>
-          <input type="hidden" name="id" value={""} />
+          <input type="hidden" name="id" value={id} />
 
           <InputField
             textLabel="Data"
             type="datetime-local"
             name="makedAt" 
+            defaultValue={date}
             required
           />
 
           <InputDetails
             textLabel="Descrição" 
             name="description"
+            defaultValue={description}
             required
           />
 

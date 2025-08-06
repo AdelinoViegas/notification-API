@@ -1,5 +1,6 @@
 import Prescription from "@/components/forms/prescription";
 import { getPrescriptions } from "@/app/backend/api/clinical/urgency-bank-api";
+import PrescriptionList from "@/components/prescription-list";
 
 export default async function Page(){
   const prescriptions = await getPrescriptions();
@@ -7,8 +8,7 @@ export default async function Page(){
   return(
     <div>
       <Prescription />
-
-      {JSON.stringify(prescriptions)}
+      <PrescriptionList items={prescriptions} />
     </div>
   )
 }
