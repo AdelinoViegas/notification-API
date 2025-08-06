@@ -23,7 +23,6 @@ import { getDateInDashFormat } from "@/lib/date-formater";
 import { Types } from "mongoose";
 import type { DoctorCalendarReference, DoctorDayAndTime } from "@/app/backend/api/clinical/types";
 
-
 type DoctorRole = {
   _id: string;
   roleId: string;
@@ -129,7 +128,7 @@ export default function ScheduleAppointment({ patientId }: { patientId: string }
   useEffect(()=>{
     const loadData = async ()=>{  
       const doctors = await getDoctors() as SelectionOption[];
-      doctorsRef.current = await getDoctors() as unknown as DoctorRole[];
+      doctorsRef.current = doctors as unknown as DoctorRole[];
       const tmpSpecialties = await getSpecialties();
   
       setSpecialties(tmpSpecialties);
