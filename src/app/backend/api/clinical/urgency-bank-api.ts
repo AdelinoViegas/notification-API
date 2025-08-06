@@ -17,7 +17,9 @@ import {
   urgencyBankModel,
   urgencyServiceModel,
   screeningModel,
-  patientHospitalizedModel
+  patientHospitalizedModel,
+  prescriptionModel,
+  surgeryModel
 } from "@/app/backend/models/clinical";
 import { 
   patientAccess,
@@ -34,6 +36,7 @@ import { getUser, patientFilters } from "@/app/backend/api/clinical/api";
 import { DoctorCalendar } from "@/app/backend/api/clinical/types";
 import { getPatient as mainPatient } from "@/app/backend/api/clinical/api";
 import { closePatientProcess } from "./process-api";
+import mongoose from "mongoose";
 
 type UnitType = "workplace" | "internment" | "laboratory" | "imaging";
 
@@ -441,8 +444,7 @@ async function removeUnitAccess(formData: FormData){
 }
 
 async function getGrantedUnitAccess(userId: string){
-  console.log("granted: ", userId)
-  const grantedAccess = await workplaceModel.find() //.find({ userId });
+  const grantedAccess = await workplaceModel.find({ userId })
   const formatedList = [];
 
   for(const access of grantedAccess)
@@ -857,6 +859,112 @@ async function finishHospitalization(prev: unknown, form: FormData){
   }
 }
 
+async function addPrescription(p: unknown, form: FormData){
+  try{
+    const description = form.get("description");
+    const makedAt = form.get("makedAt");
+    const prescriptionId = form.get("id");
+    const patientId = form.get("patientId");
+
+    const hasData = prescriptionId 
+      ? await prescriptionModel.findOneAndUpdate({ _id: prescriptionId }, {
+          makedAt,
+          description,
+          patientId
+        })
+      : null
+
+    if(!hasData)
+      await prescriptionModel.create({
+        makedAt,
+        description,
+        patientId,
+        userId: await getUserId()
+      });
+    
+    return {
+      message: "Salvo com sucesso!",
+      status: true
+    }
+  }catch{
+    return {
+      message: "Não foi possivel",
+      status: false
+    }
+  }
+}
+
+async function getPrescriptions({
+  id,
+  from,
+  to
+}: {
+  id?: string;
+  from?: string;
+  to?: string;
+}){
+  try{
+    const filter = mongoose.omitUndefined({ 
+      _id: id,
+      makedAt: to && from ? {
+        $lt: to,
+        $gt: from
+      }: undefined
+    });
+    
+    const prescriptions = await prescriptionModel.find(filter);
+
+    return prescriptions.map(e => ({ 
+      _id: e._id?.toString() as string,
+      makedAt: e.makedAt,
+      description: e.description
+    }));
+  } catch {
+    return [];
+  }
+}
+
+async function requestSurgery(p: unknown, formdata: FormData){
+  try{
+    const description = formdata.get("description");
+    const patientId = formdata.get("patientId");
+
+    await surgeryModel.create({
+      userId: await getUserId(),
+      description,
+      patientId
+    });
+
+    return {
+      message: "Solicitação envida!",
+      status: true
+    }
+  }catch {
+    return {
+      message: "operação impossivel",
+      status: false
+    }
+  }
+}
+
+async function getSurgery({ id }:{ id?: string }){
+  try{
+    const filter = mongoose.omitUndefined({ _id: id });
+
+    const surgeries = (await surgeryModel.find(filter)).map((e) => ({
+      _id: e._id.toString(),
+      description: e.description,
+      state: e.state,
+      createdAt: e.createdAt,
+      doctor: "Não assinado" 
+    }));
+
+    return surgeries;
+  }catch {
+    return [];
+  }
+}
+
 export {
   finishHospitalization,
   getPatients,
@@ -880,5 +988,9 @@ export {
   signUrgencyService,
   getUrgencyService,
   getUrgencyServices,
-  getPatient
+  getPatient,
+  addPrescription,
+  getPrescriptions,
+  requestSurgery,
+  getSurgery
 };

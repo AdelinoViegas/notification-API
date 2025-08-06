@@ -1,4 +1,5 @@
 import { Schema } from "mongoose";
+import { Prescription } from "./types";
 
 const anamnesis = new Schema({
   generalClinic: {
@@ -199,8 +200,34 @@ const patientHospitalizedSchema = new Schema({
   timestamps: true
 });
 
+const prescriptionSchema = new Schema<Prescription>({
+  userId: Schema.ObjectId,
+  description: String,
+  makedAt: Date,
+  urgencyId: Schema.ObjectId,
+  patientId: Schema.ObjectId
+}, {
+  timestamps: true
+});
+
+const surgerySchema = new Schema({
+  userId: Schema.ObjectId,
+  description: String,
+  patientId: Schema.ObjectId,
+  resultId: Schema.ObjectId, // associar o resultado da cirurgia com este documento
+  state: {
+    type: String,
+    enum: ["resolved", "rejected", "pending", "opened"],
+    default: "opened"
+  }
+}, {
+  timestamps: true
+}); // deve ser processado todas as surgery em opened para o bloco operatório
+
 export {
   urgencyBankSchema,
   urgencyService,
-  patientHospitalizedSchema
+  patientHospitalizedSchema,
+  prescriptionSchema,
+  surgerySchema
 }

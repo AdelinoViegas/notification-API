@@ -64,11 +64,11 @@ export default function FinishAnalysis({
       </Button>
 
       <Modal
-        title="Concluir Consulta"
+        title="Concluir o Exame"
         onClose={closeModal}
         open={modalState}>
         <div>
-          <p>Tem certeza que deseja concluir o processo de análise de exames?</p>
+          <p>Tem certeza que deseja concluir o exames?</p>
           <div className="flex gap-3 justify-end">
             <Button 
               type="button" 

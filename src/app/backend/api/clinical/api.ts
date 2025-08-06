@@ -1,7 +1,6 @@
 'use server';
 
 import { getUserId } from "@/lib/web-token";
-// import { userModel as managerUserModel } from '@/app/backend/models/manager';
 import {
   Responsable,
   Assured,
@@ -24,10 +23,8 @@ import {
 import { 
   patientAccess,
   patientGroup as patientGroups,
-  // userCategory
+  userCategory
 } from "@/app/backend/api/clinical/translator"; 
-// import { closePatientProcess } from "@/app/backend/api/clinical/process-api";
-// import { getGrantedUnitAccess } from "@/app/backend/api/clinical/urgency-bank-api";
 import { validatePatientDoc } from "@/lib/regexp";
 import { closePatientProcess } from "./process-api";
 import { 
@@ -58,37 +55,27 @@ async function allowUpdate(id: string){
 
 async function getUsers(){  
   const users = await RESTgetUsers();
+  const userRoles = new Map<string, typeof userCategory[number]>();
+  userCategory.forEach(e => userRoles.set(e._id, e));
+  const clinicalUsers = [];
 
-  const clinicalUsers = users.map(user => ({
-    id: user._id,
-    createdAt: new Date(),
-    category: "Indefinido",
-    categoryId: "doctor",
-    role: "Ind",
-    roleId: "test",
-    workplaces: 0,
-    ...user
-  }));
+  for (const user of users){
+    const clinicalUser = await userModel.findOne({ userId: user._id });
+    const specialty = await specialtyModel.findOne({ _id: clinicalUser?.specialtyId });
+
+    clinicalUsers.push({
+      id: user._id,
+      createdAt: new Date(),
+      category: userRoles.get(clinicalUser?.categoryId as string)?.label ?? "Indefinido",
+      categoryId: clinicalUser?.categoryId as string,
+      role: specialty?.name as string ?? "Indefinido",
+      roleId: clinicalUser?.specialtyId.toString() as string,
+      workplaces: 0,
+      ...user
+    })
+  }
 
   return clinicalUsers;
-  // for (const user of users){
-  //   const workplaces = await getGrantedUnitAccess(user.userId as unknown as string);
-  //   const role = user?.specialtyId?(await specialtyModel.findById({ _id: user.specialtyId }))?.name:"Indefinido";
-
-  //   formatedUsers.push({
-  //     _id: user?.userId?.toString() as string,
-  //     id: user?.userId?.toString() as string,
-  //     fullname: sysUser?.fullname as string,
-  //     createdAt: user?.createdAt as Date,
-  //     category: user?.categoryId?userCategory.find(item => item._id == user?.categoryId)?.label:"Indefinido",
-  //     categoryId: user.categoryId?.toString() as string,
-  //     role: role,
-  //     roleId: user.specialtyId?.toString() as string,
-  //     workplaces: workplaces.length,
-  //   });
-  // }
-
-  // return formatedUsers;
 }
 
 async function getDoctors(){

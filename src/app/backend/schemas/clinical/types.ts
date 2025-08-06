@@ -5,6 +5,14 @@ export interface ClinicalUser extends Document {
   orderNumber: number;
   serviceId: Types.ObjectId;
   specialtyId: Types.ObjectId;
-  categoryId: Types.ObjectId;
+  categoryId: string;
   officeId: Types.ObjectId;
+}
+
+export interface Prescription extends Document {
+  userId: Types.ObjectId;
+  description: string;
+  makedAt: Date;
+  urgencyId: Types.ObjectId;
+  patientId: Types.ObjectId;
 }

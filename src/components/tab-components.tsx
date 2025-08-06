@@ -114,7 +114,7 @@ const tabComponents = [
           className="w-full"
           id="Documentação:0:documentation"
           title="123456789AB123"
-          defaultValue={"123456789AB123"}
+          // defaultValue={"123456789AB123"}
         />
       </div>
       

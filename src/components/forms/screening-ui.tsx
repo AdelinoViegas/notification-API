@@ -164,7 +164,7 @@ export default function ScreeningUI({
         {ui === "reason" && 
           <>
             <InputDetails
-              textLabel="Escreva na caixa de Texto"
+              textLabel="Descrever o motivo da vinda"
               placeholder="Descreva o motivo da vinda do utente..."
               name="reason"
               defaultValue={screeningData?.reason}
@@ -298,7 +298,7 @@ export default function ScreeningUI({
           <>
             <InputDetails
               textLabel="Estado actual"
-              placeholder="Diga como o utente está actualmente..."
+              placeholder="Descreva o utente actual do utente ..."
               name="state"
               defaultValue={screeningData?.state}
               required

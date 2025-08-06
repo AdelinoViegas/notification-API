@@ -43,7 +43,7 @@ export default async function Page({
           useReactHook
           subPaths={[
             { path: "patient", title: "Ficha de Cadastro" },
-            { path: "reason", title: "Movito da vinda" },
+            { path: "reason", title: "Motivo da vinda" },
             { path: "vital-signals", title: "Sinais Vitais" },
             { path: "priority", title: "Grau de Prioridade" },
             { path: "state", title: "Estado Actual" },

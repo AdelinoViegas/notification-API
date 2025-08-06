@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Header from "@/components/header";
-// import { getUser } from "@/app/backend/api/manager/api";
 import { getUserId } from "@/lib/web-token";
 import WorkplaceFrom from "@/components/forms/workplace-form";
 import { getGrantedUnitAccess } from "@/app/backend/api/clinical/urgency-bank-api";

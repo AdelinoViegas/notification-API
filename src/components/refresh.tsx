@@ -9,7 +9,7 @@ export default function Refresh(){
   useEffect(()=>{
     const interval = setInterval(()=>{
       router.refresh();
-    }, 1000);
+    }, 5000);
 
     return () => clearInterval(interval); 
   }, []);

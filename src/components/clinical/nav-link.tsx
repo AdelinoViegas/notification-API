@@ -1,8 +1,9 @@
 "use client";
 
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
 import { clinicalIcons } from '@/components/routes';
+import Link from 'next/link';
 
 interface Route {
   href: string;
@@ -12,7 +13,6 @@ interface Route {
 
 export default function NavLink({ routes }:{ routes: Route[] }){
   const pathname = usePathname();
-  const router = useRouter();
   const icons = new Map<string, typeof clinicalIcons[number]>();
   clinicalIcons.forEach(e => icons.set(e.route, e));
 
@@ -24,12 +24,9 @@ export default function NavLink({ routes }:{ routes: Route[] }){
         const Icon = icons.get(item.route)?.Icon;
 
         return(
-          <button
+          <Link
             key={index}
-            onClick={()=>{
-              router.replace(item.href);
-              router.refresh();
-            }}
+            href={item.href}
             className={clsx(
               "flex rounded-md py-2 px-3 items-center gap-2 border-2",
               "text-sm font-medium hover:bg-blue-100 hover:hover:text-blue-600",
@@ -37,7 +34,7 @@ export default function NavLink({ routes }:{ routes: Route[] }){
             )}>
             {!!Icon && <Icon fontSize={25} />}
             <p className="hidden md:block">{item.label}</p>
-          </button>
+          </Link>
         );
       })}
     </>

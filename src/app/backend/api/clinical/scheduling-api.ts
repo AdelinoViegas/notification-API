@@ -20,7 +20,6 @@ import {
   appointmentCancelModel,
   scheduleServiceModel,
 } from "@/app/backend/models/clinical";
-import { userModel } from "@/app/backend/models/manager";
 import { getUser } from "@/app/backend/api/clinical/api";
 import { redirect } from "next/navigation";
 import { getExamResult as getExamResutlFromUnit } from "./unit-api";
@@ -341,8 +340,7 @@ async function getSchedulePatientExams({
   unitId?: string, 
   name?: string,
   isCanceled?: boolean, 
-  isServed?: boolean, 
-
+  isServed?: boolean
 }){
   try{
     const schedules = unitId?await scheduleExamModel.find({ 
@@ -360,7 +358,7 @@ async function getSchedulePatientExams({
     for(const item of schedules){
       const patient = await patientModel.findById({_id: item.patientId }).select({ fullname: 1 });
       const laboratory = await unitModel.findById({_id: item.laboratoryId }).select({ name: 1 });
-      const user = await userModel.findById({ _id: item.userId }).select({ fullname: 1 });
+      const user = await getUser(item.userId?.toString() as string) // await userModel.findById({ _id: item.userId }).select({ fullname: 1 });
       const patientExams = await getSchedulePatientExam(item._id.toString());
       
       formatedList.push({
@@ -368,7 +366,7 @@ async function getSchedulePatientExams({
         createAt: item.dateTime,
         patientName: patient?.fullname as string,
         laboratory: laboratory?.name as string,
-        user: user?.fullname as string,
+        user: user.fullname,
         examQty: patientExams?.exams.length as number,
         status: (item.payment?.status === "pending")?"Pendente":"Confirmado" as string,
       });
@@ -391,7 +389,7 @@ async function getSchedulePatientExam(scheduleId: string){
     const schedule = await scheduleExamModel.findById({ _id: scheduleId });
     const patient = await patientModel.findById({ _id: schedule?.patientId }).select({ fullname: 1, age:1, gender:1});
     const unit = await unitModel.findById({ _id: schedule?.laboratoryId }).select({ name: 1});
-    const user = await userModel.findById({ _id: schedule?.userId }).select({fullname: 1});
+    const user = await getUser(schedule?.userId?.toString() as string);
     const exams = [];
     let totalPrice = 0;
     
@@ -414,7 +412,7 @@ async function getSchedulePatientExam(scheduleId: string){
       age: patient?.age as number,
       gender: patient?.gender as string,
       laboratory: unit?.name as string,
-      user: user?.fullname as string,
+      user: user.fullname,
       exams,
       examPrice: totalPrice?totalPrice:"0",
       detail: schedule?.detail,
@@ -540,7 +538,7 @@ async function getExamResults(){
 
 async function getExamResult(scheduleId: string){
   const result  = await examResultModel.findOne({scheduleId});
-  const user = await userModel.findById({ _id: result?.userId }).select({fullname: 1});
+  const user = await getUser(result?.userId?.toString() as string);
 
   return {
     user: user?.fullname,
@@ -551,7 +549,7 @@ async function getExamResult(scheduleId: string){
 
 async function getExamCancel(scheduleId: string){
   const cancel  = await examCancelModel.findOne({ scheduleId });
-  const user = await userModel.findById({ _id: cancel?.userId }).select({fullname: 1});
+  const user = await getUser(cancel?.userId?.toString() as string);
 
   return {
     user: user?.fullname as string,
