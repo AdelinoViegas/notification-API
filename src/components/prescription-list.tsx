@@ -49,10 +49,10 @@ function List({ id }:{ id: string }){
   useEffect(()=>{
     getPrescriptions({ id })
     .then(props => setData(props[0]))
-  })
+  }, [])
   return(
     <div className="ring ring-gray-200 ring-1 rounded px-3 py-2">
-      <h2 className="line-clamp-1">{data?.description}</h2>
+      <h2 className="line-clamp-1">Receituário</h2>
       <p className="text-sm text-gray-500 font-medium">{data?.makedAt.toLocaleString()}</p>
       <Prescription
         buttonText="Editar"
