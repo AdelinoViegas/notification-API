@@ -18,7 +18,8 @@ import {
   urgencyServiceModel,
   screeningModel,
   patientHospitalizedModel,
-  prescriptionModel
+  prescriptionModel,
+  surgeryModel
 } from "@/app/backend/models/clinical";
 import { 
   patientAccess,
@@ -924,6 +925,47 @@ async function getPrescriptions({
   }
 }
 
+async function requestSurgery(p: unknown, formdata: FormData){
+  try{
+    const description = formdata.get("description");
+    const patientId = formdata.get("patientId");
+
+    await surgeryModel.create({
+      userId: await getUserId(),
+      description,
+      patientId
+    });
+
+    return {
+      message: "Solicitação envida!",
+      status: true
+    }
+  }catch {
+    return {
+      message: "operação impossivel",
+      status: false
+    }
+  }
+}
+
+async function getSurgery({ id }:{ id?: string }){
+  try{
+    const filter = mongoose.omitUndefined({ _id: id });
+
+    const surgeries = (await surgeryModel.find(filter)).map((e) => ({
+      _id: e._id.toString(),
+      description: e.description,
+      state: e.state,
+      createdAt: e.createdAt,
+      doctor: "Não assinado" 
+    }));
+
+    return surgeries;
+  }catch {
+    return [];
+  }
+}
+
 export {
   finishHospitalization,
   getPatients,
@@ -949,5 +991,7 @@ export {
   getUrgencyServices,
   getPatient,
   addPrescription,
-  getPrescriptions
+  getPrescriptions,
+  requestSurgery,
+  getSurgery
 };

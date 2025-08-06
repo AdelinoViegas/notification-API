@@ -18,13 +18,7 @@ function List({ id }:{ id: string }){
       <div className="ring ring-gray-200 ring-1 rounded px-3 py-2">
         <h2 className="line-clamp-1">{data?.description}</h2>
         <p className="text-sm text-gray-500 font-medium">{data?.makedAt.toLocaleString()}</p>
-        <Prescription
-          buttonText="Editar"
-          buttonClass="text-blue-500"
-          id={id}
-          date={data?.makedAt.toISOString().split('.')[0].slice(0, -3)}
-          description={data?.description} 
-        />
+        <button>ver detalhes</button>
       </div>
     );
 }
