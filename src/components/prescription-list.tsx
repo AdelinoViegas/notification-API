@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import Prescription from "@/components/forms/prescription";
 import { getPrescriptions } from "@/app/backend/api/clinical/urgency-bank-api";
-import type { Prescription as PIF } from "@/app/backend/schemas/clinical/types";
 
 type PrescriptionIF = Awaited<ReturnType<typeof getPrescriptions>>;
 
