@@ -864,12 +864,13 @@ async function addPrescription(p: unknown, form: FormData){
     const description = form.get("description");
     const makedAt = form.get("makedAt");
     const prescriptionId = form.get("id");
+    const patientId = form.get("patientId");
 
-    
     const hasData = prescriptionId 
       ? await prescriptionModel.findOneAndUpdate({ _id: prescriptionId }, {
           makedAt,
-          description
+          description,
+          patientId
         })
       : null
 
@@ -877,6 +878,7 @@ async function addPrescription(p: unknown, form: FormData){
       await prescriptionModel.create({
         makedAt,
         description,
+        patientId,
         userId: await getUserId()
       });
     

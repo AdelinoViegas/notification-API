@@ -4,7 +4,7 @@ import PrescriptionList from "@/components/prescription-list";
 
 export default async function Page(){
   const prescriptions = await getPrescriptions();
-
+  
   return(
     <div>
       <Prescription />

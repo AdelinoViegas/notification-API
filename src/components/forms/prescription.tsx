@@ -6,6 +6,7 @@ import InputDetails from "@/components/ui/input-details";
 import InputField from "@/components/ui/input-field";
 import { addPrescription } from "@/app/backend/api/clinical/urgency-bank-api";
 import { toast } from "react-toastify";
+import { useParams } from "next/navigation";
 
 export default function Prescription({
   buttonText,
@@ -22,6 +23,7 @@ export default function Prescription({
 }){
   const [ state, action ] = useActionState(addPrescription, { message: "", status: false }); 
   const [ modal, setModal ] = useState(false);
+  const params = useParams();
   
   useEffect(()=>{
     if(state.message)
@@ -44,6 +46,7 @@ export default function Prescription({
       >
         <form action={action}>
           <input type="hidden" name="id" value={id} />
+          <input type="hidden" name="patientId" value={params.patientId} />
 
           <InputField
             textLabel="Data"

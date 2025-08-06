@@ -14,4 +14,6 @@ export interface Prescription extends Document {
   userId: Types.ObjectId;
   description: string;
   makedAt: Date;
+  urgencyId: Types.ObjectId;
+  patientId: Types.ObjectId;
 }

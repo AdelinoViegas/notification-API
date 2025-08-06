@@ -203,7 +203,9 @@ const patientHospitalizedSchema = new Schema({
 const prescriptionSchema = new Schema<Prescription>({
   userId: Schema.ObjectId,
   description: String,
-  makedAt: Date
+  makedAt: Date,
+  urgencyId: Schema.ObjectId,
+  patientId: Schema.ObjectId
 }, {
   timestamps: true
 });
