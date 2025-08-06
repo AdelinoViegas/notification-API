@@ -210,9 +210,24 @@ const prescriptionSchema = new Schema<Prescription>({
   timestamps: true
 });
 
+const surgerySchema = new Schema({
+  userId: Schema.ObjectId,
+  description: String,
+  patientId: Schema.ObjectId,
+  resultId: Schema.ObjectId, // associar o resultado da cirurgia com este documento
+  state: {
+    type: String,
+    enum: ["resolved", "rejected", "pending", "opened"],
+    default: "opened"
+  }
+}, {
+  timestamps: true
+}); // deve ser processado todas as surgery em opened para o bloco operatório
+
 export {
   urgencyBankSchema,
   urgencyService,
   patientHospitalizedSchema,
-  prescriptionSchema
+  prescriptionSchema,
+  surgerySchema
 }

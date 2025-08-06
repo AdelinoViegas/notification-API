@@ -78,9 +78,14 @@ export default function UrgencyFilter(){
     >
       <div className="flex flex-col">
         <label htmlFor="filter" className="text-sm">Atalho de dias</label>
-        <select id="filter" name="range" className="px-3 py-1 border-2 border-primary/50 rounded-lg">
+        <select 
+          id="filter" 
+          name="range" 
+          defaultValue={0}
+          className="px-3 py-1 border-2 border-primary/50 rounded-lg"
+        >
           {defaultsDays.map((props, index)=>(
-            <option selected={index === 0} key={index} value={index}>{props.label}</option>
+            <option key={index} value={index}>{props.label}</option>
           ))}
         </select> 
       </div>

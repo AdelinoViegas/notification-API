@@ -64,7 +64,8 @@ export default async function Layout({
             { path: "exam", title: "Exames" },
             { path: "clinical-diary", title: "Diário Clínico" },
             { path: "office", title: "Consultas" },
-            { path: "prescription", title: "Receituário" }
+            { path: "prescription", title: "Receituário" },
+            { path: "surgery", title: "Cirurgia"}
           ]}
         />
       </div>
