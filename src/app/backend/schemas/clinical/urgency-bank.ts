@@ -1,4 +1,5 @@
 import { Schema } from "mongoose";
+import { Prescription } from "./types";
 
 const anamnesis = new Schema({
   generalClinic: {
@@ -199,8 +200,17 @@ const patientHospitalizedSchema = new Schema({
   timestamps: true
 });
 
+const prescriptionSchema = new Schema<Prescription>({
+  userId: Schema.ObjectId,
+  description: String,
+  makedAt: Date
+}, {
+  timestamps: true
+});
+
 export {
   urgencyBankSchema,
   urgencyService,
-  patientHospitalizedSchema
+  patientHospitalizedSchema,
+  prescriptionSchema
 }

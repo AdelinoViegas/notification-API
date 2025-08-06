@@ -40,7 +40,8 @@ import {
 import { 
   urgencyBankSchema, 
   urgencyService,
-  patientHospitalizedSchema 
+  patientHospitalizedSchema, 
+  prescriptionSchema
 } from "@/app/backend/schemas/clinical/urgency-bank";
 
 const clinical = createConnection(process.env.MONGO_URL as string, {
@@ -83,6 +84,7 @@ const externalResultsModel = clinical.model('ExternalResults', externalResultSch
 const urgencyBankModel = clinical.model("UrgencyBank", urgencyBankSchema);
 const urgencyServiceModel = clinical.model('UrgencyService', urgencyService);
 const patientHospitalizedModel = clinical.model("PatientHospitalized", patientHospitalizedSchema);
+const prescriptionModel = clinical.model("Prescription", prescriptionSchema);
 
 export {
   userModel,
@@ -115,5 +117,6 @@ export {
   externalResultsModel,
   urgencyBankModel,
   urgencyServiceModel,
-  patientHospitalizedModel
+  patientHospitalizedModel,
+  prescriptionModel
 };

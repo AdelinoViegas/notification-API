@@ -8,3 +8,10 @@ export interface ClinicalUser extends Document {
   categoryId: Types.ObjectId;
   officeId: Types.ObjectId;
 }
+
+
+export interface Prescription extends Document {
+  userId: Types.ObjectId;
+  description: string;
+  makedAt: Date;
+}
