@@ -66,9 +66,9 @@ async function getUsers(){
     clinicalUsers.push({
       id: user._id,
       createdAt: new Date(),
-      category: userRoles.get(clinicalUser?.categoryId as string)?.label,
+      category: userRoles.get(clinicalUser?.categoryId as string)?.label ?? "Indefinido",
       categoryId: clinicalUser?.categoryId as string,
-      role: specialty?.name as string,
+      role: specialty?.name as string ?? "Indefinido",
       roleId: clinicalUser?.specialtyId.toString() as string,
       workplaces: 0,
       ...user
