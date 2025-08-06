@@ -907,14 +907,12 @@ async function getPrescriptions({
   try{
     const filter = mongoose.omitUndefined({ 
       _id: id,
-      createdAt: {
+      createdAt: to && from ? {
         $lt: to,
         $gt: from
-      } 
+      }: undefined
     });
-
-    console.log(filter);
-
+    
     const prescriptions = await prescriptionModel.find(filter);
 
     return prescriptions.map(e => ({ 

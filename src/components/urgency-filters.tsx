@@ -81,7 +81,7 @@ export default function UrgencyFilter(){
         <label htmlFor="filter" className="text-sm">Atalho de dias</label>
         <select id="filter" name="range" className="px-3 py-1 border-2 border-primary/50 rounded-lg">
           {defaultsDays.map((props, index)=>(
-            <option key={index} value={index}>{props.label}</option>
+            <option selected={index === 0} key={index} value={index}>{props.label}</option>
           ))}
         </select> 
       </div>
