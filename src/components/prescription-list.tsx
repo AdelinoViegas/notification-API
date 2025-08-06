@@ -31,7 +31,7 @@ function List({ id }:{ id: string }){
 export default function PrescriptionList({ items }:{ items: PrescriptionIF }){
   return(
     <div>
-      <ul className="grid md:grid-cols-2 gap-3 mt-3">
+      <ul className="grid md:grid-cols-2 lg:grid-cols-4 gap-3 mt-3">
         {items.map((props, index)=>(
           <li key={index}><List id={props._id as string} /></li>
         ))}
