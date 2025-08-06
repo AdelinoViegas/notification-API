@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
 import { clinicalIcons } from '@/components/routes';
 import Link from 'next/link';
@@ -13,7 +13,6 @@ interface Route {
 
 export default function NavLink({ routes }:{ routes: Route[] }){
   const pathname = usePathname();
-  const router = useRouter();
   const icons = new Map<string, typeof clinicalIcons[number]>();
   clinicalIcons.forEach(e => icons.set(e.route, e));
 
