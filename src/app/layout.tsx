@@ -42,7 +42,7 @@ export default function RootLayout({
           autoClose={5000}
           hideProgressBar={true}
           newestOnTop={false}
-          closeOnClick={false}
+          closeOnClick={true}
           rtl={false}
           draggable
           pauseOnHover

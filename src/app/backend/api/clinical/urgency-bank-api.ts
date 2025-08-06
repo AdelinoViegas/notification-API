@@ -865,7 +865,6 @@ async function addPrescription(p: unknown, form: FormData){
     const makedAt = form.get("makedAt");
     const prescriptionId = form.get("id");
     const patientId = form.get("patientId");
-    console.log([...form.entries()])
 
     const hasData = prescriptionId 
       ? await prescriptionModel.findOneAndUpdate({ _id: prescriptionId }, {
