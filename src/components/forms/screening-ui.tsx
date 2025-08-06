@@ -164,7 +164,7 @@ export default function ScreeningUI({
         {ui === "reason" && 
           <>
             <InputDetails
-              textLabel="Descrever o motio da vinda"
+              textLabel="Descrever o motivo da vinda"
               placeholder="Descreva o motivo da vinda do utente..."
               name="reason"
               defaultValue={screeningData?.reason}
