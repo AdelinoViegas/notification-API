@@ -445,7 +445,7 @@ async function removeUnitAccess(formData: FormData){
 
 async function getGrantedUnitAccess(userId: string){
   console.log("granted: ", userId)
-  const grantedAccess = await workplaceModel.find() //.find({ userId });
+  const grantedAccess = await workplaceModel.find({ userId }) //.find({ userId });
   const formatedList = [];
 
   for(const access of grantedAccess)
