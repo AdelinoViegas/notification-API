@@ -30,8 +30,12 @@ export default function Prescription({
     if(state.message)
       if(state.status)
         toast.success(state.message, { 
-          onClose: ()=> setModal(false),
-          onOpen: ()=> router.refresh()
+          onClose: () => setModal(false),
+          onOpen: () => {
+            if(id)
+              setModal(false);
+            window.location.reload();
+          }
         });
       else
         toast.error(state.message);

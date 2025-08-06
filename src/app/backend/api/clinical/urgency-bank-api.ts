@@ -906,7 +906,7 @@ async function getPrescriptions({
   try{
     const filter = mongoose.omitUndefined({ 
       _id: id,
-      createdAt: to && from ? {
+      makedAt: to && from ? {
         $lt: to,
         $gt: from
       }: undefined
@@ -919,7 +919,7 @@ async function getPrescriptions({
       makedAt: e.makedAt,
       description: e.description
     }));
-  }catch {
+  } catch {
     return [];
   }
 }
