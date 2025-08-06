@@ -27,7 +27,7 @@ class FilterDateDate {
   }
 
   getLast10Day() {
-    return this.#subtractDays(10);
+    return this.#subtractDays(7);
   }
 }
 
@@ -66,7 +66,7 @@ export default function UrgencyFilter(){
       ...defaultFilters.getLast3Day()
     },
     {
-      label: "10 dias Atrás",
+      label: "Uma Semana Atrás",
       ...defaultFilters.getLast10Day()
     }
   ]
