@@ -865,6 +865,7 @@ async function addPrescription(p: unknown, form: FormData){
     const makedAt = form.get("makedAt");
     const prescriptionId = form.get("id");
     const patientId = form.get("patientId");
+    console.log([...form.entries()])
 
     const hasData = prescriptionId 
       ? await prescriptionModel.findOneAndUpdate({ _id: prescriptionId }, {
@@ -894,9 +895,26 @@ async function addPrescription(p: unknown, form: FormData){
   }
 }
 
-async function getPrescriptions(id?: string){
+async function getPrescriptions({
+  id,
+  from,
+  to
+}: {
+  id?: string;
+  from?: string;
+  to?: string;
+}){
   try{
-    const filter = mongoose.omitUndefined({ _id: id });
+    const filter = mongoose.omitUndefined({ 
+      _id: id,
+      createdAt: {
+        $lt: to,
+        $gt: from
+      } 
+    });
+
+    console.log(filter);
+
     const prescriptions = await prescriptionModel.find(filter);
 
     return prescriptions.map(e => ({ 

@@ -10,7 +10,7 @@ function List({ id }:{ id: string }){
   const [ data, setData ] = useState<PrescriptionIF[number]>();
 
   useEffect(()=>{
-    getPrescriptions(id)
+    getPrescriptions({ id })
     .then(props => setData(props[0]))
   })
   return(
@@ -27,10 +27,11 @@ function List({ id }:{ id: string }){
     </div>
   )
 }
+
 export default function PrescriptionList({ items }:{ items: PrescriptionIF }){
   return(
     <div>
-      <ul className="grid md:grid-cols-2 gap-x-3">
+      <ul className="grid md:grid-cols-2 gap-3 mt-3">
         {items.map((props, index)=>(
           <li key={index}><List id={props._id as string} /></li>
         ))}

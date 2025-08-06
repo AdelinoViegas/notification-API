@@ -26,6 +26,7 @@ export default function Prescription({
   const params = useParams();
   
   useEffect(()=>{
+    console.log(state);
     if(state.message)
       if(state.status)
         toast.success(state.message);
