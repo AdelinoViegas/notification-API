@@ -27,7 +27,7 @@ export default function Modal({
   return(
     <>
     <Dialog {...{open}} as="div" className="relative z-10 focus:outline-none" onClose={asWindow?()=>{}:onClose}>
-        <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+        <div className="fixed inset-0 z-10 w-screen overflow-y-auto bg-primary/50 backdrop-blur">
           <div className="flex min-h-full items-center justify-center p-4">
             <DialogPanel
               transition

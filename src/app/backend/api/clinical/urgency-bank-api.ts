@@ -17,7 +17,8 @@ import {
   urgencyBankModel,
   urgencyServiceModel,
   screeningModel,
-  patientHospitalizedModel
+  patientHospitalizedModel,
+  prescriptionModel
 } from "@/app/backend/models/clinical";
 import { 
   patientAccess,
@@ -34,6 +35,7 @@ import { getUser, patientFilters } from "@/app/backend/api/clinical/api";
 import { DoctorCalendar } from "@/app/backend/api/clinical/types";
 import { getPatient as mainPatient } from "@/app/backend/api/clinical/api";
 import { closePatientProcess } from "./process-api";
+import mongoose from "mongoose";
 
 type UnitType = "workplace" | "internment" | "laboratory" | "imaging";
 
@@ -857,6 +859,72 @@ async function finishHospitalization(prev: unknown, form: FormData){
   }
 }
 
+async function addPrescription(p: unknown, form: FormData){
+  try{
+    const description = form.get("description");
+    const makedAt = form.get("makedAt");
+    const prescriptionId = form.get("id");
+    const patientId = form.get("patientId");
+    console.log([...form.entries()])
+
+    const hasData = prescriptionId 
+      ? await prescriptionModel.findOneAndUpdate({ _id: prescriptionId }, {
+          makedAt,
+          description,
+          patientId
+        })
+      : null
+
+    if(!hasData)
+      await prescriptionModel.create({
+        makedAt,
+        description,
+        patientId,
+        userId: await getUserId()
+      });
+    
+    return {
+      message: "Salvo com sucesso!",
+      status: true
+    }
+  }catch{
+    return {
+      message: "Não foi possivel",
+      status: false
+    }
+  }
+}
+
+async function getPrescriptions({
+  id,
+  from,
+  to
+}: {
+  id?: string;
+  from?: string;
+  to?: string;
+}){
+  try{
+    const filter = mongoose.omitUndefined({ 
+      _id: id,
+      createdAt: to && from ? {
+        $lt: to,
+        $gt: from
+      }: undefined
+    });
+    
+    const prescriptions = await prescriptionModel.find(filter);
+
+    return prescriptions.map(e => ({ 
+      _id: e._id?.toString() as string,
+      makedAt: e.makedAt,
+      description: e.description
+    }));
+  }catch {
+    return [];
+  }
+}
+
 export {
   finishHospitalization,
   getPatients,
@@ -880,5 +948,7 @@ export {
   signUrgencyService,
   getUrgencyService,
   getUrgencyServices,
-  getPatient
+  getPatient,
+  addPrescription,
+  getPrescriptions
 };
