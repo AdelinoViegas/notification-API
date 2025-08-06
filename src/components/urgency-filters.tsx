@@ -2,7 +2,7 @@
 
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
-import { useSearchParams, usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 class FilterDateDate {
   #now() {
@@ -34,7 +34,6 @@ class FilterDateDate {
 export default function UrgencyFilter(){
   const defautlDate = new Date().toISOString().split('T')[0];
   const defaultFilters = new FilterDateDate();
-  const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
 
