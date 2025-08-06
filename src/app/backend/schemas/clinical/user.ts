@@ -9,7 +9,11 @@ export const userSchema = new Schema<ClinicalUser>({
   orderNumber: Number,
   serviceId: Schema.Types.ObjectId,
   specialtyId: Schema.Types.ObjectId,
-  categoryId: String, // do arquivo translator.ts
+  categoryId: {
+    type: String,
+    enum: ["doctor", "nurse", "others"],
+    default: "others"
+  }, // do arquivo translator.ts
   officeId: Schema.Types.ObjectId
 }, {
   timestamps: true,

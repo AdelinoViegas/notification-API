@@ -176,11 +176,10 @@ async function getPatients({
       total: formated.length,
     }
 
-  }catch(err: unknown){
+  }catch {
     return {
       patients: [],
       total: 0,
-      detail: err
     }
   }
 }
