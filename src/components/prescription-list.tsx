@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Prescription from "@/components/forms/prescription";
 import { getPrescriptions } from "@/app/backend/api/clinical/urgency-bank-api";
 
 type PrescriptionIF = Awaited<ReturnType<typeof getPrescriptions>>;

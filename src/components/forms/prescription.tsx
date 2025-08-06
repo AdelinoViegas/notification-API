@@ -6,7 +6,7 @@ import InputDetails from "@/components/ui/input-details";
 import InputField from "@/components/ui/input-field";
 import { addPrescription } from "@/app/backend/api/clinical/urgency-bank-api";
 import { toast } from "react-toastify";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 
 export default function Prescription({
   buttonText,
@@ -24,7 +24,6 @@ export default function Prescription({
   const [ state, action ] = useActionState(addPrescription, { message: "", status: false }); 
   const [ modal, setModal ] = useState(false);
   const params = useParams();
-  const router = useRouter();
   
   useEffect(()=>{
     if(state.message)
