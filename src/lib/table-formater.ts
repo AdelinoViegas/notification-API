@@ -1,7 +1,7 @@
 import { GETpatient } from "@/app/backend/api/clinical/types";
 import { getDataAndHoursFormat, getDateInSlashFormat } from "@/lib/date-formater";
 
-type TableRow = {
+export type TableRow = {
   id: string;
   row: string[]
 };
@@ -315,6 +315,19 @@ export function tableOffice(data: DoctorOffice[]){
 
   return tableRows;
 }
+
+/*export function tableClinicalDiary(data: DiaryTypeProps[]){
+  const dataClinicalDiary:TableRow[] = [];
+
+    data?.medicineDiary.forEach((value, index) => {
+        dataClinicalDiary.push({
+          id: String(index),
+          row: [
+            value.date,
+            value.description,
+          ]
+    })});
+}*/
 
 type TempResult = {
   _id: string;

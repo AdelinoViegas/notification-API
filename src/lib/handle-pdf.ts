@@ -9,7 +9,6 @@ import type {
 import type { 
   Assured,
   Employee,
-  Enterprise,
 } from "@/app/backend/api/clinical/types";
 // import { getDateInSlashFormat } from "./date-formater";
 
@@ -25,7 +24,7 @@ function patientRecord({
   const patientGroup = JSON.parse(group) as Group; 
   const assured = patientGroup?.group as Assured;
   const employee = patientGroup?.group as Employee;
-  const enterprise = patientGroup?.group as Enterprise; 
+  //const enterprise = patientGroup?.group as Enterprise; 
 
   doc.setFontSize(10);
   doc.addImage('/logo.png', 'PNG', margin.x, margin.y, 19, 24);
@@ -246,21 +245,21 @@ function patientRecord({
   doc.setFont("Helvetica", "bold");
   doc.text("Nome da Empresa:", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text(enterprise?.name ?? "", margin.x*4.368, margin.y);
+  doc.text("'enterprise?.name' ?? ", margin.x*4.368, margin.y);
   
   margin.x *= 7.6;
   
   doc.setFont("Helvetica", "bold");
   doc.text("Nª de Passe: ", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text(enterprise?.passNumber ?? "", margin.x*1.295, margin.y);
+  doc.text("'enterprise?.passNumber' ?? ", margin.x*1.295, margin.y);
 
   margin.x *= 1.54;
 
   doc.setFont("Helvetica", "bold");
   doc.text("Função: ", margin.x, margin.y);
   doc.setFont("Helvetica", "normal");
-  doc.text(enterprise?.role ?? "", margin.x*1.128, margin.y);
+  doc.text("'enterprise?.role ??' ", margin.x*1.128, margin.y);
 
   margin.y += 10;
   margin.x = 10;
