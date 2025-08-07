@@ -965,6 +965,21 @@ async function getSurgery({ id }:{ id?: string }){
   }
 }
 
+async function applyDischarge(){
+  try{
+    
+    return {
+      message: "Alta registrada com sucesso!",
+      status: true
+    }
+  }catch {
+     return {
+      message: "Alta registrada com sucesso!",
+      status: false
+    }
+  }
+}
+
 export {
   finishHospitalization,
   getPatients,
@@ -992,5 +1007,6 @@ export {
   addPrescription,
   getPrescriptions,
   requestSurgery,
-  getSurgery
+  getSurgery,
+  applyDischarge
 };
