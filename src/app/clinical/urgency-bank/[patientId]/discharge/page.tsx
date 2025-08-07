@@ -5,7 +5,7 @@ import Button from "@/components/ui/button";
 import InputDetails from "@/components/ui/input-details";
 import InputField from "@/components/ui/input-field";
 import Selection from "@/components/ui/selection";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { useActionState, useEffect } from "react";
 import { toast } from "react-toastify";
 
@@ -17,12 +17,13 @@ export default function Page(){
 
   const [ state, action ] = useActionState(applyDischarge, { message: "", status: false})
   const router = useRouter();
+  const params = useParams();
 
   useEffect(()=>{
     if(state.message)
       if(state.status)
         toast.success(state.message, { 
-          onClose: () => router.replace("/clinical/urgency-bank")
+          onOpen: () => router.replace("/clinical/urgency-bank")
         });
       else
         toast.error(state.message);
@@ -31,6 +32,8 @@ export default function Page(){
   return(
     <div>
       <form action={action}>
+        <input type="hidden" name="patientId" value={params.patientId} />
+
         <div className="grid md:grid-cols-2 gap-x-3">
           <Selection
             label="Tipo de Alta"

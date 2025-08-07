@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { RESTproxy } from './app/auth/rest-proxy' 
+import { RESTproxy } from '@/app/auth/rest-proxy' 
 import { NextConfig } from 'next';
 
 export async function middleware() {
