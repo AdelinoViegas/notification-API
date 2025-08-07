@@ -84,7 +84,6 @@ export default function ClinicalDiary({
       if(state.status)
         toast.success(state.message, {
           onClose: router.refresh,
-          autoClose: 1500
         });
       else 
         toast.error(state.message);
@@ -177,6 +176,7 @@ export default function ClinicalDiary({
 
       <Modal
         title={modalTitle}
+        asWindow
         onClose={()=>setModalState(false)}
         open={modalState}
       >
@@ -330,7 +330,10 @@ export default function ClinicalDiary({
             />
           </div>}
 
-          <Button>Salvar</Button>
+          <div className="flex gap-x-3">
+            <Button cancel type="button" onClick={()=>setModalState(false)}>Fechar</Button>
+            <Button>Salvar</Button>
+          </div>
         </form>
       </Modal>
     </Accordium>
