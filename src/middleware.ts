@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
-import { RESTproxy } from './app/auth/rest-proxy' 
+import { RESTproxy } from '@/app/auth/rest-proxy' 
 import { NextConfig } from 'next';
+
+export const runtime = "nodejs";
 
 export async function middleware() {
   if(await RESTproxy())
