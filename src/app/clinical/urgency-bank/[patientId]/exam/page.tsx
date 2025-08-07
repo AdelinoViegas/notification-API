@@ -29,6 +29,7 @@ export default async function Page({ params }: {
             "Resultado Descritivo",
             "Documento"
           ]}
+          baseRowLink={`/clinical/urgency-bank/${patientId}/exam`}
           rows={rows}
         />
       </div>

@@ -193,6 +193,14 @@ async function getPatientExams(laboratoryId: string){
   }finally{}
 }
 
+// async function getExams(patientId: string){
+//   try{
+//     const 
+//   }catch{
+
+//   }
+// }
+
 async function signExamResult(prev:unknown, formData:FormData){
   const serviceId = formData.get("serviceId") as string;
   const resultId = formData.get("resultId") as string;
