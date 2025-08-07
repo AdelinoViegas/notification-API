@@ -965,9 +965,18 @@ async function getSurgery({ id }:{ id?: string }){
   }
 }
 
-async function applyDischarge(){
+async function applyDischarge(p:unknown, formdata:FormData){
   try{
+    const patientId = formdata.get("patientId");
     
+    await triedModel.updateOne({
+      userId: await getUserId(),
+      patientId,
+      served: false
+    }, {
+      served: true
+    });
+
     return {
       message: "Alta registrada com sucesso!",
       status: true
