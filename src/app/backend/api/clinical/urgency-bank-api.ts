@@ -37,6 +37,7 @@ import { DoctorCalendar } from "@/app/backend/api/clinical/types";
 import { getPatient as mainPatient } from "@/app/backend/api/clinical/api";
 import { closePatientProcess } from "./process-api";
 import mongoose from "mongoose";
+import { getDataAndHoursFormat } from "@/lib/date-formater";
 
 type UnitType = "workplace" | "internment" | "laboratory" | "imaging";
 
@@ -714,6 +715,95 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
 
 async function getPatientUrgencyBank(patientId: string){
   const urgency = await urgencyBankModel.findOne({ patientId, served: false });
+  const medicinelDiary:{date: string, description: string}[] = [];
+  const nursingNotes:{date: string, description: string}[] = [];
+  const therapeuticDiary:{date: string, signature: string, description: string}[] = [];
+  const treatmentDiary:{date: string, signature: string, description: string}[] = [];
+  const vitalSignals:{
+    date: string,  
+    description: string,
+    vitalSignals: {
+      paMax: number,
+      paMin: number,
+      jump: number,
+      pvc: number,
+      imc: number,
+      sp02: number,
+      temperature: number,
+      breathing: number,
+      weight: number,
+      height: number,
+      bloodGlucose: number,
+    }
+  }[] = [];
+
+const hydromineralBalance: {
+  date: string,
+  siteOfDrugAdministration: string,
+  amount: string,
+  hidromineralBalance: string,
+  description: string,
+}[] = [];
+
+  urgency?.clinicalDiary?.medicalDiary.forEach((value) => {
+      medicinelDiary.push({
+        date: getDataAndHoursFormat(value.date as Date),
+        description: value.description as string,
+      });    
+  });
+
+  urgency?.clinicalDiary?.nursingNotes.forEach((value) => {
+      nursingNotes.push({
+        date: getDataAndHoursFormat(value.date as Date),
+        description: value.description as string,
+      });    
+  });
+
+  urgency?.clinicalDiary?.therapeuticDiary.forEach((value) => {
+      therapeuticDiary.push({
+        date: getDataAndHoursFormat(value.date as Date),
+        signature: value.signature as string,
+        description: value.description as string,
+      });    
+  });
+
+  urgency?.clinicalDiary?.treatmentDiary.forEach((value) => {
+    treatmentDiary.push({
+        date: getDataAndHoursFormat(value.date as Date),
+        signature: value.signature as string,
+        description: value.description as string,
+      });    
+  });
+
+  urgency?.clinicalDiary?.vitalSignals.forEach((value) => {
+    vitalSignals.push({
+        date: getDataAndHoursFormat(value.date as Date),
+        description: value.description as string,
+        vitalSignals: {
+          paMax: value.vitalSignals?.paMax as number,
+          paMin: value.vitalSignals?.paMin as number,
+          jump: value.vitalSignals?.jump as number,
+          pvc: value.vitalSignals?.pvc as number,
+          imc: value.vitalSignals?.imc as number, 
+          sp02: value.vitalSignals?.sp02 as number,
+          temperature: value.vitalSignals?.temperature as number,
+          breathing: value.vitalSignals?.breathing as number,
+          weight: value.vitalSignals?.weight as number,
+          height: value.vitalSignals?.height as number,
+          bloodGlucose: value.vitalSignals?.bloodGlucose as number,
+        }
+      });    
+  });
+  
+  urgency?.clinicalDiary?.hydromineralBalance.forEach((value) => {
+    hydromineralBalance.push({
+        date: getDataAndHoursFormat(value.date as Date),
+        siteOfDrugAdministration: value.siteOfDrugAdministration as string,
+        amount: value.amount as  string,
+        hidromineralBalance: (value.hidromineralBalance === "ingested"?"ingeridos":"eliminados") as string,
+        description: value.description as string,
+      });    
+  });
 
   return {
     id: urgency?._id.toString() as string,
@@ -753,11 +843,18 @@ async function getPatientUrgencyBank(patientId: string){
         },
       }
     },
+
     clinicalDiary: {
-      medicineDiary: urgency?.clinicalDiary?.medicalDiary as { date: Date, description : string}[],
-      nursingNotes: urgency?.clinicalDiary?.nursingNotes,
+      medicinelDiary,
+      nursingNotes,
+      therapeuticDiary,
+      treatmentDiary,
+      vitalSignals,
+      hydromineralBalance
     }
   }
+
+
 }
 
 async function signUrgencyService(prev:unknown, formData:FormData){

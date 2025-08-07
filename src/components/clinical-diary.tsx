@@ -11,12 +11,60 @@ import InputDetails from "@/components/ui/input-details";
 import Selection from "@/components/ui/selection";
 import { toast } from "react-toastify";
 import { signUrgencyBank } from "@/app/backend/api/clinical/urgency-bank-api";
+import { TableRow } from "@/lib/table-formater";
+
+export type DiaryTypeProps = {
+  medicineDiary?: {
+    date: string,
+    description: string,
+  }[],
+  nursingNotes?: {
+    date: string,
+    description: string,
+  }[], 
+  therapeuticDiary?:{
+    date: string,
+    signature: string,
+    description:string,
+  }[],
+  treatmentDiary?:{
+    date: string,
+    signature: string,
+    description:string,
+  }[],
+  vitalSignals?:{
+    date: string,  
+    description: string,
+    vitalSignals: {
+      paMax: number,
+      paMin: number,
+      jump: number,
+      pvc: number,
+      imc: number,
+      sp02: number,
+      temperature: number,
+      breathing: number,
+      weight: number,
+      height: number,
+      bloodGlucose: number,
+    }
+  }[],
+  hydromineralBalance?: {
+    date: string,
+    siteOfDrugAdministration: string,
+    amount: string,
+    hidromineralBalance: string,
+    description: string,
+  }[],  
+}
 
 export type ClinicalDiaryProps = {
   accordiumTitle: string;
   modalTitle: string;
   apiType: "diary" | "therapeutic" | "treatment" | "vital" | "annotation" | "balance";
   patientId: string;
+  columns: string[];
+  dataDiary: DiaryTypeProps;
 }
 
 export default function ClinicalDiary({
@@ -24,6 +72,8 @@ export default function ClinicalDiary({
   modalTitle,
   apiType,
   patientId,
+  columns,
+  dataDiary,
 }: ClinicalDiaryProps){
   const [ state, action ] = useActionState(signUrgencyBank, {message: "", status: false});
   const [ modalState, setModalState ] = useState(false);
@@ -40,7 +90,80 @@ export default function ClinicalDiary({
         toast.error(state.message);
     }   
   },[state, router])
-  
+   
+    const data:TableRow[] = [];
+
+    if(dataDiary.medicineDiary)
+      dataDiary?.medicineDiary.forEach((value, index) => {
+          data.push({
+            id: String(index),
+            row: [
+              value.date,
+              value.description,
+            ]
+      })});
+    else if(dataDiary.nursingNotes)
+        dataDiary?.nursingNotes.forEach((value, index) => {
+          data.push({
+            id: String(index),
+            row: [
+              value.date,
+              value.description,
+            ]
+      })});
+    else if(dataDiary.therapeuticDiary)
+        dataDiary?.therapeuticDiary.forEach((value, index) => {
+          data.push({
+            id: String(index),
+            row: [
+              value.date,
+              value.signature,
+              value.description,
+            ]
+      })});
+    else if(dataDiary.treatmentDiary)
+      dataDiary?.treatmentDiary.forEach((value, index) => {
+        data.push({
+          id: String(index),
+          row: [
+            value.date,
+            value.signature,
+            value.description,
+          ]
+      })});
+    else if(dataDiary.vitalSignals)
+      dataDiary?.vitalSignals.forEach((value, index) => {
+        data.push({
+          id: String(index),
+          row: [
+            value.date,
+            value.description,
+            String(value.vitalSignals.paMax),
+            String(value.vitalSignals.paMin),
+            String(value.vitalSignals.jump),
+            String(value.vitalSignals.pvc),
+            String(value.vitalSignals.imc),
+            String(value.vitalSignals.sp02),
+            String(value.vitalSignals.temperature),
+            String(value.vitalSignals.breathing),
+            String(value.vitalSignals.weight),
+            String(value.vitalSignals.height),
+            String(value.vitalSignals.bloodGlucose),
+          ]
+      })});
+      else if(dataDiary.hydromineralBalance)
+        dataDiary?.hydromineralBalance.forEach((value, index) => {
+          data.push({
+            id: String(index),
+            row: [
+              value.date,
+              value.siteOfDrugAdministration,
+              value.amount,
+              value.hidromineralBalance,
+              value.description,
+            ]
+      })});
+
   return(
     <Accordium className="bg-primary/15 hover:bg-primary/20" title={accordiumTitle}>
       <div>
@@ -48,8 +171,8 @@ export default function ClinicalDiary({
       </div>
 
       <Table
-        columns={["Registrado em", "Descrição"]} 
-        rows={[]}
+        columns={columns} 
+        rows={data}
       />
 
       <Modal
