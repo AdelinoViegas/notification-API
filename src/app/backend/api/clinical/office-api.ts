@@ -357,7 +357,8 @@ async function requestReschedule(prev: unknown, formData: FormData){
 }
 async function getConsult(officeId: string){
   const consult = await officeModel.findById({ _id: officeId });
-
+  const externalResult = await externalResultsModel.findOne({ officeId });
+  
   return{   
     vitalSignal:{
       paMax: consult?.results?.vitalSignal?.paMax as number,
@@ -376,6 +377,10 @@ async function getConsult(officeId: string){
       complaints: consult?.results?.currentStates?.complaints as string,
       phisicalExam: consult?.results?.currentStates?.phisicalDetail as string,
       detail: consult?.results?.currentStates?.detail as string,
+    },
+    fileDocument: {
+      name: externalResult?.fileDocument?.name as string,
+      size: externalResult?.fileDocument?.size as number
     }
   }
 }
