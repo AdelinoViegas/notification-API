@@ -7,7 +7,7 @@ const instance = axios.create({
   baseURL: process.env.ADMIN_SRV_URL
 });
 
-export async function userState(token: string){
+async function userState(token: string){
   instance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   const res = await instance.get("/users/myProfile/status");
   return res.status === 200;
