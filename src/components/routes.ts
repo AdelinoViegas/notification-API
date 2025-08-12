@@ -55,7 +55,7 @@ export const clinicalIcons = [
   }
 ];
 
-const clinicalRoutes = [
+export const clinicalRoutes = [
   {
     href: "/clinical/patient",
     route: 'patient',
@@ -112,21 +112,3 @@ const clinicalRoutes = [
     label: 'Imagiologia',
   }
 ];
-
-const managerRoutes = [
-  {
-    href: '/manager/users',
-    route: '/manager/users',
-    label: 'Usuários',
-  },
-  {
-    href: '/manager/permissions',
-    route: '/manager/users',
-    label: 'Permissões',
-  }
-];
-
-export {
-  clinicalRoutes,
-  managerRoutes,
-};
