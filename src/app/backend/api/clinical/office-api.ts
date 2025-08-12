@@ -12,10 +12,9 @@ import { officeModel } from "@/app/backend/models/clinical";
 import { getUserId } from "@/lib/web-token";
 import { findDoctorCalendar } from "@/app/backend/api/clinical/scheduling-api";
 import { getDateInSlashFormat } from "@/lib/date-formater";
-import { userModel } from "@/app/backend/models/manager";
 import { FileHandler } from "@/lib/client-files";
 import { ServerFileHandler } from "@/lib/server-files";
-import { getUser } from "./api";
+import { getUser } from "@/app/backend/api/clinical/api";
 import { randomUUID } from "node:crypto";
 
 type ConsultationTypes = "vitalSignals" | "currentStates";

@@ -26,7 +26,6 @@ import {
   patientGroup as patientGroups, 
 } from "@/app/backend/api/clinical/translator"; 
 
-import { userModel } from "@/app/backend/models/manager";
 import { 
   priorityToComponent,
   unitTypes,
@@ -510,7 +509,7 @@ async function getExternalUnits({ name }:{ name?: string }){
       street: externalUnit.street?externalUnit.street:"Indefinido",
       municipality: externalUnit.municipality?externalUnit.municipality:"Indefinido",
       province: externalUnit.province?externalUnit.province:"Indefinido",
-      user: (await userModel.findById({ _id: externalUnit.userId }))?.fullname,
+      user: (await getUser(externalUnit?.userId?.toString() as string)).fullname,
     });
   
   return name?formated.filter((props) => props.name.match(new RegExp(name, 'i'))):formated;
@@ -528,7 +527,7 @@ async function getExternalUnit(unitId: string){
       street: externalUnit.street,
       municipality: externalUnit.municipality,
       province: externalUnit.province,
-      user: (await userModel.findById({ _id: externalUnit.userId }))?.fullname,
+      user: (await getUser(externalUnit?.userId?.toString() as string)).fullname,
     };
   }finally{}
 }
