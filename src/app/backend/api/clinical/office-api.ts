@@ -16,6 +16,7 @@ import { userModel } from "@/app/backend/models/manager";
 import { FileHandler } from "@/lib/client-files";
 import { ServerFileHandler } from "@/lib/server-files";
 import { getUser } from "./api";
+import { randomUUID } from "node:crypto";
 
 type ConsultationTypes = "vitalSignals" | "currentStates";
 
@@ -394,11 +395,16 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
     if(!FileHandler.validMaxSize(file))
       throw new Error("Tamanho do arquivo superior!", { cause: "max_file_size"});
     
+    const fileRenamed = [
+      randomUUID().toString(), 
+      FileHandler.getExtension(file.name)
+    ].join(".");
+
     await externalResultsModel.create({
       patientId,
       officeId,
       fileDocument: {
-        name: file.name,
+        name: fileRenamed,
         size: file.size,
         mimeType: file.type,
         binaryData: Buffer.from(await file.arrayBuffer())
