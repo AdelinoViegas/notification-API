@@ -23,7 +23,7 @@ import { getDateInDashFormat } from "@/lib/date-formater";
 import { Types } from "mongoose";
 import type { DoctorCalendarReference, DoctorDayAndTime } from "@/app/backend/api/clinical/types";
 
-type DoctorRole = {
+export type DoctorRole = {
   _id: string;
   roleId: string;
 };
@@ -138,7 +138,7 @@ export default function ScheduleAppointment({ patientId }: { patientId: string }
   }, []);
 
   return(
-    <main>
+    <main className="w-full">
       <form {...{action}} ref={formRef}>
         <input 
           type="hidden" 

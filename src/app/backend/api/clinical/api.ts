@@ -19,6 +19,9 @@ import {
   specialtyModel,
   urgencyBankModel,
   processStateModel,
+  scheduleExamModel,
+  examModel,
+  scheduleAppointmentModel,
 } from "@/app/backend/models/clinical";
 import { 
   patientAccess,
@@ -31,6 +34,7 @@ import {
   getUsers as RESTgetUsers,
   getUser as RESTgetUser 
 } from "@/app/backend/api/admin";
+import { getNumberDoctorAppointment } from "./scheduling-api";
 
 type ChoosedGroup = Assured | Employee | Enterprise | undefined;
 
@@ -939,6 +943,93 @@ async function finishScreening(prev: unknown, formData: FormData){
   }
 }
 
+async function finishScheduleInScreening(prev: unknown, formData: FormData){
+  try{
+    const patientId = formData.get("patientId") as string;
+    const scheduleType = formData.get("scheduleType") as string;
+    const scrPatient = await screeningModel.findOne({ patientId, served: false });
+    
+    if(!scrPatient)
+      throw new Error("Opps, ficha não encontrada!", { cause: "not_found"});
+
+    if(scheduleType === "exam"){
+      const laboratoryId = formData.get("laboratoryId") as string; 
+      const dateTime = formData.get("datetime") as unknown as Date;
+      const detail = formData.get("detail") as string;
+      const exams = formData.get('exams')?JSON.parse(formData.get("exams") as string) as string[]:[];
+      
+      if(!exams.length)
+        throw new Error("Escolha os exames desejado!", { cause: "empty" });
+
+      await scheduleExamModel.create({
+        patientId,
+        laboratoryId,
+        dateTime: dateTime?dateTime:new Date(),
+        exams,
+        detail,
+        userId: await getUserId()
+      });
+    }else {
+      const consultId = formData.get("consultId");
+      const doctorId = formData.get("doctorId") as string;
+      const doctorDay = new Date(formData.get("date") as string);
+      const doctorTime = formData.get("time");
+      const detail = formData.get("detail");
+      
+      const result = await getNumberDoctorAppointment({ doctorId, day: doctorDay });  
+      const consult = await examModel.findById({ _id: consultId });
+
+      if(!consult)
+        throw new Error('Selecione uma consulta!', { cause: 'consultation_empty'});
+      
+      if(!result?.hasSpace)
+        throw new Error(`Lamentamos, mas o número máximo de agendamentos para ${doctorDay.toLocaleDateString('pt', { dateStyle: 'full' })} foi alcançado. Por favor, escolha uma data diferente!`, { cause: "full" });
+
+      const existingAppointment = await scheduleAppointmentModel.findOne({
+        doctorId,
+        doctorDay,
+        doctorTime,
+        served: false,
+        canceled: false,
+      });
+
+      if(existingAppointment)
+        throw new Error("Desculpe, a hora selecionada já foi ocupada!", { cause: "busy" });
+      
+      const appointment = new scheduleAppointmentModel({
+        doctorId,
+        doctorDay,
+        doctorTime,
+        consultId,
+        userId: await getUserId(),
+        patientId,
+        detail,
+      });
+      await appointment.save();
+    }
+
+    await screeningModel.updateOne({ _id: scrPatient._id }, { 
+      served: true,
+      userId: await getUserId() 
+    });
+  
+    return {
+      message: "Agendado com sucesso!",
+      status: true,
+    }
+  
+  }catch(err: unknown){
+    const e = err as Error;
+    
+    return {
+      message: e.cause
+        ? e.message
+        : "Desculpe, não foi possivel fazer o agendamento",
+      status: false
+    }
+  }
+}
+
 async function signSpecialty(prev: unknown, formData: FormData){
   try{
     const name = (formData.get('name') as string).toUpperCase();
@@ -990,6 +1081,7 @@ export {
   getPatientsInScreening,
   changeArchived,
   finishScreening,
+  finishScheduleInScreening,
   signSpecialty,
   getScreening,
   insertScreening,

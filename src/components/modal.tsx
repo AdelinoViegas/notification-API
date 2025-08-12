@@ -2,6 +2,7 @@
 
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import Button from '@/components/ui/button';
+import clsx from 'clsx';
 
 type ModalProps = {
   open: boolean;
@@ -12,6 +13,7 @@ type ModalProps = {
   alertOnly?: boolean;
   children?: React.ReactNode;
   asWindow?: boolean;
+  widthFull?: boolean;
 };
 
 export default function Modal({
@@ -22,16 +24,21 @@ export default function Modal({
   onConfirm,
   alertOnly,
   children,
-  asWindow
+  asWindow,
+  widthFull
 }: ModalProps){
   return(
     <>
     <Dialog {...{open}} as="div" className="relative z-10 focus:outline-none" onClose={asWindow?()=>{}:onClose}>
         <div className="fixed inset-0 z-10 w-screen overflow-y-auto bg-primary/50 backdrop-blur">
-          <div className="flex min-h-full items-center justify-center p-4">
+          <div className={clsx("flex min-h-full items-center justify-center p-4",
+            widthFull && "mx-auto max-w-[900px]"
+          )}>
             <DialogPanel
               transition
-              className="w-full max-w-md rounded-xl bg-white p-6 duration-300 ease-out data-[closed]:transform-[scale(95%)] data-[closed]:opacity-0 border shadow-xl"
+              className={clsx("rounded-xl bg-white p-6 duration-300 ease-out data-[closed]:transform-[scale(95%)] data-[closed]:opacity-0 border shadow-xl",
+               widthFull?"w-full":"max-w-md"
+              )}
             >
               <DialogTitle as="h3" className="text-base/7 font-medium uppercase">
                 {title}
