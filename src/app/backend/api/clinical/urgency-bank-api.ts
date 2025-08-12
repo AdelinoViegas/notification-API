@@ -378,35 +378,40 @@ async function getDoctorCalender(calendarId: string){
 }
 
 async function getDoctorCalendars(){
-  const calendars = await doctorCalendarModel.find();
-  const handleCalendars = [];
+  try{
+    const calendars = await doctorCalendarModel.find();
+    const handleCalendars = [];
 
-  for(const calendar of calendars){
-    const handleDoctors = [];
-    const creator = await getUser(calendar.userId as unknown as string);
+    for(const calendar of calendars){
+      const handleDoctors = [];
+      const creator = await getUser(calendar.userId as unknown as string);
 
-    for(const doctor of calendar.doctors){
-      const user = await getUser(doctor.doctorId as unknown as string);
-      handleDoctors.push({
-        fullname: user.fullname,
-        initialTime: doctor.initialTime,
-        finalTime: doctor.finalTime,
-        room: doctor.room,
+      for(const doctor of calendar.doctors){
+        const user = await getUser(doctor.doctorId as unknown as string);
+        handleDoctors.push({
+          fullname: user.fullname,
+          initialTime: doctor.initialTime,
+          finalTime: doctor.finalTime,
+          room: doctor.room,
+        });
+      }
+
+      handleCalendars.push({
+        month: calendar.month as number,
+        monthName: new Date(new Date().getFullYear(), calendar.month as number).toLocaleString('pt-AO', { month: 'long' }),
+        creator: creator?.fullname as string,
+        doctors: handleDoctors,
+        description: calendar.description as string,
+        id: calendar._id.toString() as string,
+        createdAt: calendar.createdAt,
       });
     }
-
-    handleCalendars.push({
-      month: calendar.month as number,
-      monthName: new Date(new Date().getFullYear(), calendar.month as number).toLocaleString('pt-AO', { month: 'long' }),
-      creator: creator?.fullname as string,
-      doctors: handleDoctors,
-      description: calendar.description as string,
-      id: calendar._id.toString() as string,
-      createdAt: calendar.createdAt,
-    });
+    
+    return handleCalendars;
+  }catch(e){
+    console.error(e);
+    return []
   }
-  
-  return handleCalendars;
 }
 
 async function grantUnitAccess(formData: FormData){
