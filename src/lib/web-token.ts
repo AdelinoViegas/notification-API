@@ -4,7 +4,6 @@ import { SignJWT, jwtVerify, type JWTPayload } from 'jose';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
-const privateKey = new TextEncoder().encode(String(process.env.JWT_SECRET_KEY));
 const adminKey = new TextEncoder().encode(process.env.JWT_SECRET_ADMIN_KEY);
 
 interface DecPayload extends JWTPayload {
@@ -24,52 +23,7 @@ async function decAdminJWT(token: string){
   return payload.id;
 }
 
-async function authJWT({
-  userId,
-  route,
-}: {
-  userId: string;
-  route: string;
-}){
-  try{
-    const jwt = new SignJWT({ userId, route })
-    .setProtectedHeader({ alg: "HS256" })
-    .setIssuedAt()
-    .setIssuer('urn:socompser:issuer')
-    .setAudience('urn:socompser:audience')
-    .setExpirationTime(String(process.env.JWT_EXPIRATION_TIME))
-    .sign(privateKey)
-
-    return jwt;
-  }catch(err: unknown){
-    const error = err as Error;
-    console.log('token: ', error.message);
-    return "";
-  }
-}
-
-async function decryptAndVerifyJWT(token: string){
-  try{
-    const { payload } = await jwtVerify(token, privateKey)   
-    
-    return {
-      data: payload as { 
-        userId: string,
-        route: string,
-      },
-      status: true,
-    };
-  }catch(err: unknown){
-    const error = err as Error;
-
-    return {
-      message: error.message,
-      status: false
-    };
-  }
-}
-
-async function getUserId(){
+export async function getUserId(){
   try{
     const cache = await cookies();
     const token = cache.get(process.env.COOKIE_AUTH_HEADER as string);
@@ -88,10 +42,4 @@ export async function getUserToken(){
   const cache = await cookies();
   const token = cache.get(process.env.COOKIE_AUTH_HEADER as string);
   return token?.value;
-}
-
-export {
-  decryptAndVerifyJWT,
-  authJWT,
-  getUserId
 }
