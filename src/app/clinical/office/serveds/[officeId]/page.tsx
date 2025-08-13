@@ -2,9 +2,12 @@ import Card from "@/components/ui/card";
 import SubTitle from "@/components/ui/subtitle";
 import TitleAndSubtitle from "@/components/title-subtitle";
 import InputField from "@/components/ui/input-field";
-import { getConsult, getPatient } from "@/app/backend/api/clinical/office-api";
+import { getConsult, getPatient, readExternalExamFile } from "@/app/backend/api/clinical/office-api";
 import Accordium from "@/components/ui/accordium";
 import { civilState, gender } from "@/app/backend/api/clinical/translator";
+import { FileHandler } from "@/lib/client-files";
+import { FaRegFileImage, FaRegFilePdf } from "react-icons/fa6";
+import Link from "next/link";
 
 export default async function Page({
   params
@@ -16,6 +19,7 @@ export default async function Page({
   const { officeId } = await params;
   const patient = await getPatient(officeId);
   const consult = await getConsult(officeId);
+  const externalFile = await readExternalExamFile({ officeId, patientId: patient.personal._id });
 
   return(
     <main className="space-y-3">
@@ -160,6 +164,29 @@ export default async function Page({
                 defaultValue={consult?.vitalSignal?.bloodGlucose}
                 disabled
               />
+            </div>
+          </div>
+
+          <div className="mt-8">
+            <SubTitle className="inline-flex">Resultado externo</SubTitle>
+            <div className="my-3">
+            { !! externalFile &&
+                <Link target="_blank" href={externalFile.link}>
+                  <div className="w-96 hover:bg-gray-100 flex gap-2 border border-2 rounded-xl px-3 py-2">
+                    <div className="w-10">
+                      {
+                        FileHandler.getExtension(externalFile.name) === "pdf"?
+                        <FaRegFilePdf className="text-red-500 size-10" />:
+                        <FaRegFileImage className="text-green-500 size-10" />
+                      }
+                    </div>
+                    <div>
+                      <h2 className="font-medium">{FileHandler.handleFileName(externalFile.name)}</h2>
+                      <p className="text-sm">{FileHandler.getFileHandlerToString(externalFile.size)}</p>
+                    </div>
+                  </div>
+                </Link>
+              }
             </div>
           </div>
         </Card>

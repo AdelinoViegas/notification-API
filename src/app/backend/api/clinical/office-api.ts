@@ -12,9 +12,10 @@ import { officeModel } from "@/app/backend/models/clinical";
 import { getUserId } from "@/lib/web-token";
 import { findDoctorCalendar } from "@/app/backend/api/clinical/scheduling-api";
 import { getDateInSlashFormat } from "@/lib/date-formater";
-import { userModel } from "@/app/backend/models/manager";
 import { FileHandler } from "@/lib/client-files";
 import { ServerFileHandler } from "@/lib/server-files";
+import { getUser } from "@/app/backend/api/clinical/api";
+import { randomUUID } from "node:crypto";
 
 type ConsultationTypes = "vitalSignals" | "currentStates";
 
@@ -154,7 +155,8 @@ async function getPatients({
       const patient = await patientModel.findById({_id: scheduledAppointment?.patientId }).select({ fullname: 1 });
       const doctorCalendar = await findDoctorCalendar({doctorId: scheduledAppointment?.doctorId?.toString() as string, toSchedule: true});
       const doctorRoom = doctorCalendar.find(props => props.day.toISOString().split('T')[0] === scheduledAppointment?.doctorDay?.toISOString().split('T')[0]);
-      const doctor = await userModel.findById({ _id: scheduledAppointment?.doctorId });
+      const doctor = await getUser(scheduledAppointment?.doctorId?.toString() as string);//userModel.findById({ _id: scheduledAppointment?.doctorId });
+      const user =  await getUser(appointment?.userId?.toString() as string);
 
       formated.push({
         _id: appointment._id.toString() as string,
@@ -167,7 +169,7 @@ async function getPatients({
         room: doctorRoom?.room,
         doctor: doctor?.fullname,
         status: "#",
-        user: (await userModel.findById({ _id: appointment?.userId }).select({ fullname: 1 }))?.fullname as string,
+        user: user.fullname,
       });
     }
 
@@ -354,7 +356,8 @@ async function requestReschedule(prev: unknown, formData: FormData){
 }
 async function getConsult(officeId: string){
   const consult = await officeModel.findById({ _id: officeId });
-
+  const externalResult = await externalResultsModel.findOne({ officeId });
+  
   return{   
     vitalSignal:{
       paMax: consult?.results?.vitalSignal?.paMax as number,
@@ -373,6 +376,10 @@ async function getConsult(officeId: string){
       complaints: consult?.results?.currentStates?.complaints as string,
       phisicalExam: consult?.results?.currentStates?.phisicalDetail as string,
       detail: consult?.results?.currentStates?.detail as string,
+    },
+    fileDocument: {
+      name: externalResult?.fileDocument?.name as string,
+      size: externalResult?.fileDocument?.size as number
     }
   }
 }
@@ -392,11 +399,16 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
     if(!FileHandler.validMaxSize(file))
       throw new Error("Tamanho do arquivo superior!", { cause: "max_file_size"});
     
+    const fileRenamed = [
+      randomUUID().toString(), 
+      FileHandler.getExtension(file.name)
+    ].join(".");
+
     await externalResultsModel.create({
       patientId,
       officeId,
       fileDocument: {
-        name: file.name,
+        name: fileRenamed,
         size: file.size,
         mimeType: file.type,
         binaryData: Buffer.from(await file.arrayBuffer())

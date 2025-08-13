@@ -256,17 +256,6 @@ const unitTypes = [
   },
 ];
 
-const querysStatus:SelectionOption[] = [
-  { 
-    _id: "Confirmed", 
-    label: "Confirmado",
-  },
-  { 
-    _id: "Pending", 
-    label: "Pendente",
-  },
-];
-
 const ccgTypes = {
   category: {
     single: "Categoria",
@@ -295,6 +284,5 @@ export {
   urgencyServices,
   userCategory,
   unitTypes,
-  querysStatus,
   ccgTypes
 };

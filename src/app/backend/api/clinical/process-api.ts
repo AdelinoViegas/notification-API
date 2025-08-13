@@ -3,7 +3,6 @@
 import { getUserId } from "@/lib/web-token";
 import { processStateModel } from "@/app/backend/models/clinical";
 import { getFirstAndLastName } from "@/components/userbar";
-// import { getUser } from "@/app/backend/api/manager/api";
 import { getUser } from "@/app/backend/api/admin";
 
 type WorkLocation = "screening" | "urgency" | "laboratory" | "imaging" ;
@@ -31,22 +30,22 @@ export async function openPatientProcess(patientId: string, location: WorkLocati
     }
 
     if(!existProcess?.isInUse){
-      await processStateModel.updateOne({ patientId, location}, {
+      await processStateModel.updateOne({ patientId, location }, {
         isInUse: true,
         userId: await getUserId(),
       });
     } 
 
-    if(existProcess?.isInUse && existProcess.userId?.toString() !== await getUserId()){
+    if(existProcess?.isInUse && existProcess.userId?.toString() !== await getUserId()){      
       const { fullname } = await getUser(existProcess.userId?.toString() as string);
       throw new Error(`Este processo está em uso pelo Sr(a).${getFirstAndLastName(fullname as string)}!`, { cause: "busy" });
     } 
     
   }catch(e: unknown){
     const err = e as Error;
-    
+
     return {
-      message: err?.cause === "busy"?err.message:"Erro crítico!",
+      message: err?.cause === "busy"?err.message:"Operação impossivel!",
       status: false
     }
   }
