@@ -32,12 +32,12 @@ export default function Modal({
     <Dialog {...{open}} as="div" className="relative z-10 focus:outline-none" onClose={asWindow?()=>{}:onClose}>
         <div className="fixed inset-0 z-10 w-screen overflow-y-auto bg-primary/50 backdrop-blur">
           <div className={clsx("flex min-h-full items-center justify-center p-4",
-            widthFull && "mx-auto max-w-[900px]"
+            widthFull && "mx-auto max-w-[1024px]"
           )}>
             <DialogPanel
               transition
               className={clsx("rounded-xl bg-white p-6 duration-300 ease-out data-[closed]:transform-[scale(95%)] data-[closed]:opacity-0 border shadow-xl",
-               widthFull?"w-full":"max-w-md"
+               widthFull?"w-full":"w-full max-w-md"
               )}
             >
               <DialogTitle as="h3" className="text-base/7 font-medium uppercase">

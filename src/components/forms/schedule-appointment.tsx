@@ -7,28 +7,36 @@ import {
   useCallback,
   useActionState
 } from "react";
+import { useRouter } from "next/navigation";
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
 import Selection from "@/components/ui/selection";
 import { SelectionOption } from "@/components/ui/selection";
+import InputDetails from "@/components/ui/input-details";
+import Alert from "@/components/ui/alert";
+import { getDateInDashFormat } from "@/lib/date-formater";
+import { Types } from "mongoose";
+import { getDoctors, getSpecialties } from "@/app/backend/api/clinical/api";
+import type { DoctorCalendarReference, DoctorDayAndTime } from "@/app/backend/api/clinical/types";
 import { 
   scheduleAppointment, 
   findDoctorCalendar,
   getExams
 } from "@/app/backend/api/clinical/scheduling-api";
-import InputDetails from "@/components/ui/input-details";
-import Alert from "@/components/ui/alert";
-import { getDoctors, getSpecialties } from "@/app/backend/api/clinical/api";
-import { getDateInDashFormat } from "@/lib/date-formater";
-import { Types } from "mongoose";
-import type { DoctorCalendarReference, DoctorDayAndTime } from "@/app/backend/api/clinical/types";
 
 export type DoctorRole = {
   _id: string;
   roleId: string;
 };
 
-export default function ScheduleAppointment({ patientId }: { patientId: string }){
+export default function ScheduleAppointment(
+  { 
+    patientId,
+    scheduleType, 
+  }: { 
+    patientId: string;
+    scheduleType?: string; 
+  }){
   const [ state, action ] = useActionState(scheduleAppointment, { message: "", status: false });
   const [ closeAlert, setCloseAlert ] = useState(true);
   const [ doctors, setDoctors ] = useState<SelectionOption[]>([]);
@@ -40,6 +48,7 @@ export default function ScheduleAppointment({ patientId }: { patientId: string }
   const doctorsRef = useRef<Array<DoctorRole>>([]);
   const formRef = useRef<HTMLFormElement>(null);
   const doctorDayRef = useRef<DoctorCalendarReference[]>(null);
+  const router = useRouter();
  
   const filterDoctors = useCallback(async (e: unknown)=>{
     const specialtyId = (e as { target: { value?: string } }).target?.value;
@@ -121,9 +130,12 @@ export default function ScheduleAppointment({ patientId }: { patientId: string }
       if(state.status){
         formRef.current?.reset();
         setDoctorDays([]);
+
+        if(!!scheduleType)
+          router.replace("/clinical/screening");
       }
     }, state.status?3000:7000);
-  }, [state]);
+  }, [state, router]);
 
   useEffect(()=>{
     const loadData = async ()=>{  
@@ -144,6 +156,12 @@ export default function ScheduleAppointment({ patientId }: { patientId: string }
           type="hidden" 
           name="patientId" 
           defaultValue={patientId} 
+        />
+
+        <input 
+          type="hidden" 
+          name="scheduleType" 
+          defaultValue={scheduleType} 
         />
 
         <div className="grid xl:grid-cols-5 gap-3">
@@ -211,7 +229,7 @@ export default function ScheduleAppointment({ patientId }: { patientId: string }
           name="detail" 
         />
 
-        <Button>Agendar</Button>
+        <Button>Solicitar</Button>
 
         {
           state.message && messageState &&

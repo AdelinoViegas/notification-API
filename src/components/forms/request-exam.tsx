@@ -7,28 +7,31 @@ import React, {
   useCallback,
   useActionState
 } from "react";
+import { useRouter } from "next/navigation";
 import Button from "@/components/ui/button";
 import Selection from "@/components/ui/selection";
 import { getUnits } from "@/app/backend/api/clinical/urgency-bank-api";
 import { SelectionOption } from "@/components/ui/selection";
+import InputDetails from "@/components/ui/input-details";
+import Alert from "@/components/ui/alert";
+import SubTitle from "@/components/ui/subtitle";
+import { BiTrash as TrashIcon } from "react-icons/bi";
+import clsx from "clsx";
+import { toast } from 'react-toastify';
 import { 
   getExams, 
   schedulePatientExam,
   getCCGs
 } from "@/app/backend/api/clinical/scheduling-api";
-import InputDetails from "@/components/ui/input-details";
-import { BiTrash as TrashIcon } from "react-icons/bi";
-import SubTitle from "@/components/ui/subtitle";
-
-import clsx from "clsx";
-import { toast } from 'react-toastify';
 
 export default function RequestExams({ 
   patientId,
-  isFullWindow 
+  isFullWindow,
+  scheduleType, 
 }: { 
   patientId: string;
   isFullWindow?: boolean;
+  scheduleType?: string;
 }){
   const [ state, action ] = useActionState(schedulePatientExam, { message: "", status: false });
   const formRef = useRef<HTMLFormElement>(null);
@@ -39,6 +42,8 @@ export default function RequestExams({
   const [ item, setItem ] = useState("");
   const [ renderAux, setRenderAux ] = useState(false);
   const [ examCache, setExamCache ] = useState<SelectionOption[]>([]);
+  const [ messageState, setMessageState ] = useState(false);
+  const router = useRouter();
 
   const handlerCallback = (e: React.ChangeEvent<HTMLSelectElement>)=>{
     getExams()
@@ -73,19 +78,21 @@ export default function RequestExams({
   }
 
   useEffect(()=>{
-    if(state.message)
-      if(state.status)
-        toast.success(state.message, {
-          onOpen: ()=> {
-            formRef.current?.reset();
-            setExamCart([]);
-            setItem("");
-          },
-          autoClose: 1500
-        });
-      else 
-        toast.error(state.message);
-  }, [state]);
+    setMessageState(true);
+    
+    setTimeout(()=>{
+      setMessageState(false);
+
+      if(state.status){
+        formRef.current?.reset();
+        setExamCart([]);
+        setItem("");
+        
+        if(!!scheduleType)
+          router.replace("/clinical/screening");
+      }
+    }, state.status?3000:7000);
+  }, [state, router]);
 
   useEffect(()=>{
     const loadData = async ()=>{
@@ -104,8 +111,13 @@ export default function RequestExams({
       <form 
         {...{action}} 
         ref={formRef} 
-        // className={clsx({ "": isFullWindow })}
       >
+        <input 
+          type="hidden" 
+          name="scheduleType" 
+          defaultValue={scheduleType} 
+        />
+
         <input 
           type="hidden" 
           name="patientId" 
@@ -183,6 +195,16 @@ export default function RequestExams({
         />
 
         <Button>Solicitar</Button>
+
+        {
+          state.message && messageState &&
+          <div className="flex mt-3">
+            <Alert
+              type={state.status?'success':'error'}
+              message={state.message}
+            />
+          </div>
+        }
       </form>
     </div>
   );

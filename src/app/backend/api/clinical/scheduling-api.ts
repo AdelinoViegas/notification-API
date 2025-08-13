@@ -5,6 +5,8 @@ import {
   getDataAndHoursFormat, 
   getDateInSlashFormat 
 } from "@/lib/date-formater";
+import { redirect } from "next/navigation";
+import { getExamResult as getExamResutlFromUnit } from "./unit-api";
 import { 
   examModel, 
   examGroupModel,
@@ -19,10 +21,10 @@ import {
   scheduleAppointmentModel,
   appointmentCancelModel,
   scheduleServiceModel,
+  screeningModel,
 } from "@/app/backend/models/clinical";
 import { getUser } from "@/app/backend/api/clinical/api";
-import { redirect } from "next/navigation";
-import { getExamResult as getExamResutlFromUnit } from "./unit-api";
+
 export type CCGTypes = "category" | "classification" | "group";
 
 async function signExam(prev: unknown, formData: FormData){
@@ -298,11 +300,14 @@ async function getCCG({ type, id }:{ type?: CCGTypes, id: string }){
 async function schedulePatientExam(prev: unknown, formData: FormData){
   try{
     const patientId = formData.get("patientId") as string;
+    const isScheduleInScreening = formData.get("scheduleType") as string;
     const laboratoryId = formData.get("laboratoryId") as string; 
     const dateTime = formData.get("datetime") as unknown as Date;
     const detail = formData.get("detail") as string;
-    const exams = formData.get('exams')?JSON.parse(formData.get("exams") as string) as string[]:[];
-    
+    const exams = formData.get('exams')?JSON.parse(formData.get("exams") as string) as string[]:[];    
+    const scrPatient = await screeningModel.findOne({ patientId, served: false });
+        
+
     if(!exams.length)
       throw new Error("Escolha os exames desejado!", { cause: "empty" });
 
@@ -314,9 +319,15 @@ async function schedulePatientExam(prev: unknown, formData: FormData){
       detail,
       userId: await getUserId()
     });
+    
+    if(!!isScheduleInScreening)
+      await screeningModel.updateOne({ _id: scrPatient?._id }, { 
+        served: true,
+        userId: await getUserId() 
+      });
 
     return {
-      message: "Agendado com sucesso!",
+      message: "Exame marcado com sucesso!",
       status: true,
     }
   }catch(err: unknown){
@@ -567,6 +578,8 @@ async function scheduleAppointment(prev: unknown, formData: FormData){
     const doctorDay = new Date(formData.get("date") as string);
     const doctorTime = formData.get("time");
     const detail = formData.get("detail");
+    const isScheduleInScreening = formData.get("scheduleType") as string;
+    const scrPatient = await screeningModel.findOne({ patientId, served: false });
      
     const result = await getNumberDoctorAppointment({ doctorId, day: doctorDay });  
     const consult = await examModel.findById({ _id: consultId });
@@ -597,9 +610,17 @@ async function scheduleAppointment(prev: unknown, formData: FormData){
       patientId,
       detail,
     });
-
-    await patientModel.updateOne({ _id: patientId }, { served: true });
+    
     await appointment.save();
+
+    if(!!isScheduleInScreening){
+      await screeningModel.updateOne({ _id: scrPatient?._id }, { 
+        served: true,
+        userId: await getUserId() 
+      });
+    }else{
+      await patientModel.updateOne({ _id: patientId }, { served: true });
+    }  
 
     return {
       message: "Consulta marcada com sucesso!",
