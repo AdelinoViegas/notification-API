@@ -1,6 +1,8 @@
 'use server';
 
 import { getUserId } from "@/lib/web-token";
+import { validatePatientDoc } from "@/lib/regexp";
+import { closePatientProcess } from "./process-api";
 import {
   Responsable,
   Assured,
@@ -25,8 +27,6 @@ import {
   patientGroup as patientGroups,
   userCategory
 } from "@/app/backend/api/clinical/translator"; 
-import { validatePatientDoc } from "@/lib/regexp";
-import { closePatientProcess } from "./process-api";
 import { 
   getUsers as RESTgetUsers,
   getUser as RESTgetUser 

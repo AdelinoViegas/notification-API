@@ -7,6 +7,7 @@ import ArchiveButton from "@/components/archive-button";
 import Screening from "@/components/screening";
 import { UIComponent } from "@/components/forms/screening-ui";
 import { UnlockProcessAccess, MonitorAccess } from "@/components/lock-unlock-monitor-process";
+import ScheduleInScreening from "@/components/scheduleInScreening";
 
 type Routes = "patient" | "reason" | "vital-signals" | "priority" | "state" | "advice";
 
@@ -29,6 +30,11 @@ export default async function Page({
       />
 
       <div className="mt-4 mb-6">
+                
+        <div className="flex gap-x-2 justify-end">
+            <ScheduleInScreening {...{patientId}} type="appointment" label="agendar consulta"/>  
+            <ScheduleInScreening {...{patientId}} type="exam" label="agendar exame"/>             
+        </div>        
         <Header 
           center 
           title={fullname}

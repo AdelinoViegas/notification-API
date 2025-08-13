@@ -255,7 +255,7 @@ async function getUnits({
         name: searchByName?new RegExp(`^${searchByName}`, "i"):/[a-z]/gi
       })
     );
-
+    
     const formatedList = units.map(item => {
       return {
         _id: item._id.toString(),
