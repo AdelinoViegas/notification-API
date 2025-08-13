@@ -29,11 +29,11 @@ export async function getUserId(){
     const token = cache.get(process.env.COOKIE_AUTH_HEADER as string);
     
     if(!token)
-      throw new Error("sem cookies");
+      throw new Error("falta de cookie de autenticação!");
     
     const userId = await decAdminJWT(token.value);
     return userId;
-  }catch { 
+  } catch { 
     redirect("/clinical");
   }
 }
