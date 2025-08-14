@@ -10,11 +10,8 @@ import {
 } from "@/app/backend/models/clinical";
 import { getUserId } from "@/lib/web-token";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
-import { Types } from "mongoose";
-import { FileHandler } from "@/lib/client-files";
-import { ServerFileHandler } from "@/lib/server-files";
-import { randomUUID } from "node:crypto";
 import { getUser } from "@/app/backend/api/admin";
+import { getFile, upload } from "@/app/backend/api/storage";
 
 async function updatePaymentData(prev: unknown, formData: FormData){
   try{
@@ -29,10 +26,11 @@ async function updatePaymentData(prev: unknown, formData: FormData){
 
     const service = await scheduleExamModel.findById({ _id: serviceId }); 
    
-    for(const examId of service?.exams as Types.ObjectId[]){
-      const exam = await examModel.findById({_id:examId}).select({ price: 1});
-      totalPrice +=  exam?.price as number; 
-    }
+    if(service)
+      for(const examId of service?.exams){
+        const exam = await examModel.findById({_id:examId}).select({ price: 1});
+        totalPrice +=  exam?.price as number; 
+      }
 
     if(totalPrice){
       const paiedPorcent = Math.trunc((value * 100)/totalPrice);
@@ -73,10 +71,11 @@ async function sendPatientToUnit(prev: unknown, formData: FormData){
     const typeUnit = await unitModel.findById({ _id: scheduleService?.laboratoryId }).select({ unitTypeId: 1 });
     let totalPrice = 0;
     
-    for(const examId of scheduleService?.exams as Types.ObjectId[]){
-      const service = await examModel.findById({ _id: examId}).select({ price: 1});
-      totalPrice += service?.price as number;
-    }
+    if(scheduleService)
+      for(const examId of scheduleService.exams){
+        const service = await examModel.findById({ _id: examId}).select({ price: 1});
+        totalPrice += service?.price as number;
+      }
 
     if(totalPrice){
       if(scheduleService?.payment?.status === "pending")
@@ -208,97 +207,79 @@ async function signExamResult(prev:unknown, formData:FormData){
   const plainText = formData.get("plainText") as string;
 
   try{
-    const results = await serviceResultModel.findOne({ resultId });
-
-    if(!plainText && !file.size)
-      throw new Error("Resultados vazios não são permitidos!", { cause: "empty_fields"});
-
-    if(file.size && !FileHandler.validdateFileType(file))
-      throw new Error("Formato do arquivo inválido!", { cause: "invalid_type_file"});
-
-    if(file.size && !FileHandler.validMaxSize(file))
-      throw new Error("Tamanho do arquivo superior!", { cause: "max_file_size"});
+    const formdata = new FormData();
+    formdata.append("file", file);
     
-    const fileRenamed = [
-      randomUUID().toString(), 
-      FileHandler.getExtension(file.name)
-    ].join(".");
+    const driveFile = await upload(formdata, await getUserId());
 
+    const results = await serviceResultModel.findOne({ resultId });
 
     if(!results){
       await serviceResultModel.create({
         resultId,
         exams: [{
           serviceId,
-          results: {
-            file: {
-              name: fileRenamed,
-              size: file.size,
-              mimeType: file.type,
-              binaryData: Buffer.from(await file.arrayBuffer())
-            },
-            plainText
-          },
+          storageId: driveFile.id,
           userId: await getUserId(),
         }],
         userId: await getUserId()
       });
     }
 
-    if(!!results){
-      const allExams = new Map<string, typeof results.exams[number]>();
-      results.exams.forEach(props => allExams.set(props.serviceId?.toString() as string, props)); // carregando os exames
+    // if(!!results){
+    //   const allExams = new Map<string, typeof results.exams[number]>();
+    //   results.exams.forEach(props => allExams.set(props.serviceId?.toString() as string, props)); // carregando os exames
 
-      if(allExams.has(serviceId)){
-        const exam = allExams.get(serviceId);
-        // verificar as entradas do user se tem arquivo ou texto ou os dois
-        if(file.size && plainText && exam?.results){
-          exam.results.file = {
-            name: fileRenamed,
-            size: file.size,
-            mimeType: file.type,
-            binaryData: Buffer.from(await file.arrayBuffer())
-          };
-          exam.results.plainText = plainText;
-        }else if(!file.size && plainText && exam?.results){
-          exam.results.plainText = plainText;
-        }else if(file.size && !plainText && exam?.results){
-          exam.results.file = {
-            name: fileRenamed,
-            size: file.size,
-            mimeType: file.type,
-            binaryData: Buffer.from(await file.arrayBuffer())
-          }
-        }
+    //   if(allExams.has(serviceId)){
+    //     const exam = allExams.get(serviceId);
+    //     // verificar as entradas do user se tem arquivo ou texto ou os dois
+    //     if(file.size && plainText && exam?.results){
+    //       exam.results.file = {
+    //         name: fileRenamed,
+    //         size: file.size,
+    //         mimeType: file.type,
+    //         binaryData: Buffer.from(await file.arrayBuffer())
+    //       };
+    //       exam.results.plainText = plainText;
+    //     }else if(!file.size && plainText && exam?.results){
+    //       exam.results.plainText = plainText;
+    //     }else if(file.size && !plainText && exam?.results){
+    //       exam.results.file = {
+    //         name: fileRenamed,
+    //         size: file.size,
+    //         mimeType: file.type,
+    //         binaryData: Buffer.from(await file.arrayBuffer())
+    //       }
+    //     }
 
-        if(exam)
-          allExams.set(serviceId, exam);
-      }else{
-        const newResults = new serviceResultModel({
-          resultId,
-          exams: [{
-            serviceId,
-            results: {
-              file: {
-                name: fileRenamed,
-                size: file.size,
-                mimeType: file.type,
-                binaryData: Buffer.from(await file.arrayBuffer())
-              },
-              plainText
-            },
-            userId: await getUserId(),
-          }],
-          userId: await getUserId()
-        });
+    //     if(exam)
+    //       allExams.set(serviceId, exam);
+    //   }else{
+    //     const newResults = new serviceResultModel({
+    //       resultId,
+    //       exams: [{
+    //         serviceId,
+    //         results: {
+    //           file: {
+    //             name: fileRenamed,
+    //             size: file.size,
+    //             mimeType: file.type,
+    //             binaryData: Buffer.from(await file.arrayBuffer())
+    //           },
+    //           plainText
+    //         },
+    //         userId: await getUserId(),
+    //       }],
+    //       userId: await getUserId()
+    //     });
 
-        allExams.set(serviceId, newResults.exams[0]);
-      }
+    //     allExams.set(serviceId, newResults.exams[0]);
+    //   }
 
-      await serviceResultModel.updateOne({ _id:  results._id }, {
-        exams: Array.from(allExams.values())
-      });
-    }
+    //   await serviceResultModel.updateOne({ _id:  results._id }, {
+    //     exams: Array.from(allExams.values())
+    //   });
+    // }
       
     return {
       message: "Informações salvas!",
@@ -324,17 +305,20 @@ async function getExamResult({
   const serviceResult = await serviceResultModel.findOne({ resultId: serviceResultId });
   const list = [];
   if(serviceResult)
-  for(const item of serviceResult.exams)
-    list.push({
-      _id: item.serviceId?.toString() as string,
-      plainText: item.results?.plainText  as string,
-      createdAt: item.createdAt as Date,
-      file: {
-        name: item.results?.file?.name as string,
-        size: item.results?.file?.size as number,
-        link: "#"
-      }
-    });
+    for(const item of serviceResult.exams){
+      const file = await getFile(item.storageId as string);
+
+      list.push({
+        _id: item.serviceId?.toString() as string,
+        plainText: item?.description  as string,
+        createdAt: item.createdAt as Date,
+        file: {
+          name: file.name,
+          link: file.link,
+          size: 0
+        }
+      });
+    }
 
   return list; // isto n é definitivo, 
 }
@@ -350,8 +334,8 @@ async function finishExam(prev: unknown, formData: FormData){
       throw new Error("Termine de registrar todos os exames marcados!", { cause: "not_registered"});
     
     if(serviceResult?.exams.length){
-      for( const { results } of serviceResult.exams){
-        if (!(results?.plainText || results?.file?.size))
+      for( const { description, storageId } of serviceResult.exams){
+        if (!(description || storageId))
           throw new Error("Registre pelos menos um dos resultados!", { cause: "empty_result"});
       }
     }else
@@ -395,6 +379,5 @@ export {
   getPatientExams,
   signExamResult,
   getExamResult,
-  readUploadedFile,
   finishExam
 }

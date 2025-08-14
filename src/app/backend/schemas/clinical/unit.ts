@@ -76,6 +76,7 @@ const serviceResultSchema = new Schema({
     _id: false,
     serviceId: Schema.Types.ObjectId, //o _id do examSchema
     storageId: String,
+    description: String,
     sourceType: {
       type: String,
       enum: ["laboratory", "imaginig"],
