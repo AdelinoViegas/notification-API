@@ -7,7 +7,7 @@ import {
   patientModel,
   unitModel,
   serviceResultModel
-} from "@/app/backend/models/clinical";
+} from "@/app/backend/model";
 import { getUserId } from "@/lib/web-token";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
 import { getUser } from "@/app/backend/api/admin";

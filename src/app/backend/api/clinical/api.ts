@@ -21,7 +21,7 @@ import {
   specialtyModel,
   urgencyBankModel,
   processStateModel,
-} from "@/app/backend/models/clinical";
+} from "@/app/backend/model";
 import { 
   patientAccess,
   patientGroup as patientGroups,

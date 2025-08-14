@@ -20,7 +20,7 @@ import {
   patientHospitalizedModel,
   prescriptionModel,
   surgeryModel
-} from "@/app/backend/models/clinical";
+} from "@/app/backend/model";
 import { 
   patientAccess,
   patientGroup as patientGroups, 

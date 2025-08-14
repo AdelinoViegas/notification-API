@@ -7,8 +7,8 @@ import {
   demographyModel,
   responsibleModel,
   externalResultsModel,
-} from "@/app/backend/models/clinical";
-import { officeModel } from "@/app/backend/models/clinical";
+} from "@/app/backend/model";
+import { officeModel } from "@/app/backend/model";
 import { getUserId } from "@/lib/web-token";
 import { findDoctorCalendar } from "@/app/backend/api/clinical/scheduling-api";
 import { getDateInSlashFormat } from "@/lib/date-formater";

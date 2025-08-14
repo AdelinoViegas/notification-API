@@ -22,7 +22,7 @@ import {
   appointmentCancelModel,
   scheduleServiceModel,
   screeningModel,
-} from "@/app/backend/models/clinical";
+} from "@/app/backend/model";
 import { getUser } from "@/app/backend/api/clinical/api";
 
 export type CCGTypes = "category" | "classification" | "group";

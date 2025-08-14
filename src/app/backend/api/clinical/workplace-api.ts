@@ -1,6 +1,6 @@
 "use server";
 
-import { currentLocationModel } from "@/app/backend/models/clinical";
+import { currentLocationModel } from "@/app/backend/model";
 import { getUserId } from "@/lib/web-token";
 
 async function enterIntoWorkplace(prev: unknown, formData: FormData){
