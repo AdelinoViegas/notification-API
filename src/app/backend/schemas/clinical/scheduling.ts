@@ -1,5 +1,6 @@
 import { randomInt } from "crypto";
 import { Schema } from "mongoose";
+import { ConsultResult } from "./types";
 
 const examSchema = new Schema({
   name: {
@@ -202,14 +203,11 @@ const doctorCalendarSchema = new Schema({
   timestamps: true,
 });
 
-const officeSchema = new Schema({
+const officeSchema = new Schema<ConsultResult>({
   scheduleId: Schema.Types.ObjectId,
   served: {
-    status: {
-      type: Boolean,
-      default: false,
-    },
-    finishedAt: Date, 
+    type: Boolean,
+    default: false,
   },
   archiving: {
     reason: String,
@@ -232,7 +230,7 @@ const officeSchema = new Schema({
     },
     currentStates: {
       complaints: String,
-      phisicalDetail: String,
+      phisicalExam: String,
       detail: String,
     },
     status: { // para controlar se o preechimento dos campos está concluída
@@ -245,17 +243,8 @@ const officeSchema = new Schema({
         default: false
       },
     },
+    storageId: String
   },
-  deleted: {
-    type: Boolean,
-    default: false
-  },
-  externalFileExam: {
-    name: String,
-    size: Number,
-    mimeType: String,
-    binaryData: Buffer
-  }
 }, {
   timestamps: true,
   collection: "schedule_in_office",

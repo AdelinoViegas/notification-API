@@ -2,7 +2,7 @@ import Header from "@/components/header";
 import Card from "@/components/ui/card";
 import TitleAndSubtitle from "@/components/title-subtitle";
 import { CurrentDataInOffice, FileUpload, VitalSignalsInOffice } from "@/components/forms/office-form";
-import { getConsult, getPatient, readExternalExamFile } from "@/app/backend/api/clinical/office-api";
+import { getConsultResult, getPatient } from "@/app/backend/api/clinical/office-api";
 import Accordium from "@/components/ui/accordium";
 import { civilState, gender } from "@/app/backend/api/clinical/translator";
 import FinishConsultation from "@/components/finish-consulation";
@@ -20,10 +20,9 @@ export default async function Page({
 }){
   const { officeId } = await params; 
   const patient = await getPatient(officeId);
-  const consult = await getConsult(officeId);
+  const consultResult = await getConsultResult(officeId);
   const { detail } = await getScheduleAppointment(patient.scheduleAppointmentId);
-  const externalFile = await readExternalExamFile({ officeId, patientId: patient.personal._id });
-  const results = await getPatientScheduledServices({ patientId: patient.personal._id });
+  // const results = await getPatientScheduledServices({ patientId: patient.personal._id });
 
   return(
     <main className="space-y-3">
@@ -74,11 +73,17 @@ export default async function Page({
           </Accordium>
 
           <Accordium title="Sinais Vitais">
-            <VitalSignalsInOffice id={officeId} {...{consult}}/>
+            <VitalSignalsInOffice 
+              id={officeId}
+              vitalSignal={consultResult?.vitalSignal}
+            />
           </Accordium>
 
           <Accordium title="Dados Actuais">
-            <CurrentDataInOffice id={officeId} {...{consult}}/>
+            <CurrentDataInOffice 
+              id={officeId}
+              currentState={consultResult?.currentStates}
+            />
           </Accordium>
 
           <Accordium title="Exames">
@@ -86,13 +91,14 @@ export default async function Page({
               <RequestExams patientId={patient.personal._id} />
               
               <div>
-                <FileUpload 
+                {/* <FileUpload 
                   {...{officeId}} 
                   patientId={patient.personal._id}  
                   {...{externalFile}}
-                />
-                
-                <ExamResultViewer results={results} />
+                /> */}
+
+
+                {/* <ExamResultViewer results={results} /> */}
               </div>
             </div>
           </Accordium>      

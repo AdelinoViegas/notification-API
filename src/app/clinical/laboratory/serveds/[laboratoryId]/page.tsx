@@ -30,7 +30,7 @@ export default async function Page({
           <div className="flex flex-col gap-y-6 my-5" key={i}>
             <Accordium title={item.name}>         
               <div className="grid lg:grid-cols-2">
-                <div className="my-5 px-4 flex flex-col gap-y-2">
+                {/* <div className="my-5 px-4 flex flex-col gap-y-2">
                   <SubTitle className="inline-flex mt-3">Resultado por JPEG/PNG/PDF</SubTitle>
                     { !!savedResults?.find(i => i._id === item._id)?.file.size &&
                       <Link target="_blank" href={savedResults?.find(i => i._id === item._id)?.file.link as string}>
@@ -49,7 +49,7 @@ export default async function Page({
                         </div>
                       </Link>
                     }
-                </div>
+                </div> */}
     
                 <div className="my-5 px-4 flex flex-col gap-y-2">
                   <SubTitle className="inline-flex mt-3">Resultado por Descrição</SubTitle>

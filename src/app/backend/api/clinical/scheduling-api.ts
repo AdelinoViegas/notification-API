@@ -989,7 +989,9 @@ async function getPatientScheduledServices({ patientId }: { patientId: string })
       }
     }
     return resultsList;
-  }finally{}
+  }catch {
+    
+  }
 }
 
 export {

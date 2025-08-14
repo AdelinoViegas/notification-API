@@ -157,8 +157,8 @@ async function getPatients({
       const user =  await getUser(appointment?.userId?.toString() as string);
 
       formated.push({
-        _id: appointment._id.toString() as string,
-        id: appointment._id.toString() as string,
+        _id: appointment._id?.toString() as string,
+        id: appointment._id?.toString() as string,
         patient: patient?.fullname as string,
         date: new Date(scheduledAppointment?.doctorDay as Date),
         time: scheduledAppointment?.doctorTime as string,
@@ -306,10 +306,7 @@ async function finishConsultation(prev: unknown, formData: FormData){
     if(!patientConsult?.results?.status?.currentStates)
       throw new Error("Preencha os Dados Actuais!", { cause: "not_fill"});
 
-    patientConsult.served = {
-      status: true,
-      finishedAt: new Date()
-    }
+    patientConsult.served = true
 
     await officeModel.updateOne({ _id: patientConsult._id }, patientConsult);
 
@@ -352,41 +349,40 @@ async function requestReschedule(prev: unknown, formData: FormData){
     }
   }
 }
-async function getConsult(officeId: string){
-  const consult = await officeModel.findById({ _id: officeId });
-  const externalResult = await externalResultsModel.findOne({ officeId });
 
-  const file = await getFile(externalResult?.storageId as string);
-  
-  return{   
-    vitalSignal:{
-      paMax: consult?.results?.vitalSignal?.paMax as number,
-      paMin: consult?.results?.vitalSignal?.paMin as number,
-      jump: consult?.results?.vitalSignal?.jump as number,
-      pvc: consult?.results?.vitalSignal?.pvc as number,
-      imc: consult?.results?.vitalSignal?.imc as number,
-      sp02: consult?.results?.vitalSignal?.sp02 as number,
-      temperature: consult?.results?.vitalSignal?.temperature as number,
-      breathing: consult?.results?.vitalSignal?.breathing as number,
-      weight: consult?.results?.vitalSignal?.weight as number,
-      height: consult?.results?.vitalSignal?.height as number,
-      bloodGlucose: consult?.results?.vitalSignal?.bloodGlucose as number,
-    },
-    currentStates:{
-      complaints: consult?.results?.currentStates?.complaints as string,
-      phisicalExam: consult?.results?.currentStates?.phisicalDetail as string,
-      detail: consult?.results?.currentStates?.detail as string,
-    },
-    fileDocument: {
-      name: file.name,
-      size: 23
+async function getConsultResult(id: string){
+  try{
+    const consult = await officeModel.findById({ _id: id });
+    const externalResult = await externalResultsModel.findOne({ officeId: id });
+
+    return{   
+      vitalSignal:{
+        paMax: consult?.results?.vitalSignal?.paMax as number,
+        paMin: consult?.results?.vitalSignal?.paMin as number,
+        jump: consult?.results?.vitalSignal?.jump as number,
+        pvc: consult?.results?.vitalSignal?.pvc as number,
+        imc: consult?.results?.vitalSignal?.imc as number,
+        sp02: consult?.results?.vitalSignal?.sp02 as number,
+        temperature: consult?.results?.vitalSignal?.temperature as number,
+        breathing: consult?.results?.vitalSignal?.breathing as number,
+        weight: consult?.results?.vitalSignal?.weight as number,
+        height: consult?.results?.vitalSignal?.height as number,
+        bloodGlucose: consult?.results?.vitalSignal?.bloodGlucose as number,
+      },
+      currentStates: {
+        complaints: consult?.results?.currentStates?.complaints as string,
+        phisicalExam: consult?.results?.currentStates?.phisicalExam as string,
+        detail: consult?.results?.currentStates?.detail as string,
+      },
+      storageId: externalResult?.storageId
     }
+  } catch {
+  
   }
 }
 
 async function uploadExternalExamFile(prev: unknown, formData: FormData){
   try{
-
     const file = formData.get("externalFile") as File;
     const officeId = formData.get("officeId");
     const patientId = formData.get("patientId");
@@ -416,41 +412,14 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
   }
 }
 
-async function readExternalExamFile({ 
-  officeId,
-  patientId
-}: {
-  officeId: string;
-  patientId: string;
-}){
-  try{
-    const fileDocuments = await externalResultsModel.find({ patientId, officeId });
-    const externalFileDocument = fileDocuments[fileDocuments.length - 1];
-
-    if(!externalFileDocument)
-      return;
-
-    const file = await getFile(externalFileDocument.storageId as string);
-    
-    return {
-      name: file.name,
-      size: 23,
-      link: file.link
-    }
-  }catch {
-    
-  }
-}
-
 export {
   sendPatientToOffice,
   getPatient,
   getPatients,
   updatePaymentData,
   signConsutation,
-  getConsult,
+  getConsultResult,
   finishConsultation,
   requestReschedule,
-  uploadExternalExamFile,
-  readExternalExamFile
+  uploadExternalExamFile
 };

@@ -305,19 +305,13 @@ async function getExamResult({
 }){
   const serviceResult = await serviceResultModel.findOne({ resultId: serviceResultId });
   const list = [];
+
   if(serviceResult)
     for(const item of serviceResult.exams){
-      const file = await getFile(item.storageId as string);
-
       list.push({
         _id: item.serviceId?.toString() as string,
         plainText: item?.description  as string,
-        createdAt: item.createdAt as Date,
-        file: {
-          name: file.name,
-          link: file.link,
-          size: 0
-        }
+        createdAt: item.createdAt as Date
       });
     }
 

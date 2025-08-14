@@ -13,7 +13,8 @@ import Alert from "@/components/ui/alert";
 import { signConsutation, uploadExternalExamFile } from "@/app/backend/api/clinical/office-api";
 import { useRouter } from "next/navigation";
 
-import { resultsConsult } from "@/app/backend/api/clinical/types";
+import type { ConsultCurrentStates, ConsultVitalSignal } from "@/app/backend/schemas/clinical/types";
+
 import { FileHandler } from "@/lib/client-files";
 import { toast, ToastContainer } from "react-toastify";
 import SubTitle from "@/components/ui/subtitle";
@@ -22,10 +23,10 @@ import Link from "next/link";
 
 function VitalSignalsInOffice({ 
   id, 
-  consult
+  vitalSignal
 }:{ 
-  id: string, 
-  consult: resultsConsult
+  id: string;
+  vitalSignal?: ConsultVitalSignal;
 }){
   const [ state, action ] = useActionState(signConsutation, { message:"", status:false });
   const [ messageState, setMessageState ] = useState(false);
@@ -65,7 +66,7 @@ function VitalSignalsInOffice({
           textLabel="P.A MÁXIMA (mmHG)"
           name="pamax" 
           placeholder="0 (mmHG)"
-          defaultValue={consult?.vitalSignal.paMax}
+          defaultValue={vitalSignal?.paMax}
           required
         />
 
@@ -74,7 +75,7 @@ function VitalSignalsInOffice({
           textLabel="P.A MÍNIMA (mmHG)"
           name="pamin" 
           placeholder="0 (mmHG)"
-          defaultValue={consult?.vitalSignal.paMin}
+          defaultValue={vitalSignal?.paMin}
           required
         />
         
@@ -83,7 +84,7 @@ function VitalSignalsInOffice({
           textLabel="PULSO (BPM)"
           name="jump" 
           placeholder="0 (BPM)"
-          defaultValue={consult?.vitalSignal.jump}
+          defaultValue={vitalSignal?.jump}
         />
 
         <InputField
@@ -92,7 +93,7 @@ function VitalSignalsInOffice({
           textLabel="TEMPERATURA (°)"
           name="temperature"
           placeholder="0 graus(°)"
-          defaultValue={consult?.vitalSignal.temperature}
+          defaultValue={vitalSignal?.temperature}
           required
         />
 
@@ -101,7 +102,7 @@ function VitalSignalsInOffice({
           textLabel="RESPIRAÇÂO (IRPM)"
           name="breathing" 
           placeholder="0 (IRPM)"
-          defaultValue={consult?.vitalSignal.breathing}
+          defaultValue={vitalSignal?.breathing}
           required
         />
 
@@ -111,7 +112,7 @@ function VitalSignalsInOffice({
           name="weight" 
           placeholder="0 (kg)"
           step={0.01}
-          defaultValue={consult?.vitalSignal.weight}
+          defaultValue={vitalSignal?.weight}
         />
 
         <InputField
@@ -120,7 +121,7 @@ function VitalSignalsInOffice({
           textLabel="ALTURA ((m)"
           name="height"
           placeholder="0 (m)"
-          defaultValue={consult?.vitalSignal.height}
+          defaultValue={vitalSignal?.height}
         />
 
         <InputField
@@ -129,7 +130,7 @@ function VitalSignalsInOffice({
           name="sp02"
           step={0.01}
           placeholder="0 (%)"
-          defaultValue={consult?.vitalSignal.sp02}
+          defaultValue={vitalSignal?.sp02}
         />
 
         <InputField
@@ -137,7 +138,7 @@ function VitalSignalsInOffice({
           textLabel="PVC ((CH20) opcional)"
           name="pvc"
           placeholder="0 (CH20)"
-          defaultValue={consult?.vitalSignal.pvc}
+          defaultValue={vitalSignal?.pvc}
         />
 
         <InputField
@@ -146,7 +147,7 @@ function VitalSignalsInOffice({
           textLabel="GLICEMIA ( (mg/dl) opcional)"
           name="bloodGlucose"
           placeholder="0 (mg/dl)"
-          defaultValue={consult?.vitalSignal.bloodGlucose}
+          defaultValue={vitalSignal?.bloodGlucose}
         />
       </div>
 
@@ -167,10 +168,10 @@ function VitalSignalsInOffice({
 
 function CurrentDataInOffice({
   id,
-  consult
+  currentState
 }:{ 
   id: string,
-  consult: resultsConsult
+  currentState?: ConsultCurrentStates;
 }){
   const [ state, action ] = useActionState(signConsutation, { message:"", status:false })
   const [ messageState, setMessageState ] = useState(false);
@@ -210,15 +211,15 @@ function CurrentDataInOffice({
           name="complaints"
           rows={3}
           placeholder="Descreva as queixas do utente"
-          defaultValue={consult.currentStates.complaints}
+          defaultValue={currentState?.complaints}
         />
 
         <InputDetails
           textLabel="Exame Físico"  
-          name="phisicalDetail"
+          name="phisicalExam"
           rows={3}
           placeholder="Descreva os exames físicos"
-          defaultValue={consult.currentStates.phisicalExam}
+          defaultValue={currentState?.phisicalExam}
 
         />
 
@@ -227,7 +228,7 @@ function CurrentDataInOffice({
           name="detail"
           rows={3}
           placeholder="O que observou?"
-          defaultValue={consult.currentStates.detail}
+          defaultValue={currentState?.detail}
 
         />
       </div>

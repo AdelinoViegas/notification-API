@@ -160,27 +160,6 @@ type DoctorDayAndTime = {
   };
 };
 
-type resultsConsult = {
-  vitalSignal:{
-    paMax: number,
-    paMin: number,
-    jump: number,
-    pvc: number,
-    imc: number,
-    sp02: number,
-    temperature: number,
-    breathing: number,
-    weight: number,
-    height: number,
-    bloodGlucose: number,
-  },
-  currentStates:{
-    complaints: string,
-    phisicalExam: string,
-    detail: string,
-  }
-}
-
 export type {
   Responsable,
   Responsables,
@@ -202,5 +181,4 @@ export type {
   Calendar,
   DoctorCalendarReference,
   DoctorDayAndTime,
-  resultsConsult,
 };
