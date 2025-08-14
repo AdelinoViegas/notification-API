@@ -204,7 +204,7 @@ async function signExamResult(prev:unknown, formData:FormData){
   const serviceId = formData.get("serviceId") as string;
   const resultId = formData.get("resultId") as string;
   const file = formData.get("file") as File;
-  const plainText = formData.get("plainText") as string;
+  const description = formData.get("plainText") as string;
 
   try{
     const formdata = new FormData();
@@ -219,6 +219,7 @@ async function signExamResult(prev:unknown, formData:FormData){
         resultId,
         exams: [{
           serviceId,
+          description,
           storageId: driveFile.id,
           userId: await getUserId(),
         }],
