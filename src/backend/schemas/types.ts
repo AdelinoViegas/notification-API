@@ -53,4 +53,5 @@ export interface ConsultResult extends Document {
   archiving: boolean;
   userId: Types.ObjectId;
   results: ConsultResults;
+  externalId: Types.ObjectId;
 }

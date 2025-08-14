@@ -205,6 +205,7 @@ const doctorCalendarSchema = new Schema({
 
 const officeSchema = new Schema<ConsultResult>({
   scheduleId: Schema.Types.ObjectId,
+  externalId: Schema.Types.ObjectId,
   served: {
     type: Boolean,
     default: false,

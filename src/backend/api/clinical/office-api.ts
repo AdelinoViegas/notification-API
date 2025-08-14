@@ -350,7 +350,7 @@ async function requestReschedule(prev: unknown, formData: FormData){
 async function getConsultResult(id: string){
   try{
     const consult = await officeModel.findById({ _id: id });
-    const externalResult = await externalResultsModel.findOne({ officeId: id });
+    const externalResult = await externalResultsModel.findOne({ _id: consult?.externalId });
 
     return{   
       vitalSignal:{
@@ -389,21 +389,37 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
     formdata.append("userFile", file);
     const data = await upload(formdata, await getUserId());
 
+    // if(storageId){
+    //   await 
+    //   await externalResultsModel.updateOne({ 
+    //     officeId,
+    //     patientId
+    //   }, { 
+    //     storageId: data.id
+    //   });
+    // }else 
+    //   await externalResultsModel.create({
+    //     patientId,
+    //     officeId,
+    //     storageId: data.id,
+    //     userId: await getUserId()
+    //   });
     if(storageId){
-      await externalResultsModel.updateOne({ 
-        officeId,
-        patientId
-      }, { 
-        storageId: data.id
-      });
-    }else 
-      await externalResultsModel.create({
+      const consult = await officeModel.findById({ _id: officeId });
+      await externalResultsModel.updateOne({ _id: consult?.externalId }, { storageId: data.id });
+    }else{
+      const externalResult = await externalResultsModel.create({
         patientId,
         officeId,
         storageId: data.id,
         userId: await getUserId()
       });
-      
+        
+      await officeModel.updateOne({ _id: officeId }, { externalId: externalResult._id });
+    }
+
+    
+
     return {
       message: data.message,
       status: true,
