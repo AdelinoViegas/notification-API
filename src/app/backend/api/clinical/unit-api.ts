@@ -224,7 +224,6 @@ async function signExamResult(prev:unknown, formData:FormData){
       FileHandler.getExtension(file.name)
     ].join(".");
 
-    await readUploadedFile({ serviceId, resultId });
 
     if(!results){
       await serviceResultModel.create({
@@ -317,30 +316,6 @@ async function signExamResult(prev:unknown, formData:FormData){
   }
 }
 
-async function readUploadedFile({ 
-  resultId,
-  serviceId 
-}: { 
-  resultId: string;
-  serviceId: string;
-}){
-  try{
-    const resultService = await serviceResultModel.findOne({ resultId });
-    const resultFile = resultService?.exams.find(item => item.serviceId?.toString() === serviceId)?.results?.file;
-    
-    if(resultFile?.size && resultFile?.binaryData){
-      return await ServerFileHandler.writeFileInPublicDir({ 
-        name: resultFile?.name as string,
-        binaryData: resultFile?.binaryData as Buffer,
-      });
-    }
-    return "#";
-  }catch(e:unknown){
-    console.log(e); 
-    return "#";
-  }
-}
-
 async function getExamResult({
   serviceResultId
 }: {
@@ -357,10 +332,7 @@ async function getExamResult({
       file: {
         name: item.results?.file?.name as string,
         size: item.results?.file?.size as number,
-        link: await readUploadedFile({ 
-          resultId: serviceResultId, 
-          serviceId: item?.serviceId?.toString() as string 
-        })
+        link: "#"
       }
     });
 

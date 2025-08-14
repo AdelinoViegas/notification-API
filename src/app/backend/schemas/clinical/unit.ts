@@ -75,22 +75,14 @@ const serviceResultSchema = new Schema({
   exams: [{
     _id: false,
     serviceId: Schema.Types.ObjectId, //o _id do examSchema
-    results: {
-      file: {
-        name: String,
-        size: Number,
-        mimeType: String,
-        binaryData: Buffer
-      },
-      plainText: String,
+    storageId: String,
+    sourceType: {
+      type: String,
+      enum: ["laboratory", "imaginig"],
+      required: true
     },
-    sourceType: String, // : "laboratory" | "imagining" possivelmente n necessário	,
     userId: Schema.Types.ObjectId,
     createdAt: {
-      type: Date,
-      default: new Date()
-    },
-    updatedAt:  {
       type: Date,
       default: new Date()
     }

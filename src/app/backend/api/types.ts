@@ -25,10 +25,6 @@ export interface DefaultResponse {
   status: string;
 }
 
-export interface FilePayload {
-
-}
-
 export interface FileResponse {
   message: string;
   id: string;
