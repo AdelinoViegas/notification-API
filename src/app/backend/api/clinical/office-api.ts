@@ -12,10 +12,8 @@ import { officeModel } from "@/app/backend/models/clinical";
 import { getUserId } from "@/lib/web-token";
 import { findDoctorCalendar } from "@/app/backend/api/clinical/scheduling-api";
 import { getDateInSlashFormat } from "@/lib/date-formater";
-import { FileHandler } from "@/lib/client-files";
-import { ServerFileHandler } from "@/lib/server-files";
 import { getUser } from "@/app/backend/api/clinical/api";
-import { randomUUID } from "node:crypto";
+import { getFile, upload } from "@/app/backend/api/storage";
 
 type ConsultationTypes = "vitalSignals" | "currentStates";
 
@@ -357,6 +355,8 @@ async function requestReschedule(prev: unknown, formData: FormData){
 async function getConsult(officeId: string){
   const consult = await officeModel.findById({ _id: officeId });
   const externalResult = await externalResultsModel.findOne({ officeId });
+
+  const file = await getFile(externalResult?.storageId as string);
   
   return{   
     vitalSignal:{
@@ -378,53 +378,39 @@ async function getConsult(officeId: string){
       detail: consult?.results?.currentStates?.detail as string,
     },
     fileDocument: {
-      name: externalResult?.fileDocument?.name as string,
-      size: externalResult?.fileDocument?.size as number
+      name: file.name,
+      size: 23
     }
   }
 }
 
 async function uploadExternalExamFile(prev: unknown, formData: FormData){
   try{
+
     const file = formData.get("externalFile") as File;
     const officeId = formData.get("officeId");
     const patientId = formData.get("patientId");
 
-    if(!file.size)
-      throw new Error("Resultados vazios não são permitidos!", { cause: "empty_fields"});
-
-    if(!FileHandler.validdateFileType(file))
-      throw new Error("Formato do arquivo inválido!", { cause: "invalid_type_file"});
-
-    if(!FileHandler.validMaxSize(file))
-      throw new Error("Tamanho do arquivo superior!", { cause: "max_file_size"});
-    
-    const fileRenamed = [
-      randomUUID().toString(), 
-      FileHandler.getExtension(file.name)
-    ].join(".");
+    const formdata = new FormData();
+    formdata.append("userFile", file);
+    const data = await upload(formdata, await getUserId());
 
     await externalResultsModel.create({
       patientId,
       officeId,
-      fileDocument: {
-        name: fileRenamed,
-        size: file.size,
-        mimeType: file.type,
-        binaryData: Buffer.from(await file.arrayBuffer())
-      },
+      storageId: data.id,
       userId: await getUserId()
     });
 
     return {
-      message: 'Arquivo salvo com sucesso!',
+      message: data.message,
       status: true,
     }
-  }catch(err: unknown){
-    const error = err as Error & { code: number };
+  }catch(e: unknown){
+    console.log(e);
 
     return {
-      message: error?.code?"Este arquivo já foi carregado!":error.cause?error.message:error.message,
+      message: "operação impossivel!",
       status: false,
     }
   }
@@ -444,18 +430,15 @@ async function readExternalExamFile({
     if(!externalFileDocument)
       return;
 
-    const externalFileLink = await ServerFileHandler.writeFileInPublicDir({ 
-      name: externalFileDocument?.fileDocument?.name as string,
-      binaryData: externalFileDocument?.fileDocument?.binaryData as Buffer,
-    });
-
+    const file = await getFile(externalFileDocument.storageId as string);
+    
     return {
-      name: externalFileDocument?.fileDocument?.name as string,
-      size: externalFileDocument?.fileDocument?.size as number,
-      link: externalFileLink
+      name: file.name,
+      size: 23,
+      link: file.link
     }
-  }catch(e){
-    console.log(e);
+  }catch {
+    
   }
 }
 

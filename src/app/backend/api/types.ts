@@ -24,3 +24,31 @@ export interface DefaultResponse {
   message: string;
   status: string;
 }
+
+export interface FilePayload {
+
+}
+
+export interface FileResponse {
+  message: string;
+  id: string;
+}
+
+export interface DriveFile {
+  _id: string;
+  authorId: string;
+  name: string;
+}
+
+export interface ListAllFiles {
+  items: Array<DriveFile>;
+  total: number;
+  page: number;
+  currentPage: number;
+  totalPages: number;
+}
+
+export interface ResponseDriveFile {
+  link: string;
+  name: string;
+}

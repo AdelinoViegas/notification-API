@@ -17,6 +17,8 @@ import { resultsConsult } from "@/app/backend/api/clinical/types";
 import { FileHandler } from "@/lib/client-files";
 import { toast, ToastContainer } from "react-toastify";
 import SubTitle from "@/components/ui/subtitle";
+import { FaRegFileImage, FaRegFilePdf } from "react-icons/fa6";
+import Link from "next/link";
 
 function VitalSignalsInOffice({ 
   id, 
@@ -244,10 +246,6 @@ function CurrentDataInOffice({
     </form>
   )
 }
-
-import 'react-toastify/dist/ReactToastify.css';
-import { FaRegFileImage, FaRegFilePdf } from "react-icons/fa6";
-import Link from "next/link";
 
 function FileUpload({ 
   patientId,
