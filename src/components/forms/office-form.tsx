@@ -10,10 +10,10 @@ import InputField from "@/components/ui/input-field";
 import InputDetails from "@/components/ui/input-details";
 import Button from "@/components/ui/button";
 import Alert from "@/components/ui/alert";
-import { signConsutation, uploadExternalExamFile } from "@/app/backend/api/clinical/office-api";
+import { signConsutation, uploadExternalExamFile } from "@/backend/api/clinical/office-api";
 import { useRouter } from "next/navigation";
 
-import type { ConsultCurrentStates, ConsultVitalSignal } from "@/app/backend/schemas/types";
+import type { ConsultCurrentStates, ConsultVitalSignal } from "@/backend/schemas/types";
 
 import { FileHandler } from "@/lib/client-files";
 import { toast, ToastContainer } from "react-toastify";

@@ -1,6 +1,6 @@
 "use client";
 
-import { applyDischarge } from "@/app/backend/api/clinical/urgency-bank-api";
+import { applyDischarge } from "@/backend/api/clinical/urgency-bank-api";
 import Button from "@/components/ui/button";
 import InputDetails from "@/components/ui/input-details";
 import InputField from "@/components/ui/input-field";

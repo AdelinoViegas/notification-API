@@ -1,8 +1,8 @@
 import Header from "@/components/header";
-import { getExam } from "@/app/backend/api/clinical/scheduling-api";
+import { getExam } from "@/backend/api/clinical/scheduling-api";
 import ExamForm from "@/components/forms/exam-form";
-import { getCCGs } from "@/app/backend/api/clinical/scheduling-api";
-import { getSpecialties } from "@/app/backend/api/clinical/api";
+import { getCCGs } from "@/backend/api/clinical/scheduling-api";
+import { getSpecialties } from "@/backend/api/clinical/api";
 
 export default async function Page({
 	params

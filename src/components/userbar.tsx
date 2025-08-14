@@ -1,5 +1,5 @@
 import { FaUserCircle } from "react-icons/fa";
-import { getMyProfile } from "@/app/backend/api/admin";
+import { getMyProfile } from "@/backend/api/admin";
 
 export const getFirstAndLastName = (fullname: string) => {
   if(!fullname)

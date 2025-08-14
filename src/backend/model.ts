@@ -2,7 +2,7 @@ import { createConnection } from "mongoose";
 import { 
   userSchema, 
   currentLocationSchema
-} from "@/app/backend/schemas/user";
+} from "@/backend/schemas/user";
 import { 
   examSchema, 
   examGroupSchema,
@@ -15,7 +15,7 @@ import {
   scheduleAppointmentSchema,
   appointmentCancelSchema,
   officeSchema,
-} from "@/app/backend/schemas/scheduling";
+} from "@/backend/schemas/scheduling";
 import { 
   responsibleSchema,
   accesTypeSchema, 
@@ -24,11 +24,11 @@ import {
   demographySchema,
   processStateSchema,
   specialtyStateSchema
-} from "@/app/backend/schemas/patient";
+} from "@/backend/schemas/patient";
 import { 
   screeningSchema,
   triedSchema
-} from "@/app/backend/schemas/screening";
+} from "@/backend/schemas/screening";
 import { 
   unitSchema, 
   workplaceSchema,
@@ -36,14 +36,14 @@ import {
   scheduleServiceSchema,
   serviceResultSchema,
   externalResultSchema
-} from "@/app/backend/schemas/unit";
+} from "@/backend/schemas/unit";
 import { 
   urgencyBankSchema, 
   urgencyService,
   patientHospitalizedSchema, 
   prescriptionSchema,
   surgerySchema
-} from "@/app/backend/schemas/urgency-bank";
+} from "@/backend/schemas/urgency-bank";
 
 const clinical = createConnection(process.env.MONGO_URL as string, {
   dbName: process.env.CLINICAL_DB_NAME

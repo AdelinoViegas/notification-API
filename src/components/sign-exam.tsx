@@ -18,8 +18,8 @@ import {
   signExam, 
   signCCG,
   getCCGs,
-} from "@/app/backend/api/clinical/scheduling-api";
-import { getSpecialties } from "@/app/backend/api/clinical/api";
+} from "@/backend/api/clinical/scheduling-api";
+import { getSpecialties } from "@/backend/api/clinical/api";
 import SpecialtyModal from "@/components/specialty-modal";
 
 export default function SignExam(){

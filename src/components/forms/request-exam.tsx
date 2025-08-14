@@ -10,7 +10,7 @@ import React, {
 import { useRouter } from "next/navigation";
 import Button from "@/components/ui/button";
 import Selection from "@/components/ui/selection";
-import { getUnits } from "@/app/backend/api/clinical/urgency-bank-api";
+import { getUnits } from "@/backend/api/clinical/urgency-bank-api";
 import { SelectionOption } from "@/components/ui/selection";
 import InputDetails from "@/components/ui/input-details";
 import Alert from "@/components/ui/alert";
@@ -22,7 +22,7 @@ import {
   getExams, 
   schedulePatientExam,
   getCCGs
-} from "@/app/backend/api/clinical/scheduling-api";
+} from "@/backend/api/clinical/scheduling-api";
 
 export default function RequestExams({ 
   patientId,

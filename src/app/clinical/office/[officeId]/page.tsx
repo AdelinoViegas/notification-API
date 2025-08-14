@@ -2,12 +2,12 @@ import Header from "@/components/header";
 import Card from "@/components/ui/card";
 import TitleAndSubtitle from "@/components/title-subtitle";
 import { CurrentDataInOffice, VitalSignalsInOffice } from "@/components/forms/office-form";
-import { getConsultResult, getPatient } from "@/app/backend/api/clinical/office-api";
+import { getConsultResult, getPatient } from "@/backend/api/clinical/office-api";
 import Accordium from "@/components/ui/accordium";
-import { civilState, gender } from "@/app/backend/api/clinical/translator";
+import { civilState, gender } from "@/backend/api/clinical/translator";
 import FinishConsultation from "@/components/finish-consulation";
 import RequestReschedule from "@/components/request-reschedule";
-import { getScheduleAppointment } from "@/app/backend/api/clinical/scheduling-api";
+import { getScheduleAppointment } from "@/backend/api/clinical/scheduling-api";
 import RequestExams from "@/components/forms/request-exam";
 // import ExamResultViewer from "@/components/exam-result-viewer";
 

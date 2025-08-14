@@ -10,13 +10,13 @@ import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
 import Alert from '@/components/ui/alert';
 import forceRefreshPage from "@/lib/force-refresh";
-import type { Patient } from "@/app/backend/api/clinical/types";
-import { updatePersonalInfo } from "@/app/backend/api/clinical/api";
+import type { Patient } from "@/backend/api/clinical/types";
+import { updatePersonalInfo } from "@/backend/api/clinical/api";
 
 import { 
   civilState as civilStateValues, 
   gender as genderValues
-} from "@/app/backend/api/clinical/translator";
+} from "@/backend/api/clinical/translator";
 
 type Personal = { id: string } & Patient;
 

@@ -1,7 +1,7 @@
 "use server";
 
 import axios from "axios";
-import type { FileResponse, ListAllFiles, ResponseDriveFile } from "@/app/backend/api/types";
+import type { FileResponse, ListAllFiles, ResponseDriveFile } from "@/backend/api/types";
 
 const instance = axios.create({ 
   baseURL: process.env.STORAGE_SRV_URL,

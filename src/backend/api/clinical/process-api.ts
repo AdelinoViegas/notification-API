@@ -1,9 +1,9 @@
 "use server";
 
 import { getUserId } from "@/lib/web-token";
-import { processStateModel } from "@/app/backend/model";
+import { processStateModel } from "@/backend/model";
 import { getFirstAndLastName } from "@/components/userbar";
-import { getUser } from "@/app/backend/api/admin";
+import { getUser } from "@/backend/api/admin";
 
 type WorkLocation = "screening" | "urgency" | "laboratory" | "imaging" ;
 

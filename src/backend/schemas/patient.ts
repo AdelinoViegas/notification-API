@@ -3,7 +3,7 @@ import { randomInt } from "crypto";
 import { 
   Responsables, 
   Group, 
-} from "@/app/backend/api/clinical/types";
+} from "@/backend/api/clinical/types";
 
 const patientSchema = new Schema({
   fullname: {

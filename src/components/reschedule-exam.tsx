@@ -11,7 +11,7 @@ import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
 import InputDetails from "@/components/ui/input-details";
 import Alert from "@/components/ui/alert";
-import { reschedulePatientExam } from "@/app/backend/api/clinical/scheduling-api";
+import { reschedulePatientExam } from "@/backend/api/clinical/scheduling-api";
 import Selection, { SelectionOption } from "@/components/ui/selection";
 import { GrSchedulePlay } from "react-icons/gr"; 
 

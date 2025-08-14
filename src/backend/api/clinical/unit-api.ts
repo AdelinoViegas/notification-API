@@ -7,11 +7,11 @@ import {
   patientModel,
   unitModel,
   serviceResultModel
-} from "@/app/backend/model";
+} from "@/backend/model";
 import { getUserId } from "@/lib/web-token";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
-import { getUser } from "@/app/backend/api/admin";
-import { upload } from "@/app/backend/api/storage";
+import { getUser } from "@/backend/api/admin";
+import { upload } from "@/backend/api/storage";
 
 async function updatePaymentData(prev: unknown, formData: FormData){
   try{

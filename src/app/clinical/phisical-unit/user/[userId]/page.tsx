@@ -9,10 +9,10 @@ import {
   grantUnitAccess, 
   getGrantedUnitAccess,
   removeUnitAccess,
-} from "@/app/backend/api/clinical/urgency-bank-api";
+} from "@/backend/api/clinical/urgency-bank-api";
 import UserClinicalConfig from "@/components/user-clinical-config";
-import { getUser, getSpecialties } from "@/app/backend/api/clinical/api";
-import { getUrgencyServices } from "@/app/backend/api/clinical/urgency-bank-api";
+import { getUser, getSpecialties } from "@/backend/api/clinical/api";
+import { getUrgencyServices } from "@/backend/api/clinical/urgency-bank-api";
 
 export default async function Page({
    params 

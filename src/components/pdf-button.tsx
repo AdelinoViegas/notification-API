@@ -11,7 +11,7 @@ import {
   Employee,
   Enterprise,
   accessProps,
-} from "@/app/backend/api/clinical/types";
+} from "@/backend/api/clinical/types";
 import { FaFilePdf } from "react-icons/fa";
 
 export type Group = {

@@ -10,9 +10,9 @@ import Selection from "@/components/ui/selection";
 import Button from "@/components/ui/button";
 import Alert from '@/components/ui/alert';
 import forceRefreshPage from "@/lib/force-refresh";
-import { kinshipDegree } from "@/app/backend/api/clinical/translator";
-import type { Responsable } from "@/app/backend/api/clinical/types";
-import { updateResposible } from "@/app/backend/api/clinical/api";
+import { kinshipDegree } from "@/backend/api/clinical/translator";
+import type { Responsable } from "@/backend/api/clinical/types";
+import { updateResposible } from "@/backend/api/clinical/api";
 
 
 type InfoProps = {

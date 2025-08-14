@@ -12,7 +12,7 @@ import {
 import Button from "@/components/ui/button";
 import Modal from '@/components/modal';
 import { TiInputChecked } from 'react-icons/ti';
-import { finishExam } from '@/app/backend/api/clinical/unit-api';
+import { finishExam } from '@/backend/api/clinical/unit-api';
 import Alert from '@/components/ui/alert';
 
 

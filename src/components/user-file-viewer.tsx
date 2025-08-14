@@ -1,4 +1,4 @@
-import { getFile } from "@/app/backend/api/storage";
+import { getFile } from "@/backend/api/storage";
 
 export default async function UserFileViewer({ id }:{ id: string }){
   const userFile = await getFile(id);

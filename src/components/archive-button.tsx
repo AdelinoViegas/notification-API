@@ -8,7 +8,7 @@ import {
 import Button from "@/components/ui/button";
 import Modal from '@/components/modal';
 import { HiArchiveBoxXMark as ArchiveBoxXMarkIcon } from 'react-icons/hi2';
-import { changeArchived } from '@/app/backend/api/clinical/api';
+import { changeArchived } from '@/backend/api/clinical/api';
 import { toast } from 'react-toastify';
 
 export default function ArchiveButton({ invert }:{ invert?: boolean }){

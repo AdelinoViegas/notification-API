@@ -1,6 +1,6 @@
 import Header from "@/components/header";
 import Table from "@/components/table";
-import { getPatients } from "@/app/backend/api/clinical/urgency-bank-api";
+import { getPatients } from "@/backend/api/clinical/urgency-bank-api";
 import tableFormater from "@/lib/table-formater";
 import Alert from "@/components/ui/alert";
 import { orderByPriority } from "@/lib/filters";

@@ -12,7 +12,7 @@ import Card from "@/components/ui/card";
 import Button from "@/components/ui/button";
 import tabComponents from "@/components/tab-components";
 import clsx from "clsx";
-import { signPatient } from "@/app/backend/api/clinical/api";
+import { signPatient } from "@/backend/api/clinical/api";
 import { GrLinkNext } from "react-icons/gr";
 
 import { validatePatientDoc } from "@/lib/regexp";

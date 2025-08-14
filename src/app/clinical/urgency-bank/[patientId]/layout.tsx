@@ -2,7 +2,7 @@ import Header from "@/components/header";
 import clsx from "clsx";
 import TabNav from "@/components/tabnav";
 import Card from "@/components/ui/card";
-import { getPatient } from "@/app/backend/api/clinical/urgency-bank-api";
+import { getPatient } from "@/backend/api/clinical/urgency-bank-api";
 import { MonitorAccess, UnlockProcessAccess } from "@/components/lock-unlock-monitor-process";
 import { redirect } from "next/navigation";
 

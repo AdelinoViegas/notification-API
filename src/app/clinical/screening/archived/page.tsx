@@ -1,5 +1,5 @@
 import Table from "@/components/table";
-import { getPatientsInScreening } from "@/app/backend/api/clinical/api";
+import { getPatientsInScreening } from "@/backend/api/clinical/api";
 import tableFormater from "@/lib/table-formater";
 import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";

@@ -9,8 +9,8 @@ import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
 import Alert from '@/components/ui/alert';
 import forceRefreshPage from "@/lib/force-refresh";
-import type { Demography } from "@/app/backend/api/clinical/types";
-import { updateDemography } from "@/app/backend/api/clinical/api";
+import type { Demography } from "@/backend/api/clinical/types";
+import { updateDemography } from "@/backend/api/clinical/api";
 
 type InfoProps = {
   id: string;

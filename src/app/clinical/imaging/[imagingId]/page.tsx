@@ -4,7 +4,7 @@ import {
   // getExamResult, 
   getPatient, 
   // getPatientExams 
-} from "@/app/backend/api/clinical/unit-api";
+} from "@/backend/api/clinical/unit-api";
 // import LaboratoryImagingForm from "@/components/forms/laboratory-imaging-form";
 import { MonitorAccess, UnlockProcessAccess } from "@/components/lock-unlock-monitor-process";
 

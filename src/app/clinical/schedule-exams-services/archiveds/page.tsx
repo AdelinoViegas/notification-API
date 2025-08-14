@@ -4,7 +4,7 @@ import tableFormater from "@/lib/table-formater";
 import Search from "@/components/ui/search";
 import { ScheduleExam } from "@/lib/table-formater";
 // import SelectFilter from "@/components/select-filter";
-import { getSchedulePatientExams } from "@/app/backend/api/clinical/scheduling-api";
+import { getSchedulePatientExams } from "@/backend/api/clinical/scheduling-api";
 
 export const dynamic = "force-dynamic";
 

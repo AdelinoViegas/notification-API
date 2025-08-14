@@ -12,7 +12,7 @@ import InputField from "@/components/ui/input-field";
 import InputDetails from "@/components/ui/input-details";
 import Accordium from "@/components/ui/accordium";
 import Alert from "@/components/ui/alert";
-import { signExamResult } from "@/app/backend/api/clinical/unit-api";
+import { signExamResult } from "@/backend/api/clinical/unit-api";
 import { FileHandler } from "@/lib/client-files";
 import { toast } from 'react-toastify';
 import { FaRegFilePdf } from "react-icons/fa6";

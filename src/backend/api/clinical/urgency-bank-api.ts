@@ -20,20 +20,20 @@ import {
   patientHospitalizedModel,
   prescriptionModel,
   surgeryModel
-} from "@/app/backend/model";
+} from "@/backend/model";
 import { 
   patientAccess,
   patientGroup as patientGroups, 
-} from "@/app/backend/api/clinical/translator"; 
+} from "@/backend/api/clinical/translator"; 
 
 import { 
   priorityToComponent,
   unitTypes,
   priority as priorityTranslator
-} from "@/app/backend/api/clinical/translator";
-import { getUser, patientFilters } from "@/app/backend/api/clinical/api";
-import { DoctorCalendar } from "@/app/backend/api/clinical/types";
-import { getPatient as mainPatient } from "@/app/backend/api/clinical/api";
+} from "@/backend/api/clinical/translator";
+import { getUser, patientFilters } from "@/backend/api/clinical/api";
+import { DoctorCalendar } from "@/backend/api/clinical/types";
+import { getPatient as mainPatient } from "@/backend/api/clinical/api";
 import { closePatientProcess } from "./process-api";
 import mongoose from "mongoose";
 import { getDataAndHoursFormat } from "@/lib/date-formater";

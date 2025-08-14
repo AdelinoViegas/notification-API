@@ -8,7 +8,7 @@ import type {
   User, 
   UserRole,
   DefaultResponse
-} from "@/app/backend/api/types";
+} from "@/backend/api/types";
 
 const instance = axios.create({ 
   baseURL: process.env.ADMIN_SRV_URL,

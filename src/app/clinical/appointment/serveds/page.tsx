@@ -2,7 +2,7 @@ import Header from "@/components/header";
 import Table from "@/components/table";
 import { ScheduleAppointment, tableAppointments } from "@/lib/table-formater";
 import Search from "@/components/ui/search";
-import { getPatients } from "@/app/backend/api/clinical/office-api";
+import { getPatients } from "@/backend/api/clinical/office-api";
 
 export const dynamic = "force-dynamic";
 

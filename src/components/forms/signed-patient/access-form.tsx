@@ -10,10 +10,10 @@ import Button from "@/components/ui/button";
 import Alert from '@/components/ui/alert';
 import Selection, { SelectionOption } from "@/components/ui/selection";
 import forceRefreshPage from "@/lib/force-refresh";
-import { updateAccessType } from "@/app/backend/api/clinical/api";
-import { patientAccess as accessType } from "@/app/backend/api/clinical/translator";
+import { updateAccessType } from "@/backend/api/clinical/api";
+import { patientAccess as accessType } from "@/backend/api/clinical/translator";
 import ExternalUnitForm from "../external-unit-form";
-import { getExternalUnits } from "@/app/backend/api/clinical/urgency-bank-api";
+import { getExternalUnits } from "@/backend/api/clinical/urgency-bank-api";
 
 type AccessType = {
   _id: string;

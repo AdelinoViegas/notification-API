@@ -8,7 +8,7 @@ import {
   Assured,
   Employee,
   Enterprise,  
-} from "@/app/backend/api/clinical/types";
+} from "@/backend/api/clinical/types";
 import { 
   userModel,
   patientModel,
@@ -21,16 +21,16 @@ import {
   specialtyModel,
   urgencyBankModel,
   processStateModel,
-} from "@/app/backend/model";
+} from "@/backend/model";
 import { 
   patientAccess,
   patientGroup as patientGroups,
   userCategory
-} from "@/app/backend/api/clinical/translator"; 
+} from "@/backend/api/clinical/translator"; 
 import { 
   getUsers as RESTgetUsers,
   getUser as RESTgetUser 
-} from "@/app/backend/api/admin";
+} from "@/backend/api/admin";
 
 type ChoosedGroup = Assured | Employee | Enterprise | undefined;
 

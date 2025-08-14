@@ -4,7 +4,7 @@ import Modal from "@/components/modal";
 import Button from "@/components/ui/button";
 import InputDetails from "@/components/ui/input-details";
 import InputField from "@/components/ui/input-field";
-import { addPrescription } from "@/app/backend/api/clinical/urgency-bank-api";
+import { addPrescription } from "@/backend/api/clinical/urgency-bank-api";
 import { toast } from "react-toastify";
 import { useParams } from "next/navigation";
 

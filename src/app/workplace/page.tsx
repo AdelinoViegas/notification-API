@@ -2,9 +2,9 @@ import Image from "next/image";
 import Header from "@/components/header";
 import { getUserId } from "@/lib/web-token";
 import WorkplaceFrom from "@/components/forms/workplace-form";
-import { getGrantedUnitAccess } from "@/app/backend/api/clinical/urgency-bank-api";
+import { getGrantedUnitAccess } from "@/backend/api/clinical/urgency-bank-api";
 import Carousel from "@/components/carousel";
-import { getUser } from "@/app/backend/api/admin";
+import { getUser } from "@/backend/api/admin";
 
 export const dynamic = "force-dynamic";
 
