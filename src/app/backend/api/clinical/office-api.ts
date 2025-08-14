@@ -13,7 +13,7 @@ import { getUserId } from "@/lib/web-token";
 import { findDoctorCalendar } from "@/app/backend/api/clinical/scheduling-api";
 import { getDateInSlashFormat } from "@/lib/date-formater";
 import { getUser } from "@/app/backend/api/clinical/api";
-import { getFile, upload } from "@/app/backend/api/storage";
+import { upload } from "@/app/backend/api/storage";
 
 type ConsultationTypes = "vitalSignals" | "currentStates";
 

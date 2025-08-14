@@ -1,11 +1,11 @@
 import Header from "@/components/header";
-import Card from "@/components/ui/card";
+// import Card from "@/components/ui/card";
 import { 
-  getExamResult, 
+  // getExamResult, 
   getPatient, 
-  getPatientExams 
+  // getPatientExams 
 } from "@/app/backend/api/clinical/unit-api";
-import LaboratoryImagingForm from "@/components/forms/laboratory-imaging-form";
+// import LaboratoryImagingForm from "@/components/forms/laboratory-imaging-form";
 import { MonitorAccess, UnlockProcessAccess } from "@/components/lock-unlock-monitor-process";
 
 export default async function Page({
@@ -16,9 +16,9 @@ export default async function Page({
   }>
 }){
   const { imagingId } = await params;
-  const exams = await getPatientExams(imagingId);
-  const savedResults = await getExamResult({ serviceResultId: imagingId });
-  const { patientId, patientName } = await getPatient(imagingId);
+  // const exams = await getPatientExams(imagingId);
+  // const savedResults = await getExamResult({ serviceResultId: imagingId });
+  const { patientId } = await getPatient(imagingId);
 
   return(
     <main className="space-y-3">
@@ -40,7 +40,7 @@ export default async function Page({
         />
       </div>
 
-      <Card>
+      {/* <Card>
         <LaboratoryImagingForm
           {...{patientName}} 
           savedResults={savedResults}
@@ -48,7 +48,7 @@ export default async function Page({
           {...{exams}}
           imaging
         />
-      </Card>
+      </Card> */}
     </main>
   );
 }

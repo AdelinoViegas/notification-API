@@ -1,15 +1,15 @@
 import Header from "@/components/header";
 import Card from "@/components/ui/card";
 import TitleAndSubtitle from "@/components/title-subtitle";
-import { CurrentDataInOffice, FileUpload, VitalSignalsInOffice } from "@/components/forms/office-form";
+import { CurrentDataInOffice, VitalSignalsInOffice } from "@/components/forms/office-form";
 import { getConsultResult, getPatient } from "@/app/backend/api/clinical/office-api";
 import Accordium from "@/components/ui/accordium";
 import { civilState, gender } from "@/app/backend/api/clinical/translator";
 import FinishConsultation from "@/components/finish-consulation";
 import RequestReschedule from "@/components/request-reschedule";
-import { getPatientScheduledServices, getScheduleAppointment } from "@/app/backend/api/clinical/scheduling-api";
+import { getScheduleAppointment } from "@/app/backend/api/clinical/scheduling-api";
 import RequestExams from "@/components/forms/request-exam";
-import ExamResultViewer from "@/components/exam-result-viewer";
+// import ExamResultViewer from "@/components/exam-result-viewer";
 
 export default async function Page({
   params

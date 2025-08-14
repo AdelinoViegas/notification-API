@@ -11,7 +11,7 @@ import {
 import { getUserId } from "@/lib/web-token";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
 import { getUser } from "@/app/backend/api/admin";
-import { getFile, upload } from "@/app/backend/api/storage";
+import { upload } from "@/app/backend/api/storage";
 
 async function updatePaymentData(prev: unknown, formData: FormData){
   try{

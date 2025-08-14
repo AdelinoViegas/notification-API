@@ -5,9 +5,9 @@ import InputField from "@/components/ui/input-field";
 import { getConsultResult, getPatient } from "@/app/backend/api/clinical/office-api";
 import Accordium from "@/components/ui/accordium";
 import { civilState, gender } from "@/app/backend/api/clinical/translator";
-import { FileHandler } from "@/lib/client-files";
-import { FaRegFileImage, FaRegFilePdf } from "react-icons/fa6";
-import Link from "next/link";
+// import { FileHandler } from "@/lib/client-files";
+// import { FaRegFileImage, FaRegFilePdf } from "react-icons/fa6";
+// import Link from "next/link";
 
 export default async function Page({
   params
