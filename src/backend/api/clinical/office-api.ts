@@ -132,11 +132,8 @@ async function getPatients({
   inAppointment?: boolean;
 }){
   try{
-    const appointments = await officeModel.find({ 
-      "served.status": served?served:false,
-      deleted: false 
-    });
-    
+    const appointments = await officeModel.find({ served: served ?? false });
+
     const formated = [];
 
     for(const appointment of appointments){
@@ -223,7 +220,7 @@ async function signConsutation(prev:unknown, formData:FormData){
     const sp02 = formData.get("sp02");
     const bloodGlucose = formData.get("bloodGlucose");
     const complaints = formData.get("complaints");
-    const phisicalDetail = formData.get("phisicalDetail") as string;
+    const phisicalExam = formData.get("phisicalExam");
     const detail = formData.get("detail") as string;
     const consultation = await officeModel.findById({ _id: officeId })  
     
@@ -265,7 +262,7 @@ async function signConsutation(prev:unknown, formData:FormData){
             vitalSignal: consultation?.results?.vitalSignal,
             currentStates: {
               complaints,
-              phisicalDetail,
+              phisicalExam,
               detail
             },
             "status.vitalSignal": consultation?.results?.status?.vitalSignal,
@@ -386,23 +383,32 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
     const file = formData.get("externalFile") as File;
     const officeId = formData.get("officeId");
     const patientId = formData.get("patientId");
+    const storageId = formData.get("storageId");
 
     const formdata = new FormData();
     formdata.append("userFile", file);
     const data = await upload(formdata, await getUserId());
 
-    await externalResultsModel.create({
-      patientId,
-      officeId,
-      storageId: data.id,
-      userId: await getUserId()
-    });
-
+    if(storageId){
+      await externalResultsModel.updateOne({ 
+        officeId,
+        patientId
+      }, { 
+        storageId: data.id
+      });
+    }else 
+      await externalResultsModel.create({
+        patientId,
+        officeId,
+        storageId: data.id,
+        userId: await getUserId()
+      });
+      
     return {
       message: data.message,
       status: true,
     }
-  }catch(e: unknown){
+  }catch(e){
     console.log(e);
 
     return {

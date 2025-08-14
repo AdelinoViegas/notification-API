@@ -48,3 +48,8 @@ export interface ResponseDriveFile {
   link: string;
   name: string;
 }
+
+export interface PublicDriveFile extends ResponseDriveFile {
+  size: string;
+  type: "png" | "jpeg" | "pdf" | "mp4";
+}

@@ -108,9 +108,10 @@ const externalResultSchema = new Schema({
   storageId: String,
   userId: Schema.Types.ObjectId,
 }, {
-  collection: "results_external",
-  timestamps: true
-})
+  collection: "office_external_results",
+  timestamps: true,
+});
+
 export {
   unitSchema,
   workplaceSchema,
