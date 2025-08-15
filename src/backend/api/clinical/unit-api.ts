@@ -212,14 +212,6 @@ async function finishScheduledExam(prev: unknown, formData: FormData){
   }
 }
 
-// async function getExams(patientId: string){
-//   try{
-//     const 
-//   }catch{
-
-//   }
-// }
-
 async function registerExamResult(prev:unknown, formData:FormData){
   // const serviceId = formData.get("serviceId") as string;
   // const resultId = formData.get("resultId") as string;
