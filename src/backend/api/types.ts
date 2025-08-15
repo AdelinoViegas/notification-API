@@ -47,6 +47,8 @@ export interface ListAllFiles {
 export interface ResponseDriveFile {
   link: string;
   name: string;
+  size: string;
+  extension: "png" | "jpeg" | "png" | "mp4" | "pdf";
 }
 
 export interface PublicDriveFile extends ResponseDriveFile {

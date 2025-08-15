@@ -371,7 +371,7 @@ async function getConsultResult(id: string){
         phisicalExam: consult?.results?.currentStates?.phisicalExam as string,
         detail: consult?.results?.currentStates?.detail as string,
       },
-      storageId: externalResult?.storageId
+      storageId: externalResult?.storageId as string
     }
   } catch {
   
@@ -389,21 +389,6 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
     formdata.append("userFile", file);
     const data = await upload(formdata, await getUserId());
 
-    // if(storageId){
-    //   await 
-    //   await externalResultsModel.updateOne({ 
-    //     officeId,
-    //     patientId
-    //   }, { 
-    //     storageId: data.id
-    //   });
-    // }else 
-    //   await externalResultsModel.create({
-    //     patientId,
-    //     officeId,
-    //     storageId: data.id,
-    //     userId: await getUserId()
-    //   });
     if(storageId){
       const consult = await officeModel.findById({ _id: officeId });
       await externalResultsModel.updateOne({ _id: consult?.externalId }, { storageId: data.id });
@@ -418,17 +403,15 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
       await officeModel.updateOne({ _id: officeId }, { externalId: externalResult._id });
     }
 
-    
-
     return {
       message: data.message,
       status: true,
     }
   }catch(e){
-    console.log(e);
-
+    const err = e as Error;
+    console.log(err.cause)
     return {
-      message: "operação impossivel!",
+      message: err.message,
       status: false,
     }
   }

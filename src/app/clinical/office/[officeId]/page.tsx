@@ -24,7 +24,7 @@ export default async function Page({
   const consultResult = await getConsultResult(officeId);
   const { detail } = await getScheduleAppointment(patient.scheduleAppointmentId);
   // const results = await getPatientScheduledServices({ patientId: patient.personal._id });
-  console.log(consultResult);
+  console.log(consultResult?.storageId);
 
   return(
     <main className="space-y-3">
@@ -95,12 +95,15 @@ export default async function Page({
               <div>
                 <FileUpload 
                   {...{officeId}} 
-                  patientId={patient.personal._id}  
-                  
+                  patientId={patient.personal._id}
+                  storageId={consultResult?.storageId}
                 />
 
-                { consultResult?.storageId && <UserFileViewer id={consultResult.storageId} />}
-
+                { consultResult?.storageId && 
+                  <UserFileViewer 
+                    id={consultResult.storageId} 
+                  />
+                }
 
                 {/* <ExamResultViewer results={results} /> */}
               </div>

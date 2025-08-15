@@ -21,6 +21,8 @@ import SubTitle from "@/components/ui/subtitle";
 import { FaRegFileImage, FaRegFilePdf } from "react-icons/fa6";
 import Link from "next/link";
 import { PublicDriveFile } from "@/backend/api/types";
+import { upload } from "@/backend/api/storage";
+import { getUserId } from "@/lib/web-token";
 
 export function VitalSignalsInOffice({ 
   id, 
@@ -270,7 +272,7 @@ export function FileUpload({
   }, [state])
 
   return(
-    <form {...{action}}>
+    <form action={action}>
       <input type="hidden" name="patientId" defaultValue={patientId} />
       <input type="hidden" name="officeId" defaultValue={officeId} />
       <input type="hidden" name="storageId" defaultValue={storageId} />

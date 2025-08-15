@@ -4,7 +4,7 @@ import axios from "axios";
 import type { FileResponse, ListAllFiles, ResponseDriveFile } from "@/backend/api/types";
 
 const instance = axios.create({ 
-  baseURL: process.env.STORAGE_SRV_URL,
+  baseURL: process.env.STORAGE_SRV_URL+"/v1",
 });
 
 export async function upload(params: unknown, authorId: string){
