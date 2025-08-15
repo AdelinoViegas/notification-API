@@ -174,10 +174,10 @@ async function getPatients({
   }
 }
 
-async function getPatientExams(laboratoryId: string){
+async function getScheduledExams(id: string){
   try{
     const exams = [];
-    const scheduleService = await scheduleServiceModel.findById({_id: laboratoryId}).select({ scheduleId: 1 });
+    const scheduleService = await scheduleServiceModel.findById({_id: id}).select({ scheduleId: 1 });
     const service = await scheduleExamModel.findById({_id: scheduleService?.scheduleId}).select({ exams: 1 });
     
     if(service?.exams)
@@ -190,7 +190,26 @@ async function getPatientExams(laboratoryId: string){
       }
 
     return exams;
-  }finally{}
+  }catch {
+    return []
+  }
+}
+
+async function finishScheduledExam(prev: unknown, formData: FormData){
+  try{
+    const serviceId = formData.get("serviceId");
+    await scheduleServiceModel.updateOne({ _id: serviceId }, { served: true });
+    
+    return {
+      message: "Exame concluido!",
+      status: true
+    }
+  }catch {
+    return {
+      message: "Operação impossivel!",
+      status: false
+    }
+  }
 }
 
 // async function getExams(patientId: string){
@@ -416,8 +435,9 @@ export {
   sendPatientToUnit,
   getPatient,
   getPatients,
-  getPatientExams,
+  getScheduledExams,
   registerExamResult,
   getExamResult,
-  finishExam
+  finishExam,
+  finishScheduledExam
 }

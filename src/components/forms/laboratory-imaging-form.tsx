@@ -1,6 +1,5 @@
 "use client";
 
-import { ResponseDriveFile } from "@/backend/api/types";
 import InputDetails from "@/components/ui/input-details";
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
