@@ -380,42 +380,6 @@ async function getExamResult({
   return list; // isto n é definitivo, 
 }
 
-async function finishExam(prev: unknown, formData: FormData){
-  try{
-    const resultId = formData.get("resultId");
-    const serviceResult = await serviceResultModel.findOne({ resultId });
-    const scheduleService = await scheduleServiceModel.findOne({ _id: resultId });
-    const totalScheduleServices = (await scheduleExamModel.findById({ _id: scheduleService?.scheduleId }))?.exams;
-
-    if(totalScheduleServices?.length !== serviceResult?.exams.length)
-      throw new Error("Termine de registrar todos os exames marcados!", { cause: "not_registered"});
-    
-    if(serviceResult?.exams.length){
-      for( const { description, storageId } of serviceResult.exams){
-        if (!(description || storageId))
-          throw new Error("Registre pelos menos um dos resultados!", { cause: "empty_result"});
-      }
-    }else
-      throw new Error("Sem resultados dos exames marcados!", { cause: "not_started"});
-
-    await serviceResultModel.updateOne({ resultId }, { isFinished: true });
-    await scheduleServiceModel.updateOne({ _id: resultId }, { served: true });
-
-    return {
-      message: "Resultados dos exames concluídos com sucesso!",
-      status: true,
-      type: scheduleService?.Type
-    }
-  }catch(err: unknown){
-    const error = err as Error;
-
-    return{
-      message: error.cause?error.message:"Falha na conclusão",
-      status: false,
-    }
-  }
-}
-
 async function getPatient(id: string){
   try{
     const scheduleId = (await scheduleServiceModel.findById({ _id: id }))?.scheduleId;
@@ -438,6 +402,5 @@ export {
   getScheduledExams,
   registerExamResult,
   getExamResult,
-  finishExam,
   finishScheduledExam
 }

@@ -1,52 +1,8 @@
-// import Card from "@/components/ui/card";
-// import { getExamResult, getPatient, getPatientExams } from "@/app/backend/api/clinical/unit-api";
-// import LaboratoryForm from "@/components/forms/laboratory-imaging-form";
 // import { MonitorAccess, UnlockProcessAccess } from "@/components/lock-unlock-monitor-process";
 
 import { getPatient, getScheduledExams } from "@/backend/api/clinical/unit-api";
 import { internalExamResultModel } from "@/backend/model";
-import FinishAnalysis, { FinishScheduledExam } from "@/components/finish-analysis";
-
-// export default async function Page({
-//   params
-// }: {
-//   params: Promise<{
-//     laboratoryId: string;
-//   }>
-// }){
-//   const { laboratoryId } = await params;
-//   const exams = await getPatientExams(laboratoryId);
-//   const savedResults = await getExamResult({ serviceResultId: laboratoryId });
-//   const { patientId, patientName } = await getPatient(laboratoryId);
-
-//   return(
-//     <main className="space-y-3">
-//       <MonitorAccess
-//         patientId={patientId}
-//         place="laboratory"
-//         basePathname="/clinical/laboratory"
-//       />
-
-//       <div className="flex gap-x-3">
-//         <UnlockProcessAccess
-//           patientId={patientId}
-//           place="laboratory"
-//           basePathname="/clinical/laboratory"
-//         />
-//       </div>
-
-//       <Card>
-//         <LaboratoryForm
-//           {...{patientName}} 
-//           savedResults={savedResults}
-//           resultId={laboratoryId} 
-//           {...{exams}}
-//         />
-//       </Card>
-//     </main>
-//   );
-// }
-
+import FinishScheduledExam from "@/components/finish-schedule-exam";
 import { LoboratoryForm } from "@/components/forms/laboratory-imaging-form";
 import Accordium from "@/components/ui/accordium";
 import UserFileViewer from "@/components/user-file-viewer";
@@ -54,16 +10,19 @@ import UserFileViewer from "@/components/user-file-viewer";
 export default async function Page({ params }: { params: Promise<{laboratoryId: string}>}){
   const { laboratoryId } = await params;
   const requestedExams = await getScheduledExams(laboratoryId);
-  // const savedResults = await getExamResult({ serviceResultId: laboratoryId });
-  // const patient = await getPatient(laboratoryId);
-  // console.log(requestedExams, savedResults, patient);
+  const patient = await getPatient(laboratoryId);
 
   return(
     <div>
-      <h2>Exames Solicitados</h2>
-      <div>
+      <h2>Utente: {patient?.fullname}</h2>
+
+      <h2 className="font-bold mb-3">Exames Solicitados</h2>
+      <div className="space-y-3">
          {requestedExams.map(async (props, index)=>{
-          const examResult = await internalExamResultModel.findOne({ serviceId: laboratoryId });
+          const examResult = await internalExamResultModel.findOne({ 
+            serviceId: laboratoryId, 
+            examId: props._id  
+          });
 
           return (
             <Accordium title={props.name} key={index}>
