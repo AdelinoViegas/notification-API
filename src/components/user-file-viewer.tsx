@@ -13,11 +13,6 @@ export default async function UserFileViewer({ id }:{ id: string }){
       }} />
     );
   } catch {
-
-    return(
-      <div>
-        Não foi possivel, tente mais tarde!
-      </div>
-    )
+    return <></>;
   }
 }

@@ -11,14 +11,14 @@ import type {
 } from "@/backend/api/types";
 
 const instance = axios.create({ 
-  baseURL: process.env.ADMIN_SRV_URL,
+  baseURL: process.env.ADMIN_SRV_URL+"/v1",
   headers: {
     Authorization: `Bearer ${await genWebToken()}`
   } 
 });
 
 const clientInstance = axios.create({ 
-  baseURL: process.env.ADMIN_SRV_URL
+  baseURL: process.env.ADMIN_SRV_URL+"/v1"
 });
 
 export async function getUsers(): Promise<User[]>{
