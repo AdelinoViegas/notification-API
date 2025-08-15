@@ -8,6 +8,7 @@ export default function UserViewerButton({ driveFile }: { driveFile: ResponseDri
   const handlerClick = ()=> {
     window.open(driveFile.link);
   }
+  console.log(driveFile.extension);
 
   return(
     <button onClick={handlerClick} className="flex justify-start gap-x-3 hover:bg-primary/25 items-center ring-2 ring-blue-500/50  my-3 rounded-lg px-3 py-2">

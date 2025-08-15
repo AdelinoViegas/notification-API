@@ -35,7 +35,8 @@ import {
   externalUnitSchema, 
   scheduleServiceSchema,
   serviceResultSchema,
-  externalResultSchema
+  externalResultSchema,
+  internalExamResultSchema
 } from "@/backend/schemas/unit";
 import { 
   urgencyBankSchema, 
@@ -80,6 +81,7 @@ const officeModel = clinical.model('Office', officeSchema);
 const scheduleServiceModel = clinical.model("Services", scheduleServiceSchema);
 const serviceResultModel = clinical.model("ServiceResult", serviceResultSchema);
 const externalResultsModel = clinical.model('ExternalResults', externalResultSchema);
+const internalExamResultModel = clinical.model("InternalExamResult", internalExamResultSchema);
 
 // banco de urgencia
 const urgencyBankModel = clinical.model("UrgencyBank", urgencyBankSchema);
@@ -121,5 +123,6 @@ export {
   urgencyServiceModel,
   patientHospitalizedModel,
   prescriptionModel,
-  surgeryModel
+  surgeryModel,
+  internalExamResultModel
 };

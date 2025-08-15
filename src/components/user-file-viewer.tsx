@@ -4,6 +4,7 @@ import UserViewerButton from "@/components/user-viewer-button";
 export default async function UserFileViewer({ id }:{ id: string }){
   try{
     const file = await getFile(id);
+
     return (
       <UserViewerButton driveFile={{
         name: file.name,

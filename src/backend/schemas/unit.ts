@@ -112,11 +112,22 @@ const externalResultSchema = new Schema({
   timestamps: true,
 });
 
+const internalExamResultSchema = new Schema({
+  serviceId: Schema.ObjectId, // ex: laboratorio ou imagionogia
+  description: String,
+  storageId: String, // id do arquivo da api,
+  examId: Schema.ObjectId,
+  userId: Schema.ObjectId
+}, {
+  timestamps: true
+});
+
 export {
   unitSchema,
   workplaceSchema,
   externalUnitSchema,
   scheduleServiceSchema,
   serviceResultSchema,
-  externalResultSchema
+  externalResultSchema,
+  internalExamResultSchema
 };
