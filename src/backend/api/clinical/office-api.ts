@@ -411,7 +411,7 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
     const err = e as Error;
     console.log(err.cause)
     return {
-      message: err.message,
+      message: "Erro no arquivo",
       status: false,
     }
   }

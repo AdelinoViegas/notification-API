@@ -1,7 +1,7 @@
 import Header from "@/components/header";
 import Card from "@/components/ui/card";
 import TitleAndSubtitle from "@/components/title-subtitle";
-import { CurrentDataInOffice, FileUpload, VitalSignalsInOffice } from "@/components/forms/office-form";
+import { CurrentDataInOffice, UploadExternalExam, VitalSignalsInOffice } from "@/components/forms/office-form";
 import { getConsultResult, getPatient } from "@/backend/api/clinical/office-api";
 import Accordium from "@/components/ui/accordium";
 import { civilState, gender } from "@/backend/api/clinical/translator";
@@ -24,7 +24,6 @@ export default async function Page({
   const consultResult = await getConsultResult(officeId);
   const { detail } = await getScheduleAppointment(patient.scheduleAppointmentId);
   // const results = await getPatientScheduledServices({ patientId: patient.personal._id });
-  console.log(consultResult?.storageId);
 
   return(
     <main className="space-y-3">
@@ -93,16 +92,14 @@ export default async function Page({
               <RequestExams patientId={patient.personal._id} />
               
               <div>
-                <FileUpload 
-                  {...{officeId}} 
+                <UploadExternalExam 
+                  officeId={officeId}
                   patientId={patient.personal._id}
                   storageId={consultResult?.storageId}
                 />
 
                 { consultResult?.storageId && 
-                  <UserFileViewer 
-                    id={consultResult.storageId} 
-                  />
+                  <UserFileViewer id={consultResult.storageId} />
                 }
 
                 {/* <ExamResultViewer results={results} /> */}

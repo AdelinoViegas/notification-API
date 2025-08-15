@@ -4,7 +4,6 @@ import {
   useEffect,
   useState,
   useActionState,
-  useRef
 } from "react";
 import InputField from "@/components/ui/input-field";
 import InputDetails from "@/components/ui/input-details";
@@ -12,17 +11,9 @@ import Button from "@/components/ui/button";
 import Alert from "@/components/ui/alert";
 import { signConsutation, uploadExternalExamFile } from "@/backend/api/clinical/office-api";
 import { useRouter } from "next/navigation";
-
-import type { ConsultCurrentStates, ConsultVitalSignal } from "@/backend/schemas/types";
-
-import { FileHandler } from "@/lib/client-files";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import SubTitle from "@/components/ui/subtitle";
-import { FaRegFileImage, FaRegFilePdf } from "react-icons/fa6";
-import Link from "next/link";
-import { PublicDriveFile } from "@/backend/api/types";
-import { upload } from "@/backend/api/storage";
-import { getUserId } from "@/lib/web-token";
+import type { ConsultCurrentStates, ConsultVitalSignal } from "@/backend/schemas/types";
 
 export function VitalSignalsInOffice({ 
   id, 
@@ -251,7 +242,7 @@ export function CurrentDataInOffice({
   )
 }
 
-export function FileUpload({ 
+export function UploadExternalExam({ 
   patientId,
   officeId,
   storageId
@@ -266,7 +257,7 @@ export function FileUpload({
   useEffect(()=>{
     if(state.message)
       if(state.status)
-        toast.success(state.message, { onClose: router.refresh });
+        toast.success(state.message, { onOpen: router.refresh });
       else 
         toast.error(state.message)
   }, [state])

@@ -5,6 +5,7 @@ import InputField from "@/components/ui/input-field";
 import { getConsultResult, getPatient } from "@/backend/api/clinical/office-api";
 import Accordium from "@/components/ui/accordium";
 import { civilState, gender } from "@/backend/api/clinical/translator";
+import UserFileViewer from "@/components/user-file-viewer";
 // import { FileHandler } from "@/lib/client-files";
 // import { FaRegFileImage, FaRegFilePdf } from "react-icons/fa6";
 // import Link from "next/link";
@@ -60,22 +61,6 @@ export default async function Page({
               />
             </div>
           </Accordium>
-
-          <div className="my-8">
-            <SubTitle className="inline-flex">Queixas</SubTitle>
-            <p className="mx-3">{consult?.currentStates?.complaints}</p>
-          </div>
-
-          <div className="my-8">
-            <SubTitle className="inline-flex">Exame Físico</SubTitle>
-            <p className="mt-1 mx-3">{consult?.currentStates?.phisicalExam}</p>
-          </div>
-
-          <div className="my-8">
-            <SubTitle className="inline-flex">Observações</SubTitle>
-            <p className="mx-3">{consult?.currentStates?.detail}</p>
-          </div>
-      
 
           <div className="mt-8">
             <SubTitle className="inline-flex">Sinais Vitais</SubTitle>
@@ -166,28 +151,29 @@ export default async function Page({
             </div>
           </div>
 
-          <div className="mt-8">
-            <SubTitle className="inline-flex">Resultado externo</SubTitle>
-            {/* <div className="my-3">
-            { !! externalFile &&
-                <Link target="_blank" href={externalFile.link}>
-                  <div className="w-96 hover:bg-gray-100 flex gap-2 border border-2 rounded-xl px-3 py-2">
-                    <div className="w-10">
-                      {
-                        FileHandler.getExtension(externalFile.name) === "pdf"?
-                        <FaRegFilePdf className="text-red-500 size-10" />:
-                        <FaRegFileImage className="text-green-500 size-10" />
-                      }
-                    </div>
-                    <div>
-                      <h2 className="font-medium">{FileHandler.handleFileName(externalFile.name)}</h2>
-                      <p className="text-sm">{FileHandler.getFileHandlerToString(externalFile.size)}</p>
-                    </div>
-                  </div>
-                </Link>
-              }
-            </div> */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3">
+            <div className="my-8">
+              <SubTitle className="inline-flex">Queixas</SubTitle>
+              <p className="mx-3">{consult?.currentStates?.complaints}</p>
+            </div>
+
+            <div className="my-8">
+              <SubTitle className="inline-flex">Exame Físico</SubTitle>
+              <p className="mt-1 mx-3">{consult?.currentStates?.phisicalExam}</p>
+            </div>
+
+            <div className="my-8">
+              <SubTitle className="inline-flex">Observações</SubTitle>
+              <p className="mx-3">{consult?.currentStates?.detail}</p>
+            </div>
           </div>
+
+          { consult?.storageId && 
+            <div className="mt-8">
+              <SubTitle className="inline-flex">Resultado externo</SubTitle>
+              <UserFileViewer id={consult.storageId} />
+            </div>
+           }
         </Card>
       </div>
     </main>
