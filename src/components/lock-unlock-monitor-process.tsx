@@ -9,7 +9,7 @@ import { closePatientProcess, openPatientProcess } from '@/backend/api/clinical/
 import { toast } from 'react-toastify';
 type Places = "laboratory" | "screening" | "imaging" | "urgency"; 
 
-function UnlockProcessAccess({
+export function UnlockProcessAccess({
   patientId,
   place,
   basePathname,
@@ -61,7 +61,7 @@ function UnlockProcessAccess({
   );
 }
 
-function MonitorAccess({
+export function MonitorAccess({
   basePathname,
   patientId,
   place,
@@ -76,17 +76,12 @@ function MonitorAccess({
     openPatientProcess(patientId, place)
     .then(data => {
       if(data && !data.status){
-        toast.warn(data.message, { 
-          onOpen: ()=> router.replace(basePathname)
-        });
+        router.replace(basePathname)
+        toast.warn(data.message);
       }
-    })
+    });
+
+    return;
   }, []);
-
-  return<></>;
-}
-
-export {
-  UnlockProcessAccess,
-  MonitorAccess
+  return <></>
 }
