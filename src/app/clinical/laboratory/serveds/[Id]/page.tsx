@@ -4,10 +4,10 @@ import Accordium from "@/components/ui/accordium";
 import UserFileViewer from "@/components/user-file-viewer";
 import InputDetails from "@/components/ui/input-details";
 
-export default async function Page({ params }: { params: Promise<{laboratoryId: string}>}){
-  const { laboratoryId } = await params;
-  const requestedExams = await getScheduledExams(laboratoryId);
-  const patient = await getPatient(laboratoryId);
+export default async function Page({ params }: { params: Promise<{id: string}>}){
+  const { id } = await params;
+  const requestedExams = await getScheduledExams(id);
+  const patient = await getPatient(id);
 
   return(
     <div>
@@ -18,7 +18,7 @@ export default async function Page({ params }: { params: Promise<{laboratoryId: 
         <div className="grid md:grid-cols-2 gap-3">
           {requestedExams.map(async (props, index)=>{
             const examResult = await internalExamResultModel.findOne({ 
-              serviceId: laboratoryId, 
+              serviceId: id, 
               examId: props._id  
             });
 

@@ -6,10 +6,10 @@ import { LoboratoryForm } from "@/components/forms/laboratory-imaging-form";
 import Accordium from "@/components/ui/accordium";
 import UserFileViewer from "@/components/user-file-viewer";
 
-export default async function Page({ params }: { params: Promise<{laboratoryId: string}>}){
-  const { laboratoryId } = await params;
-  const requestedExams = await getScheduledExams(laboratoryId);
-  const patient = await getPatient(laboratoryId);
+export default async function Page({ params }: { params: Promise<{id: string}>}){
+  const { id } = await params;
+  const requestedExams = await getScheduledExams(id);
+  const patient = await getPatient(id);
 
   return(
     <div>
@@ -32,7 +32,7 @@ export default async function Page({ params }: { params: Promise<{laboratoryId: 
         <div className="space-y-3">
           {requestedExams.map(async (props, index)=>{
             const examResult = await internalExamResultModel.findOne({ 
-              serviceId: laboratoryId, 
+              serviceId: id, 
               examId: props._id  
             });
 
@@ -40,7 +40,7 @@ export default async function Page({ params }: { params: Promise<{laboratoryId: 
               <Accordium title={props.name} key={index}>
                 <LoboratoryForm
                   examId={props._id}
-                  serviceId={laboratoryId}
+                  serviceId={id}
                   description={examResult?.description as string}
                 />
                 { examResult?.storageId &&
@@ -51,7 +51,7 @@ export default async function Page({ params }: { params: Promise<{laboratoryId: 
           })}
         </div>
       </div>
-      <FinishScheduledExam id={laboratoryId} />
+      <FinishScheduledExam id={id} />
     </div>
   )
 }
