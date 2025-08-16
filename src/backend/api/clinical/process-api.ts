@@ -5,8 +5,7 @@ import { processStateModel } from "@/backend/model";
 import { getFirstAndLastName } from "@/components/userbar";
 import { getUser } from "@/backend/api/admin";
 
-type WorkLocation = "screening" | "urgency" | "laboratory" | "imaging" ;
-
+type WorkLocation = "screening" | "urgency" | "laboratory" | "imaging" | string ;
 
 export async function openPatientProcess(patientId: string, location: WorkLocation){
   try{

@@ -13,6 +13,7 @@ import { getUserId } from "@/lib/web-token";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
 import { getUser } from "@/backend/api/admin";
 import { upload } from "@/backend/api/storage";
+import { closePatientProcess } from "./process-api";
 
 async function updatePaymentData(prev: unknown, formData: FormData){
   try{
@@ -197,9 +198,12 @@ async function getScheduledExams(id: string){
 
 async function finishScheduledExam(prev: unknown, formData: FormData){
   try{
-    const serviceId = formData.get("serviceId");
-    await scheduleServiceModel.updateOne({ _id: serviceId }, { served: true });
-    
+    const serviceId = formData.get("serviceId") as string;
+    const scheduled = await scheduleServiceModel.findOneAndUpdate({ _id: serviceId }, { served: true });
+    const patient = await getPatient(serviceId);
+
+    if(patient?.id && scheduled?.Type)
+      await closePatientProcess(patient.id, scheduled?.Type as string)
     return {
       message: "Exame concluido!",
       status: true

@@ -1,5 +1,16 @@
 import { Schema } from "mongoose";
 
+const UNIT_TYPES = [ 
+  "workplace", 
+  "internment", 
+  "laboratory", 
+  "imaging", 
+  "screening", 
+  "urgency", 
+  "laboratory", 
+  "imaging" 
+];
+
 const unitSchema = new Schema({
   name: {
     type: String,
@@ -9,12 +20,7 @@ const unitSchema = new Schema({
   unitTypeId: {
     type: String,
     required: true,
-    enum: [
-      "workplace", 
-      "internment",
-      "laboratory",
-      "imaging"
-    ]
+    enum: UNIT_TYPES
   },
   wing: String,
   nursing: String,
@@ -64,7 +70,10 @@ const scheduleServiceSchema = new Schema({
     userId: Schema.Types.ObjectId,
   },
   userId: Schema.Types.ObjectId,
-  Type: String,
+  Type: { 
+    type: String,
+    enum: UNIT_TYPES
+  },
 }, {
   timestamps: true,
   collection: "schedule_in_lab_imaging",
