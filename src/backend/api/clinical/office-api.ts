@@ -14,6 +14,7 @@ import { findDoctorCalendar } from "@/backend/api/clinical/scheduling-api";
 import { getDateInSlashFormat } from "@/lib/date-formater";
 import { getUser } from "@/backend/api/clinical/api";
 import { upload } from "@/backend/api/storage";
+import { CustonAxiosError } from "@/backend/api/types";
 
 type ConsultationTypes = "vitalSignals" | "currentStates";
 
@@ -408,10 +409,15 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
       status: true,
     }
   }catch(e){
-    const err = e as Error;
-    console.log(err.cause)
+    const err = e as CustonAxiosError;
+    console.log(err);
+
     return {
-      message: "Erro no arquivo",
+      message: err.cause 
+        ? err.cause.code === "ECONNREFUSED" 
+          ? "Serviço de arquivos indisponível!"
+          : "Operação impossivel"
+        : "Arquivo invalido!",
       status: false,
     }
   }

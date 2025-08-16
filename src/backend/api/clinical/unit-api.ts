@@ -13,7 +13,8 @@ import { getUserId } from "@/lib/web-token";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
 import { getUser } from "@/backend/api/admin";
 import { upload } from "@/backend/api/storage";
-import { closePatientProcess } from "./process-api";
+import { closePatientProcess } from "@/backend/api/clinical/process-api";
+import { CustonAxiosError } from "@/backend/api/types";
 
 async function updatePaymentData(prev: unknown, formData: FormData){
   try{
@@ -217,101 +218,6 @@ async function finishScheduledExam(prev: unknown, formData: FormData){
 }
 
 async function registerExamResult(prev:unknown, formData:FormData){
-  // const serviceId = formData.get("serviceId") as string;
-  // const resultId = formData.get("resultId") as string;
-  // const file = formData.get("file") as File;
-  // const description = formData.get("plainText") as string;
-
-  // try{
-  //   const formdata = new FormData();
-  //   formdata.append("file", file);
-    
-  //   const driveFile = await upload(formdata, await getUserId());
-
-  //   const results = await serviceResultModel.findOne({ resultId });
-
-  //   if(!results){
-  //     await serviceResultModel.create({
-  //       resultId,
-  //       exams: [{
-  //         serviceId,
-  //         description,
-  //         storageId: driveFile.id,
-  //         userId: await getUserId(),
-  //       }],
-  //       userId: await getUserId()
-  //     });
-  //   }
-
-  //   // if(!!results){
-  //   //   const allExams = new Map<string, typeof results.exams[number]>();
-  //   //   results.exams.forEach(props => allExams.set(props.serviceId?.toString() as string, props)); // carregando os exames
-
-  //   //   if(allExams.has(serviceId)){
-  //   //     const exam = allExams.get(serviceId);
-  //   //     // verificar as entradas do user se tem arquivo ou texto ou os dois
-  //   //     if(file.size && plainText && exam?.results){
-  //   //       exam.results.file = {
-  //   //         name: fileRenamed,
-  //   //         size: file.size,
-  //   //         mimeType: file.type,
-  //   //         binaryData: Buffer.from(await file.arrayBuffer())
-  //   //       };
-  //   //       exam.results.plainText = plainText;
-  //   //     }else if(!file.size && plainText && exam?.results){
-  //   //       exam.results.plainText = plainText;
-  //   //     }else if(file.size && !plainText && exam?.results){
-  //   //       exam.results.file = {
-  //   //         name: fileRenamed,
-  //   //         size: file.size,
-  //   //         mimeType: file.type,
-  //   //         binaryData: Buffer.from(await file.arrayBuffer())
-  //   //       }
-  //   //     }
-
-  //   //     if(exam)
-  //   //       allExams.set(serviceId, exam);
-  //   //   }else{
-  //   //     const newResults = new serviceResultModel({
-  //   //       resultId,
-  //   //       exams: [{
-  //   //         serviceId,
-  //   //         results: {
-  //   //           file: {
-  //   //             name: fileRenamed,
-  //   //             size: file.size,
-  //   //             mimeType: file.type,
-  //   //             binaryData: Buffer.from(await file.arrayBuffer())
-  //   //           },
-  //   //           plainText
-  //   //         },
-  //   //         userId: await getUserId(),
-  //   //       }],
-  //   //       userId: await getUserId()
-  //   //     });
-
-  //   //     allExams.set(serviceId, newResults.exams[0]);
-  //   //   }
-
-  //   //   await serviceResultModel.updateOne({ _id:  results._id }, {
-  //   //     exams: Array.from(allExams.values())
-  //   //   });
-  //   // }
-      
-  //   return {
-  //     message: "Informações salvas!",
-  //     status: true,
-  //     serviceId
-  //   }
-  // }catch(err: unknown){
-  //   const error = err as Error;
-
-  //   return {
-  //     message: error.cause?error.message:"Operação impossivel!",
-  //     status: false,
-  //     serviceId
-  //   }
-  // }
   try{
     const serviceId = formData.get("serviceId"); // ex: laboratorio ou imagiologia
     const description = formData.get("description");
@@ -347,33 +253,40 @@ async function registerExamResult(prev:unknown, formData:FormData){
       status: true
     }
   }catch (e){
-    console.log(e);
+    const err = e as CustonAxiosError;
+    console.log(err);
 
     return {
-      message: "oppss!",
-      status: false
+      message: err.cause 
+        ? err.cause.code === "ECONNREFUSED" 
+          ? "Serviço de arquivos indisponível!"
+          : "Operação impossivel"
+        : "Arquivo invalido!",
+      status: false,
     }
   }
 }
 
-async function getExamResult({
-  serviceResultId
-}: {
-  serviceResultId: string
-}){
-  const serviceResult = await serviceResultModel.findOne({ resultId: serviceResultId });
-  const list = [];
+async function getExamResult({serviceResultId}: { serviceResultId: string}){
+  try{
+    const serviceResult = await serviceResultModel.findOne({ resultId: serviceResultId });
+    const list = [];
 
-  if(serviceResult)
-    for(const item of serviceResult.exams){
-      list.push({
-        _id: item.serviceId?.toString() as string,
-        plainText: item?.description  as string,
-        createdAt: item.createdAt as Date
-      });
-    }
+    if(serviceResult)
+      for(const item of serviceResult.exams){
+        list.push({
+          _id: item.serviceId?.toString() as string,
+          plainText: item?.description  as string,
+          createdAt: item.createdAt as Date
+        });
+      }
 
-  return list; // isto n é definitivo, 
+    return list; // isto n é definitivo, 
+  }catch {
+    console.error("error ao listar os resultados!");
+    
+    return [];
+  }
 }
 
 async function getPatient(id: string){

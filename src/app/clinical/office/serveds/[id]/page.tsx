@@ -6,9 +6,6 @@ import { getConsultResult, getPatient } from "@/backend/api/clinical/office-api"
 import Accordium from "@/components/ui/accordium";
 import { civilState, gender } from "@/backend/api/clinical/translator";
 import UserFileViewer from "@/components/user-file-viewer";
-// import { FileHandler } from "@/lib/client-files";
-// import { FaRegFileImage, FaRegFilePdf } from "react-icons/fa6";
-// import Link from "next/link";
 
 export default async function Page({ params }: { params: Promise<{ id: string }>}){ 
   const { id } = await params;

@@ -55,3 +55,9 @@ export interface PublicDriveFile extends ResponseDriveFile {
   size: string;
   type: "png" | "jpeg" | "pdf" | "mp4";
 }
+
+type ConnetionError = "ECONNREFUSED";
+
+export interface CustonAxiosError extends Error {
+  cause: { code: ConnetionError }
+}

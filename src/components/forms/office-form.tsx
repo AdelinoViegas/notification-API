@@ -262,7 +262,7 @@ export function UploadExternalExam({
       if(state.status)
         toast.success(state.message, { onOpen: router.refresh });
       else 
-        toast.error(state.message)
+        toast.warn(state.message)
   }, [state])
 
   return(
