@@ -3,7 +3,7 @@ import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
 import { type ExternalUnit, tableExternalUnit } from "@/lib/table-formater";
-import { getExternalUnits } from "@/app/backend/api/clinical/urgency-bank-api";
+import { getExternalUnits } from "@/backend/api/clinical/urgency-bank-api";
 import ExternalUnitForm from "@/components/forms/external-unit-form";
 export const dynamic = "force-dynamic";
 

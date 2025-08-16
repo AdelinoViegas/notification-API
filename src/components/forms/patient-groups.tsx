@@ -5,7 +5,7 @@ import { useState } from "react";
 import AssuredInputs from "./patient-groups/assured-inputs";
 import Enterprise from "./patient-groups/enterprise-inputs";
 import Employee from "./patient-groups/employee-inputs";
-import { patientGroup } from "@/app/backend/api/clinical/translator";
+import { patientGroup } from "@/backend/api/clinical/translator";
 
 export default function PatientGroups(){
   const [ selectedPatientGroup, setSelectedPatientGroup ] = useState("");

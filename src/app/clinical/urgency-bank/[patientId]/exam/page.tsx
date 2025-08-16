@@ -1,16 +1,16 @@
-import { getPatientScheduledServices } from "@/app/backend/api/clinical/scheduling-api";
+// import { getPatientScheduledServices } from "@/app/backend/api/clinical/scheduling-api";
 import RequestExams from "@/components/forms/request-exam";
 import Accordium from "@/components/ui/accordium";
 import Table from "@/components/table";
-import { TableFormatter } from "@/lib/table-formater";
+// import { TableFormatter } from "@/lib/table-formater";
 import Refresh from "@/components/refresh";
 
 export default async function Page({ params }: {
   params: Promise<{ patientId: string }>
 }){
   const { patientId } = await params;
-  const results = await getPatientScheduledServices({ patientId });
-  const rows = TableFormatter.urgencyExamResults(results);
+  // const results = await getPatientScheduledServices({ patientId });
+  // const rows = TableFormatter.urgencyExamResults(results);
  
   return(
     <main>
@@ -30,7 +30,7 @@ export default async function Page({ params }: {
             "Documento"
           ]}
           baseRowLink={`/clinical/urgency-bank/${patientId}/exam`}
-          rows={rows}
+          rows={[]}
         />
       </div>
     </main>

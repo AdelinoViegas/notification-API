@@ -12,12 +12,12 @@ import Modal from "@/components/modal";
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
 import Alert from "@/components/ui/alert";
-import { rescheduleAppointment } from "@/app/backend/api/clinical/scheduling-api";
+import { rescheduleAppointment } from "@/backend/api/clinical/scheduling-api";
 import Selection,{ SelectionOption } from "@/components/ui/selection";
-import { findDoctorCalendar } from "@/app/backend/api/clinical/scheduling-api";
+import { findDoctorCalendar } from "@/backend/api/clinical/scheduling-api";
 import { getDateInDashFormat } from "@/lib/date-formater";
-import { getDoctors } from "@/app/backend/api/clinical/api";
-import type { DoctorCalendarReference, DoctorDayAndTime } from "@/app/backend/api/clinical/types";
+import { getDoctors } from "@/backend/api/clinical/api";
+import type { DoctorCalendarReference, DoctorDayAndTime } from "@/backend/api/clinical/types";
 import { GrSchedulePlay } from "react-icons/gr";
 
 export default function RescheduleAppointment({

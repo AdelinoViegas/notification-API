@@ -1,8 +1,8 @@
 import Alert from "@/components/ui/alert";
 import Header from "@/components/header";
 import Table from "@/components/table";
-import { ccgTypes } from "@/app/backend/api/clinical/translator";
-import { getCCGs } from "@/app/backend/api/clinical/scheduling-api";
+import { ccgTypes } from "@/backend/api/clinical/translator";
+import { getCCGs } from "@/backend/api/clinical/scheduling-api";
 import { simpleFormater } from "@/lib/table-formater";
 
 export const dynamic = "force-dynamic";

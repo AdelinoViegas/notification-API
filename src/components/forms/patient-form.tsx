@@ -5,11 +5,11 @@ import DemographicInfoForm from "@/components/forms/signed-patient/demography-fo
 import ResponsiblesForm from "@/components/forms/signed-patient/responsibles-form";
 import GroupForm from "@/components/forms/signed-patient/group-form";
 import AcessForm from "@/components/forms/signed-patient/access-form";
-import { getPatient } from "@/app/backend/api/clinical/api";
-import type { Responsable } from "@/app/backend/api/clinical/types";
+import { getPatient } from "@/backend/api/clinical/api";
+import type { Responsable } from "@/backend/api/clinical/types";
 import PDFButton, { PatientRecord } from "@/components/pdf-button";
-import { getExternalUnits } from "@/app/backend/api/clinical/urgency-bank-api";
-import { civilState, kinshipDegree } from "@/app/backend/api/clinical/translator";
+import { getExternalUnits } from "@/backend/api/clinical/urgency-bank-api";
+import { civilState, kinshipDegree } from "@/backend/api/clinical/translator";
 
 export default async function PatientForm({patientId}:{patientId: string}){
 	const patient = await getPatient(patientId);

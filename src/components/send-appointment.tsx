@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import Modal from "@/components/modal";
 import Button from "@/components/ui/button";
 import Alert from "@/components/ui/alert";
-import { sendPatientToOffice } from "@/app/backend/api/clinical/office-api";
+import { sendPatientToOffice } from "@/backend/api/clinical/office-api";
 
 import { VscSend } from "react-icons/vsc";
 

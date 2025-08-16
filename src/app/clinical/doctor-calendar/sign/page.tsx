@@ -1,6 +1,6 @@
 import Card from "@/components/ui/card";
 import CalendarForm from "@/components/forms/calendar-form";
-import { getUsers } from "@/app/backend/api/clinical/api";
+import { getUsers } from "@/backend/api/clinical/api";
 
 export const dynamic = "force-dynamic";
 

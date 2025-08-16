@@ -1,7 +1,7 @@
 import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
 import tableFormater from "@/lib/table-formater";
-import { getPatients } from "@/app/backend/api/clinical/api";
+import { getPatients } from "@/backend/api/clinical/api";
 import Search from "@/components/ui/search";
 import Pagination from "@/components/pagination";
 

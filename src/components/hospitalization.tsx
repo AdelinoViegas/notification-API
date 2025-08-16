@@ -5,7 +5,7 @@ import Modal from "@/components/modal";
 import { useActionState, useEffect, useState } from "react";
 import InputDetails from "./ui/input-details";
 import InputField from "./ui/input-field";
-import { finishHospitalization } from "@/app/backend/api/clinical/urgency-bank-api";
+import { finishHospitalization } from "@/backend/api/clinical/urgency-bank-api";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 

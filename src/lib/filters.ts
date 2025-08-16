@@ -1,5 +1,5 @@
-import { GETpatient } from "@/app/backend/api/clinical/types";
-import { priorityToComponent } from "../app/backend/api/clinical/translator";
+import { GETpatient } from "@/backend/api/clinical/types";
+import { priorityToComponent } from "../backend/api/clinical/translator";
 
 function orderByPriority(dataElements: GETpatient[]){
   const references = [ "red", "orange", "yellow", "green", "blue" ];

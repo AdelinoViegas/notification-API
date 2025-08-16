@@ -12,7 +12,7 @@ import {
 } from 'next/navigation';
 import Button from "@/components/ui/button";
 import Modal from '@/components/modal';
-import { requestReschedule } from '@/app/backend/api/clinical/office-api';
+import { requestReschedule } from '@/backend/api/clinical/office-api';
 import Alert from '@/components/ui/alert';
 import { MdOutlineMoreTime } from "react-icons/md";
 

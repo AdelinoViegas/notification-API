@@ -3,7 +3,7 @@ import tableFormater from "@/lib/table-formater";
 import Alert from "@/components/ui/alert";
 import SignExam from "@/components/sign-exam";
 import { PatientExam } from "@/lib/table-formater";
-import { getExams } from "@/app/backend/api/clinical/scheduling-api";
+import { getExams } from "@/backend/api/clinical/scheduling-api";
 import CCG from "@/components/CCG";
 import Refresh from "@/components/refresh";
 

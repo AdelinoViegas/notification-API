@@ -1,4 +1,4 @@
-import { signUrgencyBank } from "@/app/backend/api/clinical/urgency-bank-api";
+import { signUrgencyBank } from "@/backend/api/clinical/urgency-bank-api";
 import { InternalComponent } from "@/components/global-component";
 
 type EatingHabits = {

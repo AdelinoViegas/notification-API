@@ -1,6 +1,6 @@
 import Header from "@/components/header";
 import Card from "@/components/ui/card";
-import { getScheduleAppointment } from "@/app/backend/api/clinical/scheduling-api";
+import { getScheduleAppointment } from "@/backend/api/clinical/scheduling-api";
 import SubTitle from "@/components/ui/subtitle";
 import ArchivingAppointment from "@/components/archiving-appointment";
 import RescheduleAppointment from "@/components/reschedule-appointment";

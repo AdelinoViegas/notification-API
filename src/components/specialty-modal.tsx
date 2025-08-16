@@ -12,7 +12,7 @@ import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
 import Alert from "@/components/ui/alert";
 import { BiPlus as PlusIcon } from "react-icons/bi";
-import { signSpecialty } from "@/app/backend/api/clinical/api";
+import { signSpecialty } from "@/backend/api/clinical/api";
 
 export default function SpecialtyModal(){
   const [ state, action ] = useActionState(signSpecialty, { message: "", status: false });

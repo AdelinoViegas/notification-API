@@ -12,7 +12,7 @@ import {
 	othersComponent,
 	symptomsInternalComponent,
 } from "@/lib/internal-components";
-import { getPatientUrgencyBank } from "@/app/backend/api/clinical/urgency-bank-api";
+import { getPatientUrgencyBank } from "@/backend/api/clinical/urgency-bank-api";
 import Hospitalization from "@/components/hospitalization";
 
 export default async function Page({ params }: {

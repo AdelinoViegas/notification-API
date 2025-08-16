@@ -10,7 +10,7 @@ import InputField from "@/components/ui/input-field";
 import InputDetails from "@/components/ui/input-details";
 import Selection from "@/components/ui/selection";
 import { toast } from "react-toastify";
-import { signUrgencyBank } from "@/app/backend/api/clinical/urgency-bank-api";
+import { signUrgencyBank } from "@/backend/api/clinical/urgency-bank-api";
 import { TableRow } from "@/lib/table-formater";
 
 export type DiaryTypeProps = {

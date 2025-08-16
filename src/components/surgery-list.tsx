@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { getSurgery } from "@/app/backend/api/clinical/urgency-bank-api";
+import { getSurgery } from "@/backend/api/clinical/urgency-bank-api";
 import Modal from "@/components/modal";
 import clsx from "clsx";
 

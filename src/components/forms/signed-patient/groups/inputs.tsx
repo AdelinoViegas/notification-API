@@ -3,7 +3,7 @@ import type {
   Enterprise,
   Assured,
   Employee
-} from "@/app/backend/api/clinical/types";
+} from "@/backend/api/clinical/types";
 import InputDetails from "@/components/ui/input-details";
 
 type AssuredProps = {

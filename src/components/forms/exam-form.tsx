@@ -9,7 +9,7 @@ import { useRouter, useParams } from "next/navigation";
 import InputField from "@/components/ui/input-field";
 import Selection, { SelectionOption } from "@/components/ui/selection";
 import Button from "@/components/ui/button";
-import { updateExamService } from "@/app/backend/api/clinical/scheduling-api";
+import { updateExamService } from "@/backend/api/clinical/scheduling-api";
 import Alert from "@/components/ui/alert";
 import SpecialtyModal from "@/components/specialty-modal";
 

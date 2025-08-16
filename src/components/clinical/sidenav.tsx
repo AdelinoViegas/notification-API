@@ -2,7 +2,7 @@ import Link from 'next/link';
 import NavLink from '@/components/clinical/nav-link';
 import LogoutButton from '@/components/logout-button';
 import Image from 'next/image';
-import { getGrantedRoles } from '@/app/backend/api/admin';
+import { getGrantedRoles } from '@/backend/api/admin';
 
 export default async function SideNav(){
   const routes = await getGrantedRoles();

@@ -1,4 +1,4 @@
-import { GETpatient } from "@/app/backend/api/clinical/types";
+import { GETpatient } from "@/backend/api/clinical/types";
 import { getDataAndHoursFormat, getDateInSlashFormat } from "@/lib/date-formater";
 
 export type TableRow = {

@@ -1,7 +1,7 @@
 "use client";
 
 import { BsPower } from 'react-icons/bs';
-import { logout } from '@/app/backend/api/admin';
+import { logout } from '@/backend/api/admin';
 import { toast } from 'react-toastify';
 import clsx from 'clsx';
 

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "yarn setup && next dev --turbopack",
-    "build": "yarn setup && next build",
+    "build": "next build",
     "start": "yarn setup && next start",
     "lint": "next lint",
     "setup": "node clinical-setup.mjs",

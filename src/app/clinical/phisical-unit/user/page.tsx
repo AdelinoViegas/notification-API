@@ -3,7 +3,7 @@ import Table from "@/components/table";
 import tableFormater from "@/lib/table-formater";
 import Alert from "@/components/ui/alert";
 import { ClinicalUser } from "@/lib/table-formater";
-import { getUsers } from "@/app/backend/api/clinical/api";
+import { getUsers } from "@/backend/api/clinical/api";
 
 export const dynamic = "force-dynamic";
 

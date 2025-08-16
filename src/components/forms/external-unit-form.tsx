@@ -12,7 +12,7 @@ import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
 import Alert from "@/components/ui/alert";
 import { BiPlus as PlusIcon } from "react-icons/bi";
-import { signExternalUnit } from "@/app/backend/api/clinical/urgency-bank-api";
+import { signExternalUnit } from "@/backend/api/clinical/urgency-bank-api";
 
 export default function ExternalUnitForm(){
   const [ state, action ] = useActionState(signExternalUnit, { message: "", status: false });
