@@ -12,16 +12,10 @@ import RequestExams from "@/components/forms/request-exam";
 import UserFileViewer from "@/components/user-file-viewer";
 // import ExamResultViewer from "@/components/exam-result-viewer";
 
-export default async function Page({
-  params
-}: {
-  params: Promise<{
-    officeId: string;
-  }>
-}){
-  const { officeId } = await params; 
-  const patient = await getPatient(officeId);
-  const consultResult = await getConsultResult(officeId);
+export default async function Page({ params }: { params: Promise<{ id: string }>}){
+  const { id } = await params; 
+  const patient = await getPatient(id);
+  const consultResult = await getConsultResult(id);
   const { detail } = await getScheduleAppointment(patient.scheduleAppointmentId);
   // const results = await getPatientScheduledServices({ patientId: patient.personal._id });
 
@@ -75,14 +69,14 @@ export default async function Page({
 
           <Accordium title="Sinais Vitais">
             <VitalSignalsInOffice 
-              id={officeId}
+              id={id}
               vitalSignal={consultResult?.vitalSignal}
             />
           </Accordium>
 
           <Accordium title="Dados Actuais">
             <CurrentDataInOffice 
-              id={officeId}
+              id={id}
               currentState={consultResult?.currentStates}
             />
           </Accordium>
@@ -93,7 +87,7 @@ export default async function Page({
               
               <div>
                 <UploadExternalExam 
-                  officeId={officeId}
+                  officeId={id}
                   patientId={patient.personal._id}
                   storageId={consultResult?.storageId}
                 />

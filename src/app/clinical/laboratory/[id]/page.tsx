@@ -6,7 +6,7 @@ import { LoboratoryForm } from "@/components/forms/laboratory-imaging-form";
 import Accordium from "@/components/ui/accordium";
 import UserFileViewer from "@/components/user-file-viewer";
 
-export default async function Page({ params }: { params: Promise<{id: string}>}){
+export default async function Page({ params }: { params: Promise<{ id: string }>}){
   const { id } = await params;
   const requestedExams = await getScheduledExams(id);
   const patient = await getPatient(id);

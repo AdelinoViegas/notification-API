@@ -10,16 +10,10 @@ import UserFileViewer from "@/components/user-file-viewer";
 // import { FaRegFileImage, FaRegFilePdf } from "react-icons/fa6";
 // import Link from "next/link";
 
-export default async function Page({
-  params
-}: {
-  params: Promise<{
-    officeId: string;
-  }>
-}){ 
-  const { officeId } = await params;
-  const patient = await getPatient(officeId);
-  const consult = await getConsultResult(officeId);
+export default async function Page({ params }: { params: Promise<{ id: string }>}){ 
+  const { id } = await params;
+  const patient = await getPatient(id);
+  const consult = await getConsultResult(id);
 
   return(
     <main className="space-y-3">

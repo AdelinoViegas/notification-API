@@ -4,7 +4,7 @@ import Accordium from "@/components/ui/accordium";
 import UserFileViewer from "@/components/user-file-viewer";
 import InputDetails from "@/components/ui/input-details";
 
-export default async function Page({ params }: { params: Promise<{id: string}>}){
+export default async function Page({ params }: { params: Promise<{ id: string }>}){
   const { id } = await params;
   const requestedExams = await getScheduledExams(id);
   const patient = await getPatient(id);

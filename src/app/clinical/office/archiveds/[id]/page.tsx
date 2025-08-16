@@ -6,15 +6,9 @@ import ArchivingAppointment from "@/components/archiving-appointment";
 import TitleAndSubtitle from "@/components/title-subtitle";
 import { angolaCurrency } from "@/lib/table-formater";
 
-export default async function Page({
-  params
-}: {
-  params: Promise<{
-    officeId: string;
-  }>
-}){ 
-  const { officeId } = await params;
-  const schedule = await getScheduleAppointment(officeId);
+export default async function Page({ params }: { params: Promise<{ id: string }>}){ 
+  const { id } = await params;
+  const schedule = await getScheduleAppointment(id);
 
   return (
     <main className="space-y-3">
@@ -96,7 +90,7 @@ export default async function Page({
 
           <div className="flex gap-x-3 mt-3">
             <ArchivingAppointment 
-              scheduleId={officeId}
+              scheduleId={id}
               isArchived 
             />
           </div>
