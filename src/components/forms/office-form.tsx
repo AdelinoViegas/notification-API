@@ -4,6 +4,7 @@ import {
   useEffect,
   useState,
   useActionState,
+  useRef,
 } from "react";
 import InputField from "@/components/ui/input-field";
 import InputDetails from "@/components/ui/input-details";
@@ -253,6 +254,8 @@ export function UploadExternalExam({
 }){
   const [ state, action ] = useActionState(uploadExternalExamFile, { message: "", status: false });
   const router = useRouter();
+  const MAX_FILE_SIZE = Math.pow(1024, 2) * 10; // 10 mb 
+  const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(()=>{
     if(state.message)
@@ -271,10 +274,18 @@ export function UploadExternalExam({
       <SubTitle className="inline-flex mt-3">Enviar resultado por JPEG/PNG/PDF</SubTitle>
 
       <InputField
+        textLabel="Arquivo (PDF/IMAGEM/VIDEO)"
         type="file"
         name="externalFile"
-        required
-        accept=".jpg, .jpeg, .png, .pdf"
+        accept={".pdf, video/*, image/*"}
+        onChange={({ target }) =>{
+          if(target.files?.length){
+            const [ file ] = target.files;
+
+            if(file.size > MAX_FILE_SIZE)
+              toast.warn("Arquivo muito grande!", { onOpen: ()=>formRef.current?.reset() })
+          }
+        }}
       />
 
       <Button>Salvar</Button>
