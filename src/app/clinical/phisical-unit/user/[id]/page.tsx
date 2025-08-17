@@ -14,14 +14,8 @@ import UserClinicalConfig from "@/components/user-clinical-config";
 import { getUser, getSpecialties } from "@/backend/api/clinical/api";
 import { getUrgencyServices } from "@/backend/api/clinical/urgency-bank-api";
 
-export default async function Page({
-   params 
-  }:{
-    params: Promise<{
-      userId: string 
-    }> 
-  }) {
-  const { userId } = await params;
+export default async function Page({ params }:{ params: Promise<{ id: string }>}){
+  const { id } = await params;
   const [ 
     workplaces, 
     user,
@@ -30,10 +24,10 @@ export default async function Page({
     grantedAccess
   ] = await Promise.all([
     getUnits({ type: ["workplace"]}),
-    getUser(userId),
+    getUser(id),
     getUrgencyServices(),
     getSpecialties(),
-    getGrantedUnitAccess(userId)
+    getGrantedUnitAccess(id)
   ]);
 
   return (
@@ -45,7 +39,7 @@ export default async function Page({
       
       <Card className="grid lg:grid-cols-2 gap-y-3 gap-x-10">
         <UserClinicalConfig 
-          userId={userId}
+          userId={id}
           categoryId={user.categoryId}
           specialtyId={user.specialtyId}
           serviceId={user.serviceId} 
@@ -61,8 +55,8 @@ export default async function Page({
             <form action={grantUnitAccess}>
               <input 
                 type="hidden" 
-                name="userId" 
-                value={userId} 
+                name="id" 
+                value={id} 
               />
               
               <Selection
@@ -85,7 +79,7 @@ export default async function Page({
                   {item.label}
                   <form action={removeUnitAccess}>
                     <input type="hidden" name="accessId" value={item._id} />
-                    <input type="hidden" name="userId" value={userId} />
+                    <input type="hidden" name="id" value={id} />
                     <button className="bg-red-500 text-white px-2 rounded-md py-1">
                       <TrashIcon className="w-5"/>
                     </button>

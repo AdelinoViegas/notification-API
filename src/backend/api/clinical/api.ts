@@ -31,6 +31,7 @@ import {
   getUsers as RESTgetUsers,
   getUser as RESTgetUser 
 } from "@/backend/api/admin";
+import { omitUndefined } from "mongoose";
 
 type ChoosedGroup = Assured | Employee | Enterprise | undefined;
 
@@ -111,22 +112,7 @@ async function getUser(id: string){
     serviceId: clinical?.serviceId?.toString() as string,
     ...user
   }
-  // const clinicalUser = await userModel.findOne({ userId });
-  // const user = await managerUserModel.findById({ _id: userId }).select({ fullname: 1 });
-  // const userSpecialty = clinicalUser?.specialtyId?(await specialtyModel.findById({ _id: clinicalUser?.specialtyId }))?.name:"";
-
-  // return {
-  //   _id: user?._id.toString() as string,
-  //   fullname: user?.fullname as string,
-  //   category:  userCategory.find(item => item._id == clinicalUser?.categoryId)?.label,
-  //   categoryId: clinicalUser?.categoryId?.toString() as string,
-  //   orderNumber: clinicalUser?.orderNumber as number,
-  //   specialtyId: clinicalUser?.specialtyId?.toString() as string,
-  //   specialty: userSpecialty, 
-  //   serviceId: clinicalUser?.serviceId?.toString() as string
-  // }
 }
-
 
 async function addUser(prev: unknown, formData: FormData){
   try{
@@ -138,24 +124,22 @@ async function addUser(prev: unknown, formData: FormData){
     const specialtyId = formData.get("specialtyId");
     const serviceId = formData.get("serviceId");
 
-    const hasUser = await userModel.findOneAndUpdate({ userId: id }, {
+    const filter = omitUndefined({
       orderNumber,
-      officeId,
-      roleId,
+      officeId: officeId || undefined,
+      roleId: roleId || undefined,
       categoryId,
-      specialtyId,
-      serviceId
+      specialtyId: specialtyId || undefined,
+      serviceId: specialtyId || undefined
     });
+
+    console.log(filter)
+    const hasUser = await userModel.findOneAndUpdate({ userId: id }, filter);
 
     if(!hasUser)
       await userModel.create({
         userId: id,
-        orderNumber,
-        officeId,
-        roleId,
-        categoryId,
-        specialtyId,
-        serviceId
+        ...filter
       });
 
     return {
@@ -164,7 +148,7 @@ async function addUser(prev: unknown, formData: FormData){
         :"Usuário registrado com sucesso!",
       status: true,
     };
-  }catch {
+  }catch{
     return {
       message: "Não foi possivel registrar!",
       status: false
