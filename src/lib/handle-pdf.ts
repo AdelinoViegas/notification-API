@@ -9,7 +9,7 @@ import type {
 import type { 
   Assured,
   Employee,
-} from "@/app/backend/api/clinical/types";
+} from "@/backend/api/clinical/types";
 // import { getDateInSlashFormat } from "./date-formater";
 
 const doc = new jsPDF();

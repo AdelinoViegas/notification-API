@@ -2,7 +2,7 @@ import Alert from "@/components/ui/alert";
 import Table from "@/components/table";
 import Button from "@/components/ui/button";
 import Link from "next/link";
-import { getDoctorCalendars } from "@/app/backend/api/clinical/urgency-bank-api";
+import { getDoctorCalendars } from "@/backend/api/clinical/urgency-bank-api";
 import tableFormater, { Calendar } from "@/lib/table-formater";
 import { BiPlus as PlusIcon } from "react-icons/bi";
 

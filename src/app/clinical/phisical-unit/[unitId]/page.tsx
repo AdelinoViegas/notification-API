@@ -1,6 +1,6 @@
 import Header from "@/components/header";
 import UnitForm from "@/components/forms/unit-form";
-import { getUnit } from "@/app/backend/api/clinical/urgency-bank-api";
+import { getUnit } from "@/backend/api/clinical/urgency-bank-api";
 
 export default async function Page({ params }: {
   params: Promise<{

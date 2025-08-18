@@ -9,11 +9,11 @@ import {
   gender, 
   kinshipDegree, 
   patientAccess 
-} from "@/app/backend/api/clinical/translator";
+} from "@/backend/api/clinical/translator";
 import InputField from "@/components/ui/input-field";
 import Selection, { SelectionOption } from "@/components/ui/selection";
 import PatientGroups from "@/components/forms/patient-groups";
-import { getExternalUnits } from "@/app/backend/api/clinical/urgency-bank-api";
+import { getExternalUnits } from "@/backend/api/clinical/urgency-bank-api";
 import ExternalUnitForm from "@/components/forms/external-unit-form";
 
 function AccesTypeForm(){

@@ -1,7 +1,7 @@
 import TabNav from "@/components/tabnav";
 import Screening from "@/components/screening";
 import { UIComponent } from "@/components/forms/screening-ui";
-import { getPatient } from "@/app/backend/api/clinical/urgency-bank-api";
+import { getPatient } from "@/backend/api/clinical/urgency-bank-api";
 
 type Routes = "reason" | "vital-signals" | "priority" | "state" | "advice";
 

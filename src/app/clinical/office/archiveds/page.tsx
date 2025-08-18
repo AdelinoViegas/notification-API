@@ -1,7 +1,7 @@
 import Table from "@/components/table";
 import { ScheduleAppointment, tableAppointments } from "@/lib/table-formater";
 import Search from "@/components/ui/search";
-import { getScheduleAppointments } from "@/app/backend/api/clinical/scheduling-api";
+import { getScheduleAppointments } from "@/backend/api/clinical/scheduling-api";
 
 export const dynamic = "force-dynamic";
 

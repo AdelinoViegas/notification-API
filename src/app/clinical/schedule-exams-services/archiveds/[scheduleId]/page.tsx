@@ -3,12 +3,12 @@ import Card from "@/components/ui/card";
 import { 
   getExamCancel, 
   getSchedulePatientExam 
-} from "@/app/backend/api/clinical/scheduling-api";
+} from "@/backend/api/clinical/scheduling-api";
 import React from "react";
 import SubTitle from "@/components/ui/subtitle";
 import RescheduleExam from "@/components/reschedule-exam";
 import { SelectionOption } from "@/components/ui/selection";
-import { getUnits } from "@/app/backend/api/clinical/urgency-bank-api";
+import { getUnits } from "@/backend/api/clinical/urgency-bank-api";
 
 function TitleAndSubtitle({
   label,

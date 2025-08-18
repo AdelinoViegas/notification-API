@@ -13,7 +13,7 @@ import {
 import Button from "@/components/ui/button";
 import Modal from '@/components/modal';
 import { TiInputChecked } from 'react-icons/ti';
-import { finishConsultation } from '@/app/backend/api/clinical/office-api';
+import { finishConsultation } from '@/backend/api/clinical/office-api';
 import Alert from '@/components/ui/alert';
 
 export default function FinishConsultation(){

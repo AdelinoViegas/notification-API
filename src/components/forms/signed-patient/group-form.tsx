@@ -7,7 +7,7 @@ import {
 } from "react";
 import Selection from "@/components/ui/selection";
 import Button from "@/components/ui/button";
-import { updatePatientGroup } from "@/app/backend/api/clinical/api";
+import { updatePatientGroup } from "@/backend/api/clinical/api";
 import Alert from '@/components/ui/alert';
 import { 
   AssuredInputs,
@@ -15,12 +15,12 @@ import {
   EnterpriseInputs 
 } from "@/components/forms/signed-patient/groups/inputs";
 import forceRefreshPage from "@/lib/force-refresh";
-import { patientGroup as UserGroup } from "@/app/backend/api/clinical/translator";
+import { patientGroup as UserGroup } from "@/backend/api/clinical/translator";
 import type { 
   Enterprise,
   Assured,
   Employee
- } from "@/app/backend/api/clinical/types";
+ } from "@/backend/api/clinical/types";
 
 type AccessType = {
   id: string;

@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import Modal from "@/components/modal";
 import Button from "@/components/ui/button";
 import InputDetails from "@/components/ui/input-details";
-import { requestSurgery } from "@/app/backend/api/clinical/urgency-bank-api";
+import { requestSurgery } from "@/backend/api/clinical/urgency-bank-api";
 
 export default function Surgery(){
   const [ state, action ] = useActionState(requestSurgery, { message: "", status: false }); 

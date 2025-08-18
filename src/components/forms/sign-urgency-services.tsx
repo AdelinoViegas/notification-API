@@ -4,7 +4,7 @@ import { useState, useActionState, useEffect } from "react";
 import Modal from "@/components/modal";
 import Button from "@/components/ui/button";
 import InputField from "@/components/ui/input-field";
-import { signUrgencyService } from "@/app/backend/api/clinical/urgency-bank-api";
+import { signUrgencyService } from "@/backend/api/clinical/urgency-bank-api";
 import { toast } from "react-toastify";
 import { RiHospitalFill } from "react-icons/ri";
 

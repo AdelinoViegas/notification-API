@@ -10,11 +10,11 @@ import InputDetails from "@/components/ui/input-details";
 import Button from "@/components/ui/button";
 import Selection, { SelectionOption } from "@/components/ui/selection";
 import InputField from "@/components/ui/input-field";
-import { priorityToComponent } from "@/app/backend/api/clinical/translator";
-import { insertScreening, getScreening, finishScreening } from "@/app/backend/api/clinical/api";
+import { priorityToComponent } from "@/backend/api/clinical/translator";
+import { insertScreening, getScreening, finishScreening } from "@/backend/api/clinical/api";
 import { toast } from "react-toastify";
 import Modal from "@/components/modal";
-import { getUrgencyServices } from "@/app/backend/api/clinical/urgency-bank-api";
+import { getUrgencyServices } from "@/backend/api/clinical/urgency-bank-api";
 import { useRouter, usePathname } from "next/navigation";
 
 const initialState = { 

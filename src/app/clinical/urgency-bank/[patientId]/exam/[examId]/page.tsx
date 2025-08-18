@@ -1,9 +1,9 @@
-import Link from "next/link";
+// import Link from "next/link";
 import SubTitle from "@/components/ui/subtitle";
 import Accordium from "@/components/ui/accordium";
-import { FileHandler } from "@/lib/client-files";
-import { FaRegFileImage, FaRegFilePdf } from "react-icons/fa6";
-import { getPatientScheduledServices } from "@/app/backend/api/clinical/scheduling-api";
+// import { FileHandler } from "@/lib/client-files";
+// import { FaRegFileImage, FaRegFilePdf } from "react-icons/fa6";
+import { getPatientScheduledServices } from "@/backend/api/clinical/scheduling-api";
 
 export default async function Page({
   params
@@ -16,7 +16,7 @@ export default async function Page({
 }){
   const { patientId, examId } = await params;
   const exams = await getPatientScheduledServices({ patientId });
-  const exam = exams.find(props => props._id === examId);
+  const exam = exams?.find(props => props._id === examId);
 
   return(
 
@@ -25,7 +25,7 @@ export default async function Page({
         <div className="grid lg:grid-cols-2">
           <div className="my-5 px-4 flex flex-col gap-y-2">
             <SubTitle className="inline-flex mt-3">Resultado por JPEG/PNG/PDF</SubTitle>
-                <Link target="_blank" href={exam?.file.link as string}>
+                {/* <Link target="_blank" href={exam?.file.link as string}>
                   <div className="w-96 hover:bg-gray-100 flex gap-2 border border-2 rounded-xl px-3 py-2">
                     <div className="w-10">
                       {
@@ -39,7 +39,7 @@ export default async function Page({
                       <p className="text-sm">{FileHandler.getFileHandlerToString(exam?.file.size as number)}</p>
                     </div>
                   </div>
-                </Link>
+                </Link> */}
           </div>
 
           <div className="my-5 px-4 flex flex-col gap-y-2">

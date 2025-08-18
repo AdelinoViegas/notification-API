@@ -1,8 +1,8 @@
 import Card from "@/components/ui/card";
 import Header from "@/components/header";
 import CalendarForm from "@/components/forms/calendar-form";
-import { getUsers } from "@/app/backend/api/clinical/api";
-import { getDoctorCalender } from "@/app/backend/api/clinical/urgency-bank-api";
+import { getUsers } from "@/backend/api/clinical/api";
+import { getDoctorCalender } from "@/backend/api/clinical/urgency-bank-api";
 
 export default async function Page({
    params

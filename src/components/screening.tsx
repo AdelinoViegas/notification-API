@@ -1,4 +1,4 @@
-import { getScreening } from "@/app/backend/api/clinical/api";
+import { getScreening } from "@/backend/api/clinical/api";
 import ScreeningUI, { UIComponent } from "@/components/forms/screening-ui";
 import { redirect } from "next/navigation";
 

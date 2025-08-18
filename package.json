@@ -4,15 +4,14 @@
   "private": true,
   "scripts": {
     "dev": "yarn setup && next dev --turbopack",
-    "build": "yarn setup && next build",
+    "build": "next build",
     "start": "yarn setup && next start",
     "lint": "next lint",
-    "setup": "node clinical-setup.mjs"
+    "setup": "node clinical-setup.mjs",
+    "review": "yarn knip"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",
-    "amqplib": "^0.10.8",
-    "argon2": "^0.41.1",
     "axios": "^1.11.0",
     "clsx": "^2.1.1",
     "debounce": "^2.2.0",
@@ -24,8 +23,8 @@
     "react-dom": "19.0.0",
     "react-icons": "^5.4.0",
     "react-toastify": "^10.0.6",
-    "swiper": "^11.2.10",
-    "recharts": "^3.1.0"
+    "recharts": "^3.1.0",
+    "swiper": "^11.2.10"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -37,6 +36,7 @@
     "dotenv": "^17.2.1",
     "eslint": "^9",
     "eslint-config-next": "15.1.5",
+    "knip": "^5.62.0",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"

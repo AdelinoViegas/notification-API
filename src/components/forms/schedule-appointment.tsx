@@ -16,13 +16,13 @@ import InputDetails from "@/components/ui/input-details";
 import Alert from "@/components/ui/alert";
 import { getDateInDashFormat } from "@/lib/date-formater";
 import { Types } from "mongoose";
-import { getDoctors, getSpecialties } from "@/app/backend/api/clinical/api";
-import type { DoctorCalendarReference, DoctorDayAndTime } from "@/app/backend/api/clinical/types";
+import { getDoctors, getSpecialties } from "@/backend/api/clinical/api";
+import type { DoctorCalendarReference, DoctorDayAndTime } from "@/backend/api/clinical/types";
 import { 
   scheduleAppointment, 
   findDoctorCalendar,
   getExams
-} from "@/app/backend/api/clinical/scheduling-api";
+} from "@/backend/api/clinical/scheduling-api";
 
 export type DoctorRole = {
   _id: string;

@@ -6,7 +6,7 @@ import {
   useActionState
 } from "react";
 import { useRouter } from "next/navigation";
-import { archivingScheduleAppointment } from "@/app/backend/api/clinical/scheduling-api";
+import { archivingScheduleAppointment } from "@/backend/api/clinical/scheduling-api";
 import Button from "@/components/ui/button";
 import { LuArchiveRestore } from "react-icons/lu";
 import Modal from "@/components/modal";

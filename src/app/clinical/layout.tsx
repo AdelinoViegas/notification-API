@@ -2,7 +2,7 @@ import SideNav from "@/components/clinical/sidenav";
 import Container from "@/components/container";
 import Userbar from "@/components/userbar";
 import NavLabel from "@/components/clinical/nav-label";
-import { getGrantedRoles } from "@/app/backend/api/admin";
+import { getGrantedRoles } from "@/backend/api/admin";
 
 export default async function Layout({
   children

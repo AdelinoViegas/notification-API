@@ -10,8 +10,8 @@ import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
 import Alert from "@/components/ui/alert";
 import Selection from "@/components/ui/selection";
-import { unitTypes } from "@/app/backend/api/clinical/translator";
-import { signUnit, updateExternalUnit, updateUnit } from "@/app/backend/api/clinical/urgency-bank-api";
+import { unitTypes } from "@/backend/api/clinical/translator";
+import { signUnit, updateExternalUnit, updateUnit } from "@/backend/api/clinical/urgency-bank-api";
 
 type UnitProps = {
   jsonData?: string;

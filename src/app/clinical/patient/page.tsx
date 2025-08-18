@@ -4,7 +4,7 @@ import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
 import tableFormater from "@/lib/table-formater";
-import { getPatients } from "@/app/backend/api/clinical/api";
+import { getPatients } from "@/backend/api/clinical/api";
 import Pagination from "@/components/pagination";
 import { PiArchiveDuotone } from "react-icons/pi";
 import { BiPlus as PlusIcon } from "react-icons/bi";

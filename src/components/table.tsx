@@ -5,7 +5,7 @@ import {
   usePathname,
 } from "next/navigation";
 import clsx from "clsx";
-import { priority } from "@/app/backend/api/clinical/translator";
+import { priority } from "@/backend/api/clinical/translator";
 
 export type TableRow = {
   id: string;

@@ -4,7 +4,7 @@ import Alert from "@/components/ui/alert";
 import Button from "@/components/ui/button";
 import Search from "@/components/ui/search";
 import tableFormater from "@/lib/table-formater";
-import { getPatientsInScreening } from "@/app/backend/api/clinical/api";
+import { getPatientsInScreening } from "@/backend/api/clinical/api";
 import Pagination from "@/components/pagination";
 import { PiArchiveDuotone } from "react-icons/pi";
 import Refresh from "@/components/refresh";

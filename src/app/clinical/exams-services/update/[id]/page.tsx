@@ -1,5 +1,5 @@
 import Header from "@/components/header";
-import { getCCG, updateCCG } from "@/app/backend/api/clinical/scheduling-api";
+import { getCCG, updateCCG } from "@/backend/api/clinical/scheduling-api";
 import Button from "@/components/ui/button";
 import InputField from "@/components/ui/input-field";
 import Card from "@/components/ui/card";

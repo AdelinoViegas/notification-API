@@ -4,12 +4,13 @@ import Link from "next/link";
 import Table from "@/components/table";
 import { tableAppointments } from "@/lib/table-formater";
 import Alert from "@/components/ui/alert";
+import { ScheduleAppointment } from "@/lib/table-formater";
 import Button from "@/components/ui/button";
 import Search from "@/components/ui/search";
 import Refresh from "@/components/refresh";
 import Header from "@/components/header";
-import { ScheduleAppointment } from "@/lib/table-formater";
-import { getScheduleAppointments } from "@/app/backend/api/clinical/scheduling-api";
+import { getScheduleAppointments } from "@/backend/api/clinical/scheduling-api";
+
 
 export const dynamic = "force-dynamic";
 

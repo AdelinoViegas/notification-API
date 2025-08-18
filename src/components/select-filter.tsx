@@ -12,8 +12,8 @@ import {
   useSearchParams
 } from "next/navigation";
 import Selection, { SelectionOption } from "@/components/ui/selection";
-import { getUnits } from "@/app/backend/api/clinical/urgency-bank-api";
-import { getDoctors } from "@/app/backend/api/clinical/api";
+import { getUnits } from "@/backend/api/clinical/urgency-bank-api";
+import { getDoctors } from "@/backend/api/clinical/api";
 
 type SelectFilterProps = {
   unitType?: "laboratory" | "workplace" | "internment" | "imaging";

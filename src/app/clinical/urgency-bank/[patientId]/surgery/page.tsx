@@ -1,4 +1,4 @@
-import { getSurgery } from "@/app/backend/api/clinical/urgency-bank-api";
+import { getSurgery } from "@/backend/api/clinical/urgency-bank-api";
 import Surgery from "@/components/forms/surgery";
 import SurgeryList from "@/components/surgery-list";
 

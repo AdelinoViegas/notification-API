@@ -5,8 +5,8 @@ import SpecialtyModal from "./specialty-modal";
 import Button from "@/components/ui/button";
 import InputField from "@/components/ui/input-field";
 import Selection, { SelectionOption } from "./ui/selection";
-import { userCategory } from '@/app/backend/api/clinical/translator';
-import { addUser } from "@/app/backend/api/clinical/api";
+import { userCategory } from '@/backend/api/clinical/translator';
+import { addUser } from "@/backend/api/clinical/api";
 import { toast } from "react-toastify";
 
 export default function UserClinicalConfig({ 

@@ -39,6 +39,3 @@ Thumbs.db
 
 # Histórico
 .node_repl_history
-
-# Excluir assets gerados manualmente
-public/202713b167cccf9e7a48

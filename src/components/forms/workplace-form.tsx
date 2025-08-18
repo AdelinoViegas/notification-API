@@ -7,7 +7,7 @@ import {
 import { useRouter } from "next/navigation";
 import Button from "@/components/ui/button";
 import Selection from "@/components/ui/selection";
-import { enterIntoWorkplace } from "@/app/backend/api/clinical/workplace-api";
+import { enterIntoWorkplace } from "@/backend/api/clinical/workplace-api";
 import { toast } from "react-toastify";
 import LogoutButton from "@/components/logout-button";
 
