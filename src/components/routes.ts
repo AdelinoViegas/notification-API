@@ -52,7 +52,11 @@ export const clinicalIcons = [
   {
     route: 'imaging',
     Icon: FaRadiationAlt
-  }
+  },
+  {
+    route: 'operating-room',
+    Icon: RiCalendarScheduleLine
+  },
 ];
 
 const clinicalRoutes = [
@@ -110,6 +114,11 @@ const clinicalRoutes = [
     href: "/clinical/imaging",
     route: 'imaging',
     label: 'Imagiologia',
+  },
+  {
+    href: "/clinical/operating-room",
+    route: 'operating-room',
+    label: 'Bloco Operatório',
   }
 ];
 

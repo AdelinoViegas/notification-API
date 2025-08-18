@@ -9,6 +9,7 @@ export default async function Page({
 }){
   const surgeries = await getSurgery({});
   
+  console.log(surgeries);
   return(
     <div>
       <Surgery />

@@ -1033,7 +1033,7 @@ async function requestSurgery(p: unknown, formdata: FormData){
     });
 
     return {
-      message: "Solicitação envida!",
+      message: "Solicitação enviada!",
       status: true
     }
   }catch {

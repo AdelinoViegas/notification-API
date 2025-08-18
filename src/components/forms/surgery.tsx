@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useActionState, useEffect } from "react";
+import { useParams } from "next/navigation";
+import { toast } from "react-toastify";
 import Modal from "@/components/modal";
 import Button from "@/components/ui/button";
 import InputDetails from "@/components/ui/input-details";
 import { requestSurgery } from "@/app/backend/api/clinical/urgency-bank-api";
-import { toast } from "react-toastify";
-import { useParams } from "next/navigation";
 
 export default function Surgery(){
   const [ state, action ] = useActionState(requestSurgery, { message: "", status: false }); 

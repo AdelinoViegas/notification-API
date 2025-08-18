@@ -1,15 +1,12 @@
-import { PiArchiveDuotone } from "react-icons/pi";
-import { TiInputChecked } from "react-icons/ti";
-import Link from "next/link";
 import Table from "@/components/table";
-import { tableAppointments } from "@/lib/table-formater";
 import Alert from "@/components/ui/alert";
+import Link from "next/link";
 import Button from "@/components/ui/button";
 import Search from "@/components/ui/search";
+import { PiArchiveDuotone } from "react-icons/pi";
+import { TiInputChecked } from "react-icons/ti";
 import Refresh from "@/components/refresh";
 import Header from "@/components/header";
-import { ScheduleAppointment } from "@/lib/table-formater";
-import { getScheduleAppointments } from "@/app/backend/api/clinical/scheduling-api";
 
 export const dynamic = "force-dynamic";
 
@@ -21,17 +18,42 @@ export default async function Page({
   }>
 }) {
   const { name } = await searchParams;
-  const patientRows = tableAppointments(await getScheduleAppointments({ 
+ /* const patientRows = tableAppointments(await getScheduleAppointments({ 
     patientName: name,
-  }) as ScheduleAppointment[]);
+  }) as ScheduleAppointment[]);*/
+  const patientRows = new Array();
 
+  patientRows.push({
+    id:"#",
+    row: [
+      "12-08-2025 18:24",
+      "Adelino da Trindade Afonso Viegas",
+      "Urologia",
+      "300",
+      "sala kk07",
+      "450",
+      "Filipe Duarte Rodrigues dos Santos",
+    ]
+  },{
+    id:"#",
+    row: [
+      "12-08-2025 18:24",
+      "Salvador Luis Muzinga Duarte",
+      "Pediatria",
+      "405",
+      "sala k754",
+      "780",
+      "Samuel Manuel de Souza Figueiredo",
+    ]
+  })
   return (
     <main className="space-y-3">
       <Refresh />
 
       <div className="mt-6">
-        <Header title="Consultas Agendadas"/>
+          <Header title="Pedido de agendamento de cirurgia"/>
       </div>
+
        <div className="flex gap-x-3">
         <Link href="/clinical/appointment/serveds">
           <Button className="flex gap-3">
@@ -64,13 +86,14 @@ export default async function Page({
 
       <Table
         status
-        baseRowLink="/clinical/appointment/"
         columns={[
           "Data e Hora", 
           "Nome do Utente", 
-          "Nome do Médico",
-          "Sala",
-          "Estado"
+          "Serviço",
+          "Cirur.",
+          "EnFerm.",
+          "Cama",
+          "Médico"
         ]} 
         rows={patientRows}
       />
