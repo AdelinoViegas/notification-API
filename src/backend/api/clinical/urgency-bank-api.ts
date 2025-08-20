@@ -1025,11 +1025,11 @@ async function getPrescriptions({
   }
 }
 
-async function requestSurgery(p: unknown, formdata: FormData){
+async function requestSurgery(p: unknown, formData: FormData){
   try{
-    const description = formdata.get("description");
-    const patientId = formdata.get("patientId");
-
+    const patientId = formData.get("patientId") as string;
+    const description = formData.get("description") as string;
+    
     await surgeryModel.create({
       userId: await getUserId(),
       description,

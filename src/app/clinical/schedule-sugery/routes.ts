@@ -57,10 +57,6 @@ export const clinicalIcons = [
     route: 'operating-room',
     Icon: RiCalendarScheduleLine
   },
-  {
-    route: 'schedule-sugery',
-    Icon: RiCalendarScheduleLine
-  },
 ];
 
 export const clinicalRoutes = [

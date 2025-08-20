@@ -7,45 +7,21 @@ import { PiArchiveDuotone } from "react-icons/pi";
 import { TiInputChecked } from "react-icons/ti";
 import Refresh from "@/components/refresh";
 import Header from "@/components/header";
+import { getScheduleSugeries } from "@/backend/api/clinical/scheduling-api";
+import { ScheduleSugery, tableSugeries } from "@/lib/table-formater";
 
 export const dynamic = "force-dynamic";
 
-export default async function Page(/*{
+export default async function Page({
   searchParams
 }:{
   searchParams: Promise<{
     name: string;
   }>
-}*/) {
-  //const { name } = await searchParams;
- /* const patientRows = tableAppointments(await getScheduleAppointments({ 
-    patientName: name,
-  }) as ScheduleAppointment[]);*/
-  const patientRows = [];
+}) {
+  const { name } = await searchParams;
+  const patientRows = tableSugeries(await getScheduleSugeries( name ) as ScheduleSugery[]);
 
-  patientRows.push({
-    id:"#",
-    row: [
-      "12-08-2025 18:24",
-      "Adelino da Trindade Afonso Viegas",
-      "Urologia",
-      "300",
-      "sala kk07",
-      "450",
-      "Filipe Duarte Rodrigues dos Santos",
-    ]
-  },{
-    id:"#",
-    row: [
-      "12-08-2025 18:24",
-      "Salvador Luis Muzinga Duarte",
-      "Pediatria",
-      "405",
-      "sala k754",
-      "780",
-      "Samuel Manuel de Souza Figueiredo",
-    ]
-  })
   return (
     <main className="space-y-3">
       <Refresh />
@@ -89,11 +65,8 @@ export default async function Page(/*{
         columns={[
           "Data e Hora", 
           "Nome do Utente", 
-          "Serviço",
-          "Cirur.",
-          "EnFerm.",
-          "Cama",
-          "Médico"
+          "Tipo de cirurgia",
+          "Nome do Médico",
         ]} 
         rows={patientRows}
       />

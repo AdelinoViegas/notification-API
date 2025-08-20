@@ -251,6 +251,18 @@ const officeSchema = new Schema<ConsultResult>({
   collection: "schedule_in_office",
 });
 
+const scheduleSugerySchema = new Schema({
+  patientId: Schema.Types.ObjectId,
+  doctorId: Schema.Types.ObjectId,
+  sugeryType: Schema.Types.ObjectId,
+  doctorDay: String,
+  doctorTime: String,
+  description: String,
+}, {
+  collection: "schedule_sugery",
+  timestamps: true,
+});
+
 export{
   examSchema,
   examGroupSchema,
@@ -263,5 +275,5 @@ export{
   doctorCalendarSchema,
   scheduleAppointmentSchema,
   officeSchema,
-
+  scheduleSugerySchema,
 }

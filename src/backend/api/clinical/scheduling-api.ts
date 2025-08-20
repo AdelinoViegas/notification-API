@@ -22,6 +22,7 @@ import {
   appointmentCancelModel,
   scheduleServiceModel,
   screeningModel,
+  scheduleSugeryModel,
 } from "@/backend/model";
 import { getUser } from "@/backend/api/clinical/api";
 
@@ -139,6 +140,7 @@ async function getExams(specialtyId?: string){
       groupId: data.groupId?.toString() as string,
       group: group?.name as string,
       price: data.price.toString(), // por causa das tabelas
+      specialtyId: data.specialtyId?.toString() as string // para agendar as cirurgias
     });
   }
 
@@ -994,6 +996,63 @@ async function getPatientScheduledServices({ patientId }: { patientId: string })
   }
 }
 
+async function scheduleSugery(prev: unknown, formData: FormData){
+  try{
+    const patientId = formData.get("patientId") as string;
+    const doctorId = formData.get("doctorId") as string;
+    const sugeryType = formData.get("sugeryType") as string;
+    const doctorDay = new Date((formData.get("date") as string).split("T")[0]).toLocaleDateString();
+    const doctorTime = formData.get("time");
+    const description = formData.get("description") as string;
+
+    const sugery = new scheduleSugeryModel({
+      patientId,
+      doctorId,
+      sugeryType,
+      doctorDay,
+      doctorTime,
+      description,
+    });
+
+    await sugery.save();
+    
+    return {
+      message: "Cirurgia agendada com sucesso!",
+      status: true,
+    }
+  }catch(e: unknown){
+    const err = e as Error;
+
+    return {
+      message: err.cause ? err.message : "Desculpe, não foi possível realizar o agendamento!",
+      status: false,
+      detail: err.message
+    };
+  }
+}
+
+ 
+async function getScheduleSugeries(patientName?: string){
+  const formatedList = [];
+  const schedule = await scheduleSugeryModel.find();
+
+  for(const items of schedule){
+    const patient = await patientModel.findById({_id: items.patientId}).select({fullname: 1});
+    const doctor = await getUser(items?.doctorId?.toString() as string);
+    const sugeryType = await examModel.findById({_id: items.sugeryType}).select({name: 1});
+
+    formatedList.push({
+      id: items.id,
+      patient: patient?.fullname as string,
+      doctor: doctor.fullname as string,
+      sugeryType: sugeryType?.name,
+      date: `${items.doctorDay} ${items.doctorTime}` as string,
+    })
+  }
+
+return patientName?formatedList.filter(props => props.patient.match(new RegExp(`^${patientName}`, 'i'))):formatedList;
+}
+
 export {
   signExam,
   signExamResult,
@@ -1020,5 +1079,7 @@ export {
   rescheduleAppointment,
   findDoctorCalendar,
   getNumberDoctorAppointment,
-  getPatientScheduledServices
+  getPatientScheduledServices,
+  scheduleSugery,
+  getScheduleSugeries
 };

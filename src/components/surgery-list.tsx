@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Modal from "@/components/modal";
 import clsx from "clsx";
-import { getSurgery } from "@/app/backend/api/clinical/urgency-bank-api";
+import { getSurgery } from "@/backend/api/clinical/urgency-bank-api";
 
 type Surgeries = Awaited<ReturnType<typeof getSurgery>>;
 
