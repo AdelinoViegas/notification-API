@@ -70,7 +70,7 @@ async function getPatients({
       patientList.push({
         id: urgency._id.toString(),
         fullname: urgency.fullname,
-        registerNumber: urgency.registerNumber,
+        registerNumber: urgency?.registerNumber as number,
         accessType: accessTypeLabel.toUpperCase(),
         createdAt: urgency.createdAt,
         group: groupLabel.toUpperCase(),

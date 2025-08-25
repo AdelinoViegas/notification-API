@@ -345,7 +345,7 @@ async function getPatients({
       formated.push({
         id: patient._id.toString(),
         fullname: patient.fullname,
-        registerNumber: Number(patient?.registerNumber),
+        registerNumber: patient?.registerNumber as number,
         accessType: accessTypeLabel?accessTypeLabel.toUpperCase():"Indefinido",
         createdAt: patient.createdAt,
         group: groupLabel?groupLabel.toUpperCase():"Indefinido",
@@ -730,7 +730,7 @@ async function getPatientsInScreening({
       formated.push({
         id: patientData._id.toString(),
         fullname: patientData.fullname,
-        registerNumber: patientData.registerNumber,
+        registerNumber: patientData?.registerNumber as number,
         accessType: accessTypeLabel?accessTypeLabel.toUpperCase():"Indefinido",
         createdAt: patientData.createdAt,
         group: groupLabel?groupLabel.toUpperCase():"Indefinido",
