@@ -46,7 +46,7 @@ async function allowUpdate(id: string){
   const doc = await processStateModel.findOne({ 
     patientId: id, 
     isInUse: true 
-  }).select({ _id: 1 });
+  }).select({ userId: 1 });
   
   const userId = await getUserId();
 

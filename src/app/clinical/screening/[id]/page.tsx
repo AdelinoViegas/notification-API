@@ -78,9 +78,7 @@ export default async function Page({
 
         <div className="max-h-[60vh] overflow-auto px-2 py-3">
           { r === "patient"?                
-              <PatientForm 
-                patientId={id} 
-              /> 
+              <PatientForm patientId={id} /> 
              : 
               [ 
                 "reason",

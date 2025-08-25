@@ -54,11 +54,7 @@ export default function PersonalInfoForm({
   return(
     <form {...{action}}>
       <div className="grid md:grid-cols-2 large:grid-cols-3 gap-3">
-        <input 
-          type="hidden" 
-          name="id" 
-          value={id} 
-        />
+        <input type="hidden" name="id" value={id} />
 
         <InputField
           textLabel="Nome Completo"

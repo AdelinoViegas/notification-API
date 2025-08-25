@@ -413,38 +413,53 @@ async function getDoctorCalendars(){
   }
 }
 
-async function grantUnitAccess(formData: FormData){
+async function addUserWorkplace(prev: unknown, formData: FormData){
   try{
     const userId = formData.get("userId");
-    const workplaceId = formData.get("workplaceId");
+    const workplaceId = formData.get("id");
     
     const verifyAccess = await workplaceModel.findOne({ userId, workplaceId });
 
     if(verifyAccess)
-      throw new Error("Accesso já atribuido");
+      throw new Error("Accesso já atribuido", { cause: 1 });
 
-    const workplaceAccess = new workplaceModel({
+    await workplaceModel.create({
       userId,
       workplaceId,
       actor: await getUserId(),
     });
 
-    await workplaceAccess.save();
-  }catch(err: unknown){
-    console.log("erro: ", err);
-  }finally{
-    redirect("/clinical/phisical-unit/user");
+    return { 
+      message: "Area de trabalho adicionado!",
+      status: true
+    }
+  }catch(e){
+    const err = e as Error;
+
+    return { 
+      message: err.cause ? err.message: "impossivel",
+      status: false
+    }
   }
 }
 
-async function removeUnitAccess(formData: FormData){
+export async function removeUserWorkplace(prev: unknown, formData: FormData){
   try{
-    const userId = formData.get("userId");
-    const accessId = formData.get("accessId");
+    const id = formData.get("id");
     
-    await workplaceModel.deleteOne({ userId, _id: accessId });
-  }finally{
-    redirect("/clinical/phisical-unit/user");
+    await workplaceModel.deleteOne({ _id: id });
+
+    return { 
+      message: "Area de trabalho adicionado!",
+      status: true
+    }
+  }catch(e){
+    const err = e as Error;
+
+    return { 
+      message: err.cause ? err.message: "impossivel",
+      status: false
+    }
   }
 }
 
@@ -457,8 +472,23 @@ async function getGrantedUnitAccess(userId: string){
       _id: access?._id.toString() as string,
       label: (await unitModel.findById({_id: access?.workplaceId }))?.name as string,
     });
-
+  
   return formatedList;
+}
+
+export async function getUserWorkplaces(){
+  const items = await unitModel.find({ unitTypeId: "workplace" });
+  const list = [];
+
+  for (const item of items){
+    list.push({
+      _id: item._id.toString() as string,
+      label: item?.name as string,
+      name: item?.name as string
+    });
+  }
+
+  return list;
 }
 
 async function signExternalUnit(prev: unknown, formData: FormData){
@@ -1103,9 +1133,8 @@ export {
   updateDoctorCalender,
   getDoctorCalender,
   getDoctorCalendars,
-  grantUnitAccess,
+  addUserWorkplace,
   getGrantedUnitAccess,
-  removeUnitAccess,
   signExternalUnit,
   getExternalUnits,
   getExternalUnit,
