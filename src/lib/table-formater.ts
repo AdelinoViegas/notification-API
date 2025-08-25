@@ -37,11 +37,14 @@ export type ScheduleAppointment = {
 
 export type ScheduleSugery = {
   id: string;
-  hour: string;
   date: string;
   doctor: string;
   patient: string;
   sugeryType: string;
+  requestingService: string;
+  infirmary: string;
+  bed: string;
+  status: string;
 };
 
 export type DoctorOffice = {
@@ -282,10 +285,14 @@ export function tableSugeries(sugeries: ScheduleSugery[]){
     tableRows.push({
       id: item.id,
       row: [
+        item.requestingService,
         item.date, 
         item.patient,
         item.sugeryType,
+        item.infirmary,
+        item.bed,
         item.doctor,
+        item.status,
       ]
     });
 

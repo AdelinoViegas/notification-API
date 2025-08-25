@@ -1,6 +1,6 @@
 import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
-import Link from "next/link";
+//import Link from "next/link";
 import Button from "@/components/ui/button";
 import Search from "@/components/ui/search";
 import { PiArchiveDuotone } from "react-icons/pi";
@@ -31,19 +31,19 @@ export default async function Page({
       </div>
 
        <div className="flex gap-x-3">
-        <Link href="/clinical/appointment/serveds">
+        {/*<Link href="/clinical/appointment/serveds">*/}
           <Button className="flex gap-3">
             <TiInputChecked className="size-5" />
             Atendidos
           </Button>
-        </Link>
+        {/*</Link>
 
-        <Link href="/clinical/appointment/archiveds">
+        <Link href="/clinical/appointment/archiveds">*/}
           <Button className="flex gap-3 bg-slate-700">
             <PiArchiveDuotone className="size-5" />
             Arquivados
           </Button>
-        </Link>
+       {/* </Link>*/}
       </div>
 
       <div className="lg:flex justify-between items-center">
@@ -62,11 +62,16 @@ export default async function Page({
 
       <Table
         status
+        baseRowLink="/clinical/schedule-sugery/"
         columns={[
+          "Serv. Solicitante",
           "Data e Hora", 
           "Nome do Utente", 
           "Tipo de cirurgia",
+          "Efermaria",
+          "Cama",
           "Nome do Médico",
+          "Estado"
         ]} 
         rows={patientRows}
       />

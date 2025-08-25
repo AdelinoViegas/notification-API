@@ -255,9 +255,42 @@ const scheduleSugerySchema = new Schema({
   patientId: Schema.Types.ObjectId,
   doctorId: Schema.Types.ObjectId,
   sugeryType: Schema.Types.ObjectId,
-  doctorDay: String,
+  doctorDay: Date,
   doctorTime: String,
   description: String,
+  requestingService: String,
+  infirmary: String,
+  bed: String,
+  payment: {
+    status: {
+      type: String,
+      default: "pending" // pendente ou confirmado
+    }, 
+    invoice: {
+      code: String,
+      proof: String,
+      porcentage: {
+        type: String,
+        default: "0%",
+      },
+      value: {
+        type: Number,
+        default: 0, // procentual 1.0 (float) -> 100% 
+      }
+    }
+  },
+  served: {
+    type: Boolean,
+    default: false,
+  },
+  canceled: {
+    type: Boolean,
+    default: false,
+  },
+  archiving: {
+    reason: String,
+    userId: Schema.Types.ObjectId,
+  }
 }, {
   collection: "schedule_sugery",
   timestamps: true,

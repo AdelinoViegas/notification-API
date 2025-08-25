@@ -271,6 +271,25 @@ const ccgTypes = {
   }
 };
 
+const surgerySchedulingArea = [
+  {
+    _id: "urgency-bank",
+    label: "Consultório de urgência"
+  },
+  {
+    _id: "patient",
+    label: "Utentes"
+  },
+  {
+    _id: "hospitalization",
+    label: "iternamento"
+  },
+  {
+    _id: "office",
+    label: "Consultório"
+  },
+];
+
 export { 
   patientGroup,
   civilState,
@@ -284,5 +303,6 @@ export {
   urgencyServices,
   userCategory,
   unitTypes,
-  ccgTypes
+  ccgTypes,
+  surgerySchedulingArea
 };

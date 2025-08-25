@@ -8,7 +8,7 @@ import {
   useActionState,
   ChangeEvent
 } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
 import Selection from "@/components/ui/selection";
@@ -22,7 +22,7 @@ import type { DoctorCalendarReference, DoctorDayAndTime } from "@/backend/api/cl
 import { 
   findDoctorCalendar,
   getExams,
-  scheduleSugery as scheduleSugeries
+  scheduleSugery
 } from "@/backend/api/clinical/scheduling-api";
 
 export type DoctorRole = {
@@ -36,7 +36,7 @@ export default function ScheduleSugery(
   }: { 
     patientId: string;
   }){
-  const [ state, action ] = useActionState(scheduleSugeries, { message: "", status: false });
+  const [ state, action ] = useActionState(scheduleSugery, { message: "", status: false });
   const [ doctors, setDoctors] = useState<SelectionOption[]>([]);
   const [ messageState, setMessageState ] = useState(false);
   const [ closeAlert, setCloseAlert ] = useState(true);
@@ -48,6 +48,7 @@ export default function ScheduleSugery(
   const doctorDayRef = useRef<DoctorCalendarReference[]>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
+  const path = usePathname();
 
   useEffect(()=>{
     const loadData = async ()=>{  
@@ -182,6 +183,12 @@ export default function ScheduleSugery(
             defaultValue={doctorTime?.day.toISOString()}
           />
 
+          <input
+            type="hidden"
+            name="requestingService"
+            defaultValue={path.split("/")[2]}
+          />          
+
           <Selection
             label="Tipo de Cirurgia"
             defaultOptionLabel="Todas"
@@ -208,10 +215,26 @@ export default function ScheduleSugery(
 
           <InputField
             textLabel="Hora da Cirurgia"
+            className="lg:col-span-2"
             type="time" 
             name="time"
             min={doctorTime?.startAt}
             max={doctorTime?.endAt}
+            required
+          />
+
+          <InputField
+            textLabel="Efermaria"
+            className="lg:col-span-2"
+            placeholder="insira a efermaria"
+            name="infirmary"
+            required
+          />
+
+          <InputField
+            textLabel="Cama"
+            placeholder="número da cama" 
+            name="bed"
             required
           />
         </div>

@@ -1,14 +1,15 @@
 import Header from "@/components/header";
 import Card from "@/components/ui/card";
-import { getScheduleAppointment } from "@/backend/api/clinical/scheduling-api";
 import SubTitle from "@/components/ui/subtitle";
 import ArchivingAppointment from "@/components/archiving-appointment";
-import RescheduleAppointment from "@/components/reschedule-appointment";
-import ValidateAppointment from "@/components/validate-appointment";
 import TitleAndSubtitle from "@/components/title-subtitle";
 import { angolaCurrency } from "@/lib/table-formater";
 import SendAppointment from "@/components/send-appointment";
-import PDFButton from "@/components/pdf-button";
+//import PDFButton from "@/components/pdf-button";
+import ValidateSugery from "@/components/validate-sugery";
+import RescheduleSugery from "@/components/reschedule-sugery";
+import { getScheduleSugery } from "@/backend/api/clinical/scheduling-api";
+import Button from "@/components/ui/button";
 
 export default async function Page({
   params
@@ -18,7 +19,7 @@ export default async function Page({
   }>
 }){ 
   const { scheduleId } = await params;
-  const schedule = await getScheduleAppointment(scheduleId);
+  const schedule = await getScheduleSugery(scheduleId);
 
   return (
     <main className="space-y-3">
@@ -43,33 +44,33 @@ export default async function Page({
               />
 
               <TitleAndSubtitle
-                label="Descrição da Consulta"
-                value={schedule.consult.name} 
+                label="Tipo de Cirurgia"
+                value={schedule.sugery.type} 
               />
 
               <TitleAndSubtitle
-                label="Preço da Consulta"
-                value={angolaCurrency(schedule.consult.price)} 
+                label="Preço da Cirurgia"
+                value={angolaCurrency(schedule.sugery.price)} 
               />
 
               <TitleAndSubtitle
                 label="Responsável"
-                value={schedule.responsable} 
+                value={'schedule.responsable'} 
               />
 
               <TitleAndSubtitle
-                label="Data da Consulta"
+                label="Data da Cirurgia"
                 value={schedule.date.pt} 
               />
 
               <TitleAndSubtitle
-                label="Hora da Consulta"
+                label="Hora da Cirurgia"
                 value={schedule.hour} 
               />
 
               <TitleAndSubtitle
                 label="Observação"
-                value={schedule.detail} 
+                value={schedule.description} 
               />
             </div>
 
@@ -104,7 +105,7 @@ export default async function Page({
           </div>
 
           <div className="flex gap-x-3 mt-3"> 
-            <PDFButton
+            {/*<PDFButton
               label="Visualizar"
               type="appointmentRecord"
               args={{    
@@ -116,17 +117,18 @@ export default async function Page({
                 consultationType: schedule.consult.name,
                 consultationPrice: schedule.consult.price,
               }}
-            />                       
+            />*/}
+            <Button>Visualizar</Button>                    
 
-            <RescheduleAppointment 
+            <RescheduleSugery
               scheduleId={scheduleId}
               doctorId={schedule.doctorId}
               date={schedule.date.en}
               hour={schedule.hour}
             />
-
-            <ValidateAppointment 
-              disabled={!schedule.consult.price || schedule.payment.status === "Confirmado"}
+              
+            <ValidateSugery 
+              disabled={!schedule.sugery.price || schedule.payment.status === "Confirmado"}
               scheduleId={scheduleId}
               code={schedule.payment.code}
               proof={schedule.payment.proof}

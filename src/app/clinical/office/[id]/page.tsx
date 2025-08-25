@@ -10,6 +10,7 @@ import RequestReschedule from "@/components/request-reschedule";
 import { getScheduleAppointment } from "@/backend/api/clinical/scheduling-api";
 import RequestExams from "@/components/forms/request-exam";
 import UserFileViewer from "@/components/user-file-viewer";
+import ScheduleSugery from "@/components/forms/schedule-sugery";
 // import ExamResultViewer from "@/components/exam-result-viewer";
 
 export default async function Page({ params }: { params: Promise<{ id: string }>}){
@@ -99,7 +100,11 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                 {/* <ExamResultViewer results={results} /> */}
               </div>
             </div>
-          </Accordium>      
+          </Accordium> 
+          
+          <Accordium title="Cirurgias">
+            <ScheduleSugery patientId={patient.personal._id}/>
+          </Accordium>     
 
           <div className="flex gap-3">
             <FinishConsultation />
