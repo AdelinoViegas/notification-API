@@ -76,14 +76,13 @@ export async function closePatientProcess(patientId: string, location: WorkLocat
 export async function syncPatientRegister(id: string){
   try{
     const oldPatient = await patientModel.findById({ _id: id });
-    const patient = new patientModel(oldPatient);
-    await patientModel.updateOne({ _id: id }, { used: true });
+    const transformedOldPatient = JSON.parse(JSON.stringify(oldPatient));
+    const patient = new patientModel(transformedOldPatient);
     patient._id = new Types.ObjectId();
-
     await patient.save();
+    await patientModel.updateOne({ _id: oldPatient?._id }, { used: true });
   }catch (e){
     console.log(e);
-    
     throw new Error("Falha na sincronização!");
   }
 }

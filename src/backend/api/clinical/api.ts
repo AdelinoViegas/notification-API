@@ -32,6 +32,7 @@ import {
   getUser as RESTgetUser 
 } from "@/backend/api/admin";
 import { omitUndefined } from "mongoose";
+import { randomInt } from "node:crypto";
 
 type ChoosedGroup = Assured | Employee | Enterprise | undefined;
 
@@ -165,9 +166,10 @@ async function signPatient(prev: unknown, formData: FormData){
     const patientTel = formData.get("patientTel") as string;
     const patientDocument = formData.get("patientDocument") as string;
     const language = formData.get("language") as string;
-
+    
     const patient = new patientModel({
       fullname: patientName,
+      registerNumber: randomInt(111111111, 999999999),
       birthDate: patientBirthDate,
       age: patientAge,
       civilState,
@@ -322,6 +324,7 @@ async function getPatients({
     const formated = [];
     let patients = await patientModel.find({ 
       served: !!served, 
+      used: undefined,
       fullname: fullname?new RegExp(`^${fullname}`, 'i'):/\w*/ig, 
     }).select({
       fullname: 1,
@@ -342,7 +345,7 @@ async function getPatients({
       formated.push({
         id: patient._id.toString(),
         fullname: patient.fullname,
-        registerNumber: patient.registerNumber,
+        registerNumber: Number(patient?.registerNumber),
         accessType: accessTypeLabel?accessTypeLabel.toUpperCase():"Indefinido",
         createdAt: patient.createdAt,
         group: groupLabel?groupLabel.toUpperCase():"Indefinido",
@@ -355,13 +358,12 @@ async function getPatients({
       availablePages: Math.ceil(patients.length /10),
       currentPage: page,
     }
-  }catch(err: unknown){
+  }catch {
     return {
       patients: [],
       totalItems: 0,
       availablePages: 0,
-      currentPage: page,
-      detail: err
+      currentPage: page
     }
   }
 }

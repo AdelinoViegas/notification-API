@@ -1,19 +1,12 @@
 import { Schema } from "mongoose";
-import { randomInt } from "crypto";
-import { 
-  Responsables, 
-  Group, 
-} from "@/backend/api/clinical/types";
+import { Responsables, Group } from "@/backend/api/clinical/types";
 
 const patientSchema = new Schema({
   fullname: {
     type: String,
     required: true
   },
-  registerNumber: {
-    type: Number,
-    default: ()=>randomInt(111111111, 999999999),
-  },
+  registerNumber: Number,
   birthDate: Date,
   age: Number,
   civilState: String,
