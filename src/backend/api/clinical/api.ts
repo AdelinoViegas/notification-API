@@ -70,7 +70,7 @@ async function getUsers(){
       category: userRoles.get(clinicalUser?.categoryId as string)?.label ?? "Indefinido",
       categoryId: clinicalUser?.categoryId as string,
       role: specialty?.name as string ?? "Indefinido",
-      roleId: clinicalUser?.specialtyId.toString() as string,
+      roleId: clinicalUser?.specialtyId?.toString() as string,
       workplaces: 0,
       ...user
     })
@@ -122,7 +122,7 @@ async function addUser(prev: unknown, formData: FormData){
     const roleId = formData.get("roleId") as string;
     const categoryId = formData.get("categoryId") as string;
     const specialtyId = formData.get("specialtyId");
-    const serviceId = formData.get("serviceId");
+    // const serviceId = formData.get("serviceId");
 
     const filter = omitUndefined({
       orderNumber,

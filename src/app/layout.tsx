@@ -24,10 +24,7 @@ const local = localFont({
   ] 
 });
 
-export const metadata: Metadata = {
-  title: "MASTER ERP",
-  description: "Sistema de Gestão Integrado - ERP",
-};
+export const metadata: Metadata = { title: "Master ERP" };
 
 export default function RootLayout({
   children,
