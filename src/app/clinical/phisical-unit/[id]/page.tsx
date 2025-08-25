@@ -2,13 +2,9 @@ import Header from "@/components/header";
 import UnitForm from "@/components/forms/unit-form";
 import { getUnit } from "@/backend/api/clinical/urgency-bank-api";
 
-export default async function Page({ params }: {
-  params: Promise<{
-    unitId: string;
-  }>
-}){
-  const { unitId } = await params;
-  const unit = await getUnit(unitId);
+export default async function Page({ params }: { params: Promise<{ id: string }> }){
+  const { id } = await params;
+  const unit = await getUnit(id);
 
   return(
     <main>
