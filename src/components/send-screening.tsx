@@ -11,7 +11,7 @@ import { toast } from "react-toastify";
 
 export default function SendToScreening(){
   const [ state, action ] = useActionState(putInScreening, { message: "", status: false });
-  const urlParams:{ patientId: string } = useParams();
+  const params = useParams();
   const router = useRouter();
   
   useEffect(()=>{
@@ -28,7 +28,7 @@ export default function SendToScreening(){
   return(
     <div>
       <form {...{action}}>
-        <input type="hidden" name="patientId" value={urlParams.patientId} />
+        <input type="hidden" name="patientId" value={params.id} />
         <Button>Enviar para Triagem</Button>
       </form>
     </div>

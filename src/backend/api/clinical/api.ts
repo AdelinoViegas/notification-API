@@ -2,7 +2,7 @@
 
 import { getUserId } from "@/lib/web-token";
 import { validatePatientDoc } from "@/lib/regexp";
-import { closePatientProcess } from "./process-api";
+import { closePatientProcess, syncPatientRegister } from "./process-api";
 import {
   Responsable,
   Assured,
@@ -650,7 +650,7 @@ async function putInScreening(prev: unknown, formData: FormData){
       message: 'Utente enviado para a Triagem!',
       status: true,
     }
-  }catch(e: unknown){
+  }catch(e){
     const err = e as Error & { code: number };
     console.log(err.message);
 
@@ -860,7 +860,7 @@ async function insertScreening(prev: unknown, formData: FormData){
 
 async function finishScreening(prev: unknown, formData: FormData){
   try{
-    const patientId = formData.get('patientId');
+    const patientId = formData.get('patientId') as string;
     const serviceId = formData.get('serviceId');
 
     if(!patientId || !serviceId)
@@ -905,7 +905,8 @@ async function finishScreening(prev: unknown, formData: FormData){
       patientId
     })
     
-    await closePatientProcess(patientId as string, "screening");
+    await closePatientProcess(patientId, "screening");
+    await syncPatientRegister(patientId);
 
     return {
       message: "Utente triado com sucesso!",

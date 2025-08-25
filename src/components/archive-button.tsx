@@ -18,7 +18,7 @@ export default function ArchiveButton({ invert }:{ invert?: boolean }){
 
   const handleConfirm = ()=>{
     changeArchived({
-      patientId: params.patientId, 
+      patientId: params.id, 
       isArchived: !!invert
     })
     .then(data => {

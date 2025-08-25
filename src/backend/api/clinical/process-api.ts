@@ -1,9 +1,10 @@
 "use server";
 
 import { getUserId } from "@/lib/web-token";
-import { processStateModel } from "@/backend/model";
+import { patientModel, processStateModel } from "@/backend/model";
 import { getFirstAndLastName } from "@/components/userbar";
 import { getUser } from "@/backend/api/admin";
+import { Types } from "mongoose";
 
 type WorkLocation = "screening" | "urgency" | "laboratory" | "imaging" | string ;
 
@@ -69,5 +70,20 @@ export async function closePatientProcess(patientId: string, location: WorkLocat
       message: "Operação impossivel!",
       status: false
     }
+  }
+}
+
+export async function syncPatientRegister(id: string){
+  try{
+    const oldPatient = await patientModel.findById({ _id: id });
+    const patient = new patientModel(oldPatient);
+    await patientModel.updateOne({ _id: id }, { used: true });
+    patient._id = new Types.ObjectId();
+
+    await patient.save();
+  }catch (e){
+    console.log(e);
+    
+    throw new Error("Falha na sincronização!");
   }
 }

@@ -13,26 +13,21 @@ const patientSchema = new Schema({
   registerNumber: {
     type: Number,
     default: ()=>randomInt(111111111, 999999999),
-    unique: true,
   },
   birthDate: Date,
   age: Number,
   civilState: String,
   gender: String,
   tel: String,
-  documentation: {
-    type: String,
-    unique: true,
-    required: true,
-  },
+  documentation: String,
   lang: String,
   served: {
     type: Boolean,
     default: false
   },
-  userId: Schema.Types.ObjectId
+  userId: Schema.Types.ObjectId,
+  used: Boolean
 }, {
-  collection: "patients",
   timestamps: true,
 });
 

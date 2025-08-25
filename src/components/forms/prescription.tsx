@@ -53,7 +53,7 @@ export default function Prescription({
       >
         <form action={action}>
           <input type="hidden" name="id" value={id} />
-          <input type="hidden" name="patientId" value={params.patientId} />
+          <input type="hidden" name="patientId" value={params.id} />
 
           <InputField
             textLabel="Data"
