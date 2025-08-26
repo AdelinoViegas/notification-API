@@ -71,7 +71,7 @@ const groupSchema = new Schema<Group>({
   timestamps: true,
 });
 
-const accesTypeSchema = new Schema({
+const accessTypeSchema = new Schema({
   patientId: Schema.Types.ObjectId,
   type: { type: String },
   externalUnitId: Schema.Types.ObjectId,
@@ -111,7 +111,7 @@ export {
   patientSchema,
   demographySchema,
   responsibleSchema,
-  accesTypeSchema,
+  accessTypeSchema,
   groupSchema,
   processStateSchema,
   specialtyStateSchema,
