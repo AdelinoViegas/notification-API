@@ -26,6 +26,7 @@ import {
 } from "@/backend/model";
 import { getUser } from "@/backend/api/clinical/api";
 import { surgerySchedulingArea } from "./translator";
+import { priorityInOperatingRoom } from "@/lib/filters";
 
 export type CCGTypes = "category" | "classification" | "group";
 
@@ -1039,7 +1040,13 @@ async function scheduleSugery(prev: unknown, formData: FormData){
 }
 
  
-async function getScheduleSugeries(patientName?: string){
+async function getScheduleSugeries({
+  name,
+  priority,
+}:{
+  name?: string,
+  priority?: string, 
+}){
   const formatedList = [];
   const schedule = await scheduleSugeryModel.find();
 
@@ -1049,19 +1056,22 @@ async function getScheduleSugeries(patientName?: string){
     const sugeryType = await examModel.findById({_id: items.sugeryType}).select({name: 1});
 
     formatedList.push({
-      id: items.id,
+      id: items.id.toString() as string,
       patient: patient?.fullname as string,
       requestingService: surgerySchedulingArea.find( props => props._id === items.requestingService)?.label as string,
       doctor: doctor.fullname as string,
       infirmary: items.infirmary as string,
       bed: items.bed as string,
-      sugeryType: sugeryType?.name,
+      sugeryType: sugeryType?.name.toString() as string,
       date: `${getDateInSlashFormat(items.doctorDay as Date)} ${items.doctorTime}` as string,
       status: items.payment?.status === "confirmed"?"Confirmado":"Pendente" as string,
     })
   }
 
-return patientName?formatedList.filter(props => props.patient.match(new RegExp(`^${patientName}`, 'i'))):formatedList;
+  //return patientName?formatedList.filter(props => props.patient.match(new RegExp(`^${patientName}`, 'i'))):formatedList;
+  return name?priorityInOperatingRoom(formatedList.filter((props)=>props.patient.match(new RegExp(`^${name}`, 'i')))).orderElements:
+  priority?priorityInOperatingRoom(formatedList.filter((props)=> props.requestingService === surgerySchedulingArea.find((props)=>props.color === priority)?.label)).orderElements:
+  priorityInOperatingRoom(formatedList).orderElements;
 }
 
 async function getScheduleSugery(scheduleId:string){

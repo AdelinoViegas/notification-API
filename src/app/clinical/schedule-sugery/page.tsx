@@ -20,7 +20,7 @@ export default async function Page({
   }>
 }) {
   const { name } = await searchParams;
-  const patientRows = tableSugeries(await getScheduleSugeries( name ) as ScheduleSugery[]);
+  const patientRows = tableSugeries(await getScheduleSugeries({ name }) as ScheduleSugery[]);
 
   return (
     <main className="space-y-3">

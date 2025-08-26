@@ -1,12 +1,12 @@
 import Header from "@/components/header";
 import Table from "@/components/table";
-import { getPatients } from "@/backend/api/clinical/urgency-bank-api";
-import tableFormater from "@/lib/table-formater";
+import { ScheduleSugery, tableSugeries } from "@/lib/table-formater";
 import Alert from "@/components/ui/alert";
-import { orderByPriority } from "@/lib/filters";
-import Tooltip from "@/components/urgency-bank-tooltip";
+import {priorityInOperatingRoom } from "@/lib/filters";
+import TooltipInOperatingRoom from "@/components/operating-room-tooltip";
 import Search from "@/components/ui/search";
 import Refresh from "@/components/refresh";
+import { getScheduleSugeries } from "@/backend/api/clinical/scheduling-api";
 
 export const dynamic = "force-dynamic";
 
@@ -20,13 +20,10 @@ export default async function Page({
   }>
 }){ 
   const { name, priority } = await searchParams;
-  const patientRows = tableFormater(await getPatients({
-    name: name, 
-    priority: priority
-  }));
+  const patientRows = tableSugeries(await getScheduleSugeries({ name, priority }) as ScheduleSugery[]); 
+  const priorityData = priorityInOperatingRoom(await getScheduleSugeries({ name })).areasToSchedule;
   
-  const summary = orderByPriority(await getPatients({ name })).summary;
-
+  console.log(patientRows);
   return(
     <main className="space-y-3">
       <Refresh />
@@ -42,7 +39,7 @@ export default async function Page({
       </div>
       
       <div className="flex justify-between items-center">
-        <Tooltip data={summary} />
+        <TooltipInOperatingRoom data={priorityData} />
         <Search
           className="flex items-center gap-x-3"
           filterKey="name"
@@ -54,7 +51,7 @@ export default async function Page({
       <Table
         rowLength={6}
         priorityCol
-        rows={patientRows}
+        rows={[]}
         columns={[
           "Prioridade",
           "Data Registo", 

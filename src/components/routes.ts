@@ -127,6 +127,6 @@ export const clinicalRoutes = [
   {
     href: "/clinical/schedule-sugery",
     route: 'schedule-sugery',
-    label: 'Cirurgias Agendadas',
+    label: 'Agenda de Cirurgia',
   }
 ];

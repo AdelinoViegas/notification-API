@@ -274,19 +274,23 @@ const ccgTypes = {
 const surgerySchedulingArea = [
   {
     _id: "urgency-bank",
-    label: "Consultório de urgência"
-  },
-  {
-    _id: "patient",
-    label: "Utentes"
+    label: "Consultório de urgência",
+    color: "red",
   },
   {
     _id: "hospitalization",
-    label: "iternamento"
+    label: "Internamento",
+    color: "orange",
   },
   {
     _id: "office",
-    label: "Consultório"
+    label: "Consultório",
+    color: "yellow",
+  },
+  {
+    _id: "patient",
+    label: "Utentes",
+    color: "green",
   },
 ];
 
