@@ -73,9 +73,7 @@ const groupSchema = new Schema<Group>({
 
 const accesTypeSchema = new Schema({
   patientId: Schema.Types.ObjectId,
-  type: {
-    type: String,
-  },
+  type: { type: String },
   externalUnitId: Schema.Types.ObjectId,
 }, {
   collection: "patient_access_type",

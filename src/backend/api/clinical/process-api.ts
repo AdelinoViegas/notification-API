@@ -1,7 +1,7 @@
 "use server";
 
 import { getUserId } from "@/lib/web-token";
-import { patientModel, processStateModel } from "@/backend/model";
+import { patientModel, processStateModel,demographyModel, responsibleModel, groupModel, accessTypeModel } from "@/backend/model";
 import { getFirstAndLastName } from "@/components/userbar";
 import { getUser } from "@/backend/api/admin";
 import { Types } from "mongoose";
@@ -80,7 +80,34 @@ export async function syncPatientRegister(id: string){
     const patient = new patientModel(transformedOldPatient);
     patient._id = new Types.ObjectId();
     await patient.save();
-    await patientModel.updateOne({ _id: oldPatient?._id }, { used: true });
+    await patientModel.updateOne({ _id: oldPatient?._id }, { used: true, served: true });
+    
+    const oldDemography = await demographyModel.findOne({ patientId: oldPatient?._id });
+    const demography = new demographyModel(JSON.parse(JSON.stringify(oldDemography)));
+    demography._id = new Types.ObjectId();
+    demography.patientId = patient._id;
+    console.log(demography);
+
+    const oldResponsible = await responsibleModel.findOne({ patientId: oldPatient?._id });
+    const responsible = new responsibleModel(JSON.parse(JSON.stringify(oldResponsible)));
+    responsible._id = new Types.ObjectId();
+    responsible.patientId = patient._id.toString();
+    
+    const oldGroup = await groupModel.findOne({ patientId: oldPatient?._id });
+    const group = new groupModel(JSON.parse(JSON.stringify(oldGroup)));
+    group._id = new Types.ObjectId();
+    group.patientId = patient._id.toString();
+    
+    const oldAccessType = await accessTypeModel.findOne({ patientId: oldPatient?._id });
+    const accessType = new accessTypeModel(JSON.parse(JSON.stringify(oldAccessType)));
+    accessType._id = new Types.ObjectId();
+    accessType.patientId = patient._id;
+
+    await responsible.save();
+    await demography.save();
+    await group.save();
+    await accessType.save();
+
   }catch (e){
     console.log(e);
     throw new Error("Falha na sincronização!");

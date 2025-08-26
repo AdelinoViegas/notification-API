@@ -1,7 +1,7 @@
 import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
-import { getPatients } from "@/backend/api/clinical/unit-api";
+import { getPatients } from "@/backend/api/clinical/internal-services-api";
 import { Services, tableLaboratory } from "@/lib/table-formater";
 import SelectFilter from "@/components/select-filter";
 import Pagination from "@/components/pagination";

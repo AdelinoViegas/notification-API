@@ -1,4 +1,4 @@
-import { getPatient, getScheduledExams } from "@/backend/api/clinical/unit-api";
+import { getPatient, getScheduledExams } from "@/backend/api/clinical/internal-services-api";
 import { internalExamResultModel } from "@/backend/model";
 import Accordium from "@/components/ui/accordium";
 import UserFileViewer from "@/components/user-file-viewer";

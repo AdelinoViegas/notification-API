@@ -4,7 +4,7 @@ import InputDetails from "@/components/ui/input-details";
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
 import { useActionState, useEffect } from "react";
-import { registerExamResult } from "@/backend/api/clinical/unit-api";
+import { registerExamResult } from "@/backend/api/clinical/internal-services-api";
 import { toast } from "react-toastify";
 import { useRef } from "react";
 import { useRouter } from "next/navigation";
