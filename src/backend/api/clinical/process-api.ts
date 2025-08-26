@@ -85,8 +85,7 @@ export async function syncPatientRegister(id: string){
     const oldDemography = await demographyModel.findOne({ patientId: oldPatient?._id });
     const demography = new demographyModel(JSON.parse(JSON.stringify(oldDemography)));
     demography._id = new Types.ObjectId();
-    demography.patientId = patient._id;
-    console.log(demography);
+    demography.patientId = patient._id
 
     const oldResponsible = await responsibleModel.findOne({ patientId: oldPatient?._id });
     const responsible = new responsibleModel(JSON.parse(JSON.stringify(oldResponsible)));
@@ -107,7 +106,7 @@ export async function syncPatientRegister(id: string){
     await demography.save();
     await group.save();
     await accessType.save();
-
+    console.log("dados do utente sincronizado!");
   }catch (e){
     console.log(e);
     throw new Error("Falha na sincronização!");
