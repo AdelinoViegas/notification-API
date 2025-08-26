@@ -17,6 +17,7 @@ export default async function Page({ params }:{ params: Promise<{ id: string }>}
     getSpecialties(),
   ]);
 
+  console.log(user);
   return (
     <main className="space-y-3">
  
