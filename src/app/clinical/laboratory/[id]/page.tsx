@@ -1,5 +1,5 @@
 import { MonitorAccess, UnlockProcessAccess } from "@/components/lock-unlock-monitor-process";
-import { getPatient, getScheduledExams } from "@/backend/api/clinical/unit-api";
+import { getPatient, getScheduledExams } from "@/backend/api/clinical/internal-services-api";
 import { internalExamResultModel } from "@/backend/model";
 import FinishScheduledExam from "@/components/finish-schedule-exam";
 import { LoboratoryForm } from "@/components/forms/laboratory-imaging-form";

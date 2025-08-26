@@ -13,7 +13,7 @@ import { getUserId } from "@/lib/web-token";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
 import { getUser } from "@/backend/api/admin";
 import { upload } from "@/backend/api/storage";
-import { closePatientProcess } from "@/backend/api/clinical/process-api";
+import { closePatientProcess, syncPatientRegister } from "@/backend/api/clinical/process-api";
 import { CustonAxiosError } from "@/backend/api/types";
 
 async function updatePaymentData(prev: unknown, formData: FormData){
@@ -203,8 +203,11 @@ async function finishScheduledExam(prev: unknown, formData: FormData){
     const scheduled = await scheduleServiceModel.findOneAndUpdate({ _id: serviceId }, { served: true });
     const patient = await getPatient(serviceId);
 
-    if(patient?.id && scheduled?.Type)
-      await closePatientProcess(patient.id, scheduled?.Type as string)
+    if(patient?.id && scheduled?.Type){
+      await closePatientProcess(patient.id, scheduled?.Type as string);
+      await syncPatientRegister(patient.id);
+    }
+      
     return {
       message: "Exame concluido!",
       status: true

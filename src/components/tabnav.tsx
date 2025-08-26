@@ -54,6 +54,8 @@ export default function TabNav({
   function ReactUI({ path, title, index }:{ path: string; title: string; index: number }){
     if(!useReactHook){
       const absPathname = (idAsIndexPage && index == 0?[baseUrl, paramId]:[baseUrl, paramId, path]).join('/');  
+      console.log(absPathname);
+      
       return(
         <Link 
           href={absPathname} 
@@ -112,7 +114,7 @@ export default function TabNav({
             {...item} 
             index={index} 
             key={index} 
-            />
+          />
           )
         )}
       </ul>

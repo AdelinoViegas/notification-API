@@ -11,7 +11,7 @@ import Button from "@/components/ui/button";
 import Alert from "@/components/ui/alert";
 
 import { VscSend } from "react-icons/vsc";
-import { sendPatientToUnit } from "@/backend/api/clinical/unit-api";
+import { sendPatientToUnit } from "@/backend/api/clinical/internal-services-api";
 
 export default function SendAppointment({
   scheduleId,

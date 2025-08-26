@@ -8,15 +8,16 @@ import {
 import Selection from "@/components/ui/selection";
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
-import Alert from '@/components/ui/alert';
-import forceRefreshPage from "@/lib/force-refresh";
 import type { Patient } from "@/backend/api/clinical/types";
 import { updatePersonalInfo } from "@/backend/api/clinical/api";
+import { toast } from "react-toastify";
 
 import { 
   civilState as civilStateValues, 
   gender as genderValues
 } from "@/backend/api/clinical/translator";
+import { useRouter } from "next/navigation";
+import forceRefreshPage from "@/lib/force-refresh";
 
 type Personal = { id: string } & Patient;
 
@@ -31,34 +32,30 @@ export default function PersonalInfoForm({
   tel,
   lang
 }: Personal){
-  const [ state, action ] = useActionState(updatePersonalInfo, { message: "", status: false })
-  const [ messageState, setMessageState ] = useState(false);
+  const [ state, action ] = useActionState(updatePersonalInfo, { message: "", status: false });
+  const router = useRouter();
   const [ isEdit, setIsEdit ] = useState(false);
-  const desableEdit = ()=>setIsEdit(false);
+  const disableEdit = ()=>setIsEdit(false);
 
   useEffect(()=>{
     if(state.message){
-      setMessageState(true); 
-
-      setTimeout(()=>{
-        setMessageState(false);
-          
-        if(state.status){
-          desableEdit();
-          forceRefreshPage();
-        }
-      }, 2000);
+      if(state.status)
+        toast.success(state.message, { 
+          onOpen: ()=>{
+            router.refresh();
+            disableEdit();
+          },
+          onClose: forceRefreshPage
+        });
+      else
+        toast.error(state.message);
     }
   }, [state]);
 
   return(
     <form {...{action}}>
       <div className="grid md:grid-cols-2 large:grid-cols-3 gap-3">
-        <input 
-          type="hidden" 
-          name="id" 
-          value={id} 
-        />
+        <input type="hidden" name="id" value={id} />
 
         <InputField
           textLabel="Nome Completo"
@@ -149,22 +146,13 @@ export default function PersonalInfoForm({
           isEdit && <>
           <Button 
             cancel 
-            onClick={desableEdit}>
+            onClick={disableEdit}>
               Cancelar
           </Button>
           <Button type="submit">Actualizar</Button>
           </>
         }
       </div>
-      {
-        state.message && messageState &&
-        <div className="flex mt-3">
-          <Alert
-            type={state.status?'success':'error'}
-            message={state.message}
-          />
-        </div>
-      }
     </form>
   );
 }

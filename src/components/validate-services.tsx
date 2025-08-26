@@ -10,7 +10,7 @@ import Modal from "@/components/modal";
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
 import Alert from "@/components/ui/alert";
-import { updatePaymentData } from "@/backend/api/clinical/unit-api";
+import { updatePaymentData } from "@/backend/api/clinical/internal-services-api";
 
 import { MdAttachMoney } from "react-icons/md";
 

@@ -15,26 +15,35 @@ export default async function Page({
   params,
   searchParams
 }:{
-  params: Promise<{ patientId: string }>;
+  params: Promise<{ id: string }>;
   searchParams: Promise<{ r: Routes }>;
 }){
-  const [{ patientId }, { r }] = await Promise.all([ params, searchParams ]);
-  const { personal: { fullname } } = await getPatient(patientId);
+  const [{ id }, { r }] = await Promise.all([ params, searchParams ]);
+  const { personal: { fullname } } = await getPatient(id);
 
   return(
     <main>
       <MonitorAccess
-        patientId={patientId}
+        patientId={id}
         place="screening"
         basePathname="/clinical/screening" 
       />
 
-      <div className="mt-4 mb-6">
-                
+      <div className="mt-4 mb-6">   
         <div className="flex gap-x-2 justify-end">
-            <ScheduleInScreening {...{patientId}} type="appointment" label="agendar consulta"/>  
-            <ScheduleInScreening {...{patientId}} type="exam" label="agendar exame"/>             
-        </div>        
+          <ScheduleInScreening 
+            patientId={id} 
+            type="appointment" 
+            label="agendar consulta"
+          />  
+
+          <ScheduleInScreening 
+            patientId={id} 
+            type="exam" 
+            label="agendar exame"
+          />             
+        </div> 
+
         <Header 
           center 
           title={fullname}
@@ -59,7 +68,7 @@ export default async function Page({
 
         <div className="flex gap-x-3">
           <UnlockProcessAccess
-            patientId={patientId}
+            patientId={id}
             place="screening"
             basePathname="/clinical/screening"
           />
@@ -69,9 +78,7 @@ export default async function Page({
 
         <div className="max-h-[60vh] overflow-auto px-2 py-3">
           { r === "patient"?                
-              <PatientForm 
-                patientId={patientId} 
-              /> 
+              <PatientForm patientId={id} /> 
              : 
               [ 
                 "reason",
@@ -81,7 +88,7 @@ export default async function Page({
                 "advice"
               ].includes(r) && 
               <Screening 
-                patientId={patientId}
+                patientId={id}
                 renderComponent={r as UIComponent} 
               /> 
           }

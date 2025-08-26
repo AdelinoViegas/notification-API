@@ -6,16 +6,16 @@ import PatientForm from "@/components/forms/patient-form";
 import ScheduleAppointment from "@/components/forms/schedule-appointment";
 import RequestExams from "@/components/forms/request-exam";
 
-type Route = "patient" | "appointment" | "exams";
+type MyRoute = "patient" | "appointment" | "exams";
 
 export default async function Page({ 
 	params,
 	searchParams 
 }:{ 
-	params: Promise<{ patientId: string }>;
-	searchParams: Promise<{ r: Route }>;
+	params: Promise<{ id: string }>;
+	searchParams: Promise<{ r: MyRoute }>;
 }){
-	const [{ patientId }, { r }] = await Promise.all([
+	const [{ id }, { r }] = await Promise.all([
 		params,
 		searchParams
 	]);
@@ -43,9 +43,9 @@ export default async function Page({
         />
 
         <div className="max-h-[60vh] overflow-auto px-2 py-3">
-         { r === "patient" && <PatientForm {...{patientId}}/> }
-				 { r === "appointment" &&  <ScheduleAppointment {...{patientId}} /> }
-				 { r === "exams" &&  <RequestExams {...{patientId}} isFullWindow /> }
+         { r === "patient" && <PatientForm patientId={id} /> }
+				 { r === "appointment" &&  <ScheduleAppointment patientId={id} /> }
+				 { r === "exams" &&  <RequestExams patientId={id} isFullWindow /> }
         </div>
       </Card>
 		</div>

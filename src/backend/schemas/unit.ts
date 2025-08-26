@@ -40,6 +40,8 @@ const workplaceSchema = new Schema({
   timestamps: true,
 });
 
+workplaceSchema.index({ userId: 1, workplaceId: 1 }, { unique: true });
+
 const externalUnitSchema = new Schema({
   name: {
     type: String,

@@ -6,7 +6,7 @@ import {
   getDateInSlashFormat 
 } from "@/lib/date-formater";
 import { redirect } from "next/navigation";
-import { getExamResult as getExamResutlFromUnit } from "./unit-api";
+import { getExamResult as getExamResutlFromUnit } from "./internal-services-api";
 import { 
   examModel, 
   examGroupModel,
