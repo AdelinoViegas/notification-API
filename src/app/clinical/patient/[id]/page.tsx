@@ -6,14 +6,14 @@ import PatientForm from "@/components/forms/patient-form";
 import ScheduleAppointment from "@/components/forms/schedule-appointment";
 import RequestExams from "@/components/forms/request-exam";
 
-type Route = "patient" | "appointment" | "exams";
+type MyRoute = "patient" | "appointment" | "exams";
 
 export default async function Page({ 
 	params,
 	searchParams 
 }:{ 
 	params: Promise<{ id: string }>;
-	searchParams: Promise<{ r: Route }>;
+	searchParams: Promise<{ r: MyRoute }>;
 }){
 	const [{ id }, { r }] = await Promise.all([
 		params,

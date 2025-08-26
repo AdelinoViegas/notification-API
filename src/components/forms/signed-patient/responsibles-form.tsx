@@ -8,11 +8,12 @@ import {
 import InputField from "@/components/ui/input-field";
 import Selection from "@/components/ui/selection";
 import Button from "@/components/ui/button";
-import Alert from '@/components/ui/alert';
-import forceRefreshPage from "@/lib/force-refresh";
 import { kinshipDegree } from "@/backend/api/clinical/translator";
 import type { Responsable } from "@/backend/api/clinical/types";
 import { updateResposible } from "@/backend/api/clinical/api";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import forceRefreshPage from "@/lib/force-refresh";
 
 
 type InfoProps = {
@@ -27,22 +28,22 @@ export default function ResposiblesForm({
   second,
 }: InfoProps){
   const [ state, action ] = useActionState(updateResposible, { message: "", status: false })
+  const router = useRouter();
   const [ isEdit, setIsEdit ] = useState(false);
-  const [ messageState, setMessageState ] = useState(false);
   const disableEdit = ()=>setIsEdit(false);
 
   useEffect(()=>{
     if(state.message){
-      setMessageState(true);
-
-      setTimeout(()=>{
-        setMessageState(false);
-
-        if(state.status){
-          disableEdit();
-          forceRefreshPage();
-        }
-      }, 2000);
+      if(state.status)
+        toast.success(state.message, { 
+          onOpen: ()=>{
+            router.refresh();
+            disableEdit();
+          },
+          onClose: forceRefreshPage
+        });
+      else
+        toast.error(state.message);
     }
   }, [state]);
 
@@ -131,15 +132,6 @@ export default function ResposiblesForm({
           </>
         }
       </div>
-      {
-        state.message && messageState &&
-        <div className="flex mt-3">
-          <Alert
-            type={state.status?'success':'error'}
-            message={state.message}
-          />
-        </div>
-      }
     </form>
   );
 }
