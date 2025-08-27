@@ -17,10 +17,8 @@ export default async function Page({ params }:{ params: Promise<{ id: string }>}
     getSpecialties(),
   ]);
 
-  console.log(user);
   return (
     <main className="space-y-3">
- 
       <div className="mt-6">
         <Header title={`Area de Trabalho | ${user.fullname}`}/>
       </div>
