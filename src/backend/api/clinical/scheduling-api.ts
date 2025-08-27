@@ -7,6 +7,8 @@ import {
 } from "@/lib/date-formater";
 import { redirect } from "next/navigation";
 import { getExamResult as getExamResutlFromUnit } from "./internal-services-api";
+import { surgerySchedulingArea } from "./translator";
+
 import { 
   examModel, 
   examGroupModel,
@@ -22,6 +24,7 @@ import {
   appointmentCancelModel,
   scheduleServiceModel,
   screeningModel,
+  scheduleSugeryModel,
 } from "@/backend/model";
 import { getUser } from "@/backend/api/clinical/api";
 
@@ -139,6 +142,7 @@ async function getExams(specialtyId?: string){
       groupId: data.groupId?.toString() as string,
       group: group?.name as string,
       price: data.price.toString(), // por causa das tabelas
+      specialtyId: data.specialtyId?.toString() as string // para agendar as cirurgias
     });
   }
 
@@ -994,6 +998,207 @@ async function getPatientScheduledServices({ patientId }: { patientId: string })
   }
 }
 
+async function scheduleSugery(prev: unknown, formData: FormData){
+  try{
+    const patientId = formData.get("patientId") as string;
+    const doctorId = formData.get("doctorId") as string;
+    const sugeryType = formData.get("sugeryType") as string;
+    const doctorDay = new Date(formData.get("date") as string);
+    const doctorTime = formData.get("time");
+    const requestingService = formData.get("requestingService") as string;
+    const description = formData.get("description") as string;
+    const infirmary = formData.get("infirmary") as string;
+    const bed = formData.get("bed") as string;
+    
+    if(requestingService === "patient") 
+      await patientModel.updateOne({ _id: patientId }, { served: true });
+
+    const sugery = new scheduleSugeryModel({
+      patientId,
+      doctorId,
+      sugeryType,
+      doctorDay,
+      doctorTime,
+      description,
+      requestingService,
+      infirmary,
+      bed,
+    });
+
+    await sugery.save();
+    
+    return {
+      message: "Cirurgia agendada com sucesso!",
+      status: true,
+    }
+  }catch(e: unknown){
+    const err = e as Error;
+
+    return {
+      message: err.cause ? err.message : "Desculpe, não foi possível realizar o agendamento!",
+      status: false,
+      detail: err.message
+    };
+  }
+}
+
+ 
+async function getScheduleSugeries({
+  name,
+  area,
+}:{
+  name?: string,
+  area?: string, 
+}){
+  const formatedList = [];
+  const schedule = await scheduleSugeryModel.find();
+
+  for(const items of schedule){
+    const patient = await patientModel.findById({_id: items.patientId}).select({fullname: 1});
+    const doctor = await getUser(items?.doctorId?.toString() as string);
+    const sugeryType = await examModel.findById({_id: items.sugeryType}).select({name: 1});
+
+    formatedList.push({
+      id: items.id.toString() as string,
+      patient: patient?.fullname as string,
+      requestingService: surgerySchedulingArea.find( props => props._id === items.requestingService)?.label as string,
+      doctor: doctor.fullname as string,
+      infirmary: items.infirmary as string,
+      bed: items.bed as string,
+      sugeryType: sugeryType?.name.toString() as string,
+      date: `${getDateInSlashFormat(items.doctorDay as Date)} ${items.doctorTime}` as string,
+      status: items.payment?.status === "confirmed"?"Confirmado":"Pendente" as string,
+    })
+  }
+
+  const filteredList = formatedList.filter( props => {
+    if(name && area) return props.patient.match(new RegExp(`${name}`, 'i')) && props.requestingService === area;
+    if(name) return props.patient.match(new RegExp(`${name}`, 'i'));
+    if(area) return props.requestingService === area;
+    return true;
+  });
+
+  return filteredList;
+}
+
+async function getScheduleSugery(scheduleId:string){
+  const schedule = await scheduleSugeryModel.findById({_id: scheduleId});
+  const sugeryType = await examModel.findById({_id: schedule?.sugeryType}).select({ name: 1, price: 1});
+  const patient = await patientModel.findById({_id: schedule?.patientId}).select({fullname:1, age:1, gender:1});
+  const doctor = await getUser(schedule?.doctorId?.toString() as string);
+
+  return {
+    patient: patient?.fullname as string,
+    age: patient?.age as number,
+    gender: patient?.gender as string,
+    doctor: doctor.fullname as string,
+    doctorId: doctor._id as string,
+    sugery: {
+      type: sugeryType?.name as string,
+      price: sugeryType?.price as number,
+    },
+    date: {
+      pt: getDateInSlashFormat(schedule?.doctorDay as Date),
+      en: schedule?.doctorDay as Date,
+    },
+    hour: schedule?.doctorTime as string,
+    payment: {
+      code: schedule?.payment?.invoice?.code as string,
+      proof: schedule?.payment?.invoice?.proof as string,
+      value: schedule?.payment?.invoice?.value as number,
+      status: (schedule?.payment?.status as string) === "pending"?"Pendente":"Confirmado",
+      porcentage: schedule?.payment?.invoice?.porcentage as string,
+    },
+    description: schedule?.description as string,
+    archiving: {
+      reason:schedule?.archiving?.reason as string,
+    }
+  }
+}
+
+async function updatePaymentDataToSugery(prev: unknown, formData: FormData){
+  try{
+    const sugeryId = formData.get("scheduleId");
+    const code = formData.get("code");
+    const proof = formData.get("proof");
+    const value = Number(formData.get("value"));
+    
+    if (!value) 
+      throw new Error('Informe o preço!', { cause: "user_price_empty"}); 
+
+    const scheduleSugery = await scheduleSugeryModel.findById({ _id: sugeryId });
+    const sugery = await examModel.findById({ _id: scheduleSugery?.sugeryType });
+
+    if(sugery?.price){
+      const paiedPorcent = Math.trunc((value * 100)/sugery.price);
+
+      await scheduleSugeryModel.updateOne({ _id: sugeryId }, {
+        payment: {
+          status: paiedPorcent === 100?"confirmed":"pending",
+          invoice: {
+            code,
+            proof,
+            value,
+            porcentage: `${paiedPorcent}%`
+          }
+        }
+      });
+    }else 
+      throw new Error('Não é possivel validar consulta sem preço!', { cause: "empty_price"});
+    
+    return {
+      message: "Pagamento actualizado com sucesso!",
+      status: true,
+    }
+  }catch(e: unknown){
+    const err = e as Error & { code: number };
+
+    return {
+      message: err.code?"Os identificadores das faturas já foi usado!":
+      err.cause?err.message:"Falha na validação da consulta!",
+      status: false,
+    }
+  }
+}
+
+/*async function rescheduleSugery(prev: unknown, formData: FormData){
+  try{
+    //const isArchived = Boolean(formData.get("isArchived"));
+    const scheduleId = formData.get("scheduleId") as string;
+    //const doctorId = formData.get("doctorId") as string;
+    //const doctorDay = new Date(formData.get("date") as string);
+    //const doctorTime = formData.get("time") as string;
+    const existingSugery = await scheduleSugeryModel.findById({_id: scheduleId });
+
+    if(!existingSugery)
+      throw new Error("Desculpe, contacte o seu administrador!", { cause: "not_found" });
+
+    if(existingSugery?.doctorDay?.getTime() === doctorDay.getTime() && existingSugery?.doctorId?.toString() === doctorId){
+      const verifySugery = await scheduleSugeryModel.findOne({
+        doctorId,
+        doctorDay,
+        doctorTime,
+        served: false,
+        canceled: false,
+      });
+
+      if(verifySugery)
+        throw new Error("Desculpe, a hora selecionada já foi ocupada!", { cause: "busy" });
+
+    return {
+      message: "Cirurgia reagendada com sucesso!",
+      status: true,
+    }
+  }catch(e: unknown){
+    const err = e as Error;
+
+    return {
+      message: err.cause ? err.message : "Desculpe, não foi possível realizar o reagendamento!",
+      status: false,
+    };
+  }
+}*/
+
 export {
   signExam,
   signExamResult,
@@ -1020,5 +1225,10 @@ export {
   rescheduleAppointment,
   findDoctorCalendar,
   getNumberDoctorAppointment,
-  getPatientScheduledServices
+  getPatientScheduledServices,
+  scheduleSugery,
+  getScheduleSugeries,
+  getScheduleSugery,
+  updatePaymentDataToSugery,
+  /*rescheduleSugery,*/
 };

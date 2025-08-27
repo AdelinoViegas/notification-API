@@ -1,16 +1,14 @@
 import { PiArchiveDuotone } from "react-icons/pi";
 import { TiInputChecked } from "react-icons/ti";
-import Link from "next/link";
+import { ScheduleSugery, tableSugeries } from "@/lib/table-formater";
 import Table from "@/components/table";
-import { tableAppointments } from "@/lib/table-formater";
 import Alert from "@/components/ui/alert";
-import { ScheduleAppointment } from "@/lib/table-formater";
 import Button from "@/components/ui/button";
 import Search from "@/components/ui/search";
 import Refresh from "@/components/refresh";
 import Header from "@/components/header";
-import { getScheduleAppointments } from "@/backend/api/clinical/scheduling-api";
-
+import SelectionFilter from "@/components/ui/selection-filter";
+import { getScheduleSugeries } from "@/backend/api/clinical/scheduling-api";
 
 export const dynamic = "force-dynamic";
 
@@ -19,42 +17,56 @@ export default async function Page({
 }:{
   searchParams: Promise<{
     name: string;
+    area: string;
   }>
 }) {
-  const { name } = await searchParams;
-  const patientRows = tableAppointments(await getScheduleAppointments({ 
-    patientName: name,
-  }) as ScheduleAppointment[]);
+  const { name, area } = await searchParams;
+  const patientRows = tableSugeries(await getScheduleSugeries({ name, area }) as ScheduleSugery[]);
 
   return (
     <main className="space-y-3">
       <Refresh />
 
       <div className="mt-6">
-        <Header title="Consultas Agendadas"/>
+          <Header title="Pedido de agendamento de cirurgia"/>
       </div>
+
        <div className="flex gap-x-3">
-        <Link href="/clinical/appointment/serveds">
+        {/*<Link href="/clinical/appointment/serveds">*/}
           <Button className="flex gap-3">
             <TiInputChecked className="size-5" />
             Atendidos
           </Button>
-        </Link>
+        {/*</Link>
 
-        <Link href="/clinical/appointment/archiveds">
+        <Link href="/clinical/appointment/archiveds">*/}
           <Button className="flex gap-3 bg-slate-700">
             <PiArchiveDuotone className="size-5" />
             Arquivados
           </Button>
-        </Link>
+       {/* </Link>*/}
       </div>
 
-      <div className="lg:flex justify-between items-center">
+      <div className="lg:flex justify-between items-center my-4">
         <Alert 
           type="info" 
           message="Faça duplo click sobre o utente para seguir com o atendimento!" 
         />
+      </div>
 
+      <div className="lg:flex justify-between items-center">
+        <SelectionFilter
+          filterKey="area"
+          className="m-0" 
+          label="Selecione o serviço solicitante"
+          options={[
+            {_id:"Consultório de urgência", label:"Consultório de urgência"},
+            {_id:"Internamento", label:"Internamento"},
+            {_id:"Consultório", label:"Consultório"},
+            {_id:"Utentes", label:"Utentes"},
+          ]} 
+        />
+        
         <Search
           className="flex items-center gap-x-3"
           filterKey="name"
@@ -63,14 +75,19 @@ export default async function Page({
         />
       </div>
 
+
+
       <Table
         status
-        baseRowLink="/clinical/appointment/"
+        baseRowLink="/clinical/schedule-sugery/"
         columns={[
+          "Serv. Solicitante",
           "Data e Hora", 
           "Nome do Utente", 
+          "Tipo de cirurgia",
+          "Efermaria",
+          "Cama",
           "Nome do Médico",
-          "Sala",
           "Estado"
         ]} 
         rows={patientRows}

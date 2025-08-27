@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { getSurgery } from "@/backend/api/clinical/urgency-bank-api";
 import Modal from "@/components/modal";
 import clsx from "clsx";
+import { getSurgery } from "@/backend/api/clinical/urgency-bank-api";
 
 type Surgeries = Awaited<ReturnType<typeof getSurgery>>;
 
@@ -48,6 +48,7 @@ function Item({ data }: { data: Surgeries[number] }){
   //       <button>ver detalhes</button>
   //     </div>
   //   );
+
   return(
     <div className="grid grid-cols-6 gap-x-3 px-3 py-2 hover:bg-primary/25 select-none" onDoubleClick={()=>setModal(true)}>
       <div>
@@ -73,22 +74,22 @@ function Item({ data }: { data: Surgeries[number] }){
       >
         <div className="space-y-3 my-3">
           <div>
-            <label className="font-semibold text-sm">Data de Registro</label>
+            <label className="font-black text-md">Data de Registro</label>
             <h2>{data.createdAt.toLocaleString()}</h2>
           </div>
 
           <div className="col-span-3">
-            <label className="font-semibold text-sm">Descrição do Pedido</label>
-            <h2 className="line-clamp-1">{data.description}</h2>
+            <label className="font-black text-md">Descrição do Pedido</label>
+            <h2>{data.description}</h2>
           </div>
 
           <div className="flex flex-col items-start">
-            <label className="font-semibold text-sm">Estado do Pedido</label>
+            <label className="font-black text-md">Estado do Pedido</label>
             <SurgeryState state={data.state} />
           </div>
 
           <div>
-            <label className="font-semibold text-sm">Médico a tratar do Processo</label>
+            <label className="font-black text-md">Médico a tratar do Processo</label>
             <h2>{"Mingo Silas"}</h2>
           </div>
         </div>
@@ -107,7 +108,7 @@ export default function SurgeryList({ items }:{ items: Surgeries }){
           <h2>Estado</h2>
           <h2>Medico</h2>
         </div>
-        {!items.length && <h2>sem registro</h2>}
+        {!items.length && <h2 className="text-center">sem registro</h2>}
         {items.map((props, index)=>(
           <li key={index}><Item data={props} /></li>
         ))}

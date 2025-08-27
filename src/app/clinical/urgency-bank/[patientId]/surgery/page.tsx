@@ -1,18 +1,23 @@
-import { getSurgery } from "@/backend/api/clinical/urgency-bank-api";
-import Surgery from "@/components/forms/surgery";
+//import { getSurgery } from "@/backend/api/clinical/urgency-bank-api";
+import ScheduleSugery from "@/components/forms/schedule-sugery";
+/*import Surgery from "@/components/forms/surgery";
 import SurgeryList from "@/components/surgery-list";
+import Accordium from "@/components/ui/accordium";*/
 
 export default async function Page({
-  
+  params,
 }: {
-  searchParams: Promise<{ from: string; to: string }>
+  params: Promise<{ 
+    patientId: string;
+  }>
 }){
-  const surgeries = await getSurgery({});
-  
+  const { patientId } = await params;
+
   return(
     <div>
-      <Surgery />
-      <SurgeryList items={surgeries} />
+      {/*<Surgery />*/}
+        <ScheduleSugery {...{patientId}} />
+      {/*<SurgeryList items={surgeries} />*/}
     </div>
   )
 }

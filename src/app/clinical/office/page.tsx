@@ -17,10 +17,10 @@ export default async function Page({
     name: string;
   }>
 }) {
-  const { name } = await searchParams;
+  const { name } = await searchParams; 
   const scheduleOffices = await getPatients({ fullname: name });
   const rows = tableOffice(scheduleOffices.patients as DoctorOffice[]);
-
+  
   return (
     <main className="space-y-3">
       <Refresh />

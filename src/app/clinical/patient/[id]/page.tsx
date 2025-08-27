@@ -5,8 +5,9 @@ import Card from "@/components/ui/card";
 import PatientForm from "@/components/forms/patient-form";
 import ScheduleAppointment from "@/components/forms/schedule-appointment";
 import RequestExams from "@/components/forms/request-exam";
+import ScheduleSugery from "@/components/forms/schedule-sugery";
 
-type MyRoute = "patient" | "appointment" | "exams";
+type MyRoute = "patient" | "appointment" | "exams" | "sugery";
 
 export default async function Page({ 
 	params,
@@ -38,14 +39,15 @@ export default async function Page({
 						{ path: "patient", title: "Ficha de Cadastro" },
 						{ path: "appointment", title: "Agendar Consulta" },
 						{ path: "exams", title: "Agendar Exame" },
-						// { path: "card", title: "Cartão do Utente" }
+						{ path: "sugery", title: "Agendar Cirurgia" }
 					]}
         />
 
         <div className="max-h-[60vh] overflow-auto px-2 py-3">
-         { r === "patient" && <PatientForm patientId={id} /> }
+         { r === "patient" && <PatientForm patientId={id}/> }
 				 { r === "appointment" &&  <ScheduleAppointment patientId={id} /> }
 				 { r === "exams" &&  <RequestExams patientId={id} isFullWindow /> }
+         { r === "sugery" &&  <ScheduleSugery patientId={id} /> }
         </div>
       </Card>
 		</div>

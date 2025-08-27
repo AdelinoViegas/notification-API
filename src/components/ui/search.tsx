@@ -5,11 +5,11 @@ import {
   usePathname, 
   useSearchParams 
 } from "next/navigation";
-import InputField from "@/components/ui/input-field";
 import { BsBackspace as BackspaceIcon } from "react-icons/bs";
-import Button from "@/components/ui/button";
+import { ChangeEvent, useRef } from "react";
 import debounce from "debounce";
-import { useRef } from "react";
+import InputField from "@/components/ui/input-field";
+import Button from "@/components/ui/button";
 
 type SearchProps = {
   filterKey: string;
@@ -30,8 +30,8 @@ export default function Search({
   const router = useRouter();
   const divRef = useRef<HTMLDivElement>(null);
   
-  const onChangeText = debounce((e)=>{
-    const value = e.target.value;
+  const onChangeText = debounce((el: ChangeEvent<HTMLInputElement>)=>{
+    const value = el.target.value;
 
     if(!value)
       search.delete(filterKey);
