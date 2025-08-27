@@ -6,7 +6,8 @@ import {
   getDateInSlashFormat 
 } from "@/lib/date-formater";
 import { redirect } from "next/navigation";
-import { getExamResult as getExamResutlFromUnit } from "./unit-api";
+import { surgerySchedulingArea } from "./translator";
+import { getExamResult as getExamResutlFromUnit } from "@/backend/api/clinical/unit-api";
 import { 
   examModel, 
   examGroupModel,
@@ -25,8 +26,6 @@ import {
   scheduleSugeryModel,
 } from "@/backend/model";
 import { getUser } from "@/backend/api/clinical/api";
-import { surgerySchedulingArea } from "./translator";
-import { priorityInOperatingRoom } from "@/lib/filters";
 
 export type CCGTypes = "category" | "classification" | "group";
 
@@ -1042,10 +1041,10 @@ async function scheduleSugery(prev: unknown, formData: FormData){
  
 async function getScheduleSugeries({
   name,
-  priority,
+  area,
 }:{
   name?: string,
-  priority?: string, 
+  area?: string, 
 }){
   const formatedList = [];
   const schedule = await scheduleSugeryModel.find();
@@ -1068,10 +1067,14 @@ async function getScheduleSugeries({
     })
   }
 
-  //return patientName?formatedList.filter(props => props.patient.match(new RegExp(`^${patientName}`, 'i'))):formatedList;
-  return name?priorityInOperatingRoom(formatedList.filter((props)=>props.patient.match(new RegExp(`^${name}`, 'i')))).orderElements:
-  priority?priorityInOperatingRoom(formatedList.filter((props)=> props.requestingService === surgerySchedulingArea.find((props)=>props.color === priority)?.label)).orderElements:
-  priorityInOperatingRoom(formatedList).orderElements;
+  const filteredList = formatedList.filter( props => {
+    if(name && area) return props.patient.match(new RegExp(`${name}`, 'i')) && props.requestingService === area;
+    if(name) return props.patient.match(new RegExp(`${name}`, 'i'));
+    if(area) return props.requestingService === area;
+    return true;
+  });
+
+  return filteredList;
 }
 
 async function getScheduleSugery(scheduleId:string){
@@ -1154,7 +1157,7 @@ async function updatePaymentDataToSugery(prev: unknown, formData: FormData){
   }
 }
 
-async function rescheduleSugery(prev: unknown, formData: FormData){
+/*async function rescheduleSugery(prev: unknown, formData: FormData){
   try{
     //const isArchived = Boolean(formData.get("isArchived"));
     const scheduleId = formData.get("scheduleId") as string;
@@ -1166,7 +1169,7 @@ async function rescheduleSugery(prev: unknown, formData: FormData){
     if(!existingSugery)
       throw new Error("Desculpe, contacte o seu administrador!", { cause: "not_found" });
 
-   /* if(existingSugery?.doctorDay?.getTime() === doctorDay.getTime() && existingSugery?.doctorId?.toString() === doctorId){
+    if(existingSugery?.doctorDay?.getTime() === doctorDay.getTime() && existingSugery?.doctorId?.toString() === doctorId){
       const verifySugery = await scheduleSugeryModel.findOne({
         doctorId,
         doctorDay,
@@ -1176,7 +1179,7 @@ async function rescheduleSugery(prev: unknown, formData: FormData){
       });
 
       if(verifySugery)
-        throw new Error("Desculpe, a hora selecionada já foi ocupada!", { cause: "busy" });*/
+        throw new Error("Desculpe, a hora selecionada já foi ocupada!", { cause: "busy" });
 
     return {
       message: "Cirurgia reagendada com sucesso!",
@@ -1190,7 +1193,7 @@ async function rescheduleSugery(prev: unknown, formData: FormData){
       status: false,
     };
   }
-}
+}*/
 
 export {
   signExam,
@@ -1223,5 +1226,5 @@ export {
   getScheduleSugeries,
   getScheduleSugery,
   updatePaymentDataToSugery,
-  rescheduleSugery,
+  /*rescheduleSugery,*/
 };

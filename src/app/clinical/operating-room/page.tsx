@@ -1,16 +1,16 @@
 import Header from "@/components/header";
 import Table from "@/components/table";
-import { ScheduleSugery, tableSugeries } from "@/lib/table-formater";
+//import { ScheduleSugery, tableSugeries } from "@/lib/table-formater";
 import Alert from "@/components/ui/alert";
-import {priorityInOperatingRoom } from "@/lib/filters";
-import TooltipInOperatingRoom from "@/components/operating-room-tooltip";
+//import {priorityInOperatingRoom } from "@/lib/filters";
+//import TooltipInOperatingRoom from "@/components/operating-room-tooltip";
 import Search from "@/components/ui/search";
 import Refresh from "@/components/refresh";
-import { getScheduleSugeries } from "@/backend/api/clinical/scheduling-api";
+//import { getScheduleSugeries } from "@/backend/api/clinical/scheduling-api";
 
 export const dynamic = "force-dynamic";
 
-export default async function Page({
+export default async function Page(/*{
   searchParams
 }:{
   searchParams: Promise<{
@@ -18,12 +18,11 @@ export default async function Page({
     registerNumber: number;
     priority: string;
   }>
-}){ 
-  const { name, priority } = await searchParams;
+}*/){ 
+  /*const { name, priority } = await searchParams;
   const patientRows = tableSugeries(await getScheduleSugeries({ name, priority }) as ScheduleSugery[]); 
-  const priorityData = priorityInOperatingRoom(await getScheduleSugeries({ name })).areasToSchedule;
+  const priorityData = priorityInOperatingRoom(await getScheduleSugeries({ name })).areasToSchedule;*/
   
-  console.log(patientRows);
   return(
     <main className="space-y-3">
       <Refresh />
@@ -39,7 +38,7 @@ export default async function Page({
       </div>
       
       <div className="flex justify-between items-center">
-        <TooltipInOperatingRoom data={priorityData} />
+        {/*<TooltipInOperatingRoom data={priorityData} />*/}
         <Search
           className="flex items-center gap-x-3"
           filterKey="name"
