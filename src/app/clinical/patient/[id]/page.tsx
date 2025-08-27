@@ -7,11 +7,7 @@ import ScheduleAppointment from "@/components/forms/schedule-appointment";
 import RequestExams from "@/components/forms/request-exam";
 import ScheduleSugery from "@/components/forms/schedule-sugery";
 
-<<<<<<< HEAD:src/app/clinical/patient/[patientId]/page.tsx
-type Route = "patient" | "appointment" | "exams" | "sugery";
-=======
-type MyRoute = "patient" | "appointment" | "exams";
->>>>>>> main:src/app/clinical/patient/[id]/page.tsx
+type MyRoute = "patient" | "appointment" | "exams" | "sugery";
 
 export default async function Page({ 
 	params,
@@ -48,16 +44,10 @@ export default async function Page({
         />
 
         <div className="max-h-[60vh] overflow-auto px-2 py-3">
-<<<<<<< HEAD:src/app/clinical/patient/[patientId]/page.tsx
-         { r === "patient" && <PatientForm {...{patientId}}/> }
-				 { r === "appointment" &&  <ScheduleAppointment {...{patientId}} /> }
-				 { r === "exams" &&  <RequestExams {...{patientId}} isFullWindow /> }
-         { r === "sugery" &&  <ScheduleSugery {...{patientId}} /> }
-=======
-         { r === "patient" && <PatientForm patientId={id} /> }
+         { r === "patient" && <PatientForm patientId={id}/> }
 				 { r === "appointment" &&  <ScheduleAppointment patientId={id} /> }
 				 { r === "exams" &&  <RequestExams patientId={id} isFullWindow /> }
->>>>>>> main:src/app/clinical/patient/[id]/page.tsx
+         { r === "sugery" &&  <ScheduleSugery patientId={id} /> }
         </div>
       </Card>
 		</div>
