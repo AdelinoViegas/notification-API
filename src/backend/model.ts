@@ -19,7 +19,7 @@ import {
 } from "@/backend/schemas/scheduling";
 import { 
   responsibleSchema,
-  accesTypeSchema, 
+  accessTypeSchema, 
   groupSchema, 
   patientSchema,
   demographySchema,
@@ -58,7 +58,7 @@ const patientModel = clinical.model('Patient', patientSchema);
 const demographyModel = clinical.model('Demography', demographySchema);
 const responsibleModel = clinical.model('Responsible', responsibleSchema);
 const groupModel = clinical.model('PatientGroup', groupSchema);
-const accessTypeModel = clinical.model('AcessType', accesTypeSchema);
+const accessTypeModel = clinical.model('AcessType', accessTypeSchema);
 const screeningModel = clinical.model('Screening', screeningSchema);
 const processStateModel = clinical.model("ProcessState", processStateSchema);
 const triedModel = clinical.model("Tried", triedSchema);

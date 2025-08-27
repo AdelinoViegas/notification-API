@@ -55,7 +55,6 @@ export default function UserClinicalConfig({
           name="serviceId"
           options={services} 
           defaultValue={serviceId}
-          required
         />
 
         <InputField
@@ -64,6 +63,7 @@ export default function UserClinicalConfig({
           placeholder="Nº de Orgem"
           name="orderNumber"
           defaultValue={orderNumber}
+          required
         />
 
         <div className='flex gap-x-3 items-center'>

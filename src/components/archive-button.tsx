@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { 
+  useParams,
   useRouter, 
-  useParams,  
 } from 'next/navigation';
 import Button from "@/components/ui/button";
 import Modal from '@/components/modal';
@@ -14,11 +14,11 @@ import { toast } from 'react-toastify';
 export default function ArchiveButton({ invert }:{ invert?: boolean }){
   const [ state, setState ] = useState(false);
   const router = useRouter();
-  const params = useParams<{ patientId: string }>();
+  const params = useParams<{ id: string}>();
 
   const handleConfirm = ()=>{
     changeArchived({
-      patientId: params.patientId, 
+      patientId: params.id, 
       isArchived: !!invert
     })
     .then(data => {

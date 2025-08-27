@@ -107,7 +107,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
           </Accordium>     
 
           <div className="flex gap-3">
-            <FinishConsultation />
+            <FinishConsultation id={id} />
             <RequestReschedule />
           </div>
         </Card>

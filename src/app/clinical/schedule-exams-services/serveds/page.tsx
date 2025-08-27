@@ -2,7 +2,7 @@ import Header from "@/components/header";
 import Table from "@/components/table";
 import { tableLaboratory } from "@/lib/table-formater";
 import Search from "@/components/ui/search";
-import { getPatients } from "@/backend/api/clinical/unit-api";
+import { getPatients } from "@/backend/api/clinical/internal-services-api";
 export const dynamic = "force-dynamic";
 
 export default async function Page({

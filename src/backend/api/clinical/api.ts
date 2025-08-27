@@ -2,7 +2,7 @@
 
 import { getUserId } from "@/lib/web-token";
 import { validatePatientDoc } from "@/lib/regexp";
-import { closePatientProcess } from "./process-api";
+import { closePatientProcess, syncPatientRegister } from "./process-api";
 import {
   Responsable,
   Assured,
@@ -31,6 +31,8 @@ import {
   getUsers as RESTgetUsers,
   getUser as RESTgetUser 
 } from "@/backend/api/admin";
+import { omitUndefined } from "mongoose";
+import { randomInt } from "node:crypto";
 
 type ChoosedGroup = Assured | Employee | Enterprise | undefined;
 
@@ -45,7 +47,7 @@ async function allowUpdate(id: string){
   const doc = await processStateModel.findOne({ 
     patientId: id, 
     isInUse: true 
-  }).select({ _id: 1 });
+  }).select({ userId: 1 });
   
   const userId = await getUserId();
 
@@ -69,7 +71,7 @@ async function getUsers(){
       category: userRoles.get(clinicalUser?.categoryId as string)?.label ?? "Indefinido",
       categoryId: clinicalUser?.categoryId as string,
       role: specialty?.name as string ?? "Indefinido",
-      roleId: clinicalUser?.specialtyId.toString() as string,
+      roleId: clinicalUser?.specialtyId?.toString() as string,
       workplaces: 0,
       ...user
     })
@@ -111,22 +113,7 @@ async function getUser(id: string){
     serviceId: clinical?.serviceId?.toString() as string,
     ...user
   }
-  // const clinicalUser = await userModel.findOne({ userId });
-  // const user = await managerUserModel.findById({ _id: userId }).select({ fullname: 1 });
-  // const userSpecialty = clinicalUser?.specialtyId?(await specialtyModel.findById({ _id: clinicalUser?.specialtyId }))?.name:"";
-
-  // return {
-  //   _id: user?._id.toString() as string,
-  //   fullname: user?.fullname as string,
-  //   category:  userCategory.find(item => item._id == clinicalUser?.categoryId)?.label,
-  //   categoryId: clinicalUser?.categoryId?.toString() as string,
-  //   orderNumber: clinicalUser?.orderNumber as number,
-  //   specialtyId: clinicalUser?.specialtyId?.toString() as string,
-  //   specialty: userSpecialty, 
-  //   serviceId: clinicalUser?.serviceId?.toString() as string
-  // }
 }
-
 
 async function addUser(prev: unknown, formData: FormData){
   try{
@@ -136,26 +123,22 @@ async function addUser(prev: unknown, formData: FormData){
     const roleId = formData.get("roleId") as string;
     const categoryId = formData.get("categoryId") as string;
     const specialtyId = formData.get("specialtyId");
-    const serviceId = formData.get("serviceId");
 
-    const hasUser = await userModel.findOneAndUpdate({ userId: id }, {
+    const filter = omitUndefined({
       orderNumber,
-      officeId,
-      roleId,
+      officeId: officeId || undefined,
+      roleId: roleId || undefined,
       categoryId,
-      specialtyId,
-      serviceId
+      specialtyId: specialtyId || undefined,
+      serviceId: specialtyId || undefined
     });
+
+    const hasUser = await userModel.findOneAndUpdate({ userId: id }, filter);
 
     if(!hasUser)
       await userModel.create({
         userId: id,
-        orderNumber,
-        officeId,
-        roleId,
-        categoryId,
-        specialtyId,
-        serviceId
+        ...filter
       });
 
     return {
@@ -164,7 +147,7 @@ async function addUser(prev: unknown, formData: FormData){
         :"Usuário registrado com sucesso!",
       status: true,
     };
-  }catch {
+  }catch{
     return {
       message: "Não foi possivel registrar!",
       status: false
@@ -183,9 +166,10 @@ async function signPatient(prev: unknown, formData: FormData){
     const patientTel = formData.get("patientTel") as string;
     const patientDocument = formData.get("patientDocument") as string;
     const language = formData.get("language") as string;
-
+    
     const patient = new patientModel({
       fullname: patientName,
+      registerNumber: randomInt(111111111, 999999999),
       birthDate: patientBirthDate,
       age: patientAge,
       civilState,
@@ -340,6 +324,7 @@ async function getPatients({
     const formated = [];
     let patients = await patientModel.find({ 
       served: !!served, 
+      used: undefined,
       fullname: fullname?new RegExp(`^${fullname}`, 'i'):/\w*/ig, 
     }).select({
       fullname: 1,
@@ -360,7 +345,7 @@ async function getPatients({
       formated.push({
         id: patient._id.toString(),
         fullname: patient.fullname,
-        registerNumber: patient.registerNumber,
+        registerNumber: patient?.registerNumber as number,
         accessType: accessTypeLabel?accessTypeLabel.toUpperCase():"Indefinido",
         createdAt: patient.createdAt,
         group: groupLabel?groupLabel.toUpperCase():"Indefinido",
@@ -373,13 +358,12 @@ async function getPatients({
       availablePages: Math.ceil(patients.length /10),
       currentPage: page,
     }
-  }catch(err: unknown){
+  }catch {
     return {
       patients: [],
       totalItems: 0,
       availablePages: 0,
-      currentPage: page,
-      detail: err
+      currentPage: page
     }
   }
 }
@@ -668,7 +652,7 @@ async function putInScreening(prev: unknown, formData: FormData){
       message: 'Utente enviado para a Triagem!',
       status: true,
     }
-  }catch(e: unknown){
+  }catch(e){
     const err = e as Error & { code: number };
     console.log(err.message);
 
@@ -746,7 +730,7 @@ async function getPatientsInScreening({
       formated.push({
         id: patientData._id.toString(),
         fullname: patientData.fullname,
-        registerNumber: patientData.registerNumber,
+        registerNumber: patientData?.registerNumber as number,
         accessType: accessTypeLabel?accessTypeLabel.toUpperCase():"Indefinido",
         createdAt: patientData.createdAt,
         group: groupLabel?groupLabel.toUpperCase():"Indefinido",
@@ -878,7 +862,7 @@ async function insertScreening(prev: unknown, formData: FormData){
 
 async function finishScreening(prev: unknown, formData: FormData){
   try{
-    const patientId = formData.get('patientId');
+    const patientId = formData.get('patientId') as string;
     const serviceId = formData.get('serviceId');
 
     if(!patientId || !serviceId)
@@ -923,7 +907,8 @@ async function finishScreening(prev: unknown, formData: FormData){
       patientId
     })
     
-    await closePatientProcess(patientId as string, "screening");
+    await closePatientProcess(patientId, "screening");
+    await syncPatientRegister(patientId);
 
     return {
       message: "Utente triado com sucesso!",

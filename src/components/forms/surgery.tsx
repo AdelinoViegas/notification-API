@@ -40,7 +40,7 @@ export default function Surgery(){
           <input 
             type="hidden" 
             name="patientId" 
-            value={params.patientId} 
+            value={params.id} 
           />
 
           <InputDetails

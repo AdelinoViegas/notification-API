@@ -4,7 +4,7 @@ import Accordium from "@/components/ui/accordium";
 import DemographicInfoForm from "@/components/forms/signed-patient/demography-form";
 import ResponsiblesForm from "@/components/forms/signed-patient/responsibles-form";
 import GroupForm from "@/components/forms/signed-patient/group-form";
-import AcessForm from "@/components/forms/signed-patient/access-form";
+import AccessForm from "@/components/forms/signed-patient/access-form";
 import { getPatient } from "@/backend/api/clinical/api";
 import type { Responsable } from "@/backend/api/clinical/types";
 import PDFButton, { PatientRecord } from "@/components/pdf-button";
@@ -118,7 +118,7 @@ export default async function PatientForm({patientId}:{patientId: string}){
 				</Accordium>
 
 				<Accordium title="Tipos de Acesso">
-          <AcessForm 
+          <AccessForm 
 						data={JSON.stringify(accessType)}
 						eUnitsJson={JSON.stringify(externalUnits)} 
 					/>

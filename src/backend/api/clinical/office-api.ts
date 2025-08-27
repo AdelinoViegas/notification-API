@@ -15,6 +15,7 @@ import { getDateInSlashFormat } from "@/lib/date-formater";
 import { getUser } from "@/backend/api/clinical/api";
 import { upload } from "@/backend/api/storage";
 import { CustonAxiosError } from "@/backend/api/types";
+import { syncPatientRegister } from "./process-api";
 
 type ConsultationTypes = "vitalSignals" | "currentStates";
 
@@ -306,7 +307,11 @@ async function finishConsultation(prev: unknown, formData: FormData){
     patientConsult.served = true
 
     await officeModel.updateOne({ _id: patientConsult._id }, patientConsult);
-
+    const scheduleAppointment = await scheduleAppointmentModel.findById({ _id: patientConsult.scheduleId }).select({ patientId: 1 });
+    
+    if(scheduleAppointment?.patientId)
+      await syncPatientRegister(scheduleAppointment.patientId.toString());
+    
     return {
       message: 'Consulta concluída com sucesso!',
       status: true,

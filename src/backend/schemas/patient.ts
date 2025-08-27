@@ -1,38 +1,26 @@
 import { Schema } from "mongoose";
-import { randomInt } from "crypto";
-import { 
-  Responsables, 
-  Group, 
-} from "@/backend/api/clinical/types";
+import { Responsables, Group } from "@/backend/api/clinical/types";
 
 const patientSchema = new Schema({
   fullname: {
     type: String,
     required: true
   },
-  registerNumber: {
-    type: Number,
-    default: ()=>randomInt(111111111, 999999999),
-    unique: true,
-  },
+  registerNumber: Number,
   birthDate: Date,
   age: Number,
   civilState: String,
   gender: String,
   tel: String,
-  documentation: {
-    type: String,
-    unique: true,
-    required: true,
-  },
+  documentation: String,
   lang: String,
   served: {
     type: Boolean,
     default: false
   },
-  userId: Schema.Types.ObjectId
+  userId: Schema.Types.ObjectId,
+  used: Boolean
 }, {
-  collection: "patients",
   timestamps: true,
 });
 
@@ -83,11 +71,9 @@ const groupSchema = new Schema<Group>({
   timestamps: true,
 });
 
-const accesTypeSchema = new Schema({
+const accessTypeSchema = new Schema({
   patientId: Schema.Types.ObjectId,
-  type: {
-    type: String,
-  },
+  type: { type: String },
   externalUnitId: Schema.Types.ObjectId,
 }, {
   collection: "patient_access_type",
@@ -125,7 +111,7 @@ export {
   patientSchema,
   demographySchema,
   responsibleSchema,
-  accesTypeSchema,
+  accessTypeSchema,
   groupSchema,
   processStateSchema,
   specialtyStateSchema,

@@ -7,13 +7,14 @@ import {
   useActionState
 } from "react";
 import Button from "@/components/ui/button";
-import Alert from '@/components/ui/alert';
 import Selection, { SelectionOption } from "@/components/ui/selection";
-import forceRefreshPage from "@/lib/force-refresh";
 import { updateAccessType } from "@/backend/api/clinical/api";
 import { patientAccess as accessType } from "@/backend/api/clinical/translator";
 import ExternalUnitForm from "../external-unit-form";
 import { getExternalUnits } from "@/backend/api/clinical/urgency-bank-api";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import forceRefreshPage from "@/lib/force-refresh";
 
 type AccessType = {
   _id: string;
@@ -21,12 +22,11 @@ type AccessType = {
   externalUnitId: string;
 };
 
-export default function AcessForm({ data, eUnitsJson }: { data?: string; eUnitsJson: string }){
+export default function AccessForm({ data, eUnitsJson }: { data?: string; eUnitsJson: string }){
   const currentData = data?JSON.parse(data) as AccessType:undefined;
   const eUnits = JSON.parse(eUnitsJson) as SelectionOption[];
   const [ state, action] = useActionState(updateAccessType, { message:"", status:false })
   const [ isEdit, setIsEdit ] = useState(false);
-  const [ messageState, setMessageState ] = useState(false);
   const [ acessType, setAcessType ] = useState(currentData?.type);
   const [ externalUnits, setExternalUnits ] = useState<SelectionOption[]>(eUnits);
   const loadExternalUnits = useCallback(async()=>{
@@ -39,17 +39,20 @@ export default function AcessForm({ data, eUnitsJson }: { data?: string; eUnitsJ
     loadExternalUnits();
   }, [acessType, loadExternalUnits]);
 
+  const router = useRouter();
+
   useEffect(()=>{
     if(state.message){
-      setMessageState(true);
-
-      setTimeout(()=>{
-        setMessageState(false);
-
-        if(state.status){
-          forceRefreshPage();
-        }
-      }, 2000);
+      if(state.status)
+        toast.success(state.message, { 
+          onOpen: ()=>{
+            router.refresh();
+            disableEdit();
+          },
+          onClose: forceRefreshPage
+        });
+      else
+        toast.error(state.message);
     }
   }, [state]);
   
@@ -111,16 +114,6 @@ export default function AcessForm({ data, eUnitsJson }: { data?: string; eUnitsJ
           </>
         }
       </div>
-
-      {
-        state.message && messageState &&
-        <div className="flex mt-3">
-          <Alert
-            type={state.status?'success':'error'}
-            message={state.message}
-          />
-        </div>
-      }
     </form>
   );
 }

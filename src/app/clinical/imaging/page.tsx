@@ -4,7 +4,7 @@ import Alert from "@/components/ui/alert";
 import Button from "@/components/ui/button";
 import Search from "@/components/ui/search";
 import { TiInputChecked } from "react-icons/ti";
-import { getPatients } from "@/backend/api/clinical/unit-api";
+import { getPatients } from "@/backend/api/clinical/internal-services-api";
 import { Services, tableLaboratory } from "@/lib/table-formater";
 import SelectFilter from "@/components/select-filter";
 import Pagination from "@/components/pagination";
