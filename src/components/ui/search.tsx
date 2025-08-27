@@ -5,11 +5,11 @@ import {
   usePathname, 
   useSearchParams 
 } from "next/navigation";
-import InputField from "@/components/ui/input-field";
 import { BsBackspace as BackspaceIcon } from "react-icons/bs";
-import Button from "@/components/ui/button";
-import debounce from "debounce";
 import { ChangeEvent, useRef } from "react";
+import debounce from "debounce";
+import InputField from "@/components/ui/input-field";
+import Button from "@/components/ui/button";
 
 type SearchProps = {
   filterKey: string;

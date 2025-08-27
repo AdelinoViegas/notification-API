@@ -1008,6 +1008,9 @@ async function scheduleSugery(prev: unknown, formData: FormData){
     const description = formData.get("description") as string;
     const infirmary = formData.get("infirmary") as string;
     const bed = formData.get("bed") as string;
+    
+    if(requestingService === "patient") 
+      await patientModel.updateOne({ _id: patientId }, { served: true });
 
     const sugery = new scheduleSugeryModel({
       patientId,

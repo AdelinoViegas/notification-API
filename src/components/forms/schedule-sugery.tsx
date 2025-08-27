@@ -154,9 +154,10 @@ export default function ScheduleSugery(
     setTimeout(()=>{
       setMessageState(false);
 
-      if(state.status)
+      if(state.status){
         formRef.current?.reset();
-    
+        router.replace("/clinical/patient/");
+      }
     }, state.status?3000:7000);
   }, [state, router]);
 
