@@ -12,15 +12,10 @@ import SendScheduleExam from "@/components/send-schedule-exam";
 import ValidateService from "@/components/validate-services";
 import PDFButton from "@/components/pdf-button";
 
-export default async function Page({
-  params
-}: {
-  params: Promise<{
-    scheduleId: string;
-  }>
+export default async function Page({ params }:{ params: Promise<{ id: string }>
 }){ 
-  const { scheduleId } = await params;
-  const schedule = await getSchedulePatientExam(scheduleId);
+  const { id } = await params;
+  const schedule = await getSchedulePatientExam(id);
   const laboratories = await getUnits({type: ["laboratory", "imaging"]}) as SelectionOption[];
 
   return (
@@ -131,19 +126,19 @@ export default async function Page({
                 list: laboratories,
                 current: schedule?.laboratoryId as string,
               }}
-              scheduleId={scheduleId}
+              scheduleId={id}
             />
             
             <ValidateService
               disabled={!Number(schedule.examPrice) || schedule.payment.status === "Confirmado"}
-              scheduleId={scheduleId}
+              scheduleId={id}
               code={schedule.payment.code}
               proof={schedule.payment.proof}
               value={schedule.payment.value}
             />
 
-            <SendScheduleExam scheduleId={scheduleId} />
-            <ArchivingScheduleExam scheduleId={scheduleId} />
+            <SendScheduleExam scheduleId={id} />
+            <ArchivingScheduleExam scheduleId={id} />
           </div>
         </Card>
       </div>
