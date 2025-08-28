@@ -19,7 +19,7 @@ export default async function Page({ params }: { params: Promise<{ patientId: st
       </Accordium>
 
       <ExamHistory patientId={patientId} />
-      <div className="flex flex-col gap-x-3 mt-6 mb-3">
+      {/* <div className="flex flex-col gap-x-3 mt-6 mb-3">
         <h2 className="text-lg font-medium text-primary">Histórico de exames</h2>
         
         <Table
@@ -32,7 +32,7 @@ export default async function Page({ params }: { params: Promise<{ patientId: st
           baseRowLink={`/clinical/urgency-bank/${patientId}/exam`}
           rows={[]}
         />
-      </div>
+      </div> */}
     </main>
   );
 }

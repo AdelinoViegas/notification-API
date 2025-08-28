@@ -146,8 +146,19 @@ export async function syncPatientHistories(pastId: string, newId: string){
 export async function getSyncedHistories(id: string){
   try{
     const histories = await patientSyncModel.findOne({ id });
-    return histories;
+    if(histories)
+      return histories;
+    
+    const allHistory = await patientSyncModel.find();
+    
+    for (const history of allHistory){
+      for(const secondaryId of history.secondaries){
+        if(id === secondaryId.toString())
+          return history;
+      }
+    }
+    throw new Error();
   }catch{
-
+    return null;
   }
 }
