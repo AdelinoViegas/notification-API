@@ -7,7 +7,7 @@ import {
 } from "@/lib/date-formater";
 import { redirect } from "next/navigation";
 import { surgerySchedulingArea } from "./translator";
-import { getExamResult as getExamResutlFromUnit, getScheduledExams } from "./internal-services-api";
+import { getExamResult as getExamResutlFromUnit } from "./internal-services-api";
 
 import { 
   examModel, 
@@ -27,6 +27,7 @@ import {
   scheduleSugeryModel,
 } from "@/backend/model";
 import { getUser } from "@/backend/api/clinical/api";
+import { getSyncedHistories, syncPatientRegister } from "./process-control";
 
 export type CCGTypes = "category" | "classification" | "group";
 
@@ -311,7 +312,6 @@ async function schedulePatientExam(prev: unknown, formData: FormData){
     const exams = formData.get('exams')?JSON.parse(formData.get("exams") as string) as string[]:[];    
     const scrPatient = await screeningModel.findOne({ patientId, served: false });
         
-
     if(!exams.length)
       throw new Error("Escolha os exames desejado!", { cause: "empty" });
 
@@ -324,12 +324,18 @@ async function schedulePatientExam(prev: unknown, formData: FormData){
       userId: await getUserId()
     });
     
-    if(!!isScheduleInScreening)
+    if(!!isScheduleInScreening){
       await screeningModel.updateOne({ _id: scrPatient?._id }, { 
         served: true,
         userId: await getUserId() 
       });
 
+      await syncPatientRegister(patientId);
+    }
+      
+    
+    await patientModel.updateOne({ _id: patientId }, { served: true });
+    
     return {
       message: "Exame marcado com sucesso!",
       status: true,
@@ -1202,11 +1208,17 @@ async function updatePaymentDataToSugery(prev: unknown, formData: FormData){
 async function getExamsHistories(patientId: string){
   try{
     const servicesProvided = await scheduleServiceModel.find({ served: true }).select({ scheduleId: 1 });
+    const syncedPatientHistories = await getSyncedHistories(patientId);
     console.log(servicesProvided);
-    for(const provided of servicesProvided){
-      const resolved = await scheduleExamModel.findById({ _id: provided.scheduleId, patientId });
-      console.log(resolved);
-    }
+
+    if(syncedPatientHistories)
+      for (const patient of syncedPatientHistories.secondaries){
+        console.log(patient);
+      }
+    // for(const provided of servicesProvided){
+    //   const resolved = await scheduleExamModel.findById({ _id: provided.scheduleId, patientId });
+    //   console.log(resolved?.exams);
+    // }
   }catch {
     
   }

@@ -2,7 +2,7 @@
 
 import { getUserId } from "@/lib/web-token";
 import { validatePatientDoc } from "@/lib/regexp";
-import { closePatientProcess, syncPatientRegister } from "./process-api";
+import { closePatientProcess } from "./process-control";
 import {
   Responsable,
   Assured,
@@ -909,7 +909,6 @@ async function finishScreening(prev: unknown, formData: FormData){
     })
     
     await closePatientProcess(patientId, "screening");
-    await syncPatientRegister(patientId);
 
     return {
       message: "Utente triado com sucesso!",

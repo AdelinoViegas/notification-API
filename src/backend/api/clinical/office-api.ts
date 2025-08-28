@@ -15,7 +15,7 @@ import { getDateInSlashFormat } from "@/lib/date-formater";
 import { getUser } from "@/backend/api/clinical/api";
 import { upload } from "@/backend/api/storage";
 import { CustonAxiosError } from "@/backend/api/types";
-import { syncPatientRegister } from "./process-api";
+import { syncPatientRegister } from "./process-control";
 
 type ConsultationTypes = "vitalSignals" | "currentStates";
 

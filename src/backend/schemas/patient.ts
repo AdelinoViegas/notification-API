@@ -107,6 +107,15 @@ const specialtyStateSchema = new Schema({
   collection: "user_specialty"
 });
 
+const patientSyncSchema = new Schema({
+  id: Schema.ObjectId,
+  secondaries: [ Schema.ObjectId ]
+}, { 
+  timestamps: true 
+});
+
+patientSyncSchema.index({ firstId: 1, secondaries: 1 }, { unique: true });
+
 export {
   patientSchema,
   demographySchema,
@@ -115,4 +124,5 @@ export {
   groupSchema,
   processStateSchema,
   specialtyStateSchema,
+  patientSyncSchema
 };
