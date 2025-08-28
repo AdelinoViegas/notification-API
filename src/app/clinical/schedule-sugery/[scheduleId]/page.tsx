@@ -1,15 +1,15 @@
+import { angolaCurrency } from "@/lib/table-formater";
 import Header from "@/components/header";
 import Card from "@/components/ui/card";
 import SubTitle from "@/components/ui/subtitle";
 import ArchivingAppointment from "@/components/archiving-appointment";
 import TitleAndSubtitle from "@/components/title-subtitle";
-import { angolaCurrency } from "@/lib/table-formater";
-import SendAppointment from "@/components/send-appointment";
 //import PDFButton from "@/components/pdf-button";
 import ValidateSugery from "@/components/validate-sugery";
 import RescheduleSugery from "@/components/reschedule-sugery";
-import { getScheduleSugery } from "@/backend/api/clinical/scheduling-api";
 import Button from "@/components/ui/button";
+import SendScheduleSugery from "@/components/send-schedule-sugery";
+import { getScheduleSugery } from "@/backend/api/clinical/scheduling-api";
 
 export default async function Page({
   params
@@ -24,14 +24,14 @@ export default async function Page({
   return (
     <main className="space-y-3">
       <div className="mt-6">
-        <Header title="Atender Consulta Agendada"/>
+        <Header title="Atender Cirurgia Agendada"/>
       </div>
 
       <div className="overflow-auto h-[80vh] scroll overflow-auto">
         <Card>
           <div className="grid grid-cols-2">
             <div>
-              <SubTitle className="inline-flex mt-3">Informações da Consulta</SubTitle>
+              <SubTitle className="inline-flex mt-3">Informações da Cirurgia</SubTitle>
               
               <TitleAndSubtitle
                 label="Nome do Utente"
@@ -135,7 +135,7 @@ export default async function Page({
               value={schedule.payment.value}
             />
 
-            <SendAppointment scheduleId={scheduleId} />
+            <SendScheduleSugery scheduleId={scheduleId} />
             
             <ArchivingAppointment scheduleId={scheduleId} />
           </div>
