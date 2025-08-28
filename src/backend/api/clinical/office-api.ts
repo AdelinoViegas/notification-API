@@ -135,7 +135,6 @@ async function getPatients({
 }){
   try{
     const appointments = await officeModel.find({ served: served ?? false });
-
     const formated = [];
 
     for(const appointment of appointments){

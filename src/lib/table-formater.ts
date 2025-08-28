@@ -35,6 +35,18 @@ export type ScheduleAppointment = {
   status: string;
 };
 
+export type ScheduleSugery = {
+  id: string;
+  date: string;
+  doctor: string;
+  patient: string;
+  sugeryType: string;
+  requestingService: string;
+  infirmary: string;
+  bed: string;
+  status: string;
+};
+
 export type DoctorOffice = {
   id: string;
   markedDatatime: string;
@@ -260,6 +272,26 @@ export function tableAppointments(appointments: ScheduleAppointment[]){
         item.patient,
         item.doctor,
         item.room,
+        item.status,
+      ]
+    });
+
+  return tableRows;
+}
+
+export function tableSugeries(sugeries: ScheduleSugery[]){
+  const tableRows:TableRow[] = [];
+  for(const item of sugeries)
+    tableRows.push({
+      id: item.id,
+      row: [
+        item.requestingService,
+        item.date, 
+        item.patient,
+        item.sugeryType,
+        item.infirmary,
+        item.bed,
+        item.doctor,
         item.status,
       ]
     });
