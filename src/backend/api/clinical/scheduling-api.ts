@@ -6,7 +6,7 @@ import {
   getDateInSlashFormat 
 } from "@/lib/date-formater";
 import { redirect } from "next/navigation";
-import { getExamResult as getExamResutlFromUnit } from "./internal-services-api";
+import { getExamResult as getExamResutlFromUnit, getScheduledExams } from "./internal-services-api";
 import { 
   examModel, 
   examGroupModel,
@@ -994,6 +994,19 @@ async function getPatientScheduledServices({ patientId }: { patientId: string })
   }
 }
 
+async function getExamsHistories(patientId: string){
+  try{
+    const servicesProvided = await scheduleServiceModel.find({ served: true }).select({ scheduleId: 1 });
+    console.log(servicesProvided);
+    for(const provided of servicesProvided){
+      const resolved = await scheduleExamModel.findById({ _id: provided.scheduleId, patientId });
+      console.log(resolved);
+    }
+  }catch {
+    
+  }
+}
+
 export {
   signExam,
   signExamResult,
@@ -1020,5 +1033,6 @@ export {
   rescheduleAppointment,
   findDoctorCalendar,
   getNumberDoctorAppointment,
-  getPatientScheduledServices
+  getPatientScheduledServices,
+  getExamsHistories
 };
