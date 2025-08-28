@@ -2,7 +2,7 @@ import { angolaCurrency } from "@/lib/table-formater";
 import Header from "@/components/header";
 import Card from "@/components/ui/card";
 import SubTitle from "@/components/ui/subtitle";
-import ArchivingAppointment from "@/components/archiving-appointment";
+import ArchivingSugery from "@/components/archiving-sugery";
 import TitleAndSubtitle from "@/components/title-subtitle";
 //import PDFButton from "@/components/pdf-button";
 import ValidateSugery from "@/components/validate-sugery";
@@ -137,7 +137,7 @@ export default async function Page({
 
             <SendScheduleSugery scheduleId={scheduleId} />
             
-            <ArchivingAppointment scheduleId={scheduleId} />
+            <ArchivingSugery scheduleId={scheduleId} />
           </div>
         </Card>
       </div>

@@ -13,6 +13,7 @@ import {
   operatingRoomModel
 } from "@/backend/model";
 import { getUser } from "@/backend/api/clinical/api";
+//import { findDoctorCalendar } from "./scheduling-api";
 //import { findDoctorCalendar, getNumberDoctorAppointment } from "./scheduling-api";
 
 async function getPatients({
@@ -99,7 +100,7 @@ async function archivingSugery(prev: unknown, formData: FormData){
       await scheduleSugeryModel.updateOne({ _id: scheduleId }, { canceled: false });
       
       return {
-        message: "Consulta desarquivada com sucesso!",
+        message: "Cirurgia desarquivada com sucesso!",
         status: true,
       }
     }
@@ -131,7 +132,8 @@ async function archivingSugery(prev: unknown, formData: FormData){
 
 /*async function rescheduleSugery(prev: unknown, formData: FormData){
   try{
-     const scheduleId = formData.get("scheduleId") as string;
+    const scheduleId = formData.get("scheduleId") as string;
+    
     return {
       message: "Cirurgia reagendada com sucesso!",
       status: true,
