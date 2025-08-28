@@ -123,6 +123,7 @@ async function addUser(prev: unknown, formData: FormData){
     const roleId = formData.get("roleId") as string;
     const categoryId = formData.get("categoryId") as string;
     const specialtyId = formData.get("specialtyId");
+    const serviceId = formData.get("serviceId");
 
     const filter = omitUndefined({
       orderNumber,
@@ -130,7 +131,7 @@ async function addUser(prev: unknown, formData: FormData){
       roleId: roleId || undefined,
       categoryId,
       specialtyId: specialtyId || undefined,
-      serviceId: specialtyId || undefined
+      serviceId: serviceId || undefined
     });
 
     const hasUser = await userModel.findOneAndUpdate({ userId: id }, filter);

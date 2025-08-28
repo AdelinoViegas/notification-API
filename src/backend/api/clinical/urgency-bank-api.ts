@@ -33,9 +33,9 @@ import {
 import { getUser, patientFilters } from "@/backend/api/clinical/api";
 import { DoctorCalendar } from "@/backend/api/clinical/types";
 import { getPatient as mainPatient } from "@/backend/api/clinical/api";
-import { closePatientProcess } from "./process-api";
-import mongoose from "mongoose";
+import { closePatientProcess, syncPatientRegister } from "@/backend/api/clinical/process-api";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
+import { omitUndefined } from "mongoose";
 
 type UnitType = "workplace" | "internment" | "laboratory" | "imaging";
 
@@ -1034,7 +1034,7 @@ async function getPrescriptions({
   to?: string;
 }){
   try{
-    const filter = mongoose.omitUndefined({ 
+    const filter = omitUndefined({ 
       _id: id,
       makedAt: to && from ? {
         $lt: to,
@@ -1079,7 +1079,7 @@ async function requestSurgery(p: unknown, formData: FormData){
 
 async function getSurgery({ id }:{ id?: string }){
   try{
-    const filter = mongoose.omitUndefined({ _id: id });
+    const filter = omitUndefined({ _id: id });
 
     const surgeries = (await surgeryModel.find(filter)).map((e) => ({
       _id: e._id.toString(),
@@ -1108,6 +1108,7 @@ async function applyDischarge(p:unknown, formdata:FormData){
     });
 
     await closePatientProcess(patientId, "urgency");
+    await syncPatientRegister(patientId);
 
     return {
       message: "Alta registrada com sucesso!",
