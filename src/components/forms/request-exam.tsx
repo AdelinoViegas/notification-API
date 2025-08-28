@@ -13,7 +13,6 @@ import Selection from "@/components/ui/selection";
 import { getUnits } from "@/backend/api/clinical/urgency-bank-api";
 import { SelectionOption } from "@/components/ui/selection";
 import InputDetails from "@/components/ui/input-details";
-import Alert from "@/components/ui/alert";
 import SubTitle from "@/components/ui/subtitle";
 import { BiTrash as TrashIcon } from "react-icons/bi";
 import clsx from "clsx";
@@ -42,7 +41,6 @@ export default function RequestExams({
   const [ item, setItem ] = useState("");
   const [ renderAux, setRenderAux ] = useState(false);
   const [ examCache, setExamCache ] = useState<SelectionOption[]>([]);
-  const [ messageState, setMessageState ] = useState(false);
   const router = useRouter();
 
   const handlerCallback = (e: React.ChangeEvent<HTMLSelectElement>)=>{
@@ -78,20 +76,20 @@ export default function RequestExams({
   }
 
   useEffect(()=>{
-    setMessageState(true);
-    
-    setTimeout(()=>{
-      setMessageState(false);
+    if(state.message)
+      if(state.status)
+        toast.success(state.message, {
+          onOpen: ()=>{
+            if(!!scheduleType)
+              router.replace("/clinical/screening");
 
-      if(state.status){
-        formRef.current?.reset();
-        setExamCart([]);
-        setItem("");
-        
-        if(!!scheduleType)
-          router.replace("/clinical/screening");
-      }
-    }, state.status?3000:7000);
+            formRef.current?.reset();
+            setExamCart([]);
+            setItem("");
+          }
+        });
+      else 
+        toast.error(state.message);
   }, [state, router]);
 
   useEffect(()=>{
@@ -195,16 +193,6 @@ export default function RequestExams({
         />
 
         <Button>Solicitar</Button>
-
-        {
-          state.message && messageState &&
-          <div className="flex mt-3">
-            <Alert
-              type={state.status?'success':'error'}
-              message={state.message}
-            />
-          </div>
-        }
       </form>
     </div>
   );

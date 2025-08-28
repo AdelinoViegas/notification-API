@@ -30,6 +30,7 @@ import {
 import { getUser } from "@/backend/api/clinical/api";
 import { getSyncedHistories, syncPatientRegister } from "./process-control";
 import { Types } from "mongoose";
+import { PatientHistory } from "./types";
 
 export type CCGTypes = "category" | "classification" | "group";
 
@@ -339,7 +340,7 @@ async function schedulePatientExam(prev: unknown, formData: FormData){
     await patientModel.updateOne({ _id: patientId }, { served: true });
     
     return {
-      message: "Exame marcado com sucesso!",
+      message: "Solicitação enviada!",
       status: true,
     }
   }catch(err: unknown){
@@ -1211,7 +1212,7 @@ async function getExamsHistories(patientId: string){
   try{
     const servicesProvided = await scheduleServiceModel.find({ served: true }).select({ scheduleId: 1 });
     const syncedPatientHistories = await getSyncedHistories(patientId);
-    const servedExams = new Map<string, unknown>();
+    const servedExams = new Map<string, PatientHistory>();
 
     if(syncedPatientHistories){
       for (const pastPatientId of syncedPatientHistories.secondaries){
@@ -1228,26 +1229,29 @@ async function getExamsHistories(patientId: string){
             const internalResults = await internalExamResultModel.findOne({ 
               serviceId: service._id, 
               examId: id 
-            }).select({ description: 1, storageId: 1 });
+            }).select({ 
+              description: 1, 
+              storageId: 1, 
+              createdAt: 1 
+            });
             
             servedExams.set(id, {
-              internalServiceId: service._id,
+              internalServiceId: service._id.toString(),
               examId: id,
               patientId,
               name: exam?.name as string,
-              storageId: internalResults?.storageId,
-              createdAt: internalResults?.createdAt
+              storageId: internalResults?.storageId as string,
+              createdAt: internalResults?.createdAt as Date
             });
           }
         }
       }
     }
     
-
-    console.log(servedExams);
-
+    return Array.from(servedExams.values());
   }catch (e){
-    console.log(e)
+    console.log(e);
+    return [];
   }
 }
 

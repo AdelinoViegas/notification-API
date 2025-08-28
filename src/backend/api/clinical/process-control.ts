@@ -146,10 +146,11 @@ export async function syncPatientHistories(pastId: string, newId: string){
 export async function getSyncedHistories(id: string){
   try{
     const histories = await patientSyncModel.findOne({ id });
+
     if(histories)
       return histories;
-    
-    const allHistory = await patientSyncModel.find();
+    // buscar nas referencias passadas do utente
+    const allHistory = await patientSyncModel.find(); 
     
     for (const history of allHistory){
       for(const secondaryId of history.secondaries){
@@ -157,6 +158,7 @@ export async function getSyncedHistories(id: string){
           return history;
       }
     }
+
     throw new Error();
   }catch{
     return null;
