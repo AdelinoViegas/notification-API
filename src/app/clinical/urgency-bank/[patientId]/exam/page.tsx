@@ -1,7 +1,7 @@
 // import { getPatientScheduledServices } from "@/backend/api/clinical/scheduling-api";
 import RequestExams from "@/components/forms/request-exam";
 import Accordium from "@/components/ui/accordium";
-import Table from "@/components/table";
+// import Table from "@/components/table";
 // import { TableFormatter } from "@/lib/table-formater";
 import Refresh from "@/components/refresh";
 import ExamHistory from "@/components/exam-history";

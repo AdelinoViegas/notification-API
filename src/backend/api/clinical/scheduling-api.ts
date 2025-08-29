@@ -1212,7 +1212,6 @@ async function getExamsHistories(patientId: string){
   try{
     const servicesProvided = await scheduleServiceModel.find({ served: true }).select({ scheduleId: 1 });
     const syncedPatientHistories = await getSyncedHistories(patientId);
-    // const servedExams = new Map<string, PatientHistory>();
     const allExamHistory = new Array<PatientHistory>();
 
     if(syncedPatientHistories){
