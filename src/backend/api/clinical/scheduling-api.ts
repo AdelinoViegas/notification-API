@@ -1212,43 +1212,26 @@ async function getExamsHistories(patientId: string){
   try{
     const servicesProvided = await scheduleServiceModel.find({ served: true }).select({ scheduleId: 1 });
     const syncedPatientHistories = await getSyncedHistories(patientId);
-    const servedExams = new Map<string, PatientHistory>();
+    // const servedExams = new Map<string, PatientHistory>();
+    const allExamHistory = new Array<PatientHistory>();
 
     if(syncedPatientHistories){
-      for (const pastPatientId of syncedPatientHistories.secondaries){
-        for (const service of servicesProvided){
-          const resolved = await scheduleExamModel.findById({ _id: service.scheduleId, patientId: pastPatientId });
-          const current = await scheduleExamModel.findById({ _id: service.scheduleId, patientId });
-          const uniqueExams = new Set<string>();
-          
-          resolved?.exams.length && resolved.exams.forEach(e => uniqueExams.add(e.toString()));
-          current?.exams.length && current.exams.forEach(e => uniqueExams.add(e.toString()));
-          
-          for(const id of Array.from(uniqueExams.values())){
-            const exam = await examModel.findById({ _id: id }).select({ name: 1 });
-            const internalResults = await internalExamResultModel.findOne({ 
-              serviceId: service._id, 
-              examId: id 
-            }).select({ 
-              description: 1, 
-              storageId: 1, 
-              createdAt: 1 
+      for(const provided of servicesProvided){
+        for(const patientId of [syncedPatientHistories.id, ...syncedPatientHistories.secondaries]){
+          const examResult = await scheduleExamModel.findById({ _id: provided.scheduleId }).select({ patientId: 1, exams: 1, updatedAt: 1 });
+ 
+          if(examResult?.patientId?.toString() === patientId.toString())
+            allExamHistory.push({
+              internalServiceId: examResult?._id.toString() as string,
+              patientId: examResult?.patientId?.toString() as string,
+              examsQuantity: examResult?.exams.length as number,
+              updatedAt: examResult?.updatedAt as Date
             });
-            
-            servedExams.set(id, {
-              internalServiceId: service._id.toString(),
-              examId: id,
-              patientId,
-              name: exam?.name as string,
-              storageId: internalResults?.storageId as string,
-              createdAt: internalResults?.createdAt as Date
-            });
-          }
         }
       }
     }
     
-    return Array.from(servedExams.values());
+    return allExamHistory;
   }catch (e){
     console.log(e);
     return [];

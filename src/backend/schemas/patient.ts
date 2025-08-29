@@ -114,7 +114,7 @@ const patientSyncSchema = new Schema({
   timestamps: true 
 });
 
-patientSyncSchema.index({ firstId: 1, secondaries: 1 }, { unique: true });
+patientSyncSchema.index({ id: 1, secondaries: 1 }, { unique: true });
 
 export {
   patientSchema,

@@ -143,7 +143,7 @@ async function getPatients({
     
     for(const service of services.slice(numberOfItems - 10, numberOfItems)){
       const scheduledService = await scheduleExamModel.findById({ _id: service.scheduleId });
-      const patient = await patientModel.findById({_id: scheduledService?.patientId }).select({ fullname: 1});
+      const patient = await patientModel.findById({ _id: scheduledService?.patientId }).select({ fullname: 1 });
       const user = await getUser(service?.userId?.toString() as string);
 
       patients.push({
