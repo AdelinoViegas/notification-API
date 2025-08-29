@@ -32,7 +32,7 @@ export default function Page(){
   return(
     <div>
       <form action={action}>
-        <input type="hidden" name="patientId" value={params.id} />
+        <input type="hidden" name="patientId" value={params.patientId} />
 
         <div className="grid md:grid-cols-2 gap-x-3">
           <Selection

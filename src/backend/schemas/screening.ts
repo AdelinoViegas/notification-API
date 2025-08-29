@@ -88,7 +88,7 @@ const triedSchema = new Schema({
   }
 }, {
   timestamps: true,
-  collection: "in_urgency_bank"
+  collection: "tried_to_urgency_back"
 });
 
 export {
