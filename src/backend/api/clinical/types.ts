@@ -160,6 +160,13 @@ type DoctorDayAndTime = {
   };
 };
 
+export interface PatientHistory {
+  internalServiceId: string;
+  patientId: string;
+  examsQuantity: number;
+  updatedAt: Date;
+}
+
 export type {
   Responsable,
   Responsables,

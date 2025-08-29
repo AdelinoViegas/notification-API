@@ -5,11 +5,17 @@ import FinishScheduledExam from "@/components/finish-schedule-exam";
 import { LoboratoryForm } from "@/components/forms/laboratory-imaging-form";
 import Accordium from "@/components/ui/accordium";
 import UserFileViewer from "@/components/user-file-viewer";
+import clsx from "clsx";
 
 export default async function Page({ params }: { params: Promise<{ id: string }>}){
   const { id } = await params;
   const requestedExams = await getScheduledExams(id);
   const patient = await getPatient(id);
+
+  const className = clsx({ 
+    "grid gap-3 grid-cols-2": requestedExams.length > 2,
+    "flex flex-col gap-y-3": requestedExams.length <= 2 
+  }, "overflow-auto max-h-[60vh]");
 
   return(
     <div>
@@ -29,7 +35,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         <h2 className="text-xl">Utente: {patient?.fullname}</h2>
 
         <h2 className="font-bold mb-3 text-center">Exames Solicitados</h2>
-        <div className="space-y-3">
+        <div className={className}>
           {requestedExams.map(async (props, index)=>{
             const examResult = await internalExamResultModel.findOne({ 
               serviceId: id, 

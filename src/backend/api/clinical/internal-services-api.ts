@@ -13,7 +13,7 @@ import { getUserId } from "@/lib/web-token";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
 import { getUser } from "@/backend/api/admin";
 import { upload } from "@/backend/api/storage";
-import { closePatientProcess, syncPatientRegister } from "@/backend/api/clinical/process-api";
+import { closePatientProcess, syncPatientRegister } from "@/backend/api/clinical/process-control";
 import { CustonAxiosError } from "@/backend/api/types";
 
 async function updatePaymentData(prev: unknown, formData: FormData){
@@ -143,7 +143,7 @@ async function getPatients({
     
     for(const service of services.slice(numberOfItems - 10, numberOfItems)){
       const scheduledService = await scheduleExamModel.findById({ _id: service.scheduleId });
-      const patient = await patientModel.findById({_id: scheduledService?.patientId }).select({ fullname: 1});
+      const patient = await patientModel.findById({ _id: scheduledService?.patientId }).select({ fullname: 1 });
       const user = await getUser(service?.userId?.toString() as string);
 
       patients.push({

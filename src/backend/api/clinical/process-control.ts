@@ -1,7 +1,7 @@
 "use server";
 
 import { getUserId } from "@/lib/web-token";
-import { patientModel, processStateModel,demographyModel, responsibleModel, groupModel, accessTypeModel } from "@/backend/model";
+import { patientModel, processStateModel,demographyModel, responsibleModel, groupModel, accessTypeModel, patientSyncModel } from "@/backend/model";
 import { getFirstAndLastName } from "@/components/userbar";
 import { getUser } from "@/backend/api/admin";
 import { Types } from "mongoose";
@@ -81,6 +81,8 @@ export async function syncPatientRegister(id: string){
     patient._id = new Types.ObjectId();
     await patient.save();
     await patientModel.updateOne({ _id: oldPatient?._id }, { used: true, served: true });
+
+    await syncPatientHistories(id, patient._id.toString());
     
     const oldDemography = await demographyModel.findOne({ patientId: oldPatient?._id });
     const demography = new demographyModel(JSON.parse(JSON.stringify(oldDemography)));
@@ -110,5 +112,55 @@ export async function syncPatientRegister(id: string){
   }catch (e){
     console.log(e);
     throw new Error("Falha na sincronização!");
+  }
+}
+
+export async function syncPatientHistories(pastId: string, newId: string){
+  try{
+    const histories = await patientSyncModel.findOne({ id: pastId });
+    console.log(histories);
+
+    if(!histories){
+      await patientSyncModel.create({
+        id: newId,
+        secondaries: [ pastId ]
+      });
+      return true; 
+    }
+
+    const currentList = histories.secondaries;
+    currentList.push(new Types.ObjectId(pastId));
+
+    await patientSyncModel.updateOne({ id: pastId }, {
+      id: newId,
+      secondaries: currentList
+    });
+    
+    return true;
+  }catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
+export async function getSyncedHistories(id: string){
+  try{
+    const histories = await patientSyncModel.findOne({ id }).select({ id: 1, secondaries: 1 });
+
+    if(histories)
+      return histories;
+    // buscar nas referencias passadas do utente
+    const allHistory = await patientSyncModel.find().select({ id: 1, secondaries: 1 }); 
+    
+    for (const history of allHistory){
+      for(const secondaryId of history.secondaries){
+        if(id === secondaryId.toString())
+          return history;
+      }
+    }
+
+    throw new Error();
+  }catch{
+    return null;
   }
 }
