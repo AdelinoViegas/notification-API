@@ -5,7 +5,7 @@ import {
   usePathname,
 } from "next/navigation";
 import clsx from "clsx";
-import { priority } from "@/backend/api/clinical/translator";
+import { priority, surgerySchedulingArea } from "@/backend/api/clinical/translator";
 
 export type TableRow = {
   id: string;
@@ -87,12 +87,12 @@ export default function Table({
                     },
                     priorityCol && columnIndex === 0 && {
                       "text-white": true,
-                      "bg-blue-500": priority.find((item)=>item.label === props)?._id === "blue",
-                      "bg-green-500": priority.find((item)=>item.label === props)?._id === "green",
-                      "bg-yellow-500": priority.find((item)=>item.label === props)?._id === "yellow",
-                      "bg-orange-600": priority.find((item)=>item.label === props)?._id === "orange",
-                      "bg-red-500 animate-pulse": priority.find((item)=>item.label === props)?._id === "red"
-                    }
+                      "bg-blue-500": priority.find((item)=>item.label === props)?._id === "blue" || surgerySchedulingArea.find((item)=>item.label === props)?.color === "blue",
+                      "bg-green-500": priority.find((item)=>item.label === props)?._id === "green" || surgerySchedulingArea.find((item)=>item.label === props)?.color === "green",
+                      "bg-yellow-500": priority.find((item)=>item.label === props)?._id === "yellow" || surgerySchedulingArea.find((item)=>item.label === props)?.color === "yellow",
+                      "bg-orange-600": priority.find((item)=>item.label === props)?._id === "orange" || surgerySchedulingArea.find((item)=>item.label === props)?.color === "orange",
+                      "bg-red-500 animate-pulse": priority.find((item)=>item.label === props)?._id === "red" || surgerySchedulingArea.find((item)=>item.label === props)?.color === "red",
+                    } 
                   )}>{props}</td>
                 );
             })}

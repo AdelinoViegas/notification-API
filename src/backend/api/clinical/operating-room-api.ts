@@ -3,9 +3,9 @@
 import { 
   getDateInSlashFormat 
 } from "@/lib/date-formater";
-import { priorityInOperatingRoom } from "@/lib/filters";
+import { /*orderByPriority,*/ priorityInOperatingRoom } from "@/lib/filters";
 import { getUserId } from "@/lib/web-token";
-import { surgerySchedulingArea } from "./translator";
+import { /*priorityToComponent,*/ surgerySchedulingArea } from "./translator";
 import { 
   examModel, 
   patientModel,
@@ -17,37 +17,41 @@ import { getUser } from "@/backend/api/clinical/api";
 //import { findDoctorCalendar, getNumberDoctorAppointment } from "./scheduling-api";
 
 async function getPatients({
-  name,
-  priority,
+  /*name,*/
+  served,
+  /*priority,*/
 }:{
   name?: string,
+  served?: boolean,
   priority?: string, 
 }){
   const formatedList = [];
-  const schedule = await scheduleSugeryModel.find();
+  const operatingRoom = await operatingRoomModel.find({
+    served: served?served:false,
+  });
 
-  for(const items of schedule){
-    const patient = await patientModel.findById({_id: items.patientId}).select({fullname: 1});
-    const doctor = await getUser(items?.doctorId?.toString() as string);
-    const sugeryType = await examModel.findById({_id: items.sugeryType}).select({name: 1});
+  for(const items of operatingRoom){
+    const schedule = await scheduleSugeryModel.findById({_id: items.scheduleId })
+    const patient = await patientModel.findById({_id: schedule?.patientId}).select({fullname: 1});
+    const doctor = await getUser(schedule?.doctorId?.toString() as string);
+    const sugeryType = await examModel.findById({_id: schedule?.sugeryType}).select({name: 1});
 
     formatedList.push({
       id: items.id.toString() as string,
       patient: patient?.fullname as string,
-      requestingService: surgerySchedulingArea.find( props => props._id === items.requestingService)?.label as string,
+      requestingService: surgerySchedulingArea.find( props => props._id === schedule?.requestingService)?.label as string,
       doctor: doctor.fullname as string,
-      infirmary: items.infirmary as string,
-      bed: items.bed as string,
+      infirmary: schedule?.infirmary as string,
+      bed: schedule?.bed as string,
       sugeryType: sugeryType?.name.toString() as string,
-      date: `${getDateInSlashFormat(items.doctorDay as Date)} ${items.doctorTime}` as string,
-      status: items.payment?.status === "confirmed"?"Confirmado":"Pendente" as string,
+      date: `${getDateInSlashFormat(schedule?.doctorDay as Date)} ${schedule?.doctorTime}` as string,
     })
   }
 
-  return name?priorityInOperatingRoom(formatedList.filter((props)=>props.patient.match(new RegExp(`^${name}`, 'i')))).orderElements:
-  priority?priorityInOperatingRoom(formatedList.filter((props)=> props.requestingService === surgerySchedulingArea.find((props)=>props.color === priority)?.label)).orderElements:
-  priorityInOperatingRoom(formatedList).orderElements;
-}
+     /*return name?priorityInOperatingRoom(formatedList.filter((item)=>item.patient.match(new RegExp(`^${name}`, 'i')))).orderElements:
+      priority?priorityInOperatingRoom(formatedList.filter((item)=>item.requestingService === surgerySchedulingArea.find((props)=>props.color === priority)?.label)).orderElements:
+      */return priorityInOperatingRoom(formatedList).orderElements;
+    }
 
 async function sendPatientToOperatingRoom(prev: unknown, formData: FormData){
   try{
@@ -88,7 +92,6 @@ async function sendPatientToOperatingRoom(prev: unknown, formData: FormData){
     }
   }
 }
-
 
 async function archivingSugery(prev: unknown, formData: FormData){
   try{

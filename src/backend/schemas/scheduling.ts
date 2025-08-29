@@ -297,7 +297,7 @@ const scheduleSugerySchema = new Schema({
 });
 
 
-const operatingSugerySchema = new Schema<ConsultResult>({
+const operatingRoomSchema = new Schema<ConsultResult>({
   scheduleId: Schema.Types.ObjectId,
   served: {
     type: Boolean,
@@ -327,5 +327,5 @@ export{
   scheduleAppointmentSchema,
   officeSchema,
   scheduleSugerySchema,
-  operatingSugerySchema,
+  operatingRoomSchema,
 }

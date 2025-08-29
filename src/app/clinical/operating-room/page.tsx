@@ -1,28 +1,27 @@
 import Header from "@/components/header";
 import Table from "@/components/table";
-//import { ScheduleSugery, tableSugeries } from "@/lib/table-formater";
+import { getPatients } from "@/backend/api/clinical/operating-room-api";
+import { ScheduleSugery, tableOperatingRoom } from "@/lib/table-formater";
 import Alert from "@/components/ui/alert";
-//import {priorityInOperatingRoom } from "@/lib/filters";
-//import TooltipInOperatingRoom from "@/components/operating-room-tooltip";
+//import { priorityInOperatingRoom } from "@/lib/filters";
 import Search from "@/components/ui/search";
 import Refresh from "@/components/refresh";
 //import { getScheduleSugeries } from "@/backend/api/clinical/scheduling-api";
 
 export const dynamic = "force-dynamic";
 
-export default async function Page(/*{
+export default async function Page({
   searchParams
 }:{
   searchParams: Promise<{
     name: string;
-    registerNumber: number;
-    priority: string;
+    priority?: string;
   }>
-}*/){ 
-  /*const { name, priority } = await searchParams;
-  const patientRows = tableSugeries(await getScheduleSugeries({ name, priority }) as ScheduleSugery[]); 
-  const priorityData = priorityInOperatingRoom(await getScheduleSugeries({ name })).areasToSchedule;*/
-  
+}){ 
+  const { name, priority } = await searchParams;
+  const patientRows = tableOperatingRoom(await getPatients({ name, priority }) as ScheduleSugery[]);
+  //const dataPriority = priorityInOperatingRoom(await getScheduleSugeries({ name }));
+ 
   return(
     <main className="space-y-3">
       <Refresh />
@@ -38,7 +37,8 @@ export default async function Page(/*{
       </div>
       
       <div className="flex justify-between items-center">
-        {/*<TooltipInOperatingRoom data={priorityData} />*/}
+        {/*<TooltipInOperatingRoom data={dataPriority} />
+*/}
         <Search
           className="flex items-center gap-x-3"
           filterKey="name"
@@ -48,17 +48,19 @@ export default async function Page(/*{
       </div>
 
       <Table
+        baseRowLink="/clinical/operating-room"
         rowLength={6}
         priorityCol
-        rows={[]}
         columns={[
-          "Prioridade",
-          "Data Registo", 
-          "Nº de Registo", 
-          "Nome Completo",
-          "Grupo Utente",
-          "Tipo de Acesso"
-        ]} 
+          "Serv. Solicitante",
+          "Data e Hora", 
+          "Nome do Utente", 
+          "Tipo de cirurgia",
+          "Efermaria",
+          "Cama",
+          "Nome do Médico",
+        ]}
+        rows={patientRows} 
       />
     </main>
   );

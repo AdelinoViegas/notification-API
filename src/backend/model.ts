@@ -16,7 +16,7 @@ import {
   appointmentCancelSchema,
   officeSchema,
   scheduleSugerySchema,
-  operatingSugerySchema,
+  operatingRoomSchema,
 } from "@/backend/schemas/scheduling";
 import { 
   responsibleSchema,
@@ -93,7 +93,7 @@ const prescriptionModel = clinical.model("Prescription", prescriptionSchema);
 const surgeryModel = clinical.model("Surgery", surgerySchema);
 const scheduleSugeryModel = clinical.model("ScheduleSugery", scheduleSugerySchema);
 
-const operatingRoomModel = clinical.model("OperatingRoom", operatingSugerySchema);
+const operatingRoomModel = clinical.model("OperatingRoom", operatingRoomSchema);
 
 export {
   userModel,

@@ -39,7 +39,7 @@ function priorityInOperatingRoom(dataElements: ScheduleSugery[]){
   for(const area of reference){
     let count = 0;
     for(const element of dataElements){
-      if(surgerySchedulingArea.find((prop)=>prop._id === element.requestingService)?.color === area){
+      if(surgerySchedulingArea.find((prop)=>prop.label === element.requestingService)?.color === area){
         orderElements.push(element);
         count++;
       }
