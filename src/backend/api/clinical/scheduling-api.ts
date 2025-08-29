@@ -25,11 +25,10 @@ import {
   scheduleServiceModel,
   screeningModel,
   scheduleSugeryModel,
-  internalExamResultModel,
 } from "@/backend/model";
 import { getUser } from "@/backend/api/clinical/api";
 import { getSyncedHistories, syncPatientRegister } from "./process-control";
-import { Types } from "mongoose";
+
 import { PatientHistory } from "./types";
 
 export type CCGTypes = "category" | "classification" | "group";
