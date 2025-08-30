@@ -7,7 +7,7 @@ import {
 } from "@/lib/date-formater";
 import { redirect } from "next/navigation";
 import { surgerySchedulingArea } from "./translator";
-import { getExamResult as getExamResutlFromUnit, getScheduledExams } from "./internal-services-api";
+import { getExamResult as getExamResutlFromUnit } from "./internal-services-api";
 
 import { 
   examModel, 

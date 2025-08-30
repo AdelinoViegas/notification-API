@@ -1,6 +1,6 @@
 import { GETpatient } from "@/backend/api/clinical/types";
 import { priorityToComponent, surgerySchedulingArea } from "@/backend/api/clinical/translator";
-import { ScheduleSugery } from "./table-formater";
+import { ScheduleSugery } from "@/lib/table-formater";
 
 function orderByPriority(dataElements: GETpatient[]){
   const references = [ "red", "orange", "yellow", "green", "blue" ];

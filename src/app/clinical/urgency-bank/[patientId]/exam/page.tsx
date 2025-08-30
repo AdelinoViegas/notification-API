@@ -1,4 +1,4 @@
-import { getPatientScheduledServices, getExamsHistories } from "@/backend/api/clinical/scheduling-api";
+import { /*getPatientScheduledServices*/ getExamsHistories } from "@/backend/api/clinical/scheduling-api";
 import RequestExams from "@/components/forms/request-exam";
 import Accordium from "@/components/ui/accordium";
 import Table from "@/components/table";
@@ -7,7 +7,7 @@ import Refresh from "@/components/refresh";
 
 export default async function Page({ params }: { params: Promise<{ patientId: string }>}){
   const { patientId } = await params;
-  const results = await getPatientScheduledServices({ patientId });
+  //const results = await getPatientScheduledServices({ patientId });
   await getExamsHistories(patientId);
   // const rows = TableFormatter.urgencyExamResults(results);
   return(

@@ -3,9 +3,9 @@
 import { 
   getDateInSlashFormat 
 } from "@/lib/date-formater";
-import { /*orderByPriority,*/ priorityInOperatingRoom } from "@/lib/filters";
+import {priorityInOperatingRoom } from "@/lib/filters";
 import { getUserId } from "@/lib/web-token";
-import { /*priorityToComponent,*/ surgerySchedulingArea } from "./translator";
+import { surgerySchedulingArea } from "./translator";
 import { 
   examModel, 
   patientModel,
@@ -17,9 +17,9 @@ import { getUser } from "@/backend/api/clinical/api";
 //import { findDoctorCalendar, getNumberDoctorAppointment } from "./scheduling-api";
 
 async function getPatients({
-  /*name,*/
+  name,
   served,
-  /*priority,*/
+  priority,
 }:{
   name?: string,
   served?: boolean,
@@ -48,10 +48,10 @@ async function getPatients({
     })
   }
 
-     /*return name?priorityInOperatingRoom(formatedList.filter((item)=>item.patient.match(new RegExp(`^${name}`, 'i')))).orderElements:
-      priority?priorityInOperatingRoom(formatedList.filter((item)=>item.requestingService === surgerySchedulingArea.find((props)=>props.color === priority)?.label)).orderElements:
-      */return priorityInOperatingRoom(formatedList).orderElements;
-    }
+  return name?priorityInOperatingRoom(formatedList.filter((item)=>item.patient.match(new RegExp(`^${name}`, 'i')))).orderElements:
+  priority?priorityInOperatingRoom(formatedList.filter((item)=>item.requestingService === surgerySchedulingArea.find((props)=>props.color === priority)?.label)).orderElements:
+  priorityInOperatingRoom(formatedList).orderElements;
+}
 
 async function sendPatientToOperatingRoom(prev: unknown, formData: FormData){
   try{
@@ -151,8 +151,39 @@ async function archivingSugery(prev: unknown, formData: FormData){
   }
 }*/
 
+async function getPatient(/*{ patientId }: {
+  patientId: string;
+}*/){
+  try{
+      //return patient = await 
+
+
+     /*return {
+      _id: patient._id.toString() as string,
+      fullname: personalData.personal.fullname,
+      screening: {
+        _id: screening._id.toString() as string,
+        priority: screening.priority as string,
+        reason: screening.reason as string,
+        advice: screening.advice as string,
+        state: screening.state as string,
+        vitalSignals: {}
+      }
+    }*/
+    
+  }catch(e){
+    const err = e as Error;
+    return {
+      message: err.cause?err.message: "Falha no servidor!"
+    }
+  }
+}
+
+
+
 export {
   getPatients,
+  getPatient,
   sendPatientToOperatingRoom,
   archivingSugery,
   //rescheduleSugery,

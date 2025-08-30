@@ -1,12 +1,12 @@
+import { priorityInOperatingRoom } from "@/lib/filters";
+import { ScheduleSugery, tableOperatingRoom } from "@/lib/table-formater";
 import Header from "@/components/header";
 import Table from "@/components/table";
-import { getPatients } from "@/backend/api/clinical/operating-room-api";
-import { ScheduleSugery, tableOperatingRoom } from "@/lib/table-formater";
 import Alert from "@/components/ui/alert";
-//import { priorityInOperatingRoom } from "@/lib/filters";
 import Search from "@/components/ui/search";
 import Refresh from "@/components/refresh";
-//import { getScheduleSugeries } from "@/backend/api/clinical/scheduling-api";
+import TooltipInOperatingRoom from "@/components/operating-room-tooltip";
+import { getPatients } from "@/backend/api/clinical/operating-room-api";
 
 export const dynamic = "force-dynamic";
 
@@ -19,14 +19,15 @@ export default async function Page({
   }>
 }){ 
   const { name, priority } = await searchParams;
-  const patientRows = tableOperatingRoom(await getPatients({ name, priority }) as ScheduleSugery[]);
-  //const dataPriority = priorityInOperatingRoom(await getScheduleSugeries({ name }));
+  const patients = await getPatients({ name, priority}) as ScheduleSugery[];
+  const patientRows = tableOperatingRoom(patients);
+  const dataPriority = priorityInOperatingRoom(patients);
  
   return(
     <main className="space-y-3">
       <Refresh />
       <div className="mt-6">
-        <Header title="Banco de Urgência"/>
+        <Header title="Banco Operatório"/>
       </div>
 
       <div className="flex lg:flex-row justify-between items-center m-0">
@@ -37,8 +38,8 @@ export default async function Page({
       </div>
       
       <div className="flex justify-between items-center">
-        {/*<TooltipInOperatingRoom data={dataPriority} />
-*/}
+        <TooltipInOperatingRoom data={dataPriority.areasToSchedule} />
+
         <Search
           className="flex items-center gap-x-3"
           filterKey="name"
