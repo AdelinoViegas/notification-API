@@ -1,13 +1,14 @@
-import { /*getPatientScheduledServices*/ getExamsHistories } from "@/backend/api/clinical/scheduling-api";
+import { getExamsHistories, getPatientScheduledServices } from "@/backend/api/clinical/scheduling-api";
 import RequestExams from "@/components/forms/request-exam";
 import Accordium from "@/components/ui/accordium";
-import Table from "@/components/table";
+// import Table from "@/components/table";
 // import { TableFormatter } from "@/lib/table-formater";
 import Refresh from "@/components/refresh";
+import ExamHistory from "@/components/exam-history";
 
 export default async function Page({ params }: { params: Promise<{ patientId: string }>}){
   const { patientId } = await params;
-  //const results = await getPatientScheduledServices({ patientId });
+  const results = await getPatientScheduledServices({ patientId });
   await getExamsHistories(patientId);
   // const rows = TableFormatter.urgencyExamResults(results);
   return(
@@ -17,7 +18,8 @@ export default async function Page({ params }: { params: Promise<{ patientId: st
         <RequestExams {...{patientId}} isFullWindow />
       </Accordium>
 
-      <div className="flex flex-col gap-x-3 mt-6 mb-3">
+      <ExamHistory patientId={patientId} />
+      {/* <div className="flex flex-col gap-x-3 mt-6 mb-3">
         <h2 className="text-lg font-medium text-primary">Histórico de exames</h2>
         
         <Table
@@ -30,7 +32,7 @@ export default async function Page({ params }: { params: Promise<{ patientId: st
           baseRowLink={`/clinical/urgency-bank/${patientId}/exam`}
           rows={[]}
         />
-      </div>
+      </div> */}
     </main>
   );
 }

@@ -25,7 +25,7 @@ Este módulo depende de dois serviços principais:
   Endpoint: `http://localhost:3000/v1`  
   Responsável pela autenticação, controle de acesso e gestão de usuários. [Saber mais](https://github.com/mr0xff/api-master-admin)
 
-- **API do serviço Administrador** (`STORAGE_SRV_URL`)  
+- **API do serviço de Arquivos** (`STORAGE_SRV_URL`)  
   Endpoint: `http://localhost:3003/v1`  
   Responsável pela gestao dos arquivos carregados. [Saber mais](https://github.com/mr0xff/api-master-storage)
 

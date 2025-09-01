@@ -33,7 +33,7 @@ import {
 import { getUser, patientFilters } from "@/backend/api/clinical/api";
 import { DoctorCalendar } from "@/backend/api/clinical/types";
 import { getPatient as mainPatient } from "@/backend/api/clinical/api";
-import { closePatientProcess, syncPatientRegister } from "@/backend/api/clinical/process-api";
+import { closePatientProcess, syncPatientRegister } from "@/backend/api/clinical/process-control";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
 import { omitUndefined } from "mongoose";
 

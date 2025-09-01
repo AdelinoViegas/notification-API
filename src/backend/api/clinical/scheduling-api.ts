@@ -27,6 +27,9 @@ import {
   scheduleSugeryModel,
 } from "@/backend/model";
 import { getUser } from "@/backend/api/clinical/api";
+import { getSyncedHistories, syncPatientRegister } from "./process-control";
+
+import { PatientHistory } from "./types";
 
 export type CCGTypes = "category" | "classification" | "group";
 
@@ -311,7 +314,6 @@ async function schedulePatientExam(prev: unknown, formData: FormData){
     const exams = formData.get('exams')?JSON.parse(formData.get("exams") as string) as string[]:[];    
     const scrPatient = await screeningModel.findOne({ patientId, served: false });
         
-
     if(!exams.length)
       throw new Error("Escolha os exames desejado!", { cause: "empty" });
 
@@ -324,14 +326,20 @@ async function schedulePatientExam(prev: unknown, formData: FormData){
       userId: await getUserId()
     });
     
-    if(!!isScheduleInScreening)
+    if(!!isScheduleInScreening){
       await screeningModel.updateOne({ _id: scrPatient?._id }, { 
         served: true,
         userId: await getUserId() 
       });
 
+      await syncPatientRegister(patientId);
+    }
+      
+    
+    await patientModel.updateOne({ _id: patientId }, { served: true });
+    
     return {
-      message: "Exame marcado com sucesso!",
+      message: "Solicitação enviada!",
       status: true,
     }
   }catch(err: unknown){
@@ -1209,13 +1217,29 @@ async function updatePaymentDataToSugery(prev: unknown, formData: FormData){
 async function getExamsHistories(patientId: string){
   try{
     const servicesProvided = await scheduleServiceModel.find({ served: true }).select({ scheduleId: 1 });
-    console.log(servicesProvided);
-    for(const provided of servicesProvided){
-      const resolved = await scheduleExamModel.findById({ _id: provided.scheduleId, patientId });
-      console.log(resolved);
+    const syncedPatientHistories = await getSyncedHistories(patientId);
+    const allExamHistory = new Array<PatientHistory>();
+
+    if(syncedPatientHistories){
+      for(const provided of servicesProvided){
+        for(const patientId of [syncedPatientHistories.id, ...syncedPatientHistories.secondaries]){
+          const examResult = await scheduleExamModel.findById({ _id: provided.scheduleId }).select({ patientId: 1, exams: 1, updatedAt: 1 });
+ 
+          if(examResult?.patientId?.toString() === patientId.toString())
+            allExamHistory.push({
+              internalServiceId: examResult?._id.toString() as string,
+              patientId: examResult?.patientId?.toString() as string,
+              examsQuantity: examResult?.exams.length as number,
+              updatedAt: examResult?.updatedAt as Date
+            });
+        }
+      }
     }
-  }catch {
     
+    return allExamHistory;
+  }catch (e){
+    console.log(e);
+    return [];
   }
 }
 
