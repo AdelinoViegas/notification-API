@@ -4,7 +4,7 @@ import { getScheduleSugery } from "@/backend/api/clinical/scheduling-api";
 import SubTitle from "@/components/ui/subtitle";
 import TitleAndSubtitle from "@/components/title-subtitle";
 import { angolaCurrency } from "@/lib/table-formater";
-import RescheduleAppointment from "@/components/reschedule-appointment";
+//import RescheduleAppointment from "@/components/reschedule-appointment";
 
 export default async function Page({
   params
@@ -77,13 +77,13 @@ export default async function Page({
                 value={schedule.archiving.reason} 
               />
               
-              <RescheduleAppointment 
+              {/*<RescheduleAppointment 
                 scheduleId={scheduleId}
                 doctorId={schedule.doctorId}
                 date={schedule.date.en}
                 hour={schedule.hour}
                 isArchived
-              />
+              />*/}
             </div>
           </div>
         </Card>

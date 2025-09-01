@@ -155,6 +155,8 @@ async function getPatient(/*{ patientId }: {
   patientId: string;
 }*/){
   try{
+      console.log("campo");
+      //console.log(patientId);
       //return patient = await 
 
 

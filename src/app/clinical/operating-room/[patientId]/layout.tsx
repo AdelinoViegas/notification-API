@@ -14,9 +14,9 @@ export default async function Layout({
   params: Promise<{ patientId: string }>
 }){
   const { patientId } = await params;
-//  const patient = await getPatient({patientId}); 
+  /*const patient = await getPatient({patientId}); 
   
-  /*if(patient?.message || !patient.screening){
+  if(patient?.message || !patient.screening){
     redirect("/clinical/operating-room");
   }*/
     
