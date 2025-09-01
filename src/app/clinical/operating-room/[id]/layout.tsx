@@ -61,7 +61,7 @@ export default async function Layout({
             { path: "surgery-planning", title: "Planeamento da Cirurgia" },
             { path: "check-security", title: "Checklist de Segurança Cirúrgica" },
             { path: "intraoperative-procedure", title: "Procedimento Intraoperatório" },
-            { path: "postAnesthetic-recovery", title: "Recuperação Pós-Anestésica (RPA)" },
+            { path: "post-anesthetic-recovery", title: "Recuperação Pós-Anestésica (RPA)" },
           ]}
         />
       </div>

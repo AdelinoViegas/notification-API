@@ -10,8 +10,8 @@ import { useRouter } from "next/navigation";
 import Button from "@/components/ui/button";
 import Modal from "@/components/modal";
 import InputDetails from "@/components/ui/input-details";
-import Alert from "@/components/ui/alert";
 import { archivingSugery } from "@/backend/api/clinical/operating-room-api";
+import { toast } from "react-toastify";
 
 export default function ArchivingSugery({ 
   scheduleId,
@@ -22,21 +22,22 @@ export default function ArchivingSugery({
 }){
   const [ state, action ] = useActionState(archivingSugery, { message: "", status: false });
   const [ modalState, setModalState ] = useState(false);
-  const [ messageState, setMessageState ] = useState(false);
   const router = useRouter();
   const closeModal = ()=>setModalState(false);
 
   useEffect(()=>{
     if(state.message){
-      setMessageState(true);
+      if(state.status){
+        closeModal();
+        toast.success(state.message, {
+            autoClose: 1500,
+            onClose: ()=>{
+              router.replace(isArchived?'/clinical/schedule-sugery/archiveds':'/clinical/schedule-sugery');
+            }
+        });
+      }else
+          toast.error(state.message);
 
-      setTimeout(()=>{
-        if(state.status){
-          closeModal();
-          router.replace(isArchived?'/clinical/schedule-sugery/archiveds':'/clinical/schedule-sugery');
-        }
-        setMessageState(false);
-      }, 2000);
     }
   }, [state, isArchived, router]);
   
@@ -78,16 +79,6 @@ export default function ArchivingSugery({
             <Button>Salvar</Button>
           </div>
         </form>
-
-        {
-          state.message && messageState &&
-          <div className="mt-3">
-            <Alert
-              type={state.status?'success':'error'}
-              message={state.message}
-            />
-          </div>
-        }
       </Modal>
     </div>
   )

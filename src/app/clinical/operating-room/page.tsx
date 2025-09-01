@@ -27,7 +27,7 @@ export default async function Page({
     <main className="space-y-3">
       <Refresh />
       <div className="mt-6">
-        <Header title="Banco Operatório"/>
+        <Header title="Bloco Operatório"/>
       </div>
 
       <div className="flex lg:flex-row justify-between items-center m-0">
