@@ -37,7 +37,7 @@ async function getPatients({
     const sugeryType = await examModel.findById({_id: schedule?.sugeryType}).select({name: 1});
 
     formatedList.push({
-      id: items.id.toString() as string,
+      id: items?.id.toString() as string,
       patient: patient?.fullname as string,
       requestingService: surgerySchedulingArea.find( props => props._id === schedule?.requestingService)?.label as string,
       doctor: doctor.fullname as string,
@@ -151,27 +151,20 @@ async function archivingSugery(prev: unknown, formData: FormData){
   }
 }*/
 
-async function getPatient(/*{ patientId }: {
-  patientId: string;
-}*/){
+async function getPatient({ id }: { id: string}){
   try{
-      console.log("campo");
-      //console.log(patientId);
-      //return patient = await 
+     const operatingRoom = await operatingRoomModel.findOne({_id: id}).select({scheduleId: 1}); 
+     const schedule = await scheduleSugeryModel.findById({ _id: operatingRoom?.scheduleId });
+     const patient = await patientModel.findById({_id: schedule?.patientId})
 
-
-     /*return {
-      _id: patient._id.toString() as string,
-      fullname: personalData.personal.fullname,
-      screening: {
-        _id: screening._id.toString() as string,
-        priority: screening.priority as string,
-        reason: screening.reason as string,
-        advice: screening.advice as string,
-        state: screening.state as string,
-        vitalSignals: {}
-      }
-    }*/
+     return {
+      _id: patient?._id.toString() as string,
+      fullname: patient?.fullname as string,
+      registerNumber: patient?.registerNumber as number,
+      age: patient?.age as number,
+      gender: patient?.gender as string,
+      priority: surgerySchedulingArea.find( props => props._id === schedule?.requestingService)?.color as string,
+    }
     
   }catch(e){
     const err = e as Error;
