@@ -1,12 +1,13 @@
 import { getExamsHistories } from "@/backend/api/clinical/scheduling-api"
+import ExamHistoryComponent from "./client";
 
 export default async function ExamHistory({ patientId }: { patientId: string }){
   const examsHistory = await getExamsHistories(patientId);
 
   return(
-    <div>
-      <h2>Todos os exames realizados</h2>
-      <pre>{JSON.stringify(examsHistory, null, 2)}</pre>
+    <div className="space-y-3 py-2">
+      <h2 className="text-lg font-bold">Todos os exames realizados</h2>
+      <ExamHistoryComponent items={examsHistory} />
     </div>
   )
 }

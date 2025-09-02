@@ -6,8 +6,8 @@ import {
   getDateInSlashFormat 
 } from "@/lib/date-formater";
 import { redirect } from "next/navigation";
-import { surgerySchedulingArea } from "./translator";
-import { getExamResult as getExamResutlFromUnit } from "./internal-services-api";
+import { surgerySchedulingArea } from "@/backend/api/clinical/translator";
+import { getExamResult as getExamResutlFromUnit } from "@/backend/api/clinical/internal-services-api";
 
 import { 
   examModel, 
@@ -25,6 +25,7 @@ import {
   scheduleServiceModel,
   screeningModel,
   scheduleSugeryModel,
+  internalExamResultModel,
 } from "@/backend/model";
 import { getUser } from "@/backend/api/clinical/api";
 import { getSyncedHistories, syncPatientRegister } from "./process-control";
@@ -1224,10 +1225,10 @@ async function getExamsHistories(patientId: string){
       for(const provided of servicesProvided){
         for(const patientId of [syncedPatientHistories.id, ...syncedPatientHistories.secondaries]){
           const examResult = await scheduleExamModel.findById({ _id: provided.scheduleId }).select({ patientId: 1, exams: 1, updatedAt: 1 });
- 
+
           if(examResult?.patientId?.toString() === patientId.toString())
             allExamHistory.push({
-              internalServiceId: examResult?._id.toString() as string,
+              internalServiceId: provided?._id.toString() as string,
               patientId: examResult?.patientId?.toString() as string,
               examsQuantity: examResult?.exams.length as number,
               updatedAt: examResult?.updatedAt as Date
@@ -1237,6 +1238,36 @@ async function getExamsHistories(patientId: string){
     }
     
     return allExamHistory;
+  }catch (e){
+    console.log(e);
+    return [];
+  }
+}
+
+async function getExamResultDetail(id: string){
+  try{
+    const service = await scheduleServiceModel.findById({ _id: id });
+    const exams = await scheduleExamModel.findById({ _id: service?.scheduleId });
+    const resultDetails = [];
+
+    if(exams?.exams)
+      for (const examId of exams.exams){
+        const result = await internalExamResultModel.findOne({ 
+          serviceId: id, 
+          examId: examId 
+        });
+
+        const exam = await examModel.findById({ _id: examId });
+
+        resultDetails.push({
+          name: exam?.name as string,
+          description: result?.description as string,
+          storageId: result?.storageId as string,
+          createdAt: result?.createdAt as Date
+        });
+      }
+    
+    return resultDetails;
   }catch (e){
     console.log(e);
     return [];
@@ -1275,5 +1306,6 @@ export {
   getScheduleSugery,
   updatePaymentDataToSugery,
   /*rescheduleSugery,*/
-  getExamsHistories
+  getExamsHistories,
+  getExamResultDetail
 };
