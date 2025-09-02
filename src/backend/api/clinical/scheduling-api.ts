@@ -7,7 +7,7 @@ import {
 } from "@/lib/date-formater";
 import { redirect } from "next/navigation";
 import { surgerySchedulingArea } from "./translator";
-import { getExamResult as getExamResutlFromUnit } from "./internal-services-api";
+import { getExamResult as getExamResutlFromUnit, getScheduledExams } from "./internal-services-api";
 
 import { 
   examModel, 
@@ -25,6 +25,7 @@ import {
   scheduleServiceModel,
   screeningModel,
   scheduleSugeryModel,
+  internalExamResultModel,
 } from "@/backend/model";
 import { getUser } from "@/backend/api/clinical/api";
 import { getSyncedHistories, syncPatientRegister } from "./process-control";
@@ -1236,6 +1237,35 @@ async function getExamsHistories(patientId: string){
   }
 }
 
+async function getExamResultDetail(id: string){
+  try{
+    const exams = await scheduleExamModel.findById({ _id: id });
+    const list = [];
+
+    console.log(exams);
+
+    if(exams?.exams)
+      for (const examId of exams.exams){
+        const result = await internalExamResultModel.findOne({ 
+          serviceId: id, 
+          examId: examId 
+        });
+
+        const exam = await examModel.findById({ _id: examId });
+
+        list.push({
+          name: exam?.name as string,
+          description: result?.description as string,
+          storageId: result?.storageId as string,
+          createdAt: result?.createdAt as Date
+        });
+      }
+    // console.log(list);
+  }catch (e){
+    console.log(e)
+  }
+}
+
 export {
   signExam,
   signExamResult,
@@ -1268,5 +1298,6 @@ export {
   getScheduleSugery,
   updatePaymentDataToSugery,
   /*rescheduleSugery,*/
-  getExamsHistories
+  getExamsHistories,
+  getExamResultDetail
 };
