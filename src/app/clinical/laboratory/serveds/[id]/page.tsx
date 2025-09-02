@@ -1,8 +1,8 @@
 import { getPatient, getScheduledExams } from "@/backend/api/clinical/internal-services-api";
 import { internalExamResultModel } from "@/backend/model";
 import Accordium from "@/components/ui/accordium";
-import UserFileViewer from "@/components/user-file-viewer";
 import InputDetails from "@/components/ui/input-details";
+import ViewUserFile from "@/components/view-user-file-client";
 
 export default async function Page({ params }: { params: Promise<{ id: string }>}){
   const { id } = await params;
@@ -31,7 +31,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                 />
                 
                 { examResult?.storageId &&
-                  <UserFileViewer id={examResult.storageId} />
+                  <ViewUserFile id={examResult.storageId} />
                 }
               </Accordium>
             );

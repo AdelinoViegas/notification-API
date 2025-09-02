@@ -1218,10 +1218,10 @@ async function getExamsHistories(patientId: string){
       for(const provided of servicesProvided){
         for(const patientId of [syncedPatientHistories.id, ...syncedPatientHistories.secondaries]){
           const examResult = await scheduleExamModel.findById({ _id: provided.scheduleId }).select({ patientId: 1, exams: 1, updatedAt: 1 });
- 
+
           if(examResult?.patientId?.toString() === patientId.toString())
             allExamHistory.push({
-              internalServiceId: examResult?._id.toString() as string,
+              internalServiceId: provided?._id.toString() as string,
               patientId: examResult?.patientId?.toString() as string,
               examsQuantity: examResult?.exams.length as number,
               updatedAt: examResult?.updatedAt as Date
@@ -1239,10 +1239,9 @@ async function getExamsHistories(patientId: string){
 
 async function getExamResultDetail(id: string){
   try{
-    const exams = await scheduleExamModel.findById({ _id: id });
-    const list = [];
-
-    console.log(exams);
+    const service = await scheduleServiceModel.findById({ _id: id });
+    const exams = await scheduleExamModel.findById({ _id: service?.scheduleId });
+    const resultDetails = [];
 
     if(exams?.exams)
       for (const examId of exams.exams){
@@ -1253,16 +1252,18 @@ async function getExamResultDetail(id: string){
 
         const exam = await examModel.findById({ _id: examId });
 
-        list.push({
+        resultDetails.push({
           name: exam?.name as string,
           description: result?.description as string,
           storageId: result?.storageId as string,
           createdAt: result?.createdAt as Date
         });
       }
-    // console.log(list);
+    
+    return resultDetails;
   }catch (e){
-    console.log(e)
+    console.log(e);
+    return [];
   }
 }
 

@@ -4,11 +4,22 @@ import { PatientHistory } from "@/backend/api/clinical/types";
 import Modal from "@/components/modal";
 import { useState } from "react";
 import { getExamResultDetail } from "@/backend/api/clinical/scheduling-api";
+import Accordium from "@/components/ui/accordium";
+import InputDetails from "@/components/ui/input-details";
+import ViewUserFile from "@/components/view-user-file-client";
+
+type  ResultDetails = Awaited<ReturnType<typeof getExamResultDetail>>;
 
 export default function ExamHistoryComponent({ items }: { items: PatientHistory[]}){
   const [ modal, setModal ] = useState(false);
+  const [ resultDetail, setResultDetail ] = useState<ResultDetails>([]);
+
   const handlerClick = (id: string)=>{
-    getExamResultDetail(id).then()
+    getExamResultDetail(id)
+    .then(data => {
+      setResultDetail(data);
+      setModal(true);
+    });
   }
 
   return(
@@ -21,7 +32,7 @@ export default function ExamHistoryComponent({ items }: { items: PatientHistory[
             onClick={()=>handlerClick(props.internalServiceId)}
           >
             <small>{props.updatedAt.toLocaleString("pt-PT", { dateStyle: "long", timeStyle: "medium" })}</small>
-            <h2>Quantidade de Exames: {3}</h2>
+            <h2>Quantidade de Exames: {props.examsQuantity}</h2>
           </div>
         ))}
 
@@ -33,7 +44,28 @@ export default function ExamHistoryComponent({ items }: { items: PatientHistory[
         title="Detalhes do Exame"
         onClose={()=>setModal(false)}
       >
-        <>test</>
+        <div>
+          detalhes
+          
+          <ul>
+            {resultDetail.map((props, index)=>(
+              <Accordium title={props.name} key={index}>
+                <InputDetails
+                  textLabel="Resultado Descritivo"
+                  defaultValue={props.description as string}
+                  disabled 
+                />
+
+                {
+                  props?.storageId && 
+                  <ViewUserFile id={props.storageId} />
+                }
+              </Accordium>
+            ))}
+          </ul>
+
+          <pre>{JSON.stringify(resultDetail, null, 2)}</pre>
+        </div>
       </Modal>
     </div>
   )
