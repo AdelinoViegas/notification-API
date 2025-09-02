@@ -4,7 +4,7 @@ import { internalExamResultModel } from "@/backend/model";
 import FinishScheduledExam from "@/components/finish-schedule-exam";
 import { LoboratoryForm } from "@/components/forms/laboratory-imaging-form";
 import Accordium from "@/components/ui/accordium";
-import UserFileViewer from "@/components/user-file-viewer";
+import ViewUserFile from "@/components/view-user-file-client";
 
 export default async function Page({ params }: { params: Promise<{ id: string}>}){
   const { id } = await params;
@@ -44,7 +44,7 @@ export default async function Page({ params }: { params: Promise<{ id: string}>}
                   description={examResult?.description as string}
                 />
                 { examResult?.storageId &&
-                  <UserFileViewer id={examResult.storageId} />
+                  <ViewUserFile id={examResult.storageId} />
                 }
               </Accordium>
             );

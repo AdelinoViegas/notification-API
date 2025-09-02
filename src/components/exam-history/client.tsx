@@ -45,14 +45,14 @@ export default function ExamHistoryComponent({ items }: { items: PatientHistory[
         onClose={()=>setModal(false)}
       >
         <div>
-          detalhes
-          
-          <ul>
+          <ul className="space-y-3">
             {resultDetail.map((props, index)=>(
               <Accordium title={props.name} key={index}>
+                <h2 className="bg-green-200 px-3 rounded-lg">{props.createdAt.toLocaleString("pt", { dateStyle: "long", timeStyle: "medium" })}</h2>
                 <InputDetails
                   textLabel="Resultado Descritivo"
                   defaultValue={props.description as string}
+                  rows={2}
                   disabled 
                 />
 
@@ -63,14 +63,8 @@ export default function ExamHistoryComponent({ items }: { items: PatientHistory[
               </Accordium>
             ))}
           </ul>
-
-          <pre>{JSON.stringify(resultDetail, null, 2)}</pre>
         </div>
       </Modal>
     </div>
   )
-}
-
-function ComponentChunk(){
-  return;
 }

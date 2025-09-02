@@ -9,9 +9,8 @@ import FinishConsultation from "@/components/finish-consulation";
 import RequestReschedule from "@/components/request-reschedule";
 import { getScheduleAppointment } from "@/backend/api/clinical/scheduling-api";
 import RequestExams from "@/components/forms/request-exam";
-import UserFileViewer from "@/components/user-file-viewer";
 import ScheduleSugery from "@/components/forms/schedule-sugery";
-// import ExamResultViewer from "@/components/exam-result-viewer";
+import ViewUserFile from "@/components/view-user-file-client";
 
 export default async function Page({ params }: { params: Promise<{ id: string }>}){
   const { id } = await params; 
@@ -94,10 +93,8 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                 />
 
                 { consultResult?.storageId && 
-                  <UserFileViewer id={consultResult.storageId} />
+                  <ViewUserFile id={consultResult.storageId} />
                 }
-
-                {/* <ExamResultViewer results={results} /> */}
               </div>
             </div>
           </Accordium> 
