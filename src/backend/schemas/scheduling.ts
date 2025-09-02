@@ -296,6 +296,24 @@ const scheduleSugerySchema = new Schema({
   timestamps: true,
 });
 
+
+const operatingRoomSchema = new Schema<ConsultResult>({
+  scheduleId: Schema.Types.ObjectId,
+  served: {
+    type: Boolean,
+    default: false,
+  },
+  archiving: {
+    reason: String,
+    userId: Schema.Types.ObjectId,
+  },
+  userId: Schema.Types.ObjectId,
+
+}, {
+  timestamps: true,
+  collection: "schedule_in_operating_room",
+});
+
 export{
   examSchema,
   examGroupSchema,
@@ -309,4 +327,5 @@ export{
   scheduleAppointmentSchema,
   officeSchema,
   scheduleSugerySchema,
+  operatingRoomSchema,
 }

@@ -5,7 +5,7 @@ import ExamHistory from "@/components/exam-history";
 
 export default async function Page({ params }: { params: Promise<{ patientId: string }>}){
   const { patientId } = await params;
-
+  
   return(
     <main>
       <Refresh />

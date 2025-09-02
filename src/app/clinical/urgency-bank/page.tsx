@@ -24,7 +24,7 @@ export default async function Page({
     name: name, 
     priority: priority
   }));
-  
+
   const summary = orderByPriority(await getPatients({ name })).summary;
 
   return(

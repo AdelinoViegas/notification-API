@@ -1,6 +1,6 @@
 import { GETpatient } from "@/backend/api/clinical/types";
 import { priorityToComponent, surgerySchedulingArea } from "@/backend/api/clinical/translator";
-import { ScheduleSugery } from "./table-formater";
+import { ScheduleSugery } from "@/lib/table-formater";
 
 function orderByPriority(dataElements: GETpatient[]){
   const references = [ "red", "orange", "yellow", "green", "blue" ];
@@ -39,7 +39,7 @@ function priorityInOperatingRoom(dataElements: ScheduleSugery[]){
   for(const area of reference){
     let count = 0;
     for(const element of dataElements){
-      if(surgerySchedulingArea.find((prop)=>prop._id === element.requestingService)?.color === area){
+      if(surgerySchedulingArea.find((prop)=>prop.label === element.requestingService)?.color === area){
         orderElements.push(element);
         count++;
       }

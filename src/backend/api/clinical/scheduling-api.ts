@@ -1055,12 +1055,19 @@ async function scheduleSugery(prev: unknown, formData: FormData){
 async function getScheduleSugeries({
   name,
   area,
+  served,
+  canceled
 }:{
   name?: string,
-  area?: string, 
+  area?: string,
+  served?: boolean,
+  canceled?: boolean, 
 }){
   const formatedList = [];
-  const schedule = await scheduleSugeryModel.find();
+  const schedule = await scheduleSugeryModel.find({
+    served: served?served:false,
+    canceled: canceled?canceled:false,
+  });
 
   for(const items of schedule){
     const patient = await patientModel.findById({_id: items.patientId}).select({fullname: 1});

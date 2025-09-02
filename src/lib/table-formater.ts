@@ -44,7 +44,7 @@ export type ScheduleSugery = {
   requestingService: string;
   infirmary: string;
   bed: string;
-  status: string;
+  status?: string;
 };
 
 export type DoctorOffice = {
@@ -292,7 +292,26 @@ export function tableSugeries(sugeries: ScheduleSugery[]){
         item.infirmary,
         item.bed,
         item.doctor,
-        item.status,
+        item?.status as string,
+      ]
+    });
+
+  return tableRows;
+}
+
+export function tableOperatingRoom(sugeries: ScheduleSugery[]){
+  const tableRows:TableRow[] = [];
+  for(const item of sugeries)
+    tableRows.push({
+      id: item.id,
+      row: [
+        item.requestingService,
+        item.date, 
+        item.patient,
+        item.sugeryType,
+        item.infirmary,
+        item.bed,
+        item.doctor,
       ]
     });
 
