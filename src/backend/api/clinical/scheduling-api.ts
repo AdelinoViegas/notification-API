@@ -6,8 +6,8 @@ import {
   getDateInSlashFormat 
 } from "@/lib/date-formater";
 import { redirect } from "next/navigation";
-import { surgerySchedulingArea } from "./translator";
-import { getExamResult as getExamResutlFromUnit, getScheduledExams } from "./internal-services-api";
+import { surgerySchedulingArea } from "@/backend/api/clinical/translator";
+import { getExamResult as getExamResutlFromUnit } from "@/backend/api/clinical/internal-services-api";
 
 import { 
   examModel, 
