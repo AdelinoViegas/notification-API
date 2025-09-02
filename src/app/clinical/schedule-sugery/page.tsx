@@ -9,6 +9,7 @@ import Refresh from "@/components/refresh";
 import Header from "@/components/header";
 import SelectionFilter from "@/components/ui/selection-filter";
 import { getScheduleSugeries } from "@/backend/api/clinical/scheduling-api";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -37,14 +38,14 @@ export default async function Page({
             <TiInputChecked className="size-5" />
             Atendidos
           </Button>
-        {/*</Link>
+        {/*</Link>*/}
 
-        <Link href="/clinical/appointment/archiveds">*/}
+        <Link href="/clinical/schedule-sugery/archiveds">
           <Button className="flex gap-3 bg-slate-700">
             <PiArchiveDuotone className="size-5" />
             Arquivados
           </Button>
-       {/* </Link>*/}
+        </Link>
       </div>
 
       <div className="lg:flex justify-between items-center my-4">

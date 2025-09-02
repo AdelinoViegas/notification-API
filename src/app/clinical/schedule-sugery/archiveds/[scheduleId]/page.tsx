@@ -1,10 +1,10 @@
 import Header from "@/components/header";
 import Card from "@/components/ui/card";
-import { getScheduleAppointment } from "@/backend/api/clinical/scheduling-api";
+import { getScheduleSugery } from "@/backend/api/clinical/scheduling-api";
 import SubTitle from "@/components/ui/subtitle";
 import TitleAndSubtitle from "@/components/title-subtitle";
 import { angolaCurrency } from "@/lib/table-formater";
-import RescheduleAppointment from "@/components/reschedule-appointment";
+//import RescheduleAppointment from "@/components/reschedule-appointment";
 
 export default async function Page({
   params
@@ -14,7 +14,7 @@ export default async function Page({
   }>
 }){ 
   const { scheduleId } = await params;
-  const schedule = await getScheduleAppointment(scheduleId);
+  const schedule = await getScheduleSugery(scheduleId);
 
   return (
     <main className="space-y-3">
@@ -26,7 +26,7 @@ export default async function Page({
         <Card>
           <div className="grid grid-cols-2">
             <div>
-              <SubTitle className="inline-flex mt-3">Informações da Consulta</SubTitle>
+              <SubTitle className="inline-flex mt-3">Informações da Cirurgia</SubTitle>
               
               <TitleAndSubtitle
                 label="Nome do Utente"
@@ -39,28 +39,33 @@ export default async function Page({
               />
 
               <TitleAndSubtitle
-                label="Descrição da Consulta"
-                value={schedule.consult.name} 
+                label="Tipo de Cirurgia"
+                value={schedule.sugery.type} 
               />
 
               <TitleAndSubtitle
-                label="Preço da Consulta"
-                value={angolaCurrency(schedule.consult.price)} 
+                label="Preço da Cirurgia"
+                value={angolaCurrency(schedule.sugery.price)} 
               />
 
               <TitleAndSubtitle
                 label="Responsável"
-                value={schedule.responsable} 
+                value={'schedule.responsable'} 
               />
 
               <TitleAndSubtitle
-                label="Data da Consulta"
+                label="Data da Cirurgia"
                 value={schedule.date.pt} 
               />
 
               <TitleAndSubtitle
-                label="Hora da Consulta"
+                label="Hora da Cirurgia"
                 value={schedule.hour} 
+              />
+
+              <TitleAndSubtitle
+                label="Observação"
+                value={schedule.description} 
               />
             </div>
 
@@ -72,13 +77,13 @@ export default async function Page({
                 value={schedule.archiving.reason} 
               />
               
-              <RescheduleAppointment 
+              {/*<RescheduleAppointment 
                 scheduleId={scheduleId}
                 doctorId={schedule.doctorId}
                 date={schedule.date.en}
                 hour={schedule.hour}
                 isArchived
-              />
+              />*/}
             </div>
           </div>
         </Card>
