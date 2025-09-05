@@ -36,7 +36,7 @@ export default function ExamHistoryComponent({ items }: { items: PatientHistory[
           </div>
         ))}
 
-        {!items.length && <>Sem Histórico de exames realizados</>}
+        {!items.length && <span className="col-span-2">Sem Histórico de exames realizados</span>}
       </ul>
 
       <Modal
