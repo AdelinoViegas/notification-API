@@ -6,16 +6,12 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 import Button from "@/components/ui/button";
-import Selection from "@/components/ui/selection";
+import Selection, { type SelectionOption } from "@/components/ui/selection";
 import { enterIntoWorkplace } from "@/backend/api/clinical/workplace-api";
 import { toast } from "react-toastify";
 import LogoutButton from "@/components/logout-button";
 
-export default function WorkplaceFrom({
-  units
-}:{
-  units: { _id: string; label: string }[]
-}){
+export default function WorkplaceFrom({ units }:{ units: SelectionOption[] }){
   const [ state, action ] = useActionState(enterIntoWorkplace, { message: "", status: false });
   const router = useRouter();
 
@@ -30,12 +26,17 @@ export default function WorkplaceFrom({
   return(
     <div className="w-96 space-y-3">
       <form action={action} className="space-y-4">
-        <Selection
-          label="Local de Trabalho"
-          options={units}
-          name="workplaceId"
-          required
-        />
+       { units.length >= 2 && 
+          <Selection
+            label="Local de Trabalho"
+            options={units}
+            name="workplaceId"
+            required
+          />
+        }
+
+        { units.length === 1 && <input type="hidden" name="workplaceId" value={units[0]._id} /> }
+
         <div className="flex justify-between items-end">
           <LogoutButton
             baseUrl={process.env.LOGIN_URL as string}

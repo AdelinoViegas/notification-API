@@ -12,6 +12,8 @@ import { updateDemography } from "@/backend/api/clinical/api";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import forceRefreshPage from "@/lib/force-refresh";
+import Selection from "@/components/ui/selection";
+import { AngolaProvices } from "@/backend/api/clinical/translator";
 
 type InfoProps = {
   id: string;
@@ -29,6 +31,9 @@ export default function DemographicInfoForm({
   const [ state, action] = useActionState(updateDemography,{ message:"", status:false })
   const router = useRouter();
   const [ isEdit, setIsEdit ] = useState(false);
+  const [ isExternal, setIsExternal ] = useState(false);
+  const [ _naturality, setNaturality ] = useState(naturality);
+
   const disableEdit = ()=>setIsEdit(false);
 
   useEffect(()=>{
@@ -49,20 +54,42 @@ export default function DemographicInfoForm({
   return(
     <form {...{action}}>
       <div className="grid md:grid-cols-2 large:grid-cols-3 gap-3">
-        <input 
-          type="hidden" 
-          name="id" 
-          value={id} 
-        />
+        <input type="hidden" name="id" value={id} />
 
-        <InputField
-          textLabel="Nacionalidade"
-          name="nationality" 
-          required
-          placeholder="Nacionalidade do utente"
-          disabled={!isEdit}
+        {!isExternal && <Selection
+          label="Nacionalidade"
+          name="nationality"
+          options={[
+            { _id: "Angolana", label: "Angolana" },
+            { _id: "outros", label: "Outra" }
+          ]}
+          onChange={(e)=>{
+            if(e.target.value === "outros"){
+              setIsExternal(true);
+            }else {
+              setIsExternal(false);
+              setNaturality("Angola");
+            }
+          }}
           defaultValue={nationality}
-        />
+          disabled={!isEdit}
+          required
+        />}
+
+        { isExternal && 
+          <InputField
+            textLabel="Nacionalidade"
+            name="nationality" 
+            required
+            placeholder="Nacionalidade do utente"
+            onChange={(e) => {
+              if(/\wngo/ig.test(e.target.value)){
+                setIsExternal(false);
+                setNaturality("Angola");
+              }
+            }}
+          />
+        }
 
         <InputField
           textLabel="Naturalidade"
@@ -70,17 +97,28 @@ export default function DemographicInfoForm({
           required 
           placeholder="Naturalidade do utente"
           disabled={!isEdit}
-          defaultValue={naturality}
+          value={_naturality}
+          onChange={(e) => setNaturality(e.target.value)}
         />
 
+        {isExternal && 
         <InputField
           textLabel="Província"
-          name="province"
-          required 
+          name="province" 
           placeholder="Província do utente"
-          disabled={!isEdit}
           defaultValue={province}
-        />
+        />}
+
+        { !isExternal &&
+          <Selection
+            label="Província"
+            options={AngolaProvices}
+            name="province"
+            required
+            defaultValue={province}
+            disabled={!isEdit}
+          />
+        }
 
         <InputField
           textLabel="Morada Actual"

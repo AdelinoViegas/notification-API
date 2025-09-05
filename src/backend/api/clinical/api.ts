@@ -188,7 +188,7 @@ async function signPatient(prev: unknown, formData: FormData){
     const actualLocation = formData.get("actualLocation") as string;
     const street = formData.get("street") as string; 
     const homeNumber = formData.get("homeNumber") as string;
-
+    
     const locationDb = new demographyModel({
       patientId: patient._id,
       nationality,

@@ -4,13 +4,20 @@ import { currentLocationModel } from "@/backend/model";
 import { getUserId } from "@/lib/web-token";
 
 async function enterIntoWorkplace(prev: unknown, formData: FormData){
-  const workplaceId = formData.get("workplaceId") as string;
-  const state = await openWorkplace(workplaceId)
-  
-  return {
-    message: state?"Verification ok!":"Falha no acesso a área de trabalho!",
-    status: state
-  };
+  try{
+    const workplaceId = formData.get("workplaceId") as string;
+    await openWorkplace(workplaceId);
+    
+    return {
+      message: "Entrada confirmada!",
+      status: true
+    }
+  }catch {
+    return {
+      message: "operação impossivel",
+      status: false
+    }
+  }
 }
 
 async function openWorkplace(workplaceId: string){

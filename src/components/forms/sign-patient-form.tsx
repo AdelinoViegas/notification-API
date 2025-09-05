@@ -91,7 +91,8 @@ export default function SignPatientForm(){
 								className={clsx("w-full font-medium text-center px-3 rounded-t-2xl py-2", { 
 									"border-primary border-2 border-b-0 text-primary": currentTab === id,
 									"text-white bg-primary ": currentTab !== id, 
-									})}>
+									})}
+								>
 									{title}
 							</button>
 						))}
