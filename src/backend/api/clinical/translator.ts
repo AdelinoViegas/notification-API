@@ -1,5 +1,26 @@
 import { SelectionOption } from "@/components/ui/selection";
 
+export const AngolaProvices: SelectionOption [] = [
+  { _id: "bengo", label: "Bengo" },
+  { _id: "benguela", label: "Benguela" },
+  { _id: "bie", label: "Bié" },
+  { _id: "cabinda", label: "Cabinda" },
+  { _id: "cuando-cubango", label: "Cuando Cubango" },
+  { _id: "cuanza-norte", label: "Cuanza Norte" },
+  { _id: "cuanza-sul", label: "Cuanza Sul" },
+  { _id: "cunene", label: "Cunene" },
+  { _id: "huambo", label: "Huambo" },
+  { _id: "huila", label: "Huíla" },
+  { _id: "luanda", label: "Luanda" },
+  { _id: "lunda-norte", label: "Lunda Norte" },
+  { _id: "lunda-sul", label: "Lunda Sul" },
+  { _id: "malanje", label: "Malanje" },
+  { _id: "moxico", label: "Moxico" },
+  { _id: "namibe", label: "Namibe" },
+  { _id: "uige", label: "Uíge" },
+  { _id: "zaire", label: "Zaire" },
+];
+
 const patientGroup:SelectionOption[] = [
   {
     _id:'personal',

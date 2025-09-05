@@ -1,4 +1,5 @@
 "use client";
+
 import { 
   useState, 
   useCallback, 
@@ -15,6 +16,7 @@ import Selection, { SelectionOption } from "@/components/ui/selection";
 import PatientGroups from "@/components/forms/patient-groups";
 import { getExternalUnits } from "@/backend/api/clinical/urgency-bank-api";
 import ExternalUnitForm from "@/components/forms/external-unit-form";
+import { AngolaProvices } from "@/backend/api/clinical/translator";
 
 function AccesTypeForm(){
   const [ type, setType ] = useState("");
@@ -56,6 +58,82 @@ function AccesTypeForm(){
   );
 }
 
+function Demography(){
+  const [ isExternal, setIsExternal ] = useState(false);
+
+  return (
+    <div className="grid md:grid-cols-2 large:grid-cols-3 gap-3">
+      {!isExternal && <Selection
+        label="Nacionalidade"
+        options={[
+          { _id: "Angolana", label: "Angolana" },
+          { _id: "outros", label: "Outra" }
+        ]}
+
+        onChange={(e)=>{
+          if(e.target.value === "outros"){
+            setIsExternal(true);
+          }else
+            setIsExternal(false);
+        }}
+      />}
+
+      { isExternal && 
+      <InputField
+        textLabel="Nacionalidade"
+        name="nationality" 
+        placeholder="Nacionalidade do utente"
+        onChange={(e) => {
+          if(/\wngolana/ig.test(e.target.value)){
+            setIsExternal(false);
+          }
+        }}
+      />}
+
+      <InputField
+        textLabel="Naturalidade"
+        name="naturality" 
+        disabled={!isExternal}
+        value={!isExternal ? "Angola": undefined}
+        placeholder="Naturalidade do utente"
+      />
+
+      {isExternal && <InputField
+        textLabel="Província"
+        name="province" 
+        placeholder="Província do utente"
+      />}
+
+      { !isExternal &&
+        <Selection
+          label="Nacionalidade"
+          options={AngolaProvices}
+          name="province"
+        />
+      }
+
+      <InputField
+        textLabel="Morada Actual (Município/Bairro/Ponto de referência)"
+        name="actualLocation" 
+        placeholder="Município/Bairro/Ponto de referência"
+        required
+        id="Morada Actual:1:demography"
+      />
+
+      <InputField
+        textLabel="Rua (Opcional)"
+        name="street" 
+        placeholder="Digite a rua"
+      />
+
+      <InputField
+        textLabel="Nª da casa (Opcional)"
+        name="homeNumber" 
+        placeholder="Digite o seu município"
+      />
+    </div>
+  );
+}
 const tabComponents = [
   {
     title: "Informações Pessoais",
@@ -127,46 +205,46 @@ const tabComponents = [
   },
   {
     title: "Informações Demográficas",
-    children: 
-    <div className="grid md:grid-cols-2 large:grid-cols-3 gap-3">
-      <InputField
-				textLabel="Nacionalidade"
-				name="nationality" 
-				placeholder="Nacionalidade do utente"
-			/>
+    children: <Demography />
+    // <div className="grid md:grid-cols-2 large:grid-cols-3 gap-3">
+    //   <InputField
+		// 		textLabel="Nacionalidade"
+		// 		name="nationality" 
+		// 		placeholder="Nacionalidade do utente"
+		// 	/>
 
-			<InputField
-				textLabel="Naturalidade"
-				name="naturality" 
-				placeholder="Naturalidade do utente"
-			/>
+		// 	<InputField
+		// 		textLabel="Naturalidade"
+		// 		name="naturality" 
+		// 		placeholder="Naturalidade do utente"
+		// 	/>
 
-			<InputField
-				textLabel="Província"
-				name="province" 
-				placeholder="Província do utente"
-			/>
+		// 	<InputField
+		// 		textLabel="Província"
+		// 		name="province" 
+		// 		placeholder="Província do utente"
+		// 	/>
 
-			<InputField
-				textLabel="Morada Actual (Município/Bairro/Ponto de referência)"
-				name="actualLocation" 
-				placeholder="Município/Bairro/Ponto de referência"
-				required
-        id="Morada Actual:1:demography"
-			/>
+		// 	<InputField
+		// 		textLabel="Morada Actual (Município/Bairro/Ponto de referência)"
+		// 		name="actualLocation" 
+		// 		placeholder="Município/Bairro/Ponto de referência"
+		// 		required
+    //     id="Morada Actual:1:demography"
+		// 	/>
 
-			<InputField
-				textLabel="Rua (Opcional)"
-				name="street" 
-				placeholder="Digite a rua"
-			/>
+		// 	<InputField
+		// 		textLabel="Rua (Opcional)"
+		// 		name="street" 
+		// 		placeholder="Digite a rua"
+		// 	/>
 
-			<InputField
-				textLabel="Nª da casa (Opcional)"
-				name="homeNumber" 
-				placeholder="Digite o seu município"
-			/>
-    </div>
+		// 	<InputField
+		// 		textLabel="Nª da casa (Opcional)"
+		// 		name="homeNumber" 
+		// 		placeholder="Digite o seu município"
+		// 	/>
+    // </div>
   },
   {
     title: "Responsáveis",
@@ -228,5 +306,6 @@ const tabComponents = [
     children: <AccesTypeForm />
   }
 ];
+
 
 export default tabComponents;
