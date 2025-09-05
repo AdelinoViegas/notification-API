@@ -97,14 +97,16 @@ function Demography(){
 
       <InputField
         textLabel="Naturalidade"
-        name="_naturality" 
         disabled={!isExternal}
         value={naturality}
         onChange={(e)=> setNaturality(e.target.value)}
         placeholder="Naturalidade do utente"
       />
 
-      {isExternal && <InputField
+      <input type="hidden" name="naturality" value={naturality} />
+
+      {isExternal && 
+      <InputField
         textLabel="Província"
         name="province" 
         placeholder="Província do utente"

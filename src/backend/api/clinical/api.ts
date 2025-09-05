@@ -183,7 +183,7 @@ async function signPatient(prev: unknown, formData: FormData){
 
     // locations info
     const nationality = formData.get("nationality") as string;
-    const naturality = formData.get("_naturality") as string;
+    const naturality = formData.get("naturality") as string;
     const province = formData.get("province") as string;
     const actualLocation = formData.get("actualLocation") as string;
     const street = formData.get("street") as string; 
@@ -198,7 +198,7 @@ async function signPatient(prev: unknown, formData: FormData){
       street,
       homeNumber,
     });
-    
+
     //responsibles
     const responsibles:Responsable[] = [];
 
