@@ -60,22 +60,26 @@ function AccesTypeForm(){
 
 function Demography(){
   const [ isExternal, setIsExternal ] = useState(false);
+  const [ naturality, setNaturality ] = useState("Angola");
 
   return (
     <div className="grid md:grid-cols-2 large:grid-cols-3 gap-3">
       {!isExternal && <Selection
         label="Nacionalidade"
+        name="nationality"
         options={[
           { _id: "Angolana", label: "Angolana" },
           { _id: "outros", label: "Outra" }
         ]}
-
         onChange={(e)=>{
           if(e.target.value === "outros"){
             setIsExternal(true);
-          }else
+          }else {
             setIsExternal(false);
+            setNaturality("Angola");
+          }
         }}
+        defaultValue="Angolana"
       />}
 
       { isExternal && 
@@ -86,15 +90,17 @@ function Demography(){
         onChange={(e) => {
           if(/\wngolana/ig.test(e.target.value)){
             setIsExternal(false);
+            setNaturality("Angola");
           }
         }}
       />}
 
       <InputField
         textLabel="Naturalidade"
-        name="naturality" 
+        name="_naturality" 
         disabled={!isExternal}
-        value={!isExternal ? "Angola": undefined}
+        value={naturality}
+        onChange={(e)=> setNaturality(e.target.value)}
         placeholder="Naturalidade do utente"
       />
 
@@ -106,7 +112,7 @@ function Demography(){
 
       { !isExternal &&
         <Selection
-          label="Nacionalidade"
+          label="Província"
           options={AngolaProvices}
           name="province"
         />
