@@ -142,6 +142,7 @@ function Demography(){
     </div>
   );
 }
+
 const tabComponents = [
   {
     title: "Informações Pessoais",
@@ -214,45 +215,6 @@ const tabComponents = [
   {
     title: "Informações Demográficas",
     children: <Demography />
-    // <div className="grid md:grid-cols-2 large:grid-cols-3 gap-3">
-    //   <InputField
-		// 		textLabel="Nacionalidade"
-		// 		name="nationality" 
-		// 		placeholder="Nacionalidade do utente"
-		// 	/>
-
-		// 	<InputField
-		// 		textLabel="Naturalidade"
-		// 		name="naturality" 
-		// 		placeholder="Naturalidade do utente"
-		// 	/>
-
-		// 	<InputField
-		// 		textLabel="Província"
-		// 		name="province" 
-		// 		placeholder="Província do utente"
-		// 	/>
-
-		// 	<InputField
-		// 		textLabel="Morada Actual (Município/Bairro/Ponto de referência)"
-		// 		name="actualLocation" 
-		// 		placeholder="Município/Bairro/Ponto de referência"
-		// 		required
-    //     id="Morada Actual:1:demography"
-		// 	/>
-
-		// 	<InputField
-		// 		textLabel="Rua (Opcional)"
-		// 		name="street" 
-		// 		placeholder="Digite a rua"
-		// 	/>
-
-		// 	<InputField
-		// 		textLabel="Nª da casa (Opcional)"
-		// 		name="homeNumber" 
-		// 		placeholder="Digite o seu município"
-		// 	/>
-    // </div>
   },
   {
     title: "Responsáveis",

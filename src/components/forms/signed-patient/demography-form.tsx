@@ -32,7 +32,7 @@ export default function DemographicInfoForm({
   const router = useRouter();
   const [ isEdit, setIsEdit ] = useState(false);
   const [ isExternal, setIsExternal ] = useState(false);
-  const [ _naturality, setNaturality ] = useState("Angola");
+  const [ _naturality, setNaturality ] = useState(naturality);
 
   const disableEdit = ()=>setIsEdit(false);
 
@@ -97,7 +97,8 @@ export default function DemographicInfoForm({
           required 
           placeholder="Naturalidade do utente"
           disabled={!isEdit}
-          defaultValue={naturality}
+          value={_naturality}
+          onChange={(e) => setNaturality(e.target.value)}
         />
 
         {isExternal && 
