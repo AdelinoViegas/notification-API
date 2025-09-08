@@ -11,20 +11,27 @@ jest.mock("../../src/backend/model", ()=> ({
   patientSyncModel: {
     findOne: jest.fn(),
     create: jest.fn(),
-    updateOne: jest.fn(),
-    deleteOne: jest.fn()
+    updateOne: jest.fn()
   }
 }));
 
 describe("Controle de Processos", ()=>{
-  describe("Sincronização do id do paciente", ()=>{
-    test("chamada normal", async ()=>{
-      const pastId = new Types.ObjectId();
-      const newId = new Types.ObjectId();
+  test("Sincronização do Id do paciente", async ()=>{
+    const pastId = new Types.ObjectId();
+    const newId = new Types.ObjectId();
+    
+    patientSyncModel.findOne
+    .mockReturnValueOnce(null)
+    .mockReturnValue({ 
+      id: pastId, 
+      secondaries: [1,2,3].map(()=> new Types.ObjectId()) 
+    })
 
-      const res = await syncPatientHistories(pastId, newId);
-      console.log(res);
-      expect(patientSyncModel.deleteOne).toHaveBeenCalled();
-    });
+    expect(await syncPatientHistories(pastId, newId)).toBe(true);
+    expect(await syncPatientHistories(pastId, new Types.ObjectId())).toBe(true);
+
+    expect(patientSyncModel.findOne).toHaveBeenCalled();
+    expect(patientSyncModel.create).toHaveBeenCalled();
+    expect(patientSyncModel.updateOne).toHaveBeenCalled();
   });
 })

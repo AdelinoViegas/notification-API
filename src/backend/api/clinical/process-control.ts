@@ -118,7 +118,6 @@ export async function syncPatientRegister(id: string){
 export async function syncPatientHistories(pastId: string, newId: string){
   try{
     const histories = await patientSyncModel.findOne({ id: pastId });
-    console.log(histories);
 
     if(!histories){
       await patientSyncModel.create({
