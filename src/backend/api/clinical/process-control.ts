@@ -143,9 +143,10 @@ export async function syncPatientHistories(pastId: string, newId: string){
 }
 
 export async function getSyncedHistories(id: string){
-  try{
-    const histories = await patientSyncModel.findOne({ id }).select({ id: 1, secondaries: 1 });
+  console.log("called", id);
 
+  try{
+    const histories = await patientSyncModel.findOne({ id }).select({ id: 1, secondaries: 1 });  
     if(histories)
       return histories;
     // buscar nas referencias passadas do utente
@@ -158,8 +159,9 @@ export async function getSyncedHistories(id: string){
       }
     }
 
-    throw new Error();
-  }catch{
+    throw new Error("paciente sem historico!");
+  }catch(e){
+    console.log(e);
     return null;
   }
 }
