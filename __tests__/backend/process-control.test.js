@@ -1,5 +1,10 @@
 import { patientSyncModel } from "../../src/backend/model";
-import { syncPatientHistories, getSyncedHistories } from "../../src/backend/api/clinical/process-control";
+import { 
+  syncPatientHistories, 
+  getSyncedHistories, 
+  syncPatientRegister,
+  testMock
+} from "../../src/backend/api/clinical/process-control";
 import { Types } from "mongoose";
 
 beforeAll(() => {
@@ -61,5 +66,5 @@ describe("Controle de Processos", ()=>{
 
     expect(await getSyncedHistories(new Types.ObjectId())).toBeNull(); // erro
     expect(await getSyncedHistories(id)).toEqual(histories);
-  })
+  });
 })

@@ -143,8 +143,6 @@ export async function syncPatientHistories(pastId: string, newId: string){
 }
 
 export async function getSyncedHistories(id: string){
-  console.log("called", id);
-
   try{
     const histories = await patientSyncModel.findOne({ id }).select({ id: 1, secondaries: 1 });  
     if(histories)
@@ -164,4 +162,8 @@ export async function getSyncedHistories(id: string){
     console.log(e);
     return null;
   }
+}
+
+export async function testMock(id: string){
+  await syncPatientHistories(id, "test");
 }
