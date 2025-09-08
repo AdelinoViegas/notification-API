@@ -5,7 +5,7 @@ import InputField from "@/components/ui/input-field";
 import { getConsultResult, getPatient } from "@/backend/api/clinical/office-api";
 import Accordium from "@/components/ui/accordium";
 import { civilState, gender } from "@/backend/api/clinical/translator";
-import UserFileViewer from "@/components/user-file-viewer";
+import ViewUserFile from "@/components/view-user-file-client";
 
 export default async function Page({ params }: { params: Promise<{ id: string }>}){ 
   const { id } = await params;
@@ -162,7 +162,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
           { consult?.storageId && 
             <div className="mt-8">
               <SubTitle className="inline-flex">Resultado externo</SubTitle>
-              <UserFileViewer id={consult.storageId} />
+              <ViewUserFile id={consult.storageId} />
             </div>
            }
         </Card>
