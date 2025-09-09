@@ -3,6 +3,7 @@ import './globals.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { Bounce, ToastContainer } from "react-toastify";
 // import localFont from 'next/font/local';
+import { Inter } from "next/font/google";
 
 // const local = localFont({ 
 //   src: [
@@ -24,12 +25,16 @@ import { Bounce, ToastContainer } from "react-toastify";
 //   ] 
 // });
 
+const font = Inter({
+  subsets: ["latin"]
+});
+
 export const metadata: Metadata = { title: "Master ERP" };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="pt-ao">
-      <body>
+      <body className={font.className}>
         <ToastContainer
           position="top-right"
           autoClose={5000}

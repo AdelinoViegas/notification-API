@@ -1,9 +1,7 @@
-import { patientSyncModel } from "../../src/backend/model";
 import { 
   syncPatientHistories, 
   testMock
 } from "../../src/backend/api/clinical/process-control";
-import { Types } from "mongoose";
 
 beforeEach(() => {
   jest.clearAllMocks();
