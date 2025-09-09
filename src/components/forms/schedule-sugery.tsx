@@ -79,7 +79,7 @@ export default function ScheduleSugery(
   const filterDoctors = useCallback(async (e: ChangeEvent<HTMLSelectElement>)=>{
     const specialtyId = e.target.value;
     const data = await getExams(specialtyId);
-    const sugeryType = data.find( props => props.name === e.target.options[e.target.selectedIndex].text)?._id as string;
+    const sugeryType = data.find( props => props.name.trim() === e.target.options[e.target.selectedIndex].text.trim())?._id as string;
     setSugeryType(sugeryType);
 
     if(!specialtyId){

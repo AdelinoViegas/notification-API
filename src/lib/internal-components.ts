@@ -569,6 +569,132 @@ function familyInternalComponent(defaultValue: string){
 	}
 }
 
+
+function checklistInOperatingRoom(){
+  return {
+		title: "Checklist de Segurança Cirúrgica",
+		initialState: { message: "", status: false },
+		childrens: [  
+			{
+        className: "py-2",
+				separatedElements: [
+					{
+						label: "Identidade do paciente confirmada",
+						className: "flex gap-x-3 items-center",
+						elements: [
+							{ 
+								type: "radio",
+								props: {
+									label: "Sim",
+									name: "diabetes",
+
+								}
+							},
+							{ 
+								type: "radio",
+								props: {
+									label: "Não",
+									name: "diabetes",
+								}
+							},
+						]
+					},
+				],elements : [],
+			},
+			{ 
+        className: "py-2",
+        elements : [
+          { 
+            type: "textarea",
+            props: {
+              label: "Local e lado da cirurgia confirmados",
+              rows: 3,
+              placeholder: "Descreva o local e o lado que será feito a cirurgia",
+              name: "diseasesInFamily",
+              defaultValue: ""
+            }
+          }
+        ]
+			},
+			{      
+        className: "py-2",
+				separatedElements: [
+					{
+						label: "Consentimento validado",
+						className: "flex gap-3 items-center",
+						elements: [
+							{ 
+								type: "radio",
+								props: {
+									label: "Sim",
+									name: "respiratoryDiseases",
+								}
+							},
+							{ 
+								type: "radio",
+								props: {
+									label: "Não",
+									name: "respiratoryDiseases",					
+								}
+							},
+						]
+					}
+				],elements: []
+			},
+			{
+        className: "py-2",
+				separatedElements: [
+					{
+						label: "Risco anestésico verificado",
+						className: "flex gap-3 items-center",
+						elements: [
+							{ 
+								type: "radio",
+								props: {
+									label: "Sim",
+									name: "tuberculosis",
+								}
+							},
+							{ 
+								type: "radio",
+								props: {
+									label: "Não",
+									name: "tuberculosis",
+								}
+							},
+						]
+					}
+				],elements: []
+			},
+			{
+        className: "py-2",
+				separatedElements: [
+					{
+						label: "Disponibilidade de sangue e material de emergência confirmada",
+						className: "flex gap-3 items-center",
+						elements: [
+							{ 
+								type: "radio",
+								props: {
+									label: "Sim",
+									name: "malaria",
+								}
+							},
+							{ 
+								type: "radio",
+								props: {
+									label: "Não",
+									name: "malaria",
+								}
+							},
+						]
+					}
+				],elements: []
+			},
+		]
+	}
+}
+
 export {
 	symptomsInternalComponent,
 	diseaseInGeneralClinicComponent,
@@ -580,4 +706,5 @@ export {
 	lifeStyleInternalComponent,
 	eatingHabitsInternalComponent,
 	familyInternalComponent,
+  checklistInOperatingRoom,
 }

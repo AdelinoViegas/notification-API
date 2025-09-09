@@ -134,7 +134,7 @@ export default function GlobalComponent({
   );
 }
 
-function RenderUIElement({ items }: { items: UIComponent[]}){
+export function RenderUIElement({ items }: { items: UIComponent[]}){
   return items.map((item, key)=>{
     if(item.type === "select")
       return(
