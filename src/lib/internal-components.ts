@@ -569,7 +569,6 @@ function familyInternalComponent(defaultValue: string){
 	}
 }
 
-
 function checklistInOperatingRoom(){
   return {
 		title: "Checklist de Segurança Cirúrgica",
