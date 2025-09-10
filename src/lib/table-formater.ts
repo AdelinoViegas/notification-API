@@ -380,34 +380,67 @@ export function tableOffice(data: DoctorOffice[]){
     })});
 }*/
 
-type TempResult = {
-  _id: string;
-  plainText: string;
-  createdAt: Date;
-  file: {
-    name: string;
-    size: number;
-    link: string;
-  };
-  name: string;
-};
+type FormaterData = { [index: string ]: string }
 
-export class TableFormatter{
-  static tableRow:TableRow[] = [];
+type FormaterOptions = {
+  order?: string[]; 
+  transform?: {
+    targetKey: string;
+    fn(arg: string): string
+  }
+}
+export function formater(data: unknown[], options?:FormaterOptions){
+  try{
+    const keys = [];
+    const controller = new Map<string, null>();
+    const rows = [];
 
-  static urgencyExamResults(data: TempResult[]){
-    this.tableRow = [];
-    for(const props of data)
-      this.tableRow.push({
-        id: props._id,
-        row: [
-          getDataAndHoursFormat(props.createdAt),
-          props.name,
-          props.plainText?props.plainText:"Sem Descrição",
-          props.file.size?props.file.name:"Sem Arquivo"
-        ]
-      });
+    for (const key in data[0] as object)
+      keys.push(key);
 
-    return this.tableRow;
+    if(options?.order){
+      if(options.order.includes("id"))
+        throw new Error("não precisa adicionar a chave <id> !");
+      
+      if(options.order.length !== keys.slice(1).length)
+        throw new Error("chaves em falta!");
+
+      for(const k of options.order){
+        if(!keys.slice(1).includes(k))
+          throw new Error("a chave "+k+" não existe nos dados");
+      }
+    }
+    
+    const dataKeys = options?.order ??  keys.slice(1);
+
+    if(!keys.includes("id")){
+      throw new Error("a chave id não foi encontrado na estruturada de dados original");
+    }
+    
+    for(const i of data as FormaterData[])
+      for (const _ in i){
+        const row = {
+          id: i["id"],
+          row: dataKeys.map(k => {
+            if(options?.transform)
+              if(options.transform.targetKey === k)
+                return options.transform.fn(i[k]);
+
+            return i[k];
+          })
+        };
+        
+        if(controller.has(row.id))
+          continue;
+
+        controller.set(row.id, null);
+        rows.push(row);
+      }
+
+    return rows;
+  } catch (e) {
+    console.log(e);
+
+    return [];
   }
 }

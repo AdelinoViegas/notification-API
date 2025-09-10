@@ -4,12 +4,12 @@ import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
 import tableFormater, { formater } from "@/lib/table-formater";
-import { getPatients } from "@/backend/api/clinical/api";
 import Pagination from "@/components/pagination";
 import { PiArchiveDuotone } from "react-icons/pi";
 import { BiPlus as PlusIcon } from "react-icons/bi";
 import Refresh from "@/components/refresh";
-import { getDateInSlashFormat } from "@/lib/date-formater";
+import { getPatients } from "@/backend/api/clinical/hospitalization-api";
+// import RegisterHospitalization from "@/components/register-hospitalization";
 
 export const dynamic = "force-dynamic";
 
@@ -28,21 +28,7 @@ export default async function Page({
     page: page?Number(page):1,
   });
 
-  const patientRows = formater(patientsData.patients, {
-    order: [ 
-      "createdAt", 
-      "registerNumber", 
-      "fullname", 
-      "group", 
-      "accessType" 
-    ],
-    transform: {
-      targetKey: "createdAt",
-      fn(e) {
-        return getDateInSlashFormat(new Date(e));
-      }
-    }
-  });
+  const patientRows = formater(patientsData.patients);
   
   return (
     <main className="space-y-3">
@@ -78,13 +64,13 @@ export default async function Page({
       </div>
 
       <Table
-        baseRowLink="/clinical/patient"
+        baseRowLink="#"
         columns={[
-          "Data Registo", 
-          "Nº de Registo", 
+          "Serviço", 
+          "Data do Registro", 
           "Nome Completo",
-          "Grupo Utente",
-          "Tipo de Acesso"
+          "Estado Actual",
+          "Medico"
         ]} 
         rows={patientRows}
       />
