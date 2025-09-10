@@ -3,7 +3,7 @@ import Link from "next/link";
 import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
-import tableFormater, { formater } from "@/lib/table-formater";
+import { formater } from "@/lib/table-formater";
 import { getPatients } from "@/backend/api/clinical/api";
 import Pagination from "@/components/pagination";
 import { PiArchiveDuotone } from "react-icons/pi";

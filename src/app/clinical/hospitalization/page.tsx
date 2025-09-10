@@ -3,13 +3,12 @@ import Link from "next/link";
 import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
-import tableFormater, { formater } from "@/lib/table-formater";
+import { formater } from "@/lib/table-formater";
 import Pagination from "@/components/pagination";
 import { PiArchiveDuotone } from "react-icons/pi";
 import { BiPlus as PlusIcon } from "react-icons/bi";
 import Refresh from "@/components/refresh";
 import { getPatients } from "@/backend/api/clinical/hospitalization-api";
-// import RegisterHospitalization from "@/components/register-hospitalization";
 
 export const dynamic = "force-dynamic";
 

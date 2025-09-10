@@ -410,6 +410,13 @@ export function formater(data: unknown[], options?:FormaterOptions){
           throw new Error("a chave "+k+" não existe nos dados");
       }
     }
+
+    if(options?.transform){
+      if(!keys.slice(1).includes(options.transform.targetKey)){
+        console.log("chaves validas: ", keys.slice(1));
+        throw new Error(`a chave ${options.transform.targetKey} não existe!`); 
+      }
+    }
     
     const dataKeys = options?.order ??  keys.slice(1);
 
@@ -439,8 +446,8 @@ export function formater(data: unknown[], options?:FormaterOptions){
 
     return rows;
   } catch (e) {
-    console.log(e);
-
+    const err = e as Error;
+    console.error(err.message);
     return [];
   }
 }
