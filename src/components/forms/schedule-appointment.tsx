@@ -23,6 +23,7 @@ import {
   findDoctorCalendar,
   getExams
 } from "@/backend/api/clinical/scheduling-api";
+import { toast } from "react-toastify";
 
 export type DoctorRole = {
   _id: string;
@@ -44,7 +45,6 @@ export default function ScheduleAppointment(
   const [ specialties, setSpecialties ] = useState<SelectionOption[]>([]);
   const [ consults, setConsults ] = useState<SelectionOption[]>([]);
   const [ doctorTime, setDoctorTime ] = useState<DoctorDayAndTime>();
-  const [ messageState, setMessageState ] = useState(false);
   const doctorsRef = useRef<Array<DoctorRole>>([]);
   const formRef = useRef<HTMLFormElement>(null);
   const doctorDayRef = useRef<DoctorCalendarReference[]>(null);
@@ -119,22 +119,21 @@ export default function ScheduleAppointment(
   }, []);
 
   useEffect(()=>{
-    if(state.status)
-      setCloseAlert(false);
+    if(state.message)
+      if(state.status)
+        toast.success(state.message, {
+          autoClose: 1500,
+          onClose: ()=>{
+            if(!!scheduleType)
+              router.replace("/clinical/screening");
 
-    setMessageState(true);
-    
-    setTimeout(()=>{
-      setMessageState(false);
-
-      if(state.status){
-        formRef.current?.reset();
-        setDoctorDays([]);
-
-        if(!!scheduleType)
-          router.replace("/clinical/screening");
-      }
-    }, state.status?3000:7000);
+            formRef.current?.reset();
+            setDoctorDays([]);
+            setCloseAlert(false);
+          }
+        });
+      else
+        toast.error(state.message);
   }, [state, router]);
 
   useEffect(()=>{
@@ -230,16 +229,6 @@ export default function ScheduleAppointment(
         />
 
         <Button>Solicitar</Button>
-
-        {
-          state.message && messageState &&
-          <div className="flex mt-3">
-            <Alert
-              type={state.status?'success':'error'}
-              message={state.message}
-            />
-          </div>
-        }
       </form>
     </main>
   );
