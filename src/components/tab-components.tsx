@@ -3,7 +3,8 @@
 import { 
   useState, 
   useCallback, 
-  useEffect 
+  useEffect, 
+  ChangeEvent
 } from "react";
 import { 
   civilState, 
@@ -143,6 +144,35 @@ function Demography(){
   );
 }
 
+function BirthDate(){
+  const [age, setAge] = useState<number>();
+  const handlerAge = (el: ChangeEvent<HTMLInputElement>) => {
+    const yearOfBirth = new Date(el.target.value).getFullYear();
+    const currentYear = new Date().getFullYear();
+    setAge(currentYear - yearOfBirth);
+  }
+
+  return (
+    <>
+      <InputField
+        textLabel="Data de Nascimento"
+        name="patientBirthDate" 
+        type="date"
+        onChange={handlerAge}
+      />
+
+      <InputField
+        textLabel="Idade"
+        name="patientAge" 
+        type="number"
+        maxLength={3}
+        disabled
+        defaultValue={age}
+      />
+    </>
+  )
+}
+
 const tabComponents = [
   {
     title: "Informações Pessoais",
@@ -156,19 +186,7 @@ const tabComponents = [
         id="Nome do Paciente:0"
       />
       
-      <InputField
-        textLabel="Data de Nascimento"
-        name="patientBirthDate" 
-        type="date"
-      />
-
-      <InputField
-        textLabel="Idade"
-        name="patientAge" 
-        type="number"
-        maxLength={3}
-        placeholder="Digite a idade"
-      />
+      <BirthDate/>
 
       <Selection
         options={civilState}
