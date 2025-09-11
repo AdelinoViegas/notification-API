@@ -1,15 +1,15 @@
+import { ClinicalUser } from "@/lib/table-formater";
+import { tableClinicalUser } from "@/lib/table-formater";
 import Header from "@/components/header";
 import Table from "@/components/table";
-import tableFormater from "@/lib/table-formater";
 import Alert from "@/components/ui/alert";
-import { ClinicalUser } from "@/lib/table-formater";
 import { getUsers } from "@/backend/api/clinical/api";
 
 export const dynamic = "force-dynamic";
 
 export default async function Page() {
   
-  const userRows = tableFormater(await getUsers() as ClinicalUser[]);
+  const userRows = tableClinicalUser(await getUsers() as ClinicalUser[]);
 
   return (
     <main className="space-y-3">

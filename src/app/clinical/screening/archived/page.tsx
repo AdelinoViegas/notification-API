@@ -1,6 +1,6 @@
 import Table from "@/components/table";
 import { getPatientsInScreening } from "@/backend/api/clinical/api";
-import tableFormater from "@/lib/table-formater";
+import { tablePatient } from "@/lib/table-formater";
 import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
 
@@ -23,7 +23,7 @@ export default async function Page({
     page: page?Number(page):1,
   });
 
-  const patientRows = tableFormater(patientsData.patients);
+  const patientRows = tablePatient(patientsData.patients);
   
   return (
     <main className="space-y-3">

@@ -128,9 +128,6 @@ type TempResult = {
   name: string;
 };
 
-type FuncTableProps = GETpatient | PatientExam | ScheduleExam | ScheduleAppointment
-| PhisicalUnit | User | ClinicalUser | Calendar | Services;
-
 export function angolaCurrency(money: number | string){
   return new Intl.NumberFormat('pt-AO', { style: 'currency', currency: 'AOA' }).format(
     money as number,

@@ -1,6 +1,6 @@
 import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
-import tableFormater from "@/lib/table-formater";
+import { tablePatient } from "@/lib/table-formater";
 import { getPatients } from "@/backend/api/clinical/api";
 import Search from "@/components/ui/search";
 import Pagination from "@/components/pagination";
@@ -23,7 +23,7 @@ export default async function Page({
     served: true
   });
 
-  const patientRows = tableFormater(patientsData.patients);
+  const patientRows = tablePatient(patientsData.patients);
   
   return(
     <main>

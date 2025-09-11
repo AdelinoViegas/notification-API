@@ -1,10 +1,11 @@
+import { type ExternalUnit, tableExternalUnit } from "@/lib/table-formater";
 import Header from "@/components/header";
 import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
-import { type ExternalUnit, tableExternalUnit } from "@/lib/table-formater";
-import { getExternalUnits } from "@/backend/api/clinical/urgency-bank-api";
 import ExternalUnitForm from "@/components/forms/external-unit-form";
+import { getExternalUnits } from "@/backend/api/clinical/urgency-bank-api";
+
 export const dynamic = "force-dynamic";
 
 export default async function Page({

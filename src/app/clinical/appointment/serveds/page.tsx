@@ -1,6 +1,6 @@
+import { ScheduleAppointment, tableAppointments } from "@/lib/table-formater";
 import Header from "@/components/header";
 import Table from "@/components/table";
-import { ScheduleAppointment, tableAppointments } from "@/lib/table-formater";
 import Search from "@/components/ui/search";
 import { getPatients } from "@/backend/api/clinical/office-api";
 
