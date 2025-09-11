@@ -1,13 +1,13 @@
 "use client";
 
-import { applyDischarge } from "@/backend/api/clinical/urgency-bank-api";
+import { useActionState, useEffect } from "react";
+import { useRouter, useParams } from "next/navigation";
+import { toast } from "react-toastify";
 import Button from "@/components/ui/button";
 import InputDetails from "@/components/ui/input-details";
 import InputField from "@/components/ui/input-field";
 import Selection from "@/components/ui/selection";
-import { useRouter, useParams } from "next/navigation";
-import { useActionState, useEffect } from "react";
-import { toast } from "react-toastify";
+import { applyDischarge } from "@/backend/api/clinical/urgency-bank-api";
 
 export default function Page(){
   const discharges = [

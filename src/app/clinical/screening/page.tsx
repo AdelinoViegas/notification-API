@@ -1,9 +1,9 @@
+import { tablePatient } from "@/lib/table-formater";
 import Table from "@/components/table";
 import Link from "next/link";
 import Alert from "@/components/ui/alert";
 import Button from "@/components/ui/button";
 import Search from "@/components/ui/search";
-import tableFormater from "@/lib/table-formater";
 import { getPatientsInScreening } from "@/backend/api/clinical/api";
 import Pagination from "@/components/pagination";
 import { PiArchiveDuotone } from "react-icons/pi";
@@ -26,7 +26,7 @@ export default async function Page({
     page: page?Number(page):1,
   });
 
-  const patientRows = tableFormater(patientsData.patients);
+  const patientRows = tablePatient(patientsData.patients);
   
   return (
     <main className="space-y-3">

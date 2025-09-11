@@ -1,10 +1,10 @@
-import Header from "@/components/header";
+import { redirect } from "next/navigation";
 import clsx from "clsx";
+import Header from "@/components/header";
 import TabNav from "@/components/tabnav";
 import Card from "@/components/ui/card";
-import { getPatient } from "@/backend/api/clinical/urgency-bank-api";
 import { MonitorAccess, UnlockProcessAccess } from "@/components/lock-unlock-monitor-process";
-import { redirect } from "next/navigation";
+import { getPatient } from "@/backend/api/clinical/urgency-bank-api";
 
 export default async function Layout({ 
   children,

@@ -2,12 +2,12 @@ import TabNav from "@/components/tabnav";
 import PatientForm from "@/components/forms/patient-form";
 import Card from "@/components/ui/card";
 import Header from "@/components/header";
-import { getPatient } from "@/backend/api/clinical/api";
 import ArchiveButton from "@/components/archive-button";
 import Screening from "@/components/screening";
 import { UIComponent } from "@/components/forms/screening-ui";
 import { UnlockProcessAccess, MonitorAccess } from "@/components/lock-unlock-monitor-process";
 import ScheduleInScreening from "@/components/scheduleInScreening";
+import { getPatient } from "@/backend/api/clinical/api";
 
 type Routes = "patient" | "reason" | "vital-signals" | "priority" | "state" | "advice";
 

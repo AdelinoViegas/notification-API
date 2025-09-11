@@ -1,8 +1,8 @@
-import Table from "@/components/table";
-import { getPatientsInScreening } from "@/backend/api/clinical/api";
 import { tablePatient } from "@/lib/table-formater";
+import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
+import { getPatientsInScreening } from "@/backend/api/clinical/api";
 
 export const dynamic = "force-dynamic";
 

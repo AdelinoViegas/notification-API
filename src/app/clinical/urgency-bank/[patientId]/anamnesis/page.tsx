@@ -1,4 +1,5 @@
 import Button from "@/components/ui/button";
+import Hospitalization from "@/components/hospitalization";
 import GlobalComponent, { InternalComponent } from "@/components/global-component";
 import { 
 	diagnosticInternalComponent,
@@ -13,7 +14,6 @@ import {
 	symptomsInternalComponent,
 } from "@/lib/internal-components";
 import { getPatientUrgencyBank } from "@/backend/api/clinical/urgency-bank-api";
-import Hospitalization from "@/components/hospitalization";
 
 export default async function Page({ params }: {
 	params: Promise<{
