@@ -1,12 +1,8 @@
-import Button from "@/components/ui/button";
-import Link from "next/link";
 import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
 import { formater } from "@/lib/table-formater";
 import Pagination from "@/components/pagination";
-import { PiArchiveDuotone } from "react-icons/pi";
-import { BiPlus as PlusIcon } from "react-icons/bi";
 import Refresh from "@/components/refresh";
 import { getPatients } from "@/backend/api/clinical/hospitalization-api";
 
@@ -32,21 +28,6 @@ export default async function Page({
   return (
     <main className="space-y-3">
       <Refresh />
-      
-      <div className="flex gap-x-2">
-        <Link href="patient/sign" >
-          <Button className="flex gap-x-2">
-            <PlusIcon className="w-5" />
-            Novo Utente
-          </Button>
-        </Link>
-        <Link href="patient/serveds">
-          <Button className="flex gap-x-2 bg-slate-700">
-            <PiArchiveDuotone/>
-            Utentes Atendidos
-          </Button>
-        </Link>
-      </div>
 
       <div className="flex flex-col lg:flex-row justify-between lg:items-center">
         <Alert 
@@ -63,7 +44,7 @@ export default async function Page({
       </div>
 
       <Table
-        baseRowLink="#"
+        baseRowLink="/clinical/hospitalization"
         columns={[
           "Serviço", 
           "Data do Registro", 
