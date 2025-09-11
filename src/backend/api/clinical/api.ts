@@ -33,6 +33,7 @@ import {
 } from "@/backend/api/admin";
 import { omitUndefined } from "mongoose";
 import { randomInt } from "node:crypto";
+import { calculateAge } from "@/lib/calculate-age";
 
 type ChoosedGroup = Assured | Employee | Enterprise | undefined;
 
@@ -161,7 +162,6 @@ async function signPatient(prev: unknown, formData: FormData){
     // personal info 
     const patientName = formData.get("patientName") as string;
     const patientBirthDate = formData.get("patientBirthDate") as string;
-    const patientAge = formData.get("patientAge") as string;
     const civilState = formData.get("civilState") as string;
     const gender = formData.get("gender") as string;
     const patientTel = formData.get("patientTel") as string;
@@ -172,7 +172,6 @@ async function signPatient(prev: unknown, formData: FormData){
       fullname: patientName,
       registerNumber: randomInt(111111111, 999999999),
       birthDate: patientBirthDate,
-      age: patientAge,
       civilState,
       gender,
       tel: patientTel,
@@ -383,7 +382,7 @@ async function getPatient(patientId: string){
         fullname: personal?.fullname as string,
         registerNumber: personal?.registerNumber as number,
         birthDate: personal?.birthDate as Date,
-        age: personal?.age as number,
+        age: calculateAge(personal?.birthDate as Date),
         civilState: personal?.civilState as string,
         gender: personal?.gender as string,
         tel: personal?.tel as string,
@@ -424,7 +423,6 @@ async function updatePersonalInfo(prev:unknown, formData: FormData){
     const patientId = formData.get("id") as string;
     const fullname = formData.get("fullname") as string;
     const birthDate = formData.get("birthDate");
-    const age = Number(formData.get("age"));
     const civilState = formData.get("civilState") as string;
     const gender = formData.get("gender") as string;
     const lang = formData.get("language");
@@ -439,7 +437,6 @@ async function updatePersonalInfo(prev:unknown, formData: FormData){
     await patientModel.updateOne({_id: patientId}, {
       fullname,
       birthDate,
-      age,
       civilState,
       tel,
       gender,

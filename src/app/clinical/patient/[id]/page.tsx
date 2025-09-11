@@ -47,7 +47,7 @@ export default async function Page({
          { r === "patient" && <PatientForm patientId={id}/> }
 				 { r === "appointment" &&  <ScheduleAppointment patientId={id} /> }
 				 { r === "exams" &&  <RequestExams patientId={id} isFullWindow /> }
-         { r === "sugery" &&  <ScheduleSugery patientId={id} /> }
+         { r === "sugery" &&  <ScheduleSugery patientId={id} ispatient /> }
         </div>
       </Card>
 		</div>

@@ -34,8 +34,10 @@ export type DoctorRole = {
 export default function ScheduleSugery(
   { 
     patientId,
+    ispatient,
   }: { 
     patientId: string;
+    ispatient?: boolean;
   }){
   const [ state, action ] = useActionState(scheduleSugery, { message: "", status: false });
   const [ doctors, setDoctors] = useState<SelectionOption[]>([]);
@@ -153,8 +155,10 @@ export default function ScheduleSugery(
         toast.success(state.message, {
           autoClose: 1500,
           onClose: ()=>{
+            if(ispatient)
+              router.replace("/clinical/patient/");
+            
             formRef.current?.reset();
-            router.replace("/clinical/patient/");
             setCloseAlert(false);
           }
         });

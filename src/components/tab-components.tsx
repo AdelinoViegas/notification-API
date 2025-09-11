@@ -18,6 +18,7 @@ import PatientGroups from "@/components/forms/patient-groups";
 import { getExternalUnits } from "@/backend/api/clinical/urgency-bank-api";
 import ExternalUnitForm from "@/components/forms/external-unit-form";
 import { AngolaProvices } from "@/backend/api/clinical/translator";
+import { calculateAge } from "@/lib/calculate-age";
 
 function AccesTypeForm(){
   const [ type, setType ] = useState("");
@@ -145,11 +146,11 @@ function Demography(){
 }
 
 function BirthDate(){
-  const [age, setAge] = useState<number>();
-  const handlerAge = (el: ChangeEvent<HTMLInputElement>) => {
-    const yearOfBirth = new Date(el.target.value).getFullYear();
-    const currentYear = new Date().getFullYear();
-    setAge(currentYear - yearOfBirth);
+  const [age, setAge] = useState(0);
+
+  const handleAge = (el: ChangeEvent<HTMLInputElement>) => {
+    const calculatedAge = calculateAge(el.target.value);
+    setAge(calculatedAge);
   }
 
   return (
@@ -158,7 +159,7 @@ function BirthDate(){
         textLabel="Data de Nascimento"
         name="patientBirthDate" 
         type="date"
-        onChange={handlerAge}
+        onChange={handleAge}
       />
 
       <InputField
