@@ -116,6 +116,18 @@ export type Services = {
   nameLaboratory: string 
 };
 
+type TempResult = {
+  _id: string;
+  plainText: string;
+  createdAt: Date;
+  file: {
+    name: string;
+    size: number;
+    link: string;
+  };
+  name: string;
+};
+
 type FuncTableProps = GETpatient | PatientExam | ScheduleExam | ScheduleAppointment
 | PhisicalUnit | User | ClinicalUser | Calendar | Services;
 
@@ -125,130 +137,135 @@ export function angolaCurrency(money: number | string){
   );
 }
 
-export default function tableFormater(dataListToTable: FuncTableProps[]){
-  const dataListFormated: TableRow[] = [];
-  try{
-    if(!dataListToTable.length)
-      return [];
-    
-    if("price" in dataListToTable[0]){
-      const examData = dataListToTable as PatientExam[];
-      for(const data of examData){
-        dataListFormated.push({
-          id: data._id,
-          row: [
-            data.examCode,
-            data.name,
-            data.category,
-            data.classification,
-            data.group,
-            angolaCurrency(data.price),
-          ]
-        });
-      }
-    }else if("unitName" in dataListToTable[0]){
-      const schedules = dataListToTable as PhisicalUnit[];
-      for(const data of schedules){
-        dataListFormated.push({
-          id: data.id,
-          row: [
-            getDateInSlashFormat(data.createAt),
-            data.unitName,
-            data.type,
-            data.user,
-            data.status,
-          ]
-        });
-      }
-    }else if("description" in dataListToTable[0] && "monthName" in dataListToTable[0]){
-      const calendars = dataListToTable as Calendar[];
-      for(const data of calendars){
-        dataListFormated.push({
-          id: data.id,
-          row: [
-            getDateInSlashFormat(data.createdAt),
-            data.description,
-            data.monthName.toUpperCase(),
-            data.creator
-          ]
-        });
-      }
-    }else if("laboratory" in dataListToTable[0]){
-      const schedules = dataListToTable as ScheduleExam[];
-      for(const data of schedules){
-        dataListFormated.push({
-          id: data.id,
-          row: [
-            getDataAndHoursFormat(data.createAt),
-            data.patientName,
-            data.laboratory,
-            String(data.examQty),
-            data.user,
-            data.status,
-          ]
-        });
-      }
-    }else if("email" in dataListToTable[0]){
-      const users = dataListToTable as User[];
-      for(const data of users){
-        dataListFormated.push({
-          id: data.id,
-          row: [
-            getDateInSlashFormat(data.createAt),
-            data.fullname,
-            data.username,
-            data.tel,
-            data.email,
-            data.group,
-            data.status
-          ]
-        });
-      }
-    }else if("workplaces" in dataListToTable[0]){
-      const users = dataListToTable as ClinicalUser[];
-      for(const data of users){
-        dataListFormated.push({
-          id: data.id,
-          row: [
-            getDateInSlashFormat(data.createdAt),
-            data.fullname,
-            data.category,
-            data.role,
-            data.workplaces as unknown as string,
-          ]
-        });
-      }
-    }else{
-      const patients = dataListToTable as GETpatient[];
-      for(const data of patients){
-        dataListFormated.push({
-          id: data.id,
-          row: !!data?.priorityType?
-          [
-            data.priorityType as string,
-            getDateInSlashFormat(data.createdAt),
-            String(data.registerNumber),
-            data.fullname,
-            data.group,
-            data.accessType
-          ]:
-          [
-            getDateInSlashFormat(data.createdAt),
-            String(data.registerNumber),
-            data.fullname,
-            data.group,
-            data.accessType
-          ]
-        });
-      }
-    }
-  
-    return dataListFormated;
-  }catch(e: unknown){
-    const err = e as Error;
-    console.log(err.message);
-    return [];
-  }
+export function tablePatientExam(exam: PatientExam[]){
+  const tableRows:TableRow[] = [];
+  for(const data of exam)
+    tableRows.push({
+      id: data._id,
+      row: [
+        data.examCode,
+        data.name,
+        data.category,
+        data.classification,
+        data.group,
+        angolaCurrency(data.price),
+      ],
+    });
+
+  return tableRows;
+}
+
+export function tablePhisicalUnit(unit: PhisicalUnit[]){
+  const tableRows:TableRow[] = [];
+  for(const data of unit)
+    tableRows.push({
+      id: data.id,
+      row: [
+        getDateInSlashFormat(data.createAt),
+        data.unitName,
+        data.type,
+        data.user,
+        data.status,
+      ],
+    });
+
+  return tableRows;
+} 
+
+export function tableCalendar(calendarData: Calendar[]){
+  const tableRows:TableRow[] = [];
+  for(const data of calendarData)
+    tableRows.push({
+      id: data.id,
+      row: [
+        getDateInSlashFormat(data.createdAt),
+        data.description,
+        data.monthName.toUpperCase(),
+        data.creator,
+      ],
+    });
+
+  return tableRows;
+}
+
+export function tableScheduleExam(schedule: ScheduleExam[]){
+  const tableRows:TableRow[] = [];
+  for(const data of schedule)
+    tableRows.push({
+      id: data.id,
+      row: [
+        getDataAndHoursFormat(data.createAt),
+        data.patientName,
+        data.laboratory,
+        String(data.examQty),
+        data.user,
+        data.status,
+      ],
+    });
+
+  return tableRows;
+}
+
+export function tableUser(user: User[]){
+  const tableRows:TableRow[] = [];
+  for(const data of user)
+    tableRows.push({
+      id: data.id,
+      row: [
+        getDateInSlashFormat(data.createAt),
+        data.fullname,
+        data.username,
+        data.tel,
+        data.email,
+        data.group,
+        data.status,
+      ],
+    });
+
+  return tableRows;
+}
+
+export function tableClinicalUser(clinical: ClinicalUser[]){
+  const tableRows:TableRow[] = [];
+  for(const data of clinical)
+    tableRows.push({
+      id: data.id,
+      row: [
+        getDateInSlashFormat(data.createdAt),
+        data.fullname,
+        data.category,
+        data.role,
+        String(data.workplaces),
+      ],
+    });
+
+  return tableRows;
+}
+
+export function tablePatient(patient: GETpatient[]){
+  const tableRows:TableRow[] = [];
+  for(const data of patient)
+    tableRows.push({
+      id: data.id,
+      row: !!data?.priorityType?
+      [
+        data.priorityType as string,
+        getDateInSlashFormat(data.createdAt),
+        String(data.registerNumber),
+        data.fullname,
+        data.group,
+        data.accessType
+      ]:
+      [
+        getDateInSlashFormat(data.createdAt),
+        String(data.registerNumber),
+        data.fullname,
+        data.group,
+        data.accessType
+      ]
+    });
+
+  return tableRows;
 }
 
 export function simpleFormater(rows: { id: string; name: string }[]){
@@ -366,31 +383,6 @@ export function tableOffice(data: DoctorOffice[]){
 
   return tableRows;
 }
-
-/*export function tableClinicalDiary(data: DiaryTypeProps[]){
-  const dataClinicalDiary:TableRow[] = [];
-
-    data?.medicineDiary.forEach((value, index) => {
-        dataClinicalDiary.push({
-          id: String(index),
-          row: [
-            value.date,
-            value.description,
-          ]
-    })});
-}*/
-
-type TempResult = {
-  _id: string;
-  plainText: string;
-  createdAt: Date;
-  file: {
-    name: string;
-    size: number;
-    link: string;
-  };
-  name: string;
-};
 
 export class TableFormatter{
   static tableRow:TableRow[] = [];

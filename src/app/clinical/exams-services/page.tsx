@@ -1,5 +1,5 @@
 import Table from "@/components/table";
-import tableFormater from "@/lib/table-formater";
+import { tablePatientExam } from "@/lib/table-formater";
 import Alert from "@/components/ui/alert";
 import SignExam from "@/components/sign-exam";
 import { PatientExam } from "@/lib/table-formater";
@@ -10,7 +10,7 @@ import Refresh from "@/components/refresh";
 export const dynamic = "force-dynamic";
 
 export default async function Page() {
-  const rows = tableFormater(await getExams() as PatientExam[]);
+  const rows = tablePatientExam(await getExams() as PatientExam[]);
 
   return (
     <main className="space-y-3">

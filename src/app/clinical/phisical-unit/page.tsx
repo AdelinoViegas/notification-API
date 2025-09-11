@@ -5,7 +5,7 @@ import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
 import Button from "@/components/ui/button";
 import { PhisicalUnit } from "@/lib/table-formater";
-import tableFormater from "@/lib/table-formater";
+import { tablePhisicalUnit} from "@/lib/table-formater";
 import { getUnits } from "@/backend/api/clinical/urgency-bank-api";
 import { BiPlus as PlusIcon } from "react-icons/bi";
 import { IoPerson } from "react-icons/io5";
@@ -21,7 +21,7 @@ export default async function Page({
   }>
 }) {
   const { name } = await searchParams;
-  const patientRows = tableFormater(await getUnits({ searchByName: name }) as unknown as PhisicalUnit[]);
+  const patientRows = tablePhisicalUnit(await getUnits({ searchByName: name }) as unknown as PhisicalUnit[]);
 
   return (
     <main className="space-y-3">

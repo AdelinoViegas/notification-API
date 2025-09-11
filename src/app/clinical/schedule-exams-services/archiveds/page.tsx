@@ -1,9 +1,8 @@
 import Header from "@/components/header";
 import Table from "@/components/table";
-import tableFormater from "@/lib/table-formater";
+import { tableScheduleExam } from "@/lib/table-formater";
 import Search from "@/components/ui/search";
 import { ScheduleExam } from "@/lib/table-formater";
-// import SelectFilter from "@/components/select-filter";
 import { getSchedulePatientExams } from "@/backend/api/clinical/scheduling-api";
 
 export const dynamic = "force-dynamic";
@@ -18,7 +17,7 @@ export default async function Page({
 }) {
   const { unitId, name } = await searchParams;
   const patient = await getSchedulePatientExams({ unitId, name, isCanceled: true, isServed: false });
-  const patientRows = tableFormater( patient.scheduleExams as ScheduleExam[]);
+  const patientRows = tableScheduleExam( patient.scheduleExams as ScheduleExam[]);
   
   return (
     <main className="space-y-3">

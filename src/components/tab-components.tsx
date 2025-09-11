@@ -168,7 +168,7 @@ function BirthDate(){
         type="number"
         maxLength={3}
         disabled
-        defaultValue={age}
+        value={age}
       />
     </>
   )
