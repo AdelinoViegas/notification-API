@@ -163,7 +163,3 @@ export async function getSyncedHistories(id: string){
     return null;
   }
 }
-
-export async function testMock(id: string){
-  await syncPatientHistories(id, "test");
-}
