@@ -1,5 +1,6 @@
 import { Schema } from "mongoose";
 import { Responsables, Group } from "@/backend/api/clinical/types";
+import { AngolaProvices } from "../api/clinical/translator";
 
 const patientSchema = new Schema({
   fullname: {
@@ -115,6 +116,15 @@ const patientSyncSchema = new Schema({
 
 patientSyncSchema.index({ id: 1, secondaries: 1 }, { unique: true });
 
+const municipalitySchema = new Schema({
+  proviceId: { 
+    type: String,
+    required: true,
+    enum: AngolaProvices.map(e => e._id)
+  },
+  municipality: String
+});
+
 export {
   patientSchema,
   demographySchema,
@@ -123,5 +133,6 @@ export {
   groupSchema,
   processStateSchema,
   specialtyStateSchema,
-  patientSyncSchema
+  patientSyncSchema,
+  municipalitySchema
 };

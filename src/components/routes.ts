@@ -7,6 +7,7 @@ import { BsCalendar2Week } from "react-icons/bs";
 import { GrDocumentText } from "react-icons/gr";
 import { GrTest } from "react-icons/gr";
 import { FaRadiationAlt } from "react-icons/fa";
+import { MdOutlineBedroomChild } from "react-icons/md";
 
 export const clinicalIcons = [
   {
@@ -61,6 +62,10 @@ export const clinicalIcons = [
     route: 'schedule-sugery',
     Icon: RiCalendarScheduleLine
   },
+  {
+    route: "hospitalization",
+    Icon: MdOutlineBedroomChild
+  }
 ];
 
 export const clinicalRoutes = [
@@ -128,5 +133,10 @@ export const clinicalRoutes = [
     href: "/clinical/schedule-sugery",
     route: 'schedule-sugery',
     label: 'Agenda de Cirurgia',
+  },
+  {
+    href: "/clinical/hospitalization",
+    route: "hospitalization",
+    label: "Internamento"
   }
 ];

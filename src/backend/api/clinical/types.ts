@@ -167,6 +167,13 @@ export interface PatientHistory {
   updatedAt: Date;
 }
 
+export interface ListPatient<T>{
+  patients: T[];
+  totalItems: number;
+  availablePages: number;
+  currentPage: number;
+}
+
 export type {
   Responsable,
   Responsables,
