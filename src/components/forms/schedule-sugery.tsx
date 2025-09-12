@@ -24,6 +24,7 @@ import {
   getExams,
   scheduleSugery
 } from "@/backend/api/clinical/scheduling-api";
+import { toast } from "react-toastify";
 
 export type DoctorRole = {
   _id: string;
@@ -33,12 +34,13 @@ export type DoctorRole = {
 export default function ScheduleSugery(
   { 
     patientId,
+    ispatient,
   }: { 
     patientId: string;
+    ispatient?: boolean;
   }){
   const [ state, action ] = useActionState(scheduleSugery, { message: "", status: false });
   const [ doctors, setDoctors] = useState<SelectionOption[]>([]);
-  const [ messageState, setMessageState ] = useState(false);
   const [ closeAlert, setCloseAlert ] = useState(true);
   const [ doctorDays, setDoctorDays ] = useState<SelectionOption[]>([]);
   const [sugeriesType, setSugeriesType] = useState<SelectionOption[]>([]);
@@ -148,17 +150,20 @@ export default function ScheduleSugery(
   }, []);
 
   useEffect(()=>{
-    if(state.status)
-      setMessageState(true);
-    
-    setTimeout(()=>{
-      setMessageState(false);
-
-      if(state.status){
-        formRef.current?.reset();
-        router.replace("/clinical/patient/");
-      }
-    }, state.status?3000:7000);
+    if(state.message)
+      if(state.status)
+        toast.success(state.message, {
+          autoClose: 1500,
+          onClose: ()=>{
+            if(ispatient)
+              router.replace("/clinical/patient/");
+            
+            formRef.current?.reset();
+            setCloseAlert(false);
+          }
+        });
+      else 
+        toast.error(state.message);
   }, [state, router]);
 
 
@@ -259,16 +264,6 @@ export default function ScheduleSugery(
         />
 
         <Button>Solicitar</Button>
-
-        {
-          state.message && messageState &&
-          <div className="flex mt-3">
-            <Alert
-              type={state.status?'success':'error'}
-              message={state.message}
-            />
-          </div>
-        }
       </form>
     </main>
   );

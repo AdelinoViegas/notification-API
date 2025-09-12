@@ -1,14 +1,16 @@
-import Button from "@/components/ui/button";
+import { PiArchiveDuotone } from "react-icons/pi";
+import { BiPlus as PlusIcon } from "react-icons/bi";
 import Link from "next/link";
+import { tablePatient } from "@/lib/table-formater";
+import Button from "@/components/ui/button";
 import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
-import tableFormater from "@/lib/table-formater";
+import { formater } from "@/lib/table-formater";
 import { getPatients } from "@/backend/api/clinical/api";
 import Pagination from "@/components/pagination";
-import { PiArchiveDuotone } from "react-icons/pi";
-import { BiPlus as PlusIcon } from "react-icons/bi";
 import Refresh from "@/components/refresh";
+import { getDateInSlashFormat } from "@/lib/date-formater";
 
 export const dynamic = "force-dynamic";
 
@@ -27,7 +29,21 @@ export default async function Page({
     page: page?Number(page):1,
   });
 
-  const patientRows = tableFormater(patientsData.patients);
+  const patientRows = formater(patientsData.patients, {
+    order: [ 
+      "createdAt", 
+      "registerNumber", 
+      "fullname", 
+      "group", 
+      "accessType" 
+    ],
+    transform: {
+      targetKey: "createdAt",
+      fn(e) {
+        return getDateInSlashFormat(new Date(e));
+      }
+    }
+  });
   
   return (
     <main className="space-y-3">

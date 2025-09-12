@@ -1,7 +1,7 @@
 import Prescription from "@/components/forms/prescription";
-import { getPrescriptions } from "@/backend/api/clinical/urgency-bank-api";
 import PrescriptionList from "@/components/prescription-list";
 import UrgencyFilter from "@/components/urgency-filters";
+import { getPrescriptions } from "@/backend/api/clinical/urgency-bank-api";
 
 export default async function Page({
   searchParams

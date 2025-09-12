@@ -1,6 +1,6 @@
 import Header from "@/components/header";
 import Table from "@/components/table";
-import tableFormater from "@/lib/table-formater";
+import { tableScheduleExam } from "@/lib/table-formater";
 import Alert from "@/components/ui/alert";
 import { ScheduleExam } from "@/lib/table-formater";
 import { getSchedulePatientExams } from "@/backend/api/clinical/scheduling-api";
@@ -22,7 +22,7 @@ export default async function Page({
 }){
   const { name } = await searchParams;
   const scheduleds =  await getSchedulePatientExams({ name });
-  const rows = tableFormater(scheduleds.scheduleExams as ScheduleExam[]);
+  const rows = tableScheduleExam(scheduleds.scheduleExams as ScheduleExam[]);
  
   return (
     <main className="space-y-3">

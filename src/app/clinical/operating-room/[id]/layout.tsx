@@ -62,7 +62,7 @@ export default async function Layout({
             { path: "check-security", title: "Checklist de Segurança Cirúrgica" },
             { path: "intraoperative-procedure", title: "Procedimento Intraoperatório" },
             { path: "post-anesthetic-recovery", title: "Recuperação Pós-Anestésica (RPA)" },
-            { path: "patient-discharge", title: "Bloco de Alta" },
+            { path: "patient-discharge", title: "Alta do Bloco" },
           ]}
         />
       </div>

@@ -3,13 +3,13 @@ import Table from "@/components/table";
 import Button from "@/components/ui/button";
 import Link from "next/link";
 import { getDoctorCalendars } from "@/backend/api/clinical/urgency-bank-api";
-import tableFormater, { Calendar } from "@/lib/table-formater";
+import { tableCalendar, Calendar } from "@/lib/table-formater";
 import { BiPlus as PlusIcon } from "react-icons/bi";
 
 export const dynamic = "force-dynamic";
 
 export default async function Page(){
-  const calendarRows = tableFormater(await getDoctorCalendars() as Calendar[]);
+  const calendarRows = tableCalendar(await getDoctorCalendars() as Calendar[]);
 
   return(
     <main className="space-y-3">

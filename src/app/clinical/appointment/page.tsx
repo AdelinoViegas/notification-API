@@ -1,10 +1,10 @@
 import { PiArchiveDuotone } from "react-icons/pi";
 import { TiInputChecked } from "react-icons/ti";
 import Link from "next/link";
-import Table from "@/components/table";
-import { tableAppointments } from "@/lib/table-formater";
-import Alert from "@/components/ui/alert";
 import { ScheduleAppointment } from "@/lib/table-formater";
+import { tableAppointments } from "@/lib/table-formater";
+import Table from "@/components/table";
+import Alert from "@/components/ui/alert";
 import Button from "@/components/ui/button";
 import Search from "@/components/ui/search";
 import Refresh from "@/components/refresh";

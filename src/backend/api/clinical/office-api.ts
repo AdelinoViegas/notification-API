@@ -16,6 +16,7 @@ import { getUser } from "@/backend/api/clinical/api";
 import { upload } from "@/backend/api/storage";
 import { CustonAxiosError } from "@/backend/api/types";
 import { syncPatientRegister } from "./process-control";
+import { calculateAge } from "@/lib/calculate-age";
 
 type ConsultationTypes = "vitalSignals" | "currentStates";
 
@@ -193,7 +194,7 @@ async function getPatient(officeId: string){
     return {
       personal: {
         fullname: patient?.fullname as string,
-        age: patient?.age as number,
+        age: calculateAge(patient?.birthDate as Date),
         civilState: patient?.civilState as string,
         gender: patient?.gender as string,
         tel: patient?.tel as string,

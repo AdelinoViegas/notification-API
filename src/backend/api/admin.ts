@@ -11,10 +11,7 @@ import type {
 } from "@/backend/api/types";
 
 const instance = axios.create({ 
-  baseURL: process.env.ADMIN_SRV_URL,
-  headers: {
-    Authorization: `Bearer ${await genWebToken()}`
-  } 
+  baseURL: process.env.ADMIN_SRV_URL
 });
 
 const clientInstance = axios.create({ 
@@ -22,6 +19,7 @@ const clientInstance = axios.create({
 });
 
 export async function getUsers(): Promise<User[]>{
+  instance.defaults.headers.common.Authorization = `Bearer ${await genWebToken()}`;
   const res = await instance.get("/users", {
     params: { g: "clinico" }
   });
@@ -30,6 +28,7 @@ export async function getUsers(): Promise<User[]>{
 }
 
 export async function getUser(id: string){
+  instance.defaults.headers.common.Authorization = `Bearer ${await genWebToken()}`;
   const res = await instance.get<User>("/users/user", {
     params: { id }
   });

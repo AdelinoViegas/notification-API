@@ -69,7 +69,9 @@ export default function Pagination({
   }, [pageSearchParams, getCurrentPage]);
 
   useEffect(()=>{
-    router.push(`${pathname}?page=1`);
+    // router.push(`${pathname}?page=1`);
+    setSearchPage("1");
+
   }, [router, pathname]);
   
   return(

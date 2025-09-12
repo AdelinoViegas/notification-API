@@ -3,7 +3,8 @@
 import { 
   useState, 
   useCallback, 
-  useEffect 
+  useEffect, 
+  ChangeEvent
 } from "react";
 import { 
   civilState, 
@@ -17,6 +18,7 @@ import PatientGroups from "@/components/forms/patient-groups";
 import { getExternalUnits } from "@/backend/api/clinical/urgency-bank-api";
 import ExternalUnitForm from "@/components/forms/external-unit-form";
 import { AngolaProvices } from "@/backend/api/clinical/translator";
+import { calculateAge } from "@/lib/calculate-age";
 
 function AccesTypeForm(){
   const [ type, setType ] = useState("");
@@ -143,6 +145,35 @@ function Demography(){
   );
 }
 
+function BirthDate(){
+  const [age, setAge] = useState(0);
+
+  const handleAge = (el: ChangeEvent<HTMLInputElement>) => {
+    const calculatedAge = calculateAge(el.target.value);
+    setAge(calculatedAge);
+  }
+
+  return (
+    <>
+      <InputField
+        textLabel="Data de Nascimento"
+        name="patientBirthDate" 
+        type="date"
+        onChange={handleAge}
+      />
+
+      <InputField
+        textLabel="Idade"
+        name="patientAge" 
+        type="number"
+        maxLength={3}
+        disabled
+        value={age}
+      />
+    </>
+  )
+}
+
 const tabComponents = [
   {
     title: "Informações Pessoais",
@@ -156,19 +187,7 @@ const tabComponents = [
         id="Nome do Paciente:0"
       />
       
-      <InputField
-        textLabel="Data de Nascimento"
-        name="patientBirthDate" 
-        type="date"
-      />
-
-      <InputField
-        textLabel="Idade"
-        name="patientAge" 
-        type="number"
-        maxLength={3}
-        placeholder="Digite a idade"
-      />
+      <BirthDate/>
 
       <Selection
         options={civilState}

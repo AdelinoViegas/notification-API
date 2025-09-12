@@ -1,38 +1,34 @@
 import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
-import { tablePatient } from "@/lib/table-formater";
-import { getPatients } from "@/backend/api/clinical/api";
 import Search from "@/components/ui/search";
+import { formater } from "@/lib/table-formater";
 import Pagination from "@/components/pagination";
+import Refresh from "@/components/refresh";
+import { getPatients } from "@/backend/api/clinical/hospitalization-api";
 
-export const dynamic = "force-dynamic";
-
-export default async function Page({
-  searchParams
-}:{
-  searchParams: Promise<{
-    name: string;
-    registerNumber: number;
-    page: number;
-  }>
+export default async function Reception({ fullname, page }: {
+  fullname?: string;
+  page?: number;
 }){
-  const { name, page } = await searchParams;
+  // const { name, page } = await searchParams;
+
   const patientsData = await getPatients({ 
-    fullname: name, 
+    // fullname: name, 
     page: page?Number(page):1,
-    served: true
   });
 
-  const patientRows = tablePatient(patientsData.patients);
+  const rows = formater(patientsData.patients);
   
-  return(
-    <main>
-      <div className="flex justify-between lg:flex-row gap-3 items-center">
+  return (
+    <main className="space-y-3">
+      <Refresh />
+
+      <div className="flex flex-col lg:flex-row justify-between lg:items-center">
         <Alert 
           type="info" 
           message="Faça duplo click sobre o utente para seguir com o atendimento!" 
         />
-
+        
         <Search
           className="flex items-center gap-3"
           filterKey="name"
@@ -42,15 +38,15 @@ export default async function Page({
       </div>
 
       <Table
-        baseRowLink="/clinical/patient"
+        baseRowLink="/clinical/hospitalization"
         columns={[
-          "Data Registo", 
-          "Nº de Registo", 
+          "Serviço", 
+          "Data do Registro", 
           "Nome Completo",
-          "Grupo Utente",
-          "Tipo de Acesso"
+          "Estado Actual",
+          "Medico"
         ]} 
-        rows={patientRows}
+        rows={rows}
       />
 
       <Pagination
@@ -58,5 +54,5 @@ export default async function Page({
         totalItems={patientsData.totalItems as number} 
       />
     </main>
-  )
+  );
 }
