@@ -1,6 +1,7 @@
+import Link from "next/link";
 import { PiArchiveDuotone } from "react-icons/pi";
 import { TiInputChecked } from "react-icons/ti";
-import { ScheduleSugery, tableSugeries } from "@/lib/table-formater";
+import { formater } from "@/lib/table-formater";
 import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
 import Button from "@/components/ui/button";
@@ -9,7 +10,6 @@ import Refresh from "@/components/refresh";
 import Header from "@/components/header";
 import SelectionFilter from "@/components/ui/selection-filter";
 import { getScheduleSugeries } from "@/backend/api/clinical/scheduling-api";
-import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +22,19 @@ export default async function Page({
   }>
 }) {
   const { name, area } = await searchParams;
-  const patientRows = tableSugeries(await getScheduleSugeries({ name, area }) as ScheduleSugery[]);
+  const scheduleData = await getScheduleSugeries({ name, area })
+  const patientRows = formater(scheduleData, {
+    order: [
+      "requestingService",
+      "date",
+      "patient",
+      "sugeryType",
+      "infirmary",
+      "bed",
+      "doctor",
+      "status",
+    ]
+  });
 
   return (
     <main className="space-y-3">

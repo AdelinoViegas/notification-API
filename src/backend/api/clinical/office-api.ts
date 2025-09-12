@@ -161,7 +161,7 @@ async function getPatients({
         patient: patient?.fullname as string,
         date: new Date(scheduledAppointment?.doctorDay as Date),
         time: scheduledAppointment?.doctorTime as string,
-        markedDatatime: `${getDateInSlashFormat(scheduledAppointment?.doctorDay as Date)} ${scheduledAppointment?.doctorTime}`,
+        markedDataTime: `${getDateInSlashFormat(scheduledAppointment?.doctorDay as Date)} ${scheduledAppointment?.doctorTime}`,
         hour: `${getDateInSlashFormat(scheduledAppointment?.doctorDay as Date)} ${scheduledAppointment?.doctorTime}`,
         room: doctorRoom?.room,
         doctor: doctor?.fullname,

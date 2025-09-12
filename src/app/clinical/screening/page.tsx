@@ -1,13 +1,14 @@
-import { tablePatient } from "@/lib/table-formater";
-import Table from "@/components/table";
+import { PiArchiveDuotone } from "react-icons/pi";
 import Link from "next/link";
+import { formater } from "@/lib/table-formater";
+import { getDateInSlashFormat } from "@/lib/date-formater";
+import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
 import Button from "@/components/ui/button";
 import Search from "@/components/ui/search";
-import { getPatientsInScreening } from "@/backend/api/clinical/api";
 import Pagination from "@/components/pagination";
-import { PiArchiveDuotone } from "react-icons/pi";
 import Refresh from "@/components/refresh";
+import { getPatientsInScreening } from "@/backend/api/clinical/api";
 
 export const dynamic = "force-dynamic";
 
@@ -26,7 +27,21 @@ export default async function Page({
     page: page?Number(page):1,
   });
 
-  const patientRows = tablePatient(patientsData.patients);
+  const patientRows = formater(patientsData.patients,{
+    order: [ 
+      "createdAt", 
+      "registerNumber", 
+      "fullname", 
+      "group", 
+      "accessType" 
+    ],
+    transform: {
+      targetKey: "createdAt",
+      fn(e) {
+        return getDateInSlashFormat(new Date(e));
+      }
+    }
+  });
   
   return (
     <main className="space-y-3">

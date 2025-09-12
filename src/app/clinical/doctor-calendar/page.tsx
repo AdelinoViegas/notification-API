@@ -1,15 +1,23 @@
+import Link from "next/link";
+import { formater } from "@/lib/table-formater";
+import { BiPlus as PlusIcon } from "react-icons/bi";
 import Alert from "@/components/ui/alert";
 import Table from "@/components/table";
 import Button from "@/components/ui/button";
-import Link from "next/link";
 import { getDoctorCalendars } from "@/backend/api/clinical/urgency-bank-api";
-import { tableCalendar, Calendar } from "@/lib/table-formater";
-import { BiPlus as PlusIcon } from "react-icons/bi";
 
 export const dynamic = "force-dynamic";
 
 export default async function Page(){
-  const calendarRows = tableCalendar(await getDoctorCalendars() as Calendar[]);
+  const calendarData = await getDoctorCalendars();
+  const calendarRows = formater(calendarData, {
+    order: [
+      "createdAt",
+      "description",
+      "monthaName",
+      "creator",
+    ]
+  });
 
   return(
     <main className="space-y-3">

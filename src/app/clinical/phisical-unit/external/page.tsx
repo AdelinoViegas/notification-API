@@ -1,4 +1,4 @@
-import { type ExternalUnit, tableExternalUnit } from "@/lib/table-formater";
+import { formater } from "@/lib/table-formater";
 import Header from "@/components/header";
 import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
@@ -16,7 +16,16 @@ export default async function Page({
   }>
 }) {
   const { name } = await searchParams;
-  const patientRows = tableExternalUnit(await getExternalUnits({ name }) as ExternalUnit[]);
+  const unitsData = await getExternalUnits({ name });
+  const patientRows = formater(unitsData, {
+    order: [
+      "name",
+      "street",
+      "municipality",
+      "province",
+      "user"
+    ]
+  });
   
   return (
     <main className="space-y-3">

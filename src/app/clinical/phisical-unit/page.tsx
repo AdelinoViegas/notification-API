@@ -7,10 +7,10 @@ import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
 import Button from "@/components/ui/button";
-import { PhisicalUnit } from "@/lib/table-formater";
-import { tablePhisicalUnit} from "@/lib/table-formater";
+import { formater } from "@/lib/table-formater";
 import SignUrgencyService from "@/components/forms/sign-urgency-services";
 import { getUnits } from "@/backend/api/clinical/urgency-bank-api";
+import { getDateInSlashFormat } from "@/lib/date-formater";
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +22,22 @@ export default async function Page({
   }>
 }) {
   const { name } = await searchParams;
-  const patientRows = tablePhisicalUnit(await getUnits({ searchByName: name }) as unknown as PhisicalUnit[]);
+  const unitsData = await getUnits({ searchByName: name });
+  const patientRows = formater(unitsData, {
+    order: [
+      "createdAt", 
+      "unitName", 
+      "type",
+      "user",
+      "status",
+    ], 
+    transform: {
+      targetKey: "cratedAt",
+      fn(e){
+        return getDateInSlashFormat(new Date(e));
+      }
+    }
+  });
 
   return (
     <main className="space-y-3">

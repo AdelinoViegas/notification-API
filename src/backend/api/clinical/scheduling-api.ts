@@ -716,7 +716,7 @@ async function getScheduleAppointments({
 
       formatedList.push({
         id: item._id.toString(),
-        hour: getDateInSlashFormat(item.doctorDay as Date)+' '+item.doctorTime,
+        dateTime: getDateInSlashFormat(item.doctorDay as Date)+' '+item.doctorTime,
         patient: patient?.fullname as string,
         doctor: doctor.fullname as string,
         room: doctorRoom?.room as string,

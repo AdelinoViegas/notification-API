@@ -1,5 +1,5 @@
 import { priorityInOperatingRoom } from "@/lib/filters";
-import { ScheduleSugery, tableOperatingRoom } from "@/lib/table-formater";
+import { formater } from "@/lib/table-formater";
 import Header from "@/components/header";
 import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
@@ -19,8 +19,18 @@ export default async function Page({
   }>
 }){ 
   const { name, priority } = await searchParams;
-  const patients = await getPatients({ name, priority}) as ScheduleSugery[];
-  const patientRows = tableOperatingRoom(patients);
+  const patients = await getPatients({ name, priority});
+  const patientRows = formater(patients, {
+    order: [
+      "requestingService",
+      "date",
+      "patient",
+      "sugeryType",
+      "infirmary",
+      "bed",
+      "doctor",
+    ]
+  }) ;
   const dataPriority = priorityInOperatingRoom(patients);
  
   return(

@@ -1,4 +1,4 @@
-import { tablePatient } from "@/lib/table-formater";
+import { formater } from "@/lib/table-formater";
 import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
@@ -23,7 +23,15 @@ export default async function Page({
     page: page?Number(page):1,
   });
 
-  const patientRows = tablePatient(patientsData.patients);
+  const patientRows = formater(patientsData.patients, {
+    order: [
+      "createdAt",
+      "registerNumber",
+      "fullname",
+      "group",
+      "accessType",
+    ]
+  });
   
   return (
     <main className="space-y-3">
