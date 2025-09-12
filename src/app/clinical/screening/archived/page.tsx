@@ -1,4 +1,5 @@
 import { formater } from "@/lib/table-formater";
+import { getDateInSlashFormat } from "@/lib/date-formater";
 import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
@@ -30,7 +31,13 @@ export default async function Page({
       "fullname",
       "group",
       "accessType",
-    ]
+    ],
+    transform: {
+      targetKey: "createdAt",
+      fn(e){
+        return getDateInSlashFormat(new Date(e));
+      }
+    } 
   });
   
   return (

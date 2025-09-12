@@ -1,4 +1,3 @@
-import { getDateInSlashFormat } from "@/lib/date-formater";
 import { formater } from "@/lib/table-formater";
 import Table from "@/components/table";
 import Search from "@/components/ui/search";

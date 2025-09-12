@@ -5,20 +5,20 @@ import {
   useParams,
   useRouter, 
 } from 'next/navigation';
+import { toast } from 'react-toastify';
+import { HiArchiveBoxXMark as ArchiveBoxXMarkIcon } from 'react-icons/hi2';
 import Button from "@/components/ui/button";
 import Modal from '@/components/modal';
-import { HiArchiveBoxXMark as ArchiveBoxXMarkIcon } from 'react-icons/hi2';
 import { changeArchived } from '@/backend/api/clinical/api';
-import { toast } from 'react-toastify';
 
 export default function ArchiveButton({ invert }:{ invert?: boolean }){
   const [ state, setState ] = useState(false);
   const router = useRouter();
-  const params = useParams<{ id: string}>();
-
+  const params = useParams<{ patientId: string}>();
+  console.log(params.patientId);
   const handleConfirm = ()=>{
     changeArchived({
-      patientId: params.id, 
+      patientId: params.patientId, 
       isArchived: !!invert
     })
     .then(data => {

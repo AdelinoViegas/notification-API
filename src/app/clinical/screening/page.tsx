@@ -33,7 +33,7 @@ export default async function Page({
       "registerNumber", 
       "fullname", 
       "group", 
-      "accessType" 
+      "accessType", 
     ],
     transform: {
       targetKey: "createdAt",
