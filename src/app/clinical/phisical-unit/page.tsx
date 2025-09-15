@@ -39,12 +39,12 @@ export default async function Page({
     },
     filterKey: [
       "id",
-      "createdAt",
-      "unitName",
+      "createdAt", 
+      "unitName", 
       "type",
       "user",
       "status",
-    ]
+    ], 
   });
 
   return (
