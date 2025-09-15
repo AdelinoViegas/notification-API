@@ -1,16 +1,26 @@
 import Table from "@/components/table";
-import { tablePatientExam } from "@/lib/table-formater";
+import { formater } from "@/lib/table-formater";
 import Alert from "@/components/ui/alert";
 import SignExam from "@/components/sign-exam";
-import { PatientExam } from "@/lib/table-formater";
-import { getExams } from "@/backend/api/clinical/scheduling-api";
 import CCG from "@/components/CCG";
 import Refresh from "@/components/refresh";
+import { getExams } from "@/backend/api/clinical/scheduling-api";
 
 export const dynamic = "force-dynamic";
 
 export default async function Page() {
-  const rows = tablePatientExam(await getExams() as PatientExam[]);
+  const examsData = await getExams();
+  const rows = formater(examsData, {
+    filterKey: [
+      "id",
+      "examCode",
+      "name",
+      "category",
+      "classification",
+      "group",
+      "price",
+    ]
+  });
 
   return (
     <main className="space-y-3">

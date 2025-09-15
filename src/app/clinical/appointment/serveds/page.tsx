@@ -1,4 +1,4 @@
-import { ScheduleAppointment, tableAppointments } from "@/lib/table-formater";
+import { formater } from "@/lib/table-formater";
 import Header from "@/components/header";
 import Table from "@/components/table";
 import Search from "@/components/ui/search";
@@ -20,7 +20,15 @@ export default async function Page({
     inAppointment: true, 
   });
 
-  const rows = tableAppointments(scheduleOffices.patients as ScheduleAppointment[]);
+  const rows = formater(scheduleOffices.patients, {
+    order: [
+      "DataTime",
+      "patientName",
+      "doctorName",
+      "responsible",
+      "status",
+    ]
+  });
 
   return (
     <main className="space-y-3">

@@ -1,5 +1,5 @@
+import { formater } from "@/lib/table-formater";
 import Table from "@/components/table";
-import { type DoctorOffice, tableOffice } from "@/lib/table-formater";
 import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
 import { getPatients } from "@/backend/api/clinical/office-api";
@@ -15,7 +15,14 @@ export default async function Page({
 }) {
   const { name } = await searchParams;
   const scheduleOffices = await getPatients({ fullname: name, served: true });
-  const rows = tableOffice(scheduleOffices.patients as DoctorOffice[]);
+  const rows = formater(scheduleOffices.patients, {
+    order: [
+      "markedDataTime",
+      "patient",
+      "user",
+      "room",
+    ]
+  });
 
   return (
     <main className="space-y-3">

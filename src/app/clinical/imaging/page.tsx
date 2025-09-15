@@ -32,11 +32,12 @@ export default async function Page({
     } 
   });
   const patientRows = formater(patientsData.patients, {
-    order: [
-      "markedDatatime",
+    filterKey: [
+      "id",
+      "markedDataTime",
       "patient",
       "user",
-      "nameLaboratory"
+      "nameLaboratory",
     ]
   }); 
 

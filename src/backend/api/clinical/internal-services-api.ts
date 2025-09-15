@@ -149,7 +149,7 @@ async function getPatients({
       patients.push({
         id: service._id.toString() as string,
         patient: patient?.fullname as string,
-        markedDatatime: getDataAndHoursFormat(scheduledService?.dateTime as Date),
+        markedDataTime: getDataAndHoursFormat(scheduledService?.dateTime as Date),
         user: user.fullname,
         nameLaboratory: (await unitModel.findById({ _id: scheduledService?.laboratoryId }))?.name as string,
         unitId: scheduledService?.laboratoryId?.toString() as string

@@ -61,7 +61,7 @@ async function getUsers(){
   const userRoles = new Map<string, typeof userCategory[number]>();
   userCategory.forEach(e => userRoles.set(e._id, e));
   const clinicalUsers = [];
-
+  //console.log(users);
   for (const user of users){
     const clinicalUser = await userModel.findOne({ userId: user._id });
     const specialty = await specialtyModel.findOne({ _id: clinicalUser?.specialtyId });

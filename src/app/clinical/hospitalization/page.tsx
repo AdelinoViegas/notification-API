@@ -1,5 +1,7 @@
 import TabNav from "@/components/tabnav";
 import Reception from "@/components/hospitalization/reception";
+import Hospitalized from "@/components/hospitalization/hospitalized";
+import Nursings from "@/components/hospitalization/nursings";
 
 export default async function Page({ 
   params,
@@ -8,7 +10,7 @@ export default async function Page({
   params: Promise<{ id: string }>;
   searchParams: Promise<{ r: "r" | "h" | "n" }>;
 }){
-  const [{ id }, { r }] = await Promise.all([ params,  searchParams ]);
+  const [{ }, { r }] = await Promise.all([ params,  searchParams ]);
   
   return(
     <div>
@@ -25,6 +27,8 @@ export default async function Page({
       />
 
       { r === "r" && <Reception /> }
+      { r === "h" && <Hospitalized /> }
+      { r === "n" && <Nursings />}
     </div>
   )
 }

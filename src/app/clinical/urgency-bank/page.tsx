@@ -1,5 +1,5 @@
 import { orderByPriority } from "@/lib/filters";
-import { tablePatient } from "@/lib/table-formater";
+import { formater } from "@/lib/table-formater";
 import Header from "@/components/header";
 import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
@@ -20,10 +20,20 @@ export default async function Page({
   }>
 }){ 
   const { name, priority } = await searchParams;
-  const patientRows = tablePatient(await getPatients({
+  const patientData = await getPatients({
     name: name, 
     priority: priority
-  }));
+  });
+  const patientRows = formater(patientData, {
+    order: [
+      "priorityType",
+      "createdAt",
+      "registerNumber",
+      "fullname",
+      "group",
+      "accessType",
+    ]
+  });
 
   const summary = orderByPriority(await getPatients({ name })).summary;
 

@@ -11,7 +11,6 @@ import InputDetails from "@/components/ui/input-details";
 import Selection from "@/components/ui/selection";
 import { toast } from "react-toastify";
 import { signUrgencyBank } from "@/backend/api/clinical/urgency-bank-api";
-import { TableRow } from "@/lib/table-formater";
 
 export type DiaryTypeProps = {
   medicineDiary?: {
@@ -90,7 +89,7 @@ export default function ClinicalDiary({
     }   
   },[state, router])
    
-    const data:TableRow[] = [];
+    const data: Array<{ id: string; row: string[] }> = [];
 
     if(dataDiary.medicineDiary)
       dataDiary?.medicineDiary.forEach((value, index) => {

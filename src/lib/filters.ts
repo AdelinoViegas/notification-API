@@ -1,6 +1,5 @@
 import { GETpatient } from "@/backend/api/clinical/types";
 import { priorityToComponent, surgerySchedulingArea } from "@/backend/api/clinical/translator";
-import { ScheduleSugery } from "@/lib/table-formater";
 
 function orderByPriority(dataElements: GETpatient[]){
   const references = [ "red", "orange", "yellow", "green", "blue" ];
@@ -31,7 +30,7 @@ function orderByPriority(dataElements: GETpatient[]){
   };
 }
 
-function priorityInOperatingRoom(dataElements: ScheduleSugery[]){
+function priorityInOperatingRoom(dataElements: { requestingService: string }[]){
   const reference = [ "red", "orange", "yellow", "green",];
   const orderElements = [];
   const areasToSchedule = [];

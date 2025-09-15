@@ -1,6 +1,6 @@
+import { formater } from "@/lib/table-formater";
 import Header from "@/components/header";
 import Table from "@/components/table";
-import { tableLaboratory } from "@/lib/table-formater";
 import Search from "@/components/ui/search";
 import { getPatients } from "@/backend/api/clinical/internal-services-api";
 
@@ -23,7 +23,14 @@ export default async function Page({
     } 
   });
 
-  const rows = tableLaboratory(patientsData.patients);
+  const rows = formater(patientsData.patients, {
+    order: [
+      "markedDataTime",
+      "patient",
+      "user",
+      "nameLaboratory"
+    ]
+  });
 
   return (
     <main className="space-y-3">

@@ -137,6 +137,7 @@ async function getExams(specialtyId?: string){
 
     formatedList.push({
       _id: data._id.toString(),
+      id: data._id.toString(),
       name: data.name,
       label: data.name,
       examCode: data.examCode.toString(), // por causa das tabelas
@@ -388,7 +389,7 @@ async function getSchedulePatientExams({
       
       formatedList.push({
         id: item._id.toString(),
-        createAt: item.dateTime,
+        createdAt: item.dateTime,
         patientName: patient?.fullname as string,
         laboratory: laboratory?.name as string,
         user: user.fullname,
@@ -716,7 +717,7 @@ async function getScheduleAppointments({
 
       formatedList.push({
         id: item._id.toString(),
-        hour: getDateInSlashFormat(item.doctorDay as Date)+' '+item.doctorTime,
+        dateTime: getDateInSlashFormat(item.doctorDay as Date)+' '+item.doctorTime,
         patient: patient?.fullname as string,
         doctor: doctor.fullname as string,
         room: doctorRoom?.room as string,

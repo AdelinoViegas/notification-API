@@ -1,5 +1,5 @@
 // import { GETpatient } from "@/backend/api/clinical/types";
-import { getDataAndHoursFormat, getDateInSlashFormat } from "@/lib/date-formater";
+//import { getDataAndHoursFormat, getDateInSlashFormat } from "@/lib/date-formater";
 
 // export type TableRow = {
 //   id: string;
@@ -387,7 +387,8 @@ type FormaterOptions = {
   transform?: {
     targetKey: string;
     fn(arg: string): string
-  }
+  },
+  filterKey?: string[]; 
 }
 
 export function formater(data: unknown[], options?:FormaterOptions){
@@ -396,33 +397,50 @@ export function formater(data: unknown[], options?:FormaterOptions){
     const controller = new Map<string, null>();
     const rows = [];
 
-    for (const key in data[0] as object)
-      keys.push(key);
+    for (const key in data[0] as object){
+      if(options?.filterKey?.length){
+        if(!options.filterKey.includes(key))
+          continue;
 
+        keys.push(key);
+      }else
+        keys.push(key);
+    }
+     
     if(options?.order){
       if(options.order.includes("id"))
-        throw new Error("não precisa adicionar a chave <id> !");
+        throw new Error("[-] remova da order a chave 'id'!");
       
       if(options.order.length !== keys.slice(1).length)
-        throw new Error("chaves em falta!");
+        throw new Error("[-] chaves em falta!\n".concat(JSON.stringify({ 
+          original: {
+            length: keys.length,
+            comment: "menos 1 porque o id não se conta",
+            keys
+          }, 
+          order: {
+            length: options.order.length,
+            keys: options.order
+          } 
+        }, null, 2))); 
 
       for(const k of options.order){
         if(!keys.slice(1).includes(k))
-          throw new Error("a chave "+k+" não existe nos dados");
+          throw new Error("[-] a chave "+k+" não existe nos dados");
       }
     }
 
     if(options?.transform){
       if(!keys.slice(1).includes(options.transform.targetKey)){
-        console.log("chaves validas: ", keys.slice(1));
-        throw new Error(`a chave ${options.transform.targetKey} não existe!`); 
+        console.log("[!] chaves validas para o 'order': ", keys.slice(1));
+        throw new Error(`[-] a chave ${options.transform.targetKey} não existe!`); 
       }
     }
     
     const dataKeys = options?.order ??  keys.slice(1);
 
     if(!keys.includes("id")){
-      throw new Error("a chave id não foi encontrado na estruturada de dados original");
+      throw new Error("[-] a chave 'id' não foi encontrado na estruturada de dados original");
     }
     
     for(const i of data as FormaterData[])

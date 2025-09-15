@@ -1,9 +1,9 @@
+import { formater } from "@/lib/table-formater";
 import Header from "@/components/header";
 import Table from "@/components/table";
-import { tableScheduleExam } from "@/lib/table-formater";
 import Search from "@/components/ui/search";
-import { ScheduleExam } from "@/lib/table-formater";
 import { getSchedulePatientExams } from "@/backend/api/clinical/scheduling-api";
+import { getDateInSlashFormat } from "@/lib/date-formater";
 
 export const dynamic = "force-dynamic";
 
@@ -17,7 +17,22 @@ export default async function Page({
 }) {
   const { unitId, name } = await searchParams;
   const patient = await getSchedulePatientExams({ unitId, name, isCanceled: true, isServed: false });
-  const patientRows = tableScheduleExam( patient.scheduleExams as ScheduleExam[]);
+  const patientRows = formater( patient.scheduleExams, {
+    order: [
+      "createdAt",
+      "patientName",
+      "laboratory",
+      "examQty",
+      "user",
+      "status",
+    ],
+    transform: {
+      targetKey: "createdAt",
+      fn(e) {
+        return getDateInSlashFormat(new Date(e));
+      },
+    }
+  });
   
   return (
     <main className="space-y-3">

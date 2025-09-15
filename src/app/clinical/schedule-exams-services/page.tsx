@@ -1,15 +1,15 @@
+import { formater } from "@/lib/table-formater";
+import Link from "next/link";
 import Header from "@/components/header";
 import Table from "@/components/table";
-import { tableScheduleExam } from "@/lib/table-formater";
 import Alert from "@/components/ui/alert";
-import { ScheduleExam } from "@/lib/table-formater";
-import { getSchedulePatientExams } from "@/backend/api/clinical/scheduling-api";
-import Link from "next/link";
 import Button from "@/components/ui/button";
 import Search from "@/components/ui/search";
 import { TiInputChecked } from "react-icons/ti";
 import { PiArchiveDuotone } from "react-icons/pi";
 import Refresh from "@/components/refresh";
+import { getDateInSlashFormat } from "@/lib/date-formater";
+import { getSchedulePatientExams } from "@/backend/api/clinical/scheduling-api";
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +22,23 @@ export default async function Page({
 }){
   const { name } = await searchParams;
   const scheduleds =  await getSchedulePatientExams({ name });
-  const rows = tableScheduleExam(scheduleds.scheduleExams as ScheduleExam[]);
+
+  const rows = formater(scheduleds.scheduleExams, {
+    order: [
+      "createdAt",
+      "patientName",
+      "laboratory",
+      "examQty",
+      "user",
+      "status"
+    ],
+    transform: {
+      targetKey: "createdAt",
+      fn(e) {
+        return getDateInSlashFormat(new Date(e));
+      },
+    }
+  });
  
   return (
     <main className="space-y-3">
