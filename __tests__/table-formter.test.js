@@ -1,5 +1,3 @@
-
-
 import { formater } from "../src/lib/table-formater";
 
 describe("formatador de tabela", ()=>{
@@ -18,7 +16,7 @@ describe("formatador de tabela", ()=>{
     }
   ];
 
-  test("Estrutura valida", ()=>{
+  test("chamada normal", ()=>{
     const rows = formater(data);
 
     expect(rows.length).toBe(2);
@@ -30,7 +28,7 @@ describe("formatador de tabela", ()=>{
     });
   });
 
-  test("ordenação", ()=>{
+  test("ordenação das chaves", ()=>{
     const rows = formater(data, {
       order: [ 
         "age", 
@@ -44,7 +42,7 @@ describe("formatador de tabela", ()=>{
     });
   });
 
-  test("filtro de chaves", ()=>{
+  test("filtro explicito de chaves", ()=>{
     const rows = formater(data, {
       filterKey: [ "id", "name" ]
     });
@@ -67,7 +65,6 @@ describe("formatador de tabela", ()=>{
 
     rows.forEach(ev =>{
       expect(ev.row[0]).toMatch(/^transformed data/ig)
-    })
-
+    });
   })
 })
