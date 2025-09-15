@@ -92,6 +92,7 @@ export default async function Page({
 
       <Table
         status
+        rowLength={8}
         baseRowLink="/clinical/schedule-sugery/"
         columns={[
           "Serv. Solicitante",

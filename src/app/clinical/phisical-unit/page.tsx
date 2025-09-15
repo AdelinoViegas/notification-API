@@ -24,6 +24,13 @@ export default async function Page({
   const { name } = await searchParams;
   const unitsData = await getUnits({ searchByName: name });
   const patientRows = formater(unitsData, {
+    order:[
+      "createdAt",
+      "unitName",
+      "type",
+      "user",
+      "status",
+    ],
     transform: {
       targetKey: "createdAt",
       fn(e){

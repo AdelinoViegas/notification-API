@@ -25,6 +25,13 @@ export default async function Page({
       "patient",
       "user",
       "room",
+    ],
+    filterKey: [
+      "id",
+      "markedDataTime",
+      "patient",
+      "user",
+      "room",
     ]
   }
   );

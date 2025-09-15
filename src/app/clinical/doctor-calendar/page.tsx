@@ -5,6 +5,7 @@ import Alert from "@/components/ui/alert";
 import Table from "@/components/table";
 import Button from "@/components/ui/button";
 import { getDoctorCalendars } from "@/backend/api/clinical/urgency-bank-api";
+import { getDateInSlashFormat } from "@/lib/date-formater";
 
 export const dynamic = "force-dynamic";
 
@@ -14,9 +15,22 @@ export default async function Page(){
     order: [
       "createdAt",
       "description",
-      "monthaName",
+      "monthName",
       "creator",
-    ]
+    ],
+    filterKey: [
+      "id",
+      "createdAt",
+      "description",
+      "monthName",
+      "creator",
+    ],
+    transform: {
+    targetKey: "createdAt",
+    fn(e) {
+      return getDateInSlashFormat(new Date(e));
+    }
+    },
   });
 
   return(
