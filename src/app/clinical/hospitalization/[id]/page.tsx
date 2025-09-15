@@ -1,3 +1,5 @@
+import Accommodate from "@/components/hospitalization/accommodate";
+
 export default async function Page({ 
   params,
   searchParams 
@@ -9,7 +11,9 @@ export default async function Page({
   
   return(
     <div>
-      formutario de acomodar
+      <div className="w-1/2">
+        <Accommodate id={id} />
+      </div>
     </div>
   )
 }

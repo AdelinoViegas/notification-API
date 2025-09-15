@@ -17,13 +17,7 @@ export default async function Reception({ fullname, page }: {
     page: page?Number(page):1,
   });
 
-  const rows = formater(patientsData.patients, {
-    filterKey: [
-      "id",
-      "service",
-      "fullname"
-    ]
-  });
+  const rows = formater(patientsData.patients);
   
   return (
     <main className="space-y-3">
