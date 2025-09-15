@@ -263,7 +263,7 @@ async function getUnits({
         unitName: item.name,
         label: item.name,
         userId: item.userId?.toString(),
-        createAt: item.createdAt,
+        createdAt: item.createdAt,
         type: unitTypes.find(props => props._id === item.unitTypeId)?.label,
         status: "activo",
         user: "#"

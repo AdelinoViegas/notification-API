@@ -412,7 +412,17 @@ export function formater(data: unknown[], options?:FormaterOptions){
         throw new Error("não precisa adicionar a chave <id> !");
       
       if(options.order.length !== keys.slice(1).length)
-        throw new Error("chaves em falta!");
+        throw new Error("chaves em falta!\n".concat(JSON.stringify({ 
+          original: {
+            length: keys.length,
+            comment: "menos 1 porque o id não se conta",
+            keys
+          }, 
+          order: {
+            length: options.order.length,
+            keys: options.order
+          } 
+        }, null, 2))); 
 
       for(const k of options.order){
         if(!keys.slice(1).includes(k))
