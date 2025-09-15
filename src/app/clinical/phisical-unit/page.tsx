@@ -32,11 +32,19 @@ export default async function Page({
       "status",
     ], 
     transform: {
-      targetKey: "cratedAt",
+      targetKey: "createdAt",
       fn(e){
         return getDateInSlashFormat(new Date(e));
       }
-    }
+    },
+    filterKey: [
+      "id",
+      "createdAt",
+      "unitName",
+      "type",
+      "user",
+      "status",
+    ]
   });
 
   return (

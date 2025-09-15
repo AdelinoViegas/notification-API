@@ -18,6 +18,15 @@ export default async function Page() {
       "classification",
       "group",
       "price",
+    ],
+    filterKey: [
+      "id",
+      "examCode",
+      "name",
+      "category",
+      "classification",
+      "group",
+      "price",
     ]
   });
 

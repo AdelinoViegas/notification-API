@@ -19,6 +19,10 @@ export default async function Page({
   const rows = formater(ccg,{
     order: [
       "name",
+    ],
+    filterKey: [
+      "id",
+      "name",
     ]
   } );
 
