@@ -11,14 +11,6 @@ export const dynamic = "force-dynamic";
 export default async function Page() {
   const examsData = await getExams();
   const rows = formater(examsData, {
-    order: [
-      "examCode",
-      "name",
-      "category",
-      "classification",
-      "group",
-      "price",
-    ],
     filterKey: [
       "id",
       "examCode",

@@ -18,7 +18,8 @@ export default async function Page({
   const { name } = await searchParams;
   const unitsData = await getExternalUnits({ name });
   const patientRows = formater(unitsData, {
-    order: [
+    filterKey: [
+      "id",
       "name",
       "street",
       "municipality",

@@ -31,14 +31,7 @@ export default async function Page({
       unitId
     } 
   });
-  console.log(patientsData);
   const patientRows = formater(patientsData.patients, {
-    order: [
-      "markedDataTime",
-      "patient",
-      "user",
-      "nameLaboratory",
-    ],
     filterKey: [
       "id",
       "markedDataTime",
