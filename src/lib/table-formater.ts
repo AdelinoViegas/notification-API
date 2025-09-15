@@ -398,7 +398,7 @@ export function formater(data: unknown[], options?:FormaterOptions){
 
     for (const key in data[0] as object)
       keys.push(key);
-
+    
     if(options?.order){
       if(options.order.includes("id"))
         throw new Error("não precisa adicionar a chave <id> !");

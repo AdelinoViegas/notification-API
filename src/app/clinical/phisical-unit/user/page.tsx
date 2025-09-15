@@ -9,6 +9,7 @@ export const dynamic = "force-dynamic";
 
 export default async function Page() {
   const userData = await getUsers();
+  //console.log(userData);
   const userRows = formater(userData, {
     order: [
       "createdAt",

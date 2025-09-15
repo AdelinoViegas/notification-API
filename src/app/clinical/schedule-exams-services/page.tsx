@@ -22,6 +22,7 @@ export default async function Page({
 }){
   const { name } = await searchParams;
   const scheduleds =  await getSchedulePatientExams({ name });
+
   const rows = formater(scheduleds.scheduleExams, {
     order: [
       "createdAt",
@@ -29,7 +30,7 @@ export default async function Page({
       "laboratory",
       "examQty",
       "user",
-      "status",
+      "status"
     ],
     transform: {
       targetKey: "createdAt",

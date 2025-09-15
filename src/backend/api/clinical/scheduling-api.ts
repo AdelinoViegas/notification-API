@@ -136,18 +136,19 @@ async function getExams(specialtyId?: string){
     ]);
 
     formatedList.push({
-      _id: data._id.toString(),
+      //_id: data._id.toString(),
+      id: data._id.toString(),
       name: data.name,
-      label: data.name,
+      //label: data.name,
       examCode: data.examCode.toString(), // por causa das tabelas
-      categoryId: data.categoryId?.toString() as string,
+      //categoryId: data.categoryId?.toString() as string,
       category: category?.name as string,
-      classificationId: data.classificationId?.toString() as string,
+      //classificationId: data.classificationId?.toString() as string,
       classification: classification?.name as string,
-      groupId: data.groupId?.toString() as string,
+      //groupId: data.groupId?.toString() as string,
       group: group?.name as string,
       price: data.price.toString(), // por causa das tabelas
-      specialtyId: data.specialtyId?.toString() as string // para agendar as cirurgias
+      //specialtyId: data.specialtyId?.toString() as string // para agendar as cirurgias
     });
   }
 
