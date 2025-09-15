@@ -18,7 +18,7 @@ const sectionMock = [
   { _id: "2", label: "B - Mulher" }
 ];
 
-const nursings = [
+const nursingsMock = [
   { _id: "enf001", label: "Enfermaria Geral 1" },
   { _id: "enf002", label: "Enfermaria Cirúrgica 2" },
   { _id: "enf003", label: "Enfermaria Pediátrica" },
@@ -116,7 +116,7 @@ export default function RegisterNursing(){
           { !newSectionState && <Selection
             label="Enfermaria"
             name="serviceId"
-            options={nursings} 
+            options={nursingsMock} 
             required
             className="grow"
           />}

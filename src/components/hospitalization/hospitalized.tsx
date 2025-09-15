@@ -5,6 +5,7 @@ import { formater } from "@/lib/table-formater";
 import Pagination from "@/components/pagination";
 import Refresh from "@/components/refresh";
 import { getHospitalized } from "@/backend/api/clinical/hospitalization-api";
+import Filter from "./filter";
 
 export default async function Hospitalized({ fullname, page }: {
   fullname?: string;
@@ -24,10 +25,11 @@ export default async function Hospitalized({ fullname, page }: {
       <Refresh />
 
       <div className="flex flex-col lg:flex-row justify-between lg:items-center">
-        <Alert 
+        {/* <Alert 
           type="info" 
           message="Faça duplo click sobre o utente para seguir com o atendimento!" 
-        />
+        /> */}
+        <Filter />
         
         <Search
           className="flex items-center gap-3"
