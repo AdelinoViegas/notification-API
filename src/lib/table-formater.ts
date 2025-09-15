@@ -387,7 +387,8 @@ type FormaterOptions = {
   transform?: {
     targetKey: string;
     fn(arg: string): string
-  }
+  },
+  filterKey?: string[]; 
 }
 
 export function formater(data: unknown[], options?:FormaterOptions){
@@ -396,9 +397,16 @@ export function formater(data: unknown[], options?:FormaterOptions){
     const controller = new Map<string, null>();
     const rows = [];
 
-    for (const key in data[0] as object)
-      keys.push(key);
-    
+    for (const key in data[0] as object){
+      if(options?.filterKey?.length){
+        if(!options.filterKey.includes(key))
+          continue;
+
+        keys.push(key);
+      }else
+        keys.push(key);
+    }
+
     if(options?.order){
       if(options.order.includes("id"))
         throw new Error("não precisa adicionar a chave <id> !");
