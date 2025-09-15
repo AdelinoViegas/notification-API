@@ -77,13 +77,12 @@ export default function PersonalInfoForm({
 
         <InputField
           textLabel="Idade"
-          name="age"
           required 
           type="number"
           maxLength={3}
           placeholder="Digite a idade" 
           defaultValue={age}        
-          disabled={!isEdit}
+          disabled
         />
         
         <Selection

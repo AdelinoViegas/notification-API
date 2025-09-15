@@ -2,7 +2,7 @@ import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
 import { getPatients } from "@/backend/api/clinical/internal-services-api";
-import { Services, tableLaboratory } from "@/lib/table-formater";
+import { formater } from "@/lib/table-formater";
 import SelectFilter from "@/components/select-filter";
 import Pagination from "@/components/pagination";
 export const dynamic = "force-dynamic";
@@ -26,7 +26,15 @@ export default async function Page({
       unitId
     } 
   });
-  const patientRows = tableLaboratory(patientsData.patients as Services[]); 
+  const patientRows = formater(patientsData.patients, {
+    order: [
+      "patient",
+      "markedDataTime",
+      "user",
+      "mameLaboratory",
+    ]
+  }); 
+  
   return (
     <main className="space-y-3">
       

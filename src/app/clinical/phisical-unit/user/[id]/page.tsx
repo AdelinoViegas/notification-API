@@ -1,9 +1,9 @@
 import Header from "@/components/header";
 import Card from "@/components/ui/card";
 import UserClinicalConfig from "@/components/user-clinical-config";
-import { getUser, getSpecialties } from "@/backend/api/clinical/api";
-import { getUrgencyServices } from "@/backend/api/clinical/urgency-bank-api";
 import UserWorkplace from "@/components/user-workplace";
+import { getUrgencyServices } from "@/backend/api/clinical/urgency-bank-api";
+import { getUser, getSpecialties } from "@/backend/api/clinical/api";
 
 export default async function Page({ params }:{ params: Promise<{ id: string }>}){
   const { id } = await params;

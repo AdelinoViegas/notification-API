@@ -1,10 +1,9 @@
 import { PiArchiveDuotone } from "react-icons/pi";
 import { TiInputChecked } from "react-icons/ti";
 import Link from "next/link";
+import { formater } from "@/lib/table-formater";
 import Table from "@/components/table";
-import { tableAppointments } from "@/lib/table-formater";
 import Alert from "@/components/ui/alert";
-import { ScheduleAppointment } from "@/lib/table-formater";
 import Button from "@/components/ui/button";
 import Search from "@/components/ui/search";
 import Refresh from "@/components/refresh";
@@ -22,9 +21,16 @@ export default async function Page({
   }>
 }) {
   const { name } = await searchParams;
-  const patientRows = tableAppointments(await getScheduleAppointments({ 
-    patientName: name,
-  }) as ScheduleAppointment[]);
+  const appointmentData = await await getScheduleAppointments({ patientName: name }); 
+  const patientRows = formater(appointmentData, {
+    order: [
+      "dateTime",
+      "patient",
+      "doctor",
+      "room",
+      "status",
+    ],
+  });
 
   return (
     <main className="space-y-3">

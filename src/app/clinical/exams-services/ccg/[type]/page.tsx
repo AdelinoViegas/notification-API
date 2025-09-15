@@ -1,9 +1,9 @@
+import { formater } from "@/lib/table-formater";
 import Alert from "@/components/ui/alert";
 import Header from "@/components/header";
 import Table from "@/components/table";
 import { ccgTypes } from "@/backend/api/clinical/translator";
 import { getCCGs } from "@/backend/api/clinical/scheduling-api";
-import { simpleFormater } from "@/lib/table-formater";
 
 export const dynamic = "force-dynamic";
 
@@ -16,7 +16,11 @@ export default async function Page({
 }){
   const { type } = await params;
   const ccg = await getCCGs(type);
-  const rows = simpleFormater(ccg as { id: string; name: string}[]);
+  const rows = formater(ccg,{
+    order: [
+      "name",
+    ]
+  } );
 
   return (
     <main className="space-y-3">

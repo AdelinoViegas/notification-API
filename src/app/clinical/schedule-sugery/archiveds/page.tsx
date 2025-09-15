@@ -1,7 +1,4 @@
-import { 
-  ScheduleSugery,
-  tableSugeries
-} from "@/lib/table-formater";
+import { formater } from "@/lib/table-formater";
 import Search from "@/components/ui/search";
 import Table from "@/components/table";
 import { getScheduleSugeries } from "@/backend/api/clinical/scheduling-api";
@@ -18,12 +15,24 @@ export default async function Page({
   }>
 }) {
   const { name, area }  = await searchParams;
-    const patientRows = tableSugeries(await getScheduleSugeries({ 
+  const scheduleData = await getScheduleSugeries({ 
       name,
       area,
       served: false,
       canceled: true,
-    }) as ScheduleSugery[]);
+  });
+  const patientRows = formater(scheduleData, {
+    order: [
+      "requestingService",
+      "date",
+      "patient",
+      "sugeryType",
+      "infirmary",
+      "bed",
+      "doctor",
+      "status",
+    ]
+  });
   
   return (
     <main className="space-y-3">

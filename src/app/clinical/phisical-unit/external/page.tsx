@@ -1,10 +1,11 @@
+import { formater } from "@/lib/table-formater";
 import Header from "@/components/header";
 import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
-import { type ExternalUnit, tableExternalUnit } from "@/lib/table-formater";
-import { getExternalUnits } from "@/backend/api/clinical/urgency-bank-api";
 import ExternalUnitForm from "@/components/forms/external-unit-form";
+import { getExternalUnits } from "@/backend/api/clinical/urgency-bank-api";
+
 export const dynamic = "force-dynamic";
 
 export default async function Page({
@@ -15,7 +16,16 @@ export default async function Page({
   }>
 }) {
   const { name } = await searchParams;
-  const patientRows = tableExternalUnit(await getExternalUnits({ name }) as ExternalUnit[]);
+  const unitsData = await getExternalUnits({ name });
+  const patientRows = formater(unitsData, {
+    order: [
+      "name",
+      "street",
+      "municipality",
+      "province",
+      "user"
+    ]
+  });
   
   return (
     <main className="space-y-3">

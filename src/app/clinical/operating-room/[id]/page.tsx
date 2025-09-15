@@ -6,7 +6,8 @@ import Accordium from "@/components/ui/accordium";
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
 import { PiArchiveDuotone } from "react-icons/pi";
-import { GrSchedulePlay } from "react-icons/gr";
+import RescheduleSugery from "@/components/reschedule-sugery";
+import { getScheduleSugery } from "@/backend/api/clinical/scheduling-api";
 
 export default async function Page({ params }:{
 	params: Promise<{
@@ -14,15 +15,19 @@ export default async function Page({ params }:{
 	}>
 }){
 	const { id } = await params;
-  const patient = await getPatient({id});
+  const { scheduleId, ...patient} = await getPatient({id});
+  const schedule = await getScheduleSugery(scheduleId as string)
 
 	return (
     <div className="flex flex-col gap-y-4 py-2"> 
       <div className="flex gap-x-4 mb-2">
-        <Button className="flex gap-x-2">
-          <GrSchedulePlay/>
-          Reagendar
-        </Button>
+        <RescheduleSugery
+          scheduleId={scheduleId as string}
+          doctorId={schedule.doctorId}
+          date={schedule.date.en}
+          hour={schedule.hour}
+        />
+        
         <Button className="flex gap-x-2 bg-slate-700">
           <PiArchiveDuotone/>
           Pacientes Atendidos

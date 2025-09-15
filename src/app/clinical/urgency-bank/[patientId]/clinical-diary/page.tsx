@@ -1,5 +1,5 @@
-import { getPatientUrgencyBank } from "@/backend/api/clinical/urgency-bank-api";
 import ClinicalDiary, { type ClinicalDiaryProps } from "@/components/clinical-diary";
+import { getPatientUrgencyBank } from "@/backend/api/clinical/urgency-bank-api";
 
 export default async function Page({
 	params 

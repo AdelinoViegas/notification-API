@@ -1,13 +1,13 @@
-import Button from "@/components/ui/button";
+import { PiArchiveDuotone } from "react-icons/pi";
+import { BiPlus as PlusIcon } from "react-icons/bi";
 import Link from "next/link";
+import { formater } from "@/lib/table-formater";
+import Button from "@/components/ui/button";
 import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
-import { formater } from "@/lib/table-formater";
 import { getPatients } from "@/backend/api/clinical/api";
 import Pagination from "@/components/pagination";
-import { PiArchiveDuotone } from "react-icons/pi";
-import { BiPlus as PlusIcon } from "react-icons/bi";
 import Refresh from "@/components/refresh";
 import { getDateInSlashFormat } from "@/lib/date-formater";
 

@@ -1,12 +1,12 @@
+import { orderByPriority } from "@/lib/filters";
+import { formater } from "@/lib/table-formater";
 import Header from "@/components/header";
 import Table from "@/components/table";
-import { getPatients } from "@/backend/api/clinical/urgency-bank-api";
-import tableFormater from "@/lib/table-formater";
 import Alert from "@/components/ui/alert";
-import { orderByPriority } from "@/lib/filters";
 import Tooltip from "@/components/urgency-bank-tooltip";
 import Search from "@/components/ui/search";
 import Refresh from "@/components/refresh";
+import { getPatients } from "@/backend/api/clinical/urgency-bank-api";
 
 export const dynamic = "force-dynamic";
 
@@ -20,10 +20,20 @@ export default async function Page({
   }>
 }){ 
   const { name, priority } = await searchParams;
-  const patientRows = tableFormater(await getPatients({
+  const patientData = await getPatients({
     name: name, 
     priority: priority
-  }));
+  });
+  const patientRows = formater(patientData, {
+    order: [
+      "priorityType",
+      "createdAt",
+      "registerNumber",
+      "fullname",
+      "group",
+      "accessType",
+    ]
+  });
 
   const summary = orderByPriority(await getPatients({ name })).summary;
 

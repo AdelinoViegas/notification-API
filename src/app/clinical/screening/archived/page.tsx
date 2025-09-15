@@ -1,8 +1,9 @@
+import { formater } from "@/lib/table-formater";
+import { getDateInSlashFormat } from "@/lib/date-formater";
 import Table from "@/components/table";
-import { getPatientsInScreening } from "@/backend/api/clinical/api";
-import tableFormater from "@/lib/table-formater";
 import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
+import { getPatientsInScreening } from "@/backend/api/clinical/api";
 
 export const dynamic = "force-dynamic";
 
@@ -23,7 +24,21 @@ export default async function Page({
     page: page?Number(page):1,
   });
 
-  const patientRows = tableFormater(patientsData.patients);
+  const patientRows = formater(patientsData.patients, {
+    order: [
+      "createdAt",
+      "registerNumber",
+      "fullname",
+      "group",
+      "accessType",
+    ],
+    transform: {
+      targetKey: "createdAt",
+      fn(e){
+        return getDateInSlashFormat(new Date(e));
+      }
+    } 
+  });
   
   return (
     <main className="space-y-3">

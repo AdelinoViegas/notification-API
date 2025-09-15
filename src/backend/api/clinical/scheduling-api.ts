@@ -31,6 +31,7 @@ import { getUser } from "@/backend/api/clinical/api";
 import { getSyncedHistories, syncPatientRegister } from "./process-control";
 
 import { PatientHistory } from "./types";
+import { calculateAge } from "@/lib/calculate-age";
 
 export type CCGTypes = "category" | "classification" | "group";
 
@@ -135,18 +136,19 @@ async function getExams(specialtyId?: string){
     ]);
 
     formatedList.push({
-      _id: data._id.toString(),
+      //_id: data._id.toString(),
+      id: data._id.toString(),
       name: data.name,
-      label: data.name,
+      //label: data.name,
       examCode: data.examCode.toString(), // por causa das tabelas
-      categoryId: data.categoryId?.toString() as string,
+      //categoryId: data.categoryId?.toString() as string,
       category: category?.name as string,
-      classificationId: data.classificationId?.toString() as string,
+      //classificationId: data.classificationId?.toString() as string,
       classification: classification?.name as string,
-      groupId: data.groupId?.toString() as string,
+      //groupId: data.groupId?.toString() as string,
       group: group?.name as string,
       price: data.price.toString(), // por causa das tabelas
-      specialtyId: data.specialtyId?.toString() as string // para agendar as cirurgias
+      //specialtyId: data.specialtyId?.toString() as string // para agendar as cirurgias
     });
   }
 
@@ -411,7 +413,7 @@ async function getSchedulePatientExams({
 async function getSchedulePatientExam(scheduleId: string){
   try{
     const schedule = await scheduleExamModel.findById({ _id: scheduleId });
-    const patient = await patientModel.findById({ _id: schedule?.patientId }).select({ fullname: 1, age:1, gender:1});
+    const patient = await patientModel.findById({ _id: schedule?.patientId }).select({ fullname: 1, gender:1});
     const unit = await unitModel.findById({ _id: schedule?.laboratoryId }).select({ name: 1});
     const user = await getUser(schedule?.userId?.toString() as string);
     const exams = [];
@@ -433,7 +435,7 @@ async function getSchedulePatientExam(scheduleId: string){
 
     return {
       patient: patient?.fullname as string,
-      age: patient?.age as number,
+      age: calculateAge(patient?.birthDate as Date),
       gender: patient?.gender as string,
       laboratory: unit?.name as string,
       user: user.fullname,
@@ -652,14 +654,14 @@ async function scheduleAppointment(prev: unknown, formData: FormData){
 
 async function getScheduleAppointment(scheduleId:string){
   const schedule = await scheduleAppointmentModel.findById({_id:scheduleId});
-  const patient = await patientModel.findById({_id:schedule?.patientId}).select({fullname:1, age:1, gender:1});
+  const patient = await patientModel.findById({_id:schedule?.patientId}).select({fullname:1, gender:1});
   const doctor = await getUser(schedule?.doctorId?.toString() as string);
   const user = await getUser(schedule?.userId?.toString() as string);
   const consult = await examModel.findById({ _id: schedule?.consultId });
 
   return {
     patient: patient?.fullname as string,
-    age: patient?.age as number,
+    age: calculateAge(patient?.birthDate as Date),
     gender: patient?.gender as string,
     doctor: doctor.fullname as string,
     doctorId: doctor._id as string,
@@ -715,7 +717,7 @@ async function getScheduleAppointments({
 
       formatedList.push({
         id: item._id.toString(),
-        hour: getDateInSlashFormat(item.doctorDay as Date)+' '+item.doctorTime,
+        dateTime: getDateInSlashFormat(item.doctorDay as Date)+' '+item.doctorTime,
         patient: patient?.fullname as string,
         doctor: doctor.fullname as string,
         room: doctorRoom?.room as string,
@@ -1097,15 +1099,15 @@ async function getScheduleSugeries({
   return filteredList;
 }
 
-async function getScheduleSugery(scheduleId:string){
+async function getScheduleSugery(scheduleId: string){
   const schedule = await scheduleSugeryModel.findById({_id: scheduleId});
   const sugeryType = await examModel.findById({_id: schedule?.sugeryType}).select({ name: 1, price: 1});
-  const patient = await patientModel.findById({_id: schedule?.patientId}).select({fullname:1, age:1, gender:1});
+  const patient = await patientModel.findById({_id: schedule?.patientId}).select({fullname:1, gender:1});
   const doctor = await getUser(schedule?.doctorId?.toString() as string);
 
   return {
     patient: patient?.fullname as string,
-    age: patient?.age as number,
+    age: calculateAge(patient?.birthDate as Date),
     gender: patient?.gender as string,
     doctor: doctor.fullname as string,
     doctorId: doctor._id as string,

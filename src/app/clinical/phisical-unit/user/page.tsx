@@ -1,15 +1,30 @@
+import { formater } from "@/lib/table-formater";
+import { getDateInSlashFormat } from "@/lib/date-formater";
 import Header from "@/components/header";
 import Table from "@/components/table";
-import tableFormater from "@/lib/table-formater";
 import Alert from "@/components/ui/alert";
-import { ClinicalUser } from "@/lib/table-formater";
 import { getUsers } from "@/backend/api/clinical/api";
 
 export const dynamic = "force-dynamic";
 
 export default async function Page() {
-  
-  const userRows = tableFormater(await getUsers() as ClinicalUser[]);
+  const userData = await getUsers();
+  //console.log(userData);
+  const userRows = formater(userData, {
+    order: [
+      "createdAt",
+      "fullname",
+      "category",
+      "role",
+      "workplaces",
+    ], 
+    transform: {
+      targetKey: "createdAt",
+      fn(e){
+        return getDateInSlashFormat(new Date(e));
+      }
+    }
+  });
 
   return (
     <main className="space-y-3">

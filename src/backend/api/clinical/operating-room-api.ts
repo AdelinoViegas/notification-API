@@ -13,6 +13,7 @@ import {
   operatingRoomModel
 } from "@/backend/model";
 import { getUser } from "@/backend/api/clinical/api";
+import { calculateAge } from "@/lib/calculate-age";
 //import { findDoctorCalendar } from "./scheduling-api";
 //import { findDoctorCalendar, getNumberDoctorAppointment } from "./scheduling-api";
 
@@ -159,9 +160,10 @@ async function getPatient({ id }: { id: string}){
 
      return {
       _id: patient?._id.toString() as string,
+      scheduleId: schedule?._id.toString() as string,
       fullname: patient?.fullname as string,
       registerNumber: patient?.registerNumber as number,
-      age: patient?.age as number,
+      age: calculateAge(patient?.birthDate as Date),
       gender: patient?.gender as string,
       priority: surgerySchedulingArea.find( props => props._id === schedule?.requestingService)?.color as string,
     }

@@ -9,7 +9,6 @@ const patientSchema = new Schema({
   },
   registerNumber: Number,
   birthDate: Date,
-  age: Number,
   civilState: String,
   gender: String,
   tel: String,
