@@ -27,5 +27,5 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'yarn'
     - run: yarn install
-    - run: yarn test
-    #- run: yarn audit # analise de vulnerabilidade
+    - run: yarn test # test unitario com o jest
+    - run: yarn build # validação por next builder command
