@@ -1,5 +1,6 @@
 import TabNav from "@/components/tabnav";
 import Reception from "@/components/hospitalization/reception";
+import Hospitalized from "@/components/hospitalization/hospitalized";
 
 export default async function Page({ 
   params,
@@ -25,6 +26,7 @@ export default async function Page({
       />
 
       { r === "r" && <Reception /> }
+      { r === "h" && <Hospitalized /> }
     </div>
   )
 }
