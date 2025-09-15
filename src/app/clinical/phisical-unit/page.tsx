@@ -24,20 +24,27 @@ export default async function Page({
   const { name } = await searchParams;
   const unitsData = await getUnits({ searchByName: name });
   const patientRows = formater(unitsData, {
+    filterKey: [
+      "id",
+      "createdAt", 
+      "unitName", 
+      "type",
+      "user",
+      "status",
+    ], 
+    order: [
+      "createdAt", 
+      "unitName", 
+      "type",
+      "user",
+      "status",
+    ], 
     transform: {
       targetKey: "createdAt",
       fn(e){
         return getDateInSlashFormat(new Date(e));
       }
-    },
-    filterKey: [
-      "id",
-      "createdAt",
-      "unitName",
-      "type",
-      "user",
-      "status",
-    ]
+    }
   });
 
   return (
