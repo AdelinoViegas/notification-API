@@ -30,7 +30,7 @@ function orderByPriority(dataElements: GETpatient[]){
   };
 }
 
-function priorityInOperatingRoom(dataElements: any[]){
+function priorityInOperatingRoom(dataElements: { requestingService: string }[]){
   const reference = [ "red", "orange", "yellow", "green",];
   const orderElements = [];
   const areasToSchedule = [];

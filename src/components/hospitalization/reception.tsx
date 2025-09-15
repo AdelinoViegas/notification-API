@@ -6,7 +6,7 @@ import Pagination from "@/components/pagination";
 import Refresh from "@/components/refresh";
 import { getPatients } from "@/backend/api/clinical/hospitalization-api";
 
-export default async function Reception({ fullname, page }: {
+export default async function Reception({ page }: {
   fullname?: string;
   page?: number;
 }){

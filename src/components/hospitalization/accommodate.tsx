@@ -3,7 +3,7 @@
 import Selection from "@/components/ui/selection";
 import Button from "../ui/button";
 
-export default function Accommodate({ id }: { id: string }){
+export default function Accommodate({ }: { id: string }){
 
   return(
     <form>

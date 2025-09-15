@@ -1,5 +1,4 @@
 import Table from "@/components/table";
-import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
 import { formater } from "@/lib/table-formater";
 import Pagination from "@/components/pagination";
@@ -7,7 +6,7 @@ import Refresh from "@/components/refresh";
 import { getHospitalized } from "@/backend/api/clinical/hospitalization-api";
 import Filter from "./filter";
 
-export default async function Hospitalized({ fullname, page }: {
+export default async function Hospitalized({ page }: {
   fullname?: string;
   page?: number;
 }){
