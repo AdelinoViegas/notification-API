@@ -406,7 +406,7 @@ export function formater(data: unknown[], options?:FormaterOptions){
       }else
         keys.push(key);
     }
-
+     
     if(options?.order){
       if(options.order.includes("id"))
         throw new Error("não precisa adicionar a chave <id> !");

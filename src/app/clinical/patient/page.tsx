@@ -41,7 +41,7 @@ export default async function Page({
       fn(e) {
         return getDateInSlashFormat(new Date(e));
       }
-    }
+    },
   });
   
   return (

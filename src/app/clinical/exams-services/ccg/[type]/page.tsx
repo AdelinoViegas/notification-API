@@ -17,7 +17,8 @@ export default async function Page({
   const { type } = await params;
   const ccg = await getCCGs(type);
   const rows = formater(ccg,{
-    order: [
+    filterKey: [
+      "id",
       "name",
     ]
   } );
