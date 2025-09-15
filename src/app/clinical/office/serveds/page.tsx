@@ -16,7 +16,14 @@ export default async function Page({
   const { name } = await searchParams;
   const scheduleOffices = await getPatients({ fullname: name, served: true });
   const rows = formater(scheduleOffices.patients, {
-    order: [
+    order: [      
+      "markedDataTime",
+      "patient",
+      "user",
+      "room",
+    ],
+    filterKey: [
+      "id",
       "markedDataTime",
       "patient",
       "user",

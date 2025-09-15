@@ -29,7 +29,7 @@ export default async function Page({
       "doctor",
       "room",
       "status",
-    ],
+    ]
   });
 
   return (

@@ -396,7 +396,6 @@ export function formater(data: unknown[], options?:FormaterOptions){
     const keys = [];
     const controller = new Map<string, null>();
     const rows = [];
-
     for (const key in data[0] as object){
       if(options?.filterKey?.length){
         if(!options.filterKey.includes(key))
