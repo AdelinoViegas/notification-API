@@ -8,9 +8,9 @@ import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
 import Button from "@/components/ui/button";
 import { formater } from "@/lib/table-formater";
-import SignUrgencyService from "@/components/forms/sign-urgency-services";
-import { getUnits } from "@/backend/api/clinical/urgency-bank-api";
 import { getDateInSlashFormat } from "@/lib/date-formater";
+import { RiHospitalFill } from "react-icons/ri";
+import { getUnits } from "@/backend/api/clinical/urgency-bank-api";
 
 export const dynamic = "force-dynamic";
 
@@ -68,7 +68,7 @@ export default async function Page({
             Unidades Externas
           </Button>
         </Link>
-        
+
         <Link href="/clinical/phisical-unit/user">
           <Button className="flex gap-x-2 bg-slate-500">
             <IoPerson/>
@@ -76,7 +76,19 @@ export default async function Page({
           </Button>
         </Link>
 
-        <SignUrgencyService />
+        <Link href="/clinical/phisical-unit/specialty">
+          <Button className="flex gap-x-2">
+            <IoPerson/>
+            Especialidade
+          </Button>
+        </Link>
+
+        <Link href="/clinical/phisical-unit/urgency-service">
+          <Button className="flex gap-x-2">
+            <RiHospitalFill /> 
+            Novo Serviço
+          </Button>
+        </Link>
       </div>
 
       <div className="lg:flex justify-between items-center">

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useActionState } from "react";
-import SpecialtyModal from "./specialty-modal";
 import Button from "@/components/ui/button";
 import InputField from "@/components/ui/input-field";
 import Selection, { SelectionOption } from "./ui/selection";
@@ -66,18 +65,15 @@ export default function UserClinicalConfig({
           required
         />
 
-        <div className='flex gap-x-3 items-center'>
-          <Selection
-            options={specialties}
-            label="Especialidade"
-            name="specialtyId"
-            defaultValue={specialtyId}
-            className='w-full'
-          />
-          <SpecialtyModal />
-        </div>
+        <Selection
+          options={specialties}
+          label="Especialidade"
+          name="specialtyId"
+          defaultValue={specialtyId}
+          className='w-full'
+        />
 
-        <Button type="submit">Salvar</Button>
+        <Button className="mt-6" type="submit">Salvar</Button>
       </form>
     </div>
   )  

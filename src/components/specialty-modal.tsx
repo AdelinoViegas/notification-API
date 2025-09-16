@@ -32,6 +32,7 @@ export default function SpecialtyModal(){
           router.refresh();
           formRef.current?.reset();
         }
+        
         setMessageState(false);
       }, 2000);
     }
@@ -41,7 +42,7 @@ export default function SpecialtyModal(){
     <div>
       <Button type="button" onClick={openModal} className="flex gap-x-1">
         <PlusIcon className="w-5" />
-        Nova
+        Nova Especialidade
       </Button>
 
       <Modal 
