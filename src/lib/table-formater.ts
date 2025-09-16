@@ -450,9 +450,9 @@ export function formater(data: unknown[], options?:FormaterOptions){
           row: dataKeys.map(k => {
             if(options?.transform)
               if(options.transform.targetKey === k)
-                return options.transform.fn(i[k]);
+                return options.transform.fn(i[k])?.toString();
 
-            return i[k];
+            return i[k].toString();
           })
         };
         

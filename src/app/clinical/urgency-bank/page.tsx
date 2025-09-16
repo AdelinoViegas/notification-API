@@ -7,6 +7,7 @@ import Tooltip from "@/components/urgency-bank-tooltip";
 import Search from "@/components/ui/search";
 import Refresh from "@/components/refresh";
 import { getPatients } from "@/backend/api/clinical/urgency-bank-api";
+import { getDateInSlashFormat } from "@/lib/date-formater";
 
 export const dynamic = "force-dynamic";
 
@@ -32,7 +33,13 @@ export default async function Page({
       "fullname",
       "group",
       "accessType",
-    ]
+    ],
+    transform: {
+      targetKey: "createdAt",
+      fn: function (e){
+        return getDateInSlashFormat(new Date(e));
+      }
+    }
   });
 
   const summary = orderByPriority(await getPatients({ name })).summary;
