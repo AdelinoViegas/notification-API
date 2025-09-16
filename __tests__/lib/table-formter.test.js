@@ -66,5 +66,9 @@ describe("formatador de tabela", ()=>{
     rows.forEach(ev =>{
       expect(ev.row[0]).toMatch(/^transformed data/ig)
     });
-  })
+  });
+
+  test("lista vazia", ()=>{
+    expect(formater([])).toEqual([]);
+  });
 })
