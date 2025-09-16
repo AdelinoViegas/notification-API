@@ -28,7 +28,7 @@ export default function InputField({
         <span className="text-xs font-medium">{textLabel}</span>
         <div className="flex gap-3 border px-3 py-1 rounded-md has-[:disabled]:bg-gray-100">
           <input 
-            ref={ref?ref:inputRef} 
+            ref={ref ?? inputRef} 
             {...rest} 
             className="disabled:bg-gray-100 disabled:cursor-not-allowed disabled:text-gray-500 w-full outline-none placeholder:text-sm placeholder:font-medium" 
           />
