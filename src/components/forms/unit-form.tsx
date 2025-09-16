@@ -221,5 +221,3 @@ export function ExternalUnitForm({ jsonData }: UnitProps){
     </div>
   )
 }
-
-

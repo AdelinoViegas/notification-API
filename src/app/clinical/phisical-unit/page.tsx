@@ -68,11 +68,18 @@ export default async function Page({
             Unidades Externas
           </Button>
         </Link>
-        
+
         <Link href="/clinical/phisical-unit/user">
           <Button className="flex gap-x-2 bg-slate-500">
             <IoPerson/>
             Funcionários
+          </Button>
+        </Link>
+
+        <Link href="/clinical/phisical-unit/specialty">
+          <Button className="flex gap-x-2">
+            <IoPerson/>
+            Especialidade
           </Button>
         </Link>
 
