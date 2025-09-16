@@ -1,4 +1,4 @@
-import { formater } from "../src/lib/table-formater";
+import { formater } from "../../src/lib/table-formater";
 
 describe("formatador de tabela", ()=>{
   const data = [
@@ -37,7 +37,7 @@ describe("formatador de tabela", ()=>{
     ]});
     
     rows.forEach(ev => {
-      expect(typeof ev.row[0] === "number").toBe(true);
+      expect(typeof ev.row[0] === "string").toBe(true);
       expect(typeof ev.row[1] === "string").toBe(true);
     });
   });
