@@ -19,15 +19,14 @@ export default async function Page({
 }) {
   const { name } = await searchParams; 
   const scheduleOffices = await getPatients({ fullname: name });
-  const rows = formater(scheduleOffices.patients,{
+  const rows = formater(scheduleOffices.patients, {
     order: [
       "markedDataTime",
       "patient",
       "user",
       "room",
     ]
-  }
-  );
+  });
   
   return (
     <main className="space-y-3">

@@ -395,13 +395,13 @@ async function getDoctorCalendars(){
       }
 
       handleCalendars.push({
-        month: calendar.month as number,
+        id: calendar._id.toString() as string,
+        createdAt: calendar.createdAt,
+        monthNumber: calendar.month as number,
         monthName: new Date(new Date().getFullYear(), calendar.month as number).toLocaleString('pt-AO', { month: 'long' }),
         creator: creator?.fullname as string,
         doctors: handleDoctors,
         description: calendar.description as string,
-        id: calendar._id.toString() as string,
-        createdAt: calendar.createdAt,
       });
     }
     

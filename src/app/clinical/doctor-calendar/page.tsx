@@ -5,18 +5,31 @@ import Alert from "@/components/ui/alert";
 import Table from "@/components/table";
 import Button from "@/components/ui/button";
 import { getDoctorCalendars } from "@/backend/api/clinical/urgency-bank-api";
+import { getDateInSlashFormat } from "@/lib/date-formater";
 
 export const dynamic = "force-dynamic";
 
 export default async function Page(){
-  const calendarData = await getDoctorCalendars();
-  const calendarRows = formater(calendarData, {
+  const calendar = await getDoctorCalendars();
+
+  const calendarRows = formater(calendar, {
+    filterKey: [
+      "id",
+      "createdAt",
+      "description",
+      "monthName",
+      "creator",
+    ],
     order: [
       "createdAt",
       "description",
-      "monthaName",
+      "monthName",
       "creator",
-    ]
+    ],
+    transform: {
+      targetKey: "createdAt",
+      fn: e => getDateInSlashFormat(new Date(e))
+    }
   });
 
   return(
