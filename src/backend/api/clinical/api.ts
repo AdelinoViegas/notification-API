@@ -982,6 +982,7 @@ async function updateSpecialty(prev: unknown, formData:FormData){
     }
   }
 }
+
 export {
   getUsers,
   getUser,
