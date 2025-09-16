@@ -727,11 +727,11 @@ async function getPatientsInScreening({
   
       formated.push({
         id: patientData._id.toString(),
+        createdAt: patientData.createdAt,
         fullname: patientData.fullname,
         registerNumber: patientData?.registerNumber as number,
-        accessType: accessTypeLabel?accessTypeLabel.toUpperCase():"Indefinido",
-        createdAt: patientData.createdAt,
         group: groupLabel?groupLabel.toUpperCase():"Indefinido",
+        accessType: accessTypeLabel?accessTypeLabel.toUpperCase():"Indefinido",
       });
     }
 

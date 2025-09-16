@@ -14,11 +14,11 @@ import { changeArchived } from '@/backend/api/clinical/api';
 export default function ArchiveButton({ invert }:{ invert?: boolean }){
   const [ state, setState ] = useState(false);
   const router = useRouter();
-  const params = useParams<{ patientId: string}>();
-  console.log(params.patientId);
+  const params = useParams<{ id: string}>();
+
   const handleConfirm = ()=>{
     changeArchived({
-      patientId: params.patientId, 
+      patientId: params.id, 
       isArchived: !!invert
     })
     .then(data => {
