@@ -36,9 +36,7 @@ export default async function Page({
     ],
     transform: {
       targetKey: "createdAt",
-      fn(e){
-        return getDateInSlashFormat(new Date(e));
-      }
+      fn: e => getDateInSlashFormat(new Date(e))
     }
   });
 

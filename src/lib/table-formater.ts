@@ -20,6 +20,10 @@ export function formater(data: unknown[], options?:FormaterOptions){
     const keys = [];
     const controller = new Map<string, null>();
     const rows = [];
+    
+    if(!data.length)
+      return [];
+    
     for (const key in data[0] as object){
       if(options?.filterKey?.length){
         if(!options.filterKey.includes(key))
@@ -48,8 +52,10 @@ export function formater(data: unknown[], options?:FormaterOptions){
         }, null, 2))); 
 
       for(const k of options.order){
-        if(!keys.slice(1).includes(k))
+        if(!keys.slice(1).includes(k)){
+          console.log("chaves validas: ", keys.slice(1));
           throw new Error("[-] a chave "+k+" não existe nos dados");
+        }
       }
     }
 
@@ -73,9 +79,9 @@ export function formater(data: unknown[], options?:FormaterOptions){
           row: dataKeys.map(k => {
             if(options?.transform)
               if(options.transform.targetKey === k)
-                return options.transform.fn(i[k]);
+                return options.transform.fn(i[k])?.toString();
 
-            return i[k];
+            return i[k].toString();
           })
         };
         
@@ -92,4 +98,10 @@ export function formater(data: unknown[], options?:FormaterOptions){
     console.error(err.message);
     return [];
   }
+}
+
+export function angolaCurrency(money: number | string){
+  return new Intl.NumberFormat('pt-AO', { style: 'currency', currency: 'AOA' }).format(
+    money as number,
+  );
 }

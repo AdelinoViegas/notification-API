@@ -53,26 +53,27 @@ export default function Prescription({
       >
         <form action={action}>
           <input type="hidden" name="id" value={id} />
-          <input type="hidden" name="patientId" value={params.id} />
-
-          <InputField
+          <input type="hidden" name="patientId" value={params.patientId} />
+          
+          { date && <p>{date}</p>}
+         { !date && <InputField
             textLabel="Data"
             type="datetime-local"
             name="makedAt" 
-            defaultValue={date}
             required
-          />
+          />}
 
           <InputDetails
             textLabel="Descrição" 
             name="description"
             defaultValue={description}
+            disabled={!!description}
             required
           />
 
           <div className="flex gap-x-3 items-center">
             <Button cancel onClick={()=>setModal(false)} type="button">Fechar</Button>
-            <Button>Salvar</Button>
+            <Button disabled={!!description}>Salvar</Button>
           </div>
         </form>
       </Modal>

@@ -3,6 +3,8 @@ import Reception from "@/components/hospitalization/reception";
 import Hospitalized from "@/components/hospitalization/hospitalized";
 import Nursings from "@/components/hospitalization/nursings";
 
+export const dynamic = "force-dynamic";
+
 export default async function Page({ 
   params,
   searchParams 

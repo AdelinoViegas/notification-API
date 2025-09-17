@@ -10,14 +10,9 @@ import { getDateInSlashFormat } from "@/lib/date-formater";
 export const dynamic = "force-dynamic";
 
 export default async function Page(){
-  const calendarData = await getDoctorCalendars();
-  const calendarRows = formater(calendarData, {
-    order: [
-      "createdAt",
-      "description",
-      "monthName",
-      "creator",
-    ],
+  const calendar = await getDoctorCalendars();
+
+  const calendarRows = formater(calendar, {
     filterKey: [
       "id",
       "createdAt",
@@ -25,12 +20,16 @@ export default async function Page(){
       "monthName",
       "creator",
     ],
+    order: [
+      "createdAt",
+      "description",
+      "monthName",
+      "creator",
+    ],
     transform: {
-    targetKey: "createdAt",
-    fn(e) {
-      return getDateInSlashFormat(new Date(e));
+      targetKey: "createdAt",
+      fn: e => getDateInSlashFormat(new Date(e))
     }
-    },
   });
 
   return(

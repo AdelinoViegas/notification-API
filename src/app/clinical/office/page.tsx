@@ -19,7 +19,14 @@ export default async function Page({
 }) {
   const { name } = await searchParams; 
   const scheduleOffices = await getPatients({ fullname: name });
-  const rows = formater(scheduleOffices.patients,{
+  const rows = formater(scheduleOffices.patients, {
+    filterKey: [
+      "id",
+      "markedDataTime",
+      "patient",
+      "user",
+      "room",
+    ],
     order: [
       "markedDataTime",
       "patient",
@@ -33,8 +40,7 @@ export default async function Page({
       "user",
       "room",
     ]
-  }
-  );
+  });
   
   return (
     <main className="space-y-3">

@@ -4,18 +4,21 @@ import UrgencyFilter from "@/components/urgency-filters";
 import { getPrescriptions } from "@/backend/api/clinical/urgency-bank-api";
 
 export default async function Page({
-  searchParams
+  searchParams,
+  params
 }: {
-  searchParams: Promise<{ from: string; to: string }>
+  searchParams: Promise<{ f: string; t: string }>;
+  params: Promise<{ patientId: string }>
 }){
-  const { from, to } = await searchParams;
-  const prescriptions = await getPrescriptions({ from, to });
+  const { f, t } = await searchParams;
+  const { patientId } = await params;
+  const prescriptions = await getPrescriptions({ from: f, to: t, patientId });
   
   return(
-    <div>
+    <main>
       <Prescription />
       <UrgencyFilter />
       <PrescriptionList items={prescriptions} />
-    </div>
+    </main>
   )
 }
