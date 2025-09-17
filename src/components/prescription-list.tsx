@@ -2,15 +2,15 @@
 
 import { useState, useEffect } from "react";
 import Prescription from "@/components/forms/prescription";
-import { getPrescriptions } from "@/backend/api/clinical/urgency-bank-api";
+import { getPrescription } from "@/backend/api/clinical/urgency-bank-api";
 
-type PrescriptionIF = Awaited<ReturnType<typeof getPrescriptions>>;
+type PrescriptionIF = Awaited<ReturnType<typeof getPrescription>>;
 
 function List({ id }:{ id: string }){
-  const [ data, setData ] = useState<PrescriptionIF[number]>();
+  const [ data, setData ] = useState<PrescriptionIF>();
 
   useEffect(()=>{
-    getPrescriptions({ id }).then(props => setData(props[0]))
+    getPrescription(id).then(setData).finally(()=> console.log(data));
   }, []);
   return(
     <div className="ring ring-gray-200 ring-1 rounded px-3 py-2">
@@ -20,19 +20,19 @@ function List({ id }:{ id: string }){
         buttonText="Ver detalhes"
         buttonClass="text-blue-500"
         id={id}
-        date={data?.makedAt.toISOString().split('.')[0].slice(0, -3)}
+        date={data?.makedAt.toLocaleTimeString()}
         description={data?.description} 
       />
     </div>
-  )
+  );
 }
 
-export default function PrescriptionList({ items }:{ items: PrescriptionIF }){
+export default function PrescriptionList({ items }:{ items: PrescriptionIF[] }){
   return(
     <div>
       <ul className="grid md:grid-cols-2 lg:grid-cols-4 gap-3 mt-3">
         {items.map((props, index)=>(
-          <li key={index}><List id={props._id as string} /></li>
+          <li key={index}><List id={props?._id as string} /></li>
         ))}
       </ul>
     </div>

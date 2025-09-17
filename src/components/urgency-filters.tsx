@@ -3,6 +3,7 @@
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
 import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useRef } from "react";
 
 class FilterDateDate {
   #now() {
@@ -36,6 +37,7 @@ export default function UrgencyFilter(){
   const defaultFilters = new FilterDateDate();
   const pathname = usePathname();
   const router = useRouter();
+  const formRef = useRef<HTMLFormElement>(null);
 
   const handlerClick = (formdata:FormData)=>{
     const search = new URLSearchParams();
@@ -69,12 +71,18 @@ export default function UrgencyFilter(){
       label: "Uma Semana Atrás",
       ...defaultFilters.getLast10Day()
     }
-  ]
+  ];
+
+  useEffect(()=>{
+    formRef.current?.requestSubmit();
+  }, [])
   return(
-    <form action={(formData) => {
-      handlerClick(formData);
-    }} 
-    className="flex gap-x-3 items-center"
+    <form 
+      action={(formData) => {
+        handlerClick(formData);
+      }} 
+      className="flex gap-x-3 items-center"
+      ref={formRef}
     >
       <div className="flex flex-col">
         <label htmlFor="filter" className="text-sm">Atalho de dias</label>

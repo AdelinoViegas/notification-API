@@ -1016,7 +1016,9 @@ async function addPrescription(p: unknown, form: FormData){
       message: "Salvo com sucesso!",
       status: true
     }
-  }catch{
+  }catch (e){
+    console.error(e);
+
     return {
       message: "Não foi possivel",
       status: false
@@ -1025,21 +1027,21 @@ async function addPrescription(p: unknown, form: FormData){
 }
 
 async function getPrescriptions({
-  id,
   from,
-  to
+  to,
+  patientId
 }: {
-  id?: string;
   from?: string;
   to?: string;
+  patientId: string;
 }){
   try{
     const filter = omitUndefined({ 
-      _id: id,
-      makedAt: to && from ? {
-        $lt: to,
-        $gt: from
-      }: undefined
+      patientId,
+      // makedAt: to && from ? {
+      //   $lt: to,
+      //   $gt: from
+      // }: undefined
     });
     
     const prescriptions = await prescriptionModel.find(filter);
@@ -1053,6 +1055,19 @@ async function getPrescriptions({
     return [];
   }
 }
+
+async function getPrescription(id: string){
+  try{
+    const prescription = await prescriptionModel.findById({ _id: id });
+    return {
+      _id: prescription?._id?.toString() as string,
+      description: prescription?.description as string,
+      makedAt: prescription?.makedAt as Date
+    }
+  }catch(e){
+    console.log(e)
+  }
+};
 
 async function requestSurgery(p: unknown, formData: FormData){
   try{
@@ -1149,5 +1164,6 @@ export {
   getPrescriptions,
   requestSurgery,
   getSurgery,
-  applyDischarge
+  applyDischarge,
+  getPrescription
 };

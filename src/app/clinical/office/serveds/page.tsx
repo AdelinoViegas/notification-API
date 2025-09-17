@@ -16,6 +16,13 @@ export default async function Page({
   const { name } = await searchParams;
   const scheduleOffices = await getPatients({ fullname: name, served: true });
   const rows = formater(scheduleOffices.patients, {
+    filterKey: [
+      "id",
+      "markedDataTime",
+      "patient",
+      "user",
+      "room",
+    ],
     order: [
       "markedDataTime",
       "patient",
@@ -26,8 +33,6 @@ export default async function Page({
 
   return (
     <main className="space-y-3">
-      
-      
       <div className="flex items-center justify-between lg:flex-row gap-3 items-center">
         <Alert 
           type="info" 
