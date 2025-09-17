@@ -9,21 +9,29 @@ export const dynamic = "force-dynamic";
 
 export default async function Page() {
   const userData = await getUsers();
-  //console.log(userData);
+
   const userRows = formater(userData, {
-    order: [
+    order:[
       "createdAt",
       "fullname",
       "category",
       "role",
       "workplaces",
-    ], 
+    ],
     transform: {
       targetKey: "createdAt",
       fn(e){
         return getDateInSlashFormat(new Date(e));
       }
-    }
+    },
+    filterKey: [
+      "id",
+      "createdAt",
+      "fullname",
+      "category",
+      "role",
+      "workplaces",
+    ]
   });
 
   return (

@@ -61,7 +61,7 @@ async function getUsers(){
   const userRoles = new Map<string, typeof userCategory[number]>();
   userCategory.forEach(e => userRoles.set(e._id, e));
   const clinicalUsers = [];
-  //console.log(users);
+
   for (const user of users){
     const clinicalUser = await userModel.findOne({ userId: user._id });
     const specialty = await specialtyModel.findOne({ _id: clinicalUser?.specialtyId });
@@ -727,11 +727,11 @@ async function getPatientsInScreening({
   
       formated.push({
         id: patientData._id.toString(),
+        createdAt: patientData.createdAt,
         fullname: patientData.fullname,
         registerNumber: patientData?.registerNumber as number,
-        accessType: accessTypeLabel?accessTypeLabel.toUpperCase():"Indefinido",
-        createdAt: patientData.createdAt,
         group: groupLabel?groupLabel.toUpperCase():"Indefinido",
+        accessType: accessTypeLabel?accessTypeLabel.toUpperCase():"Indefinido",
       });
     }
 
@@ -924,6 +924,7 @@ async function finishScreening(prev: unknown, formData: FormData){
 async function signSpecialty(prev: unknown, formData: FormData){
   try{
     const name = (formData.get('name') as string).toUpperCase();
+    
     if(!name)
       throw new Error("Preencha o nome!", { cause: "empty" });
     
@@ -943,16 +944,43 @@ async function signSpecialty(prev: unknown, formData: FormData){
   }
 }
 
-async function getSpecialties(){
+async function getSpecialties(name?: string){
   const specialities = await specialtyModel.find();
 
-  return specialities.map(item =>{
+  const specialitiesData = specialities.map(item =>{
     return {
       _id: item._id.toString() as string,
+      id: item._id.toString() as string,
       label: item.name as string,
       name: item.name as string
     }
   });
+
+  return name?specialitiesData.filter( props => props.name.match(new RegExp(name, 'i'))):specialitiesData;
+}
+
+async function getSpecialty(specialtyId: string){
+  return await specialtyModel.findById({_id: specialtyId});
+}
+
+async function updateSpecialty(prev: unknown, formData:FormData){
+  try{
+    const specialtyId = formData.get("specialtyId") as string;
+    const specialtyName = formData.get("specialtyName") as string;
+    
+    await specialtyModel.updateOne({_id: specialtyId }, {name: specialtyName.toUpperCase()});
+
+    return {
+      message: "Especialidade actualizada com sucesso!",
+      status: true,
+    }
+  }catch(err: unknown){
+    const error = err as Error;
+    return {
+      message: error.message,
+      status: false,
+    }
+  }
 }
 
 export {
@@ -963,6 +991,8 @@ export {
   getPatients,
   getPatient,
   getSpecialties,
+  getSpecialty,
+  updateSpecialty,
   updatePersonalInfo,
   updateAccessType,
   updateDemography,

@@ -916,17 +916,20 @@ async function signUrgencyService(prev:unknown, formData:FormData){
   }
 }
 
-async function getUrgencyServices(){
+async function getUrgencyServices(name?: string){
   const services = await urgencyServiceModel.find();
 
-  return services.map(item => {
+  const urgencyServicies = services.map(item => {
     return {
-      _id: item._id?.toString() as string,
+      _id: item._id.toString() as string,
+      id: item._id.toString() as string,
       label: item.label as string,
       userId: item.userId?.toString() as string,
       isActive: item.isActive as boolean
     }
   });
+
+  return name?urgencyServicies.filter( props => props.label.match(new RegExp(name, 'i'))):urgencyServicies;
 }
 
 async function getUrgencyService(serviceId: string){
@@ -1133,6 +1136,26 @@ async function applyDischarge(p:unknown, formdata:FormData){
   }
 }
 
+async function updateUrgencyServices(prev: unknown, formData:FormData){
+  try{
+    const serviceId = formData.get("serviceId") as string;
+    const serviceName = formData.get("serviceName") as string;
+    
+    await urgencyServiceModel.updateOne({_id: serviceId }, {label: serviceName});
+
+    return {
+      message: "Serviço actualizado com sucesso!",
+      status: true,
+    }
+  }catch(err: unknown){
+    const error = err as Error;
+    return {
+      message: error.message,
+      status: false,
+    }
+  }
+}
+
 export {
   finishHospitalization,
   getPatients,
@@ -1155,6 +1178,7 @@ export {
   signUrgencyService,
   getUrgencyService,
   getUrgencyServices,
+  updateUrgencyServices,
   getPatient,
   addPrescription,
   getPrescriptions,

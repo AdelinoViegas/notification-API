@@ -5,19 +5,23 @@ export type CID = {
   value: string;
 };
 
-async function getByCode(code: string): Promise<CID[]>{
-  const data = await (await fetch(CID_URL)).json() as CID[];
+async function getCid(): Promise<CID[]>{
+  return await (await fetch(CID_URL)).json() as CID[];
+}
+
+export async function getByCode(code: string): Promise<CID[]>{
+  const data = await getCid();
   const result = data.find(item => item.code === code.trim().toUpperCase());
   return result?[{ code: result?.code, value: result?.value }]:[];
 }
 
-async function getByName(name: string): Promise<CID[]>{
-  const data = await (await fetch(CID_URL)).json() as CID[];
+export async function getByName(name: string): Promise<CID[]>{
+  const data = await getCid();
   return data.filter((props) => props.value.match(name.trim()));
 } 
 
-async function getByCodes(codes: string[]): Promise<CID[]>{
-  const data = await (await fetch(CID_URL)).json() as CID[];
+export async function getByCodes(codes: string[]): Promise<CID[]>{
+  const data = await getCid();
   const resolved = [];
 
   for(const code of codes){
@@ -26,10 +30,4 @@ async function getByCodes(codes: string[]): Promise<CID[]>{
   }
    
   return resolved;
-}
-
-export {
-  getByName,
-  getByCode,
-  getByCodes
 }

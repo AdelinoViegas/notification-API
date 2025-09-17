@@ -1,3 +1,9 @@
+export function angolaCurrency(money: number | string){
+  return new Intl.NumberFormat('pt-AO', { style: 'currency', currency: 'AOA' }).format(
+    money as number,
+  );
+}
+
 type FormaterData = { [index: string ]: string }
 
 type FormaterOptions = {
@@ -14,7 +20,7 @@ export function formater(data: unknown[], options?:FormaterOptions){
     const keys = [];
     const controller = new Map<string, null>();
     const rows = [];
-
+    
     if(!data.length)
       return [];
     

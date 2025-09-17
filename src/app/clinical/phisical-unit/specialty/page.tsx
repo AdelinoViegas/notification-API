@@ -3,8 +3,8 @@ import Header from "@/components/header";
 import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
-import ExternalUnitForm from "@/components/forms/external-unit-form";
-import { getExternalUnits } from "@/backend/api/clinical/urgency-bank-api";
+import SpecialtyModal from "@/components/specialty-modal";
+import { getSpecialties } from "@/backend/api/clinical/api";
 
 export const dynamic = "force-dynamic";
 
@@ -16,25 +16,17 @@ export default async function Page({
   }>
 }) {
   const { name } = await searchParams;
-  const unitsData = await getExternalUnits({ name });
-  const patientRows = formater(unitsData, {
+  const specialtiesData = await getSpecialties( name );
+  const patientRows = formater(specialtiesData, {
     order:[
       "name",
-      "street",
-      "municipality",
-      "province",
-      "user"
     ],
     filterKey: [
       "id",
       "name",
-      "street",
-      "municipality",
-      "province",
-      "user"
     ]
   });
-  
+
   return (
     <main className="space-y-3">
 
@@ -43,7 +35,7 @@ export default async function Page({
       </div>
 
       <div className="flex gap-x-2 pb-4">
-        <ExternalUnitForm />
+        <SpecialtyModal />
       </div>
 
       <div className="flex lg:flex-row justify-between gap-3 items-center">
@@ -61,13 +53,9 @@ export default async function Page({
       </div>
   
       <Table
-        baseRowLink="/clinical/phisical-unit/external"
+        baseRowLink="/clinical/phisical-unit/specialty"
         columns={[
-          "Descrição", 
-          "Rua", 
-          "Município",
-          "Província",
-          "Responsável"
+          "Especialidade", 
         ]} 
         rows={patientRows}
       />

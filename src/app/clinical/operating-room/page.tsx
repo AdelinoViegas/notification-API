@@ -60,7 +60,7 @@ export default async function Page({
 
       <Table
         baseRowLink="/clinical/operating-room"
-        rowLength={6}
+        rowLength={7}
         priorityCol
         columns={[
           "Serv. Solicitante",
