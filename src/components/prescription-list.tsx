@@ -13,11 +13,12 @@ function Item(params: PrescriptionIF ){
     <div className="ring ring-gray-200 ring-1 rounded px-3 py-2">
       <h2 className="line-clamp-1">Receituário</h2>
       <p className="text-sm text-gray-500 font-medium">{params?.makedAt.toLocaleString()}</p>
+
       <Prescription
         buttonText="Ver detalhes"
         buttonClass="text-blue-500"
         id={params?._id as string}
-        date={params?.makedAt.toLocaleTimeString()}
+        date={params?.makedAt.toLocaleString("pt", { dateStyle: "long", timeStyle: "medium"})}
         description={params?.description} 
       />
     </div>
