@@ -99,9 +99,3 @@ export function formater(data: unknown[], options?:FormaterOptions){
     return [];
   }
 }
-
-export function angolaCurrency(money: number | string){
-  return new Intl.NumberFormat('pt-AO', { style: 'currency', currency: 'AOA' }).format(
-    money as number,
-  );
-}
