@@ -1,14 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Prescription from "@/components/forms/prescription";
 import { getPrescription } from "@/backend/api/clinical/urgency-bank-api";
 
 type PrescriptionIF = Awaited<ReturnType<typeof getPrescription>>;
 
 function Item(params: PrescriptionIF ){
-  const [ data, setData ] = useState<PrescriptionIF>();
-
   return(
     <div className="ring ring-gray-200 ring-1 rounded px-3 py-2">
       <h2 className="line-clamp-1">Receituário</h2>

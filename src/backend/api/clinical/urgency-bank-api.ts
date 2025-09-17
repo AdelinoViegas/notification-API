@@ -1038,10 +1038,10 @@ async function getPrescriptions({
   try{
     const filter = omitUndefined({ 
       patientId,
-      // makedAt: to && from ? {
-      //   $lt: to,
-      //   $gt: from
-      // }: undefined
+      makedAt: (to && from) ? {
+        $lt: to,
+        $gt: from
+      }: undefined
     });
     
     const prescriptions = await prescriptionModel.find(filter);
