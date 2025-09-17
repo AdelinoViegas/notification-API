@@ -7,12 +7,12 @@ export default async function Page({
   searchParams,
   params
 }: {
-  searchParams: Promise<{ from: string; to: string }>;
+  searchParams: Promise<{ f: string; t: string }>;
   params: Promise<{ patientId: string }>
 }){
-  const { from, to } = await searchParams;
+  const { f, t } = await searchParams;
   const { patientId } = await params;
-  const prescriptions = await getPrescriptions({ from, to, patientId });
+  const prescriptions = await getPrescriptions({ from: f, to: t, patientId });
   
   return(
     <main>

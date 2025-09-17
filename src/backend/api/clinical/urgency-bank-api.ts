@@ -1039,8 +1039,8 @@ async function getPrescriptions({
     const filter = omitUndefined({ 
       patientId,
       makedAt: (to && from) ? {
-        $lt: to,
-        $gt: from
+        $lte: to,
+        $gte: from
       }: undefined
     });
     

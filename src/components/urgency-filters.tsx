@@ -3,7 +3,7 @@
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 
 class FilterDateDate {
   #now() {
@@ -37,26 +37,9 @@ export default function UrgencyFilter(){
   const defaultFilters = new FilterDateDate();
   const pathname = usePathname();
   const router = useRouter();
-  const formRef = useRef<HTMLFormElement>(null);
-
-  const handlerClick = (formdata:FormData)=>{
-    const search = new URLSearchParams();
-
-    const [ from, to, rangeIndex ] = [
-      formdata.get("from") as string,
-      formdata.get("to") as string,
-      Number(formdata.get("range"))
-    ];
-
-    const range = (!!from && !!to)
-    ? { from: (new Date(from)).toISOString(), to: (new Date(to)).toISOString() }
-    : defaultsDays[rangeIndex];
-
-    search.set("from", range.from);
-    search.set("to", range.to);
-
-    router.push([pathname,search.toString()].join("?"));
-  }
+  const [ rangeIndex, setRangeIndex ] = useState(0);
+  const [ from, setFrom ] = useState("");
+  const [ to, setTo ] = useState("");
 
   const defaultsDays = [
     { 
@@ -73,16 +56,25 @@ export default function UrgencyFilter(){
     }
   ];
 
+  const handler = () => {
+    const search = new URLSearchParams();
+    const range = (!!from && !!to)
+    ? { from: (new Date(from)).toISOString(), to: (new Date(to)).toISOString() }
+    : defaultsDays[rangeIndex];
+
+    search.set("f", range.from);
+    search.set("t", range.to);
+
+    router.push([pathname,search.toString()].join("?"));
+  }
+
   useEffect(()=>{
-    formRef.current?.requestSubmit();
-  }, [])
+    handler()
+  }, []);
+  
   return(
-    <form 
-      action={(formData) => {
-        handlerClick(formData);
-      }} 
+    <div 
       className="flex gap-x-3 items-center"
-      ref={formRef}
     >
       <div className="flex flex-col">
         <label htmlFor="filter" className="text-sm">Atalho de dias</label>
@@ -90,6 +82,7 @@ export default function UrgencyFilter(){
           id="filter" 
           name="range" 
           defaultValue={0}
+          onChange={e => setRangeIndex(Number(e.target.value))}
           className="px-3 py-1 border-2 border-primary/50 rounded-lg"
         >
           {defaultsDays.map((props, index)=>(
@@ -103,6 +96,7 @@ export default function UrgencyFilter(){
           textLabel="Inicio"
           name="from"
           type="date"
+          onChange={e => setFrom(e.target.value)}
         />  
 
         <InputField
@@ -110,9 +104,10 @@ export default function UrgencyFilter(){
           name="to"
           type="date"
           max={defautlDate}
+          onChange={e => setTo(e.target.value)}  
         />  
       </div> 
-      <Button>Filtrar</Button>   
-    </form>
+      <Button type="button" onClick={handler}>Filtrar</Button>   
+    </div>
   )
 }
