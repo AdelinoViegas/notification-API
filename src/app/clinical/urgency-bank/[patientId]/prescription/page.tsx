@@ -13,7 +13,6 @@ export default async function Page({
   const { from, to } = await searchParams;
   const { patientId } = await params;
   const prescriptions = await getPrescriptions({ from, to, patientId });
-  console.log(prescriptions);
   
   return(
     <main>

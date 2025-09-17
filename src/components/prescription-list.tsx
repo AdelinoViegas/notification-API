@@ -6,22 +6,19 @@ import { getPrescription } from "@/backend/api/clinical/urgency-bank-api";
 
 type PrescriptionIF = Awaited<ReturnType<typeof getPrescription>>;
 
-function List({ id }:{ id: string }){
+function Item(params: PrescriptionIF ){
   const [ data, setData ] = useState<PrescriptionIF>();
 
-  useEffect(()=>{
-    getPrescription(id).then(setData).finally(()=> console.log(data));
-  }, []);
   return(
     <div className="ring ring-gray-200 ring-1 rounded px-3 py-2">
       <h2 className="line-clamp-1">Receituário</h2>
-      <p className="text-sm text-gray-500 font-medium">{data?.makedAt.toLocaleString()}</p>
+      <p className="text-sm text-gray-500 font-medium">{params?.makedAt.toLocaleString()}</p>
       <Prescription
         buttonText="Ver detalhes"
         buttonClass="text-blue-500"
-        id={id}
-        date={data?.makedAt.toLocaleTimeString()}
-        description={data?.description} 
+        id={params?._id as string}
+        date={params?.makedAt.toLocaleTimeString()}
+        description={params?.description} 
       />
     </div>
   );
@@ -32,7 +29,7 @@ export default function PrescriptionList({ items }:{ items: PrescriptionIF[] }){
     <div>
       <ul className="grid md:grid-cols-2 lg:grid-cols-4 gap-3 mt-3">
         {items.map((props, index)=>(
-          <li key={index}><List id={props?._id as string} /></li>
+          <li key={index}><Item {...props} /></li>
         ))}
       </ul>
     </div>

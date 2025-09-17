@@ -1057,15 +1057,11 @@ async function getPrescriptions({
 }
 
 async function getPrescription(id: string){
-  try{
-    const prescription = await prescriptionModel.findById({ _id: id });
-    return {
-      _id: prescription?._id?.toString() as string,
-      description: prescription?.description as string,
-      makedAt: prescription?.makedAt as Date
-    }
-  }catch(e){
-    console.log(e)
+  const prescription = await prescriptionModel.findById({ _id: id });
+  return {
+    _id: prescription?._id?.toString() as string,
+    description: prescription?.description as string,
+    makedAt: prescription?.makedAt as Date
   }
 };
 
