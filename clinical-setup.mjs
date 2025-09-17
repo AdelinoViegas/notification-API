@@ -57,9 +57,9 @@ const main = async ()=>{
       });
       
       await workplaceModel.create({ workplaceId: central._id });
-      console.log("[+] clinical service configured!");
+      console.log("[+] database was configured successful!");
     }
-    console.log("[*] master configured!");
+    console.log("[*] database is configured!");
   }catch(e){
     console.log("[-] failed setup database: ", e);
     console.lgo("[*] Check the database connection and try again...");
