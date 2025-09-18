@@ -4,34 +4,16 @@ import { useState, useActionState, useEffect } from "react";
 import Modal from "@/components/modal";
 import Button from "@/components/ui/button";
 import InputField from "@/components/ui/input-field";
-import { addPrescription } from "@/backend/api/clinical/urgency-bank-api";
-import { signInternalService, signNursing } from "@/backend/api/clinical/hospitalization-api";
+import { 
+  getInternalServices, 
+  getNursings, 
+  getSections, 
+  signInternalService, 
+  signNursing 
+} from "@/backend/api/clinical/hospitalization-api";
 
 import { toast } from "react-toastify";
-import Selection from "@/components/ui/selection";
-
-const serviceMock = [
-  { _id: "2", label: "Cardiologia"},
-  { _id: "1", label: "Estomatologia"}
-];
-
-const sectionMock = [
-  { _id: "1", label: "A - Homem" },
-  { _id: "2", label: "B - Mulher" }
-];
-
-const nursingsMock = [
-  { _id: "enf001", label: "Enfermaria Geral 1" },
-  { _id: "enf002", label: "Enfermaria Cirúrgica 2" },
-  { _id: "enf003", label: "Enfermaria Pediátrica" },
-  { _id: "enf004", label: "Enfermaria Clínica 1" },
-  { _id: "enf005", label: "Enfermaria Psiquiátrica" },
-  { _id: "enf006", label: "Enfermaria Isolamento" },
-  { _id: "enf007", label: "Enfermaria COVID-19" },
-  { _id: "enf008", label: "Enfermaria Geriátrica" },
-  { _id: "enf009", label: "Enfermaria Obstétrica" },
-  { _id: "enf010", label: "Enfermaria Neurológica" }
-];
+import Selection, { SelectionOption } from "@/components/ui/selection";
 
 export default function RegisterNursing(){
   const [ state, action ] = useActionState(signNursing, { message: "", status: false }); 
@@ -40,6 +22,11 @@ export default function RegisterNursing(){
   const [ modal, setModal ] = useState(false);
   const [ modalService, setModalService ] = useState(false);
   const [ newNursingState, setNewNursingState ] = useState(false);
+  
+  const [ internalServices, setInternalServices ] = useState<SelectionOption[]>([]);
+  const [ sections, setSections ] = useState<SelectionOption[]>([]);
+  const [ nursings, setNursings ] = useState<SelectionOption[]>([]);
+
 
   const reset = ()=>{
     setNewSectionState(false);
@@ -50,11 +37,13 @@ export default function RegisterNursing(){
     if(state.message)
       if(state.status)
         toast.success(state.message, { 
-          onClose: () => setModal(false)
+          onClose: reset
         });
       else
         toast.error(state.message);
 
+    getSections().then(setSections);
+    getNursings().then(setNursings);
   }, [state]);
 
   useEffect(()=>{
@@ -66,6 +55,7 @@ export default function RegisterNursing(){
       else
         toast.error(serviceState.message);
 
+    getInternalServices().then(setInternalServices);
   }, [serviceState]);
 
   return(
@@ -83,7 +73,7 @@ export default function RegisterNursing(){
             <Selection
               label="Serviço de Internamento"
               name="serviceId"
-              options={serviceMock} 
+              options={internalServices} 
               required
               className="grow"
             />
@@ -95,7 +85,7 @@ export default function RegisterNursing(){
             <Selection
               label="Ala"
               name="sectionId"
-              options={sectionMock} 
+              options={sections} 
               required
               className="grow"
             />
@@ -133,8 +123,8 @@ export default function RegisterNursing(){
           {(!newSectionState && !newNursingState) && <div className="flex gap-x-3 items-center">
             <Selection
               label="Enfermaria"
-              name="nursingName"
-              options={nursingsMock} 
+              name="nursingId"
+              options={nursings} 
               required
               className="grow"
             />

@@ -12,6 +12,8 @@ export const bedNursingSchema = new Schema({
   internalServiceId: Schema.ObjectId,
   nursingId: Schema.ObjectId,
   bed: String
+}, {
+  timestamps: true
 });
 
 export const nursingSchema = new Schema({

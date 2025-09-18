@@ -3,8 +3,9 @@ import Search from "@/components/ui/search";
 import { formater } from "@/lib/table-formater";
 import Pagination from "@/components/pagination";
 import Refresh from "@/components/refresh";
-import { getHospitalized } from "@/backend/api/clinical/hospitalization-api";
 import RegisterNursing from "./register-nursings";
+import { getBeds } from "@/backend/api/clinical/hospitalization-api";
+import { getDateInSlashFormat } from "@/lib/date-formater";
 
 export default async function Nursings({ page }: {
   fullname?: string;
@@ -12,12 +13,14 @@ export default async function Nursings({ page }: {
 }){
   // const { name, page } = await searchParams;
 
-  const patients = await getHospitalized({ 
-    // fullname: name, 
-    page: page?Number(page):1,
-  });
+  const beds = await getBeds();
 
-  const rows = formater(patients.patients);
+  const rows = formater(beds.beds, {
+    transform: {
+      targetKey: "createdAt",
+      fn: e => getDateInSlashFormat(new Date(e))
+    }
+  });
   
   return (
     <main className="space-y-3">
@@ -39,18 +42,18 @@ export default async function Nursings({ page }: {
       <Table
         baseRowLink="/clinical/hospitalization"
         columns={[
-          "Nome Completo", 
-          "Enfermaria/Quarto", 
-          "Nº da Cama",
-          "Nº de Processo",
-          "Médico Assistente"
+          "Data de Registro",
+          "Serviço de Internamento",
+          "Ala", 
+          "Enfermaria", 
+          "Cama"
         ]} 
         rows={rows}
       />
 
       <Pagination
-        availablePages={patients.availablePages as number}
-        totalItems={patients.totalItems as number} 
+        availablePages={beds.availablePages as number}
+        totalItems={beds.totalItems as number} 
       />
     </main>
   );

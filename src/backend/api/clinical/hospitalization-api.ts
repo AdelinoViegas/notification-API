@@ -546,7 +546,7 @@ export async function signNursing(p: unknown, formData: FormData){
     const sectionId = formData.get("sectionId") as string;
     const sectionName = formData.get("sectionName") as string;
     const maxBedNumber = formData.get("maxBedNumber");
-    let nursingId = formData.get("nuringId") as string;
+    let nursingId = formData.get("nursingId") as string;
     const nursingName = formData.get("nursingName");
     const bedNumber = formData.get("bed");
 
@@ -572,7 +572,7 @@ export async function signNursing(p: unknown, formData: FormData){
 
         nursingId = nursing._id.toString();
       }
-
+    
     await bedNursingModel.create({
       internalServiceId: hospitalizationServiceId,
       nursingId,
@@ -599,7 +599,8 @@ export async function getNursings(){
 
     return nursings.map(props => ({
       _id: props._id.toString(),
-      name: props.name as string
+      name: props.name as string,
+      label: props.name as string
     }));
   }catch {
     return [];
@@ -612,7 +613,8 @@ export async function getSections(){
 
     return section.map(props => ({
       _id: props._id.toString(),
-      name: props.name as string
+      name: props.name as string,
+      label: props.name as string
     }));
   }catch {
     return [];
@@ -623,8 +625,7 @@ export async function signInternalService(p: unknown, formData: FormData){
   try{
     const serviceName = formData.get("name");
 
-    console.log([...formData.entries()]);
-
+    await internalServiceModel.create({ name: serviceName });
 
     return {
       message: "Registrado com sucesso!",
@@ -643,12 +644,52 @@ export async function signInternalService(p: unknown, formData: FormData){
 export async function getInternalServices(){
   try{
     const services = await internalServiceModel.find();
-
+    
     return services.map(props => ({
       _id: props._id.toString(),
-      name: props.name as string
+      name: props.name as string,
+      label: props.name as string
     }));
   }catch {
     return [];
+  }
+}
+
+export async function getBeds(){
+  try{
+    const beds = await bedNursingModel.find();
+    const formatedBeds = [];
+
+    for (const bed of beds){
+      const nursing = await nursingModel.findById({ _id: bed.nursingId });
+      const internalService = await internalServiceModel.findById({_id: bed.internalServiceId });
+      const section = await sectionModel.findById({ _id: nursing?.sectionId });
+
+
+      formatedBeds.push({
+        id: bed._id.toString(),
+        createdAt: new Date(),
+        internalService: internalService?.name as string,
+        section: section?.name as string,
+        nursing: nursing?.name as string,
+        bed: bed?.bed as string
+      });
+    }
+
+    return {
+      beds: formatedBeds,
+      availablePages:  formatedBeds.length/10,
+      currentPage: 1,
+      totalItems: formatedBeds.length
+    }
+  }catch (e) {
+    console.error(e);
+
+    return {
+      beds: [],
+      availablePages: 1,
+      currentPage: 1,
+      totalItems: 1
+    }
   }
 }
