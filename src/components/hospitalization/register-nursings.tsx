@@ -39,9 +39,11 @@ export default function RegisterNursing(){
   const [ newSectionState, setNewSectionState ] = useState(false);
   const [ modal, setModal ] = useState(false);
   const [ modalService, setModalService ] = useState(false);
+  const [ newNursingState, setNewNursingState ] = useState(false);
 
   const reset = ()=>{
     setNewSectionState(false);
+    setNewNursingState(false);
   }
   
   useEffect(()=>{
@@ -102,11 +104,18 @@ export default function RegisterNursing(){
           </div>}
 
           { newSectionState && <>
+            <InputField
+              textLabel="Ala"
+              name="sectionName" 
+              placeholder="Descrição da ALA"
+              required
+            />
+
             <div className="grid md:grid-cols-3 md:gap-x-3">
               <InputField
-                textLabel="Ala"
-                name="sectionName" 
-                placeholder="Descrição da ALA"
+                textLabel="Enfermaria"
+                name="nursingName" 
+                placeholder="Descreva a Enfermaria"
                 className="col-span-2"
                 required
               />
@@ -119,22 +128,40 @@ export default function RegisterNursing(){
                 required
               />
             </div>
-
-            <InputField
-              textLabel="Enfermaria"
-              name="nursingName" 
-              placeholder="Descreva a Enfermaria"
-              required
-            />
           </>}
 
-          { !newSectionState && <Selection
-            label="Enfermaria"
-            name="nursingName"
-            options={nursingsMock} 
-            required
-            className="grow"
-          />}
+          {(!newSectionState && !newNursingState) && <div className="flex gap-x-3 items-center">
+            <Selection
+              label="Enfermaria"
+              name="nursingName"
+              options={nursingsMock} 
+              required
+              className="grow"
+            />
+
+            <Button onClick={()=>setNewNursingState(true)} type="button">Nova</Button>
+          </div>}
+
+           { newNursingState && <>
+
+            <div className="grid md:grid-cols-3 md:gap-x-3">
+              <InputField
+                textLabel="Enfermaria"
+                name="nursingName" 
+                placeholder="Descreva a Enfermaria"
+                className="col-span-2"
+                required
+              />
+
+              <InputField
+                textLabel="Nº Maximo de camas"
+                type="number"
+                name="maxBedNumber" 
+                placeholder="Quantidade de cama suportados por quartos"
+                required
+              />
+            </div>
+          </>}
 
           <InputField
             textLabel="Nº da Cama"

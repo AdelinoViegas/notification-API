@@ -1,5 +1,6 @@
 "use server";
 
+import { bedNursingModel, internalServiceModel, nursingModel, sectionModel } from "@/backend/model";
 import { ListPatient } from "./types";
 
 interface Patient {
@@ -542,15 +543,41 @@ export async function getHospitalized({
 export async function signNursing(p: unknown, formData: FormData){
   try{
     const hospitalizationServiceId = formData.get("serviceId");
-    const sectionId = formData.get("sectionId");
-    const sectionName = formData.get("sectionName");
+    const sectionId = formData.get("sectionId") as string;
+    const sectionName = formData.get("sectionName") as string;
     const maxBedNumber = formData.get("maxBedNumber");
-    const nursingId = formData.get("nuringId");
+    let nursingId = formData.get("nuringId") as string;
     const nursingName = formData.get("nursingName");
     const bedNumber = formData.get("bed");
 
     console.log([...formData.entries()]);
 
+    if(sectionName && nursingName){
+      const section = await sectionModel.create({ name: sectionName });
+
+      const nursing = await nursingModel.create({
+        sectionId: section._id,
+        name: nursingName,
+        maxBedNumber
+      });
+
+      nursingId = nursing._id.toString();
+    }else
+      if(nursingName){
+        const nursing = await nursingModel.create({
+          sectionId,
+          name: nursingName,
+          maxBedNumber
+        });
+
+        nursingId = nursing._id.toString();
+      }
+
+    await bedNursingModel.create({
+      internalServiceId: hospitalizationServiceId,
+      nursingId,
+      bed: bedNumber
+    });
 
     return {
       message: "Registrado com sucesso!",
@@ -563,6 +590,32 @@ export async function signNursing(p: unknown, formData: FormData){
       message: "Não foi possivel registrar!",
       status: false
     }
+  }
+}
+
+export async function getNursings(){
+  try{
+    const nursings = await nursingModel.find();
+
+    return nursings.map(props => ({
+      _id: props._id.toString(),
+      name: props.name as string
+    }));
+  }catch {
+    return [];
+  }
+}
+
+export async function getSections(){
+  try{
+    const section = await sectionModel.find();
+
+    return section.map(props => ({
+      _id: props._id.toString(),
+      name: props.name as string
+    }));
+  }catch {
+    return [];
   }
 }
 
@@ -584,5 +637,18 @@ export async function signInternalService(p: unknown, formData: FormData){
       message: "Não foi possivel registrar!",
       status: false
     }
+  }
+}
+
+export async function getInternalServices(){
+  try{
+    const services = await internalServiceModel.find();
+
+    return services.map(props => ({
+      _id: props._id.toString(),
+      name: props.name as string
+    }));
+  }catch {
+    return [];
   }
 }

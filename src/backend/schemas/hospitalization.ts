@@ -6,3 +6,21 @@ export const hospitalizationSchema = new Schema({
   userId: Schema.Types.ObjectId
 });
 
+export const internalServiceSchema = new Schema({ name: String });
+
+export const bedNursingSchema = new Schema({
+  internalServiceId: Schema.ObjectId,
+  nursingId: Schema.ObjectId,
+  bed: String
+});
+
+export const nursingSchema = new Schema({
+  sectionId: Schema.ObjectId,
+  name: String,
+  maxBedNumber: {
+    type: Number,
+    default: 0
+  }
+});
+
+export const sectionSchema = new Schema({ name: String });
