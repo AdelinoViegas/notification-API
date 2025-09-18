@@ -5,6 +5,8 @@ import Modal from "@/components/modal";
 import Button from "@/components/ui/button";
 import InputField from "@/components/ui/input-field";
 import { addPrescription } from "@/backend/api/clinical/urgency-bank-api";
+import { signInternalService, signNursing } from "@/backend/api/clinical/hospitalization-api";
+
 import { toast } from "react-toastify";
 import Selection from "@/components/ui/selection";
 
@@ -32,7 +34,8 @@ const nursingsMock = [
 ];
 
 export default function RegisterNursing(){
-  const [ state, action ] = useActionState(addPrescription, { message: "", status: false }); 
+  const [ state, action ] = useActionState(signNursing, { message: "", status: false }); 
+  const [ serviceState, serviceAction ]= useActionState(signInternalService, { message: "", status: false});
   const [ newSectionState, setNewSectionState ] = useState(false);
   const [ modal, setModal ] = useState(false);
   const [ modalService, setModalService ] = useState(false);
@@ -51,6 +54,18 @@ export default function RegisterNursing(){
         toast.error(state.message);
 
   }, [state]);
+
+  useEffect(()=>{
+    if(serviceState.message)
+      if(serviceState.status)
+        toast.success(serviceState.message, { 
+          onClose: () => setModalService(false)
+        });
+      else
+        toast.error(serviceState.message);
+
+  }, [serviceState]);
+
   return(
     <div>
       <Button onClick={()=>setModal(true)}>Registrar Enfermagem</Button>
@@ -77,7 +92,7 @@ export default function RegisterNursing(){
           {!newSectionState && <div className="flex gap-x-3 items-center">
             <Selection
               label="Ala"
-              name="serviceId"
+              name="sectionId"
               options={sectionMock} 
               required
               className="grow"
@@ -90,7 +105,7 @@ export default function RegisterNursing(){
             <div className="grid md:grid-cols-3 md:gap-x-3">
               <InputField
                 textLabel="Ala"
-                name="section" 
+                name="sectionName" 
                 placeholder="Descrição da ALA"
                 className="col-span-2"
                 required
@@ -99,7 +114,7 @@ export default function RegisterNursing(){
               <InputField
                 textLabel="Nº Maximo de camas"
                 type="number"
-                name="maxBed" 
+                name="maxBedNumber" 
                 placeholder="Quantidade de cama suportados por quartos"
                 required
               />
@@ -107,7 +122,7 @@ export default function RegisterNursing(){
 
             <InputField
               textLabel="Enfermaria"
-              name="nursing" 
+              name="nursingName" 
               placeholder="Descreva a Enfermaria"
               required
             />
@@ -115,7 +130,7 @@ export default function RegisterNursing(){
 
           { !newSectionState && <Selection
             label="Enfermaria"
-            name="serviceId"
+            name="nursingName"
             options={nursingsMock} 
             required
             className="grow"
@@ -141,7 +156,7 @@ export default function RegisterNursing(){
         open={modalService}
         onClose={()=>setModalService(false)}
       >
-        <form action={()=>{}}>
+        <form action={serviceAction}>
           <InputField
             textLabel="Nome"
             name="name"

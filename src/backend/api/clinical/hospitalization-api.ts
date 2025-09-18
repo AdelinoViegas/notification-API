@@ -538,3 +538,51 @@ export async function getHospitalized({
     }
   }
 }
+
+export async function signNursing(p: unknown, formData: FormData){
+  try{
+    const hospitalizationServiceId = formData.get("serviceId");
+    const sectionId = formData.get("sectionId");
+    const sectionName = formData.get("sectionName");
+    const maxBedNumber = formData.get("maxBedNumber");
+    const nursingId = formData.get("nuringId");
+    const nursingName = formData.get("nursingName");
+    const bedNumber = formData.get("bed");
+
+    console.log([...formData.entries()]);
+
+
+    return {
+      message: "Registrado com sucesso!",
+      status: true
+    }
+  }catch(e) {
+    console.error(e);
+
+    return {
+      message: "Não foi possivel registrar!",
+      status: false
+    }
+  }
+}
+
+export async function signInternalService(p: unknown, formData: FormData){
+  try{
+    const serviceName = formData.get("name");
+
+    console.log([...formData.entries()]);
+
+
+    return {
+      message: "Registrado com sucesso!",
+      status: true
+    }
+  }catch(e) {
+    console.error(e);
+
+    return {
+      message: "Não foi possivel registrar!",
+      status: false
+    }
+  }
+}
