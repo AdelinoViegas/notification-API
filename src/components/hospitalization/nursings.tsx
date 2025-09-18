@@ -7,7 +7,7 @@ import RegisterNursing from "./register-nursings";
 import { getBeds } from "@/backend/api/clinical/hospitalization-api";
 import { getDateInSlashFormat } from "@/lib/date-formater";
 
-export default async function Nursings({ page }: {
+export default async function Nursings({}: {
   fullname?: string;
   page?: number;
 }){
