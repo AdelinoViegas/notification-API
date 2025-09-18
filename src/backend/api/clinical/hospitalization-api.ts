@@ -1,6 +1,8 @@
 "use server";
 
+import { bedNursingModel, internalServiceModel, nursingModel, sectionModel } from "@/backend/model";
 import { ListPatient } from "./types";
+import { omitUndefined } from "mongoose";
 
 interface Patient {
   id: string;
@@ -532,6 +534,159 @@ export async function getHospitalized({
   }catch {
     return {
       patients: [],
+      availablePages: 1,
+      currentPage: 1,
+      totalItems: 1
+    }
+  }
+}
+
+export async function signNursing(p: unknown, formData: FormData){
+  try{
+    const hospitalizationServiceId = formData.get("serviceId");
+    const sectionId = formData.get("sectionId") as string;
+    const sectionName = formData.get("sectionName") as string;
+    const maxBedNumber = formData.get("maxBedNumber");
+    let nursingId = formData.get("nursingId") as string;
+    const nursingName = formData.get("nursingName");
+    const bedNumber = formData.get("bed");
+
+    console.log([...formData.entries()]);
+
+    if(sectionName && nursingName){
+      const section = await sectionModel.create({ name: sectionName });
+
+      const nursing = await nursingModel.create({
+        sectionId: section._id,
+        name: nursingName,
+        maxBedNumber
+      });
+
+      nursingId = nursing._id.toString();
+    }else
+      if(nursingName){
+        const nursing = await nursingModel.create({
+          sectionId,
+          name: nursingName,
+          maxBedNumber
+        });
+
+        nursingId = nursing._id.toString();
+      }
+    
+    await bedNursingModel.create({
+      internalServiceId: hospitalizationServiceId,
+      nursingId,
+      bed: bedNumber
+    });
+
+    return {
+      message: "Registrado com sucesso!",
+      status: true
+    }
+  }catch(e) {
+    console.error(e);
+
+    return {
+      message: "Não foi possivel registrar!",
+      status: false
+    }
+  }
+}
+
+export async function getNursings(sectionId?: string){
+  try{
+    const nursings = await nursingModel.find(omitUndefined({ sectionId }));
+
+    return nursings.map(props => ({
+      _id: props._id.toString(),
+      name: props.name as string,
+      label: props.name as string
+    }));
+  }catch {
+    return [];
+  }
+}
+
+export async function getSections(){
+  try{
+    const section = await sectionModel.find();
+
+    return section.map(props => ({
+      _id: props._id.toString(),
+      name: props.name as string,
+      label: props.name as string
+    }));
+  }catch {
+    return [];
+  }
+}
+
+export async function signInternalService(p: unknown, formData: FormData){
+  try{
+    const serviceName = formData.get("name");
+
+    await internalServiceModel.create({ name: serviceName });
+
+    return {
+      message: "Registrado com sucesso!",
+      status: true
+    }
+  }catch(e) {
+    console.error(e);
+
+    return {
+      message: "Não foi possivel registrar!",
+      status: false
+    }
+  }
+}
+
+export async function getInternalServices(){
+  try{
+    const services = await internalServiceModel.find();
+    
+    return services.map(props => ({
+      _id: props._id.toString(),
+      name: props.name as string,
+      label: props.name as string
+    }));
+  }catch {
+    return [];
+  }
+}
+
+export async function getBeds(){
+  try{
+    const beds = await bedNursingModel.find();
+    const formatedBeds = [];
+
+    for (const bed of beds){
+      const nursing = await nursingModel.findById({ _id: bed.nursingId });
+      const internalService = await internalServiceModel.findById({_id: bed.internalServiceId });
+      const section = await sectionModel.findById({ _id: nursing?.sectionId });
+
+      formatedBeds.push({
+        id: bed._id.toString(),
+        createdAt: new Date(),
+        internalService: internalService?.name as string,
+        section: section?.name as string,
+        nursing: nursing?.name as string,
+        bed: bed?.bed as string
+      });
+    }
+
+    return {
+      beds: formatedBeds,
+      availablePages:  Number(formatedBeds.length/10 < 1 ? 1: formatedBeds.length/10),
+      currentPage: 1,
+      totalItems: formatedBeds.length
+    }
+  }catch (e) {
+    console.error(e);
+
+    return {
+      beds: [],
       availablePages: 1,
       currentPage: 1,
       totalItems: 1

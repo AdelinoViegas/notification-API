@@ -4,53 +4,60 @@ import { useState, useActionState, useEffect } from "react";
 import Modal from "@/components/modal";
 import Button from "@/components/ui/button";
 import InputField from "@/components/ui/input-field";
-import { addPrescription } from "@/backend/api/clinical/urgency-bank-api";
+import { 
+  getInternalServices, 
+  getNursings, 
+  getSections, 
+  signInternalService, 
+  signNursing 
+} from "@/backend/api/clinical/hospitalization-api";
+
 import { toast } from "react-toastify";
-import Selection from "@/components/ui/selection";
-
-const serviceMock = [
-  { _id: "2", label: "Cardiologia"},
-  { _id: "1", label: "Estomatologia"}
-];
-
-const sectionMock = [
-  { _id: "1", label: "A - Homem" },
-  { _id: "2", label: "B - Mulher" }
-];
-
-const nursingsMock = [
-  { _id: "enf001", label: "Enfermaria Geral 1" },
-  { _id: "enf002", label: "Enfermaria Cirúrgica 2" },
-  { _id: "enf003", label: "Enfermaria Pediátrica" },
-  { _id: "enf004", label: "Enfermaria Clínica 1" },
-  { _id: "enf005", label: "Enfermaria Psiquiátrica" },
-  { _id: "enf006", label: "Enfermaria Isolamento" },
-  { _id: "enf007", label: "Enfermaria COVID-19" },
-  { _id: "enf008", label: "Enfermaria Geriátrica" },
-  { _id: "enf009", label: "Enfermaria Obstétrica" },
-  { _id: "enf010", label: "Enfermaria Neurológica" }
-];
+import Selection, { SelectionOption } from "@/components/ui/selection";
 
 export default function RegisterNursing(){
-  const [ state, action ] = useActionState(addPrescription, { message: "", status: false }); 
+  const [ state, action ] = useActionState(signNursing, { message: "", status: false }); 
+  const [ serviceState, serviceAction ]= useActionState(signInternalService, { message: "", status: false});
   const [ newSectionState, setNewSectionState ] = useState(false);
   const [ modal, setModal ] = useState(false);
   const [ modalService, setModalService ] = useState(false);
+  const [ newNursingState, setNewNursingState ] = useState(false);
+  
+  const [ internalServices, setInternalServices ] = useState<SelectionOption[]>([]);
+  const [ sections, setSections ] = useState<SelectionOption[]>([]);
+  const [ nursings, setNursings ] = useState<SelectionOption[]>([]);
+  const [ selectedSection, setSelectedSection ] = useState<string>();
 
   const reset = ()=>{
     setNewSectionState(false);
+    setNewNursingState(false);
   }
   
   useEffect(()=>{
     if(state.message)
       if(state.status)
         toast.success(state.message, { 
-          onClose: () => setModal(false)
+          onClose: reset
         });
       else
         toast.error(state.message);
 
-  }, [state]);
+    getSections().then(setSections);
+    getNursings(selectedSection).then(setNursings);
+  }, [state, selectedSection]);
+
+  useEffect(()=>{
+    if(serviceState.message)
+      if(serviceState.status)
+        toast.success(serviceState.message, { 
+          onClose: () => setModalService(false)
+        });
+      else
+        toast.error(serviceState.message);
+
+    getInternalServices().then(setInternalServices);
+  }, [serviceState]);
+
   return(
     <div>
       <Button onClick={()=>setModal(true)}>Registrar Enfermagem</Button>
@@ -66,7 +73,7 @@ export default function RegisterNursing(){
             <Selection
               label="Serviço de Internamento"
               name="serviceId"
-              options={serviceMock} 
+              options={internalServices} 
               required
               className="grow"
             />
@@ -77,8 +84,9 @@ export default function RegisterNursing(){
           {!newSectionState && <div className="flex gap-x-3 items-center">
             <Selection
               label="Ala"
-              name="serviceId"
-              options={sectionMock} 
+              name="sectionId"
+              options={sections} 
+              onChange={e => setSelectedSection(e.target.value)}
               required
               className="grow"
             />
@@ -87,11 +95,18 @@ export default function RegisterNursing(){
           </div>}
 
           { newSectionState && <>
+            <InputField
+              textLabel="Ala"
+              name="sectionName" 
+              placeholder="Descrição da ALA"
+              required
+            />
+
             <div className="grid md:grid-cols-3 md:gap-x-3">
               <InputField
-                textLabel="Ala"
-                name="section" 
-                placeholder="Descrição da ALA"
+                textLabel="Enfermaria"
+                name="nursingName" 
+                placeholder="Descreva a Enfermaria"
                 className="col-span-2"
                 required
               />
@@ -99,27 +114,44 @@ export default function RegisterNursing(){
               <InputField
                 textLabel="Nº Maximo de camas"
                 type="number"
-                name="maxBed" 
+                name="maxBedNumber" 
                 placeholder="Quantidade de cama suportados por quartos"
                 required
               />
             </div>
-
-            <InputField
-              textLabel="Enfermaria"
-              name="nursing" 
-              placeholder="Descreva a Enfermaria"
-              required
-            />
           </>}
 
-          { !newSectionState && <Selection
-            label="Enfermaria"
-            name="serviceId"
-            options={nursingsMock} 
-            required
-            className="grow"
-          />}
+          {(!newSectionState && !newNursingState) && <div className="flex gap-x-3 items-center">
+            <Selection
+              label="Enfermaria"
+              name="nursingId"
+              options={nursings} 
+              required
+              className="grow"
+            />
+
+            <Button onClick={()=>setNewNursingState(true)} type="button">Nova</Button>
+          </div>}
+
+           { newNursingState && <>
+            <div className="grid md:grid-cols-3 md:gap-x-3">
+              <InputField
+                textLabel="Enfermaria"
+                name="nursingName" 
+                placeholder="Descreva a Enfermaria"
+                className="col-span-2"
+                required
+              />
+
+              <InputField
+                textLabel="Nº Maximo de camas"
+                type="number"
+                name="maxBedNumber" 
+                placeholder="Quantidade de cama suportados por quartos"
+                required
+              />
+            </div>
+          </>}
 
           <InputField
             textLabel="Nº da Cama"
@@ -141,7 +173,7 @@ export default function RegisterNursing(){
         open={modalService}
         onClose={()=>setModalService(false)}
       >
-        <form action={()=>{}}>
+        <form action={serviceAction}>
           <InputField
             textLabel="Nome"
             name="name"
