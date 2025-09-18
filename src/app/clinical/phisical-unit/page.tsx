@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { BiPlus as PlusIcon } from "react-icons/bi";
 import { IoPerson } from "react-icons/io5";
-import { FaHospital } from "react-icons/fa";
+import { FaHospital, FaUserMd } from "react-icons/fa";
 import Header from "@/components/header";
 import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
@@ -78,7 +78,7 @@ export default async function Page({
 
         <Link href="/clinical/phisical-unit/specialty">
           <Button className="flex gap-x-2">
-            <IoPerson/>
+            <FaUserMd/>
             Especialidade
           </Button>
         </Link>
