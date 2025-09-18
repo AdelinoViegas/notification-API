@@ -1,7 +1,9 @@
 "use client";
 
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
-import Selection from "@/components/ui/selection";
+import Selection, { SelectionOption } from "@/components/ui/selection";
+import { useEffect, useState } from "react";
+import { getNursings } from "@/backend/api/clinical/hospitalization-api";
 
 const nursingsMock = [
   { _id: "enf001", label: "Enfermaria Geral 1" },
@@ -20,6 +22,7 @@ export default function Filter(){
   const search = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
+  const [ nursings, setNursings ] = useState<SelectionOption[]>([]);
 
   const handlerFilter = (e: React.ChangeEvent<HTMLSelectElement>)=>{
     const _search = new URLSearchParams(search);
@@ -33,12 +36,16 @@ export default function Filter(){
     _search.delete("_fn");
     router.push([pathname, _search.toString()].join("?"));
   }
+  
+  useEffect(()=>{
+    getNursings().then(setNursings);
+  },[]);
 
   return (
     <>
       <Selection
         label="Filtrar por Enfermaria"
-        options={nursingsMock} 
+        options={nursings} 
         onChange={handlerFilter}
       />
     </>
