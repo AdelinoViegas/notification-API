@@ -26,7 +26,7 @@ export default function RegisterNursing(){
   const [ internalServices, setInternalServices ] = useState<SelectionOption[]>([]);
   const [ sections, setSections ] = useState<SelectionOption[]>([]);
   const [ nursings, setNursings ] = useState<SelectionOption[]>([]);
-
+  const [ selectedSection, setSelectedSection ] = useState<string>();
 
   const reset = ()=>{
     setNewSectionState(false);
@@ -43,8 +43,8 @@ export default function RegisterNursing(){
         toast.error(state.message);
 
     getSections().then(setSections);
-    getNursings().then(setNursings);
-  }, [state]);
+    getNursings(selectedSection).then(setNursings);
+  }, [state, selectedSection]);
 
   useEffect(()=>{
     if(serviceState.message)
@@ -86,6 +86,7 @@ export default function RegisterNursing(){
               label="Ala"
               name="sectionId"
               options={sections} 
+              onChange={e => setSelectedSection(e.target.value)}
               required
               className="grow"
             />
@@ -133,7 +134,6 @@ export default function RegisterNursing(){
           </div>}
 
            { newNursingState && <>
-
             <div className="grid md:grid-cols-3 md:gap-x-3">
               <InputField
                 textLabel="Enfermaria"

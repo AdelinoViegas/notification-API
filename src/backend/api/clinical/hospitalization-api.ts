@@ -2,6 +2,7 @@
 
 import { bedNursingModel, internalServiceModel, nursingModel, sectionModel } from "@/backend/model";
 import { ListPatient } from "./types";
+import { omitUndefined } from "mongoose";
 
 interface Patient {
   id: string;
@@ -593,9 +594,9 @@ export async function signNursing(p: unknown, formData: FormData){
   }
 }
 
-export async function getNursings(){
+export async function getNursings(sectionId?: string){
   try{
-    const nursings = await nursingModel.find();
+    const nursings = await nursingModel.find(omitUndefined({ sectionId }));
 
     return nursings.map(props => ({
       _id: props._id.toString(),
@@ -665,7 +666,6 @@ export async function getBeds(){
       const internalService = await internalServiceModel.findById({_id: bed.internalServiceId });
       const section = await sectionModel.findById({ _id: nursing?.sectionId });
 
-
       formatedBeds.push({
         id: bed._id.toString(),
         createdAt: new Date(),
@@ -678,7 +678,7 @@ export async function getBeds(){
 
     return {
       beds: formatedBeds,
-      availablePages:  formatedBeds.length/10,
+      availablePages:  Number(formatedBeds.length/10 < 1 ? 1: formatedBeds.length/10),
       currentPage: 1,
       totalItems: formatedBeds.length
     }

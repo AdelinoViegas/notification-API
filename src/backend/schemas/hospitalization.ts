@@ -16,6 +16,14 @@ export const bedNursingSchema = new Schema({
   timestamps: true
 });
 
+bedNursingSchema.index({ 
+  bed: 1, 
+  nursingId: 1, 
+  internalServiceSchema: 1 
+}, { 
+  unique: true 
+}); // criação de indice
+
 export const nursingSchema = new Schema({
   sectionId: Schema.ObjectId,
   name: String,
