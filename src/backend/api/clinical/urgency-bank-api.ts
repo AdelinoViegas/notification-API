@@ -18,7 +18,8 @@ import {
   screeningModel,
   patientHospitalizedModel,
   prescriptionModel,
-  surgeryModel
+  surgeryModel,
+  processStateModel
 } from "@/backend/model";
 import { 
   patientAccess,
@@ -51,7 +52,16 @@ async function getPatients({
     
     for(const patient of patients){
       const urgency = await patientModel.findById({ _id: patient.patientId });
-      
+
+      const isProcess = await processStateModel.findOne({
+         patientId: patient.patientId,
+         location: "urgency",
+         isInUse: true
+      });
+
+      if(isProcess)
+        continue;
+
       if(!urgency) 
         throw new Error(`${patient._id.toString()} this id not found!`);
 
