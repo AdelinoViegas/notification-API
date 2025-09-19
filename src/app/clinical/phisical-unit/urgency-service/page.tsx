@@ -47,15 +47,15 @@ export default async function Page({
         <Search
           className="flex items-center gap-3"
           filterKey="name"
-          label="Filtar pela descrição do Hospital"
-          placeholder="Buscar pelo nome da unidade externa"
+          label="Filtar pelo nome do serviço de urgência"
+          placeholder="Buscar pelo nome..."
         />
       </div>
   
       <Table
         baseRowLink="/clinical/phisical-unit/urgency-service"
         columns={[
-          "Especialidade", 
+          "Serviço de urgência", 
         ]} 
         rows={patientRows}
       />

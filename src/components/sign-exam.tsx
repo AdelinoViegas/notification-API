@@ -271,7 +271,7 @@ export default function SignExam(){
               onClick={handleSelect}
             />
             
-            <SpecialtyModal />
+            <SpecialtyModal isExamServices/>
           </div>
           
           <InputField
