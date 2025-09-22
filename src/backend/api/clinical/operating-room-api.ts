@@ -1,8 +1,5 @@
 "use server";
 
-import { 
-  getDateInSlashFormat 
-} from "@/lib/date-formater";
 import {priorityInOperatingRoom } from "@/lib/filters";
 import { getUserId } from "@/lib/web-token";
 import { surgerySchedulingArea } from "./translator";
@@ -39,13 +36,13 @@ async function getPatients({
 
     formatedList.push({
       id: items?.id.toString() as string,
-      patient: patient?.fullname as string,
       requestingService: surgerySchedulingArea.find( props => props._id === schedule?.requestingService)?.label as string,
-      doctor: doctor.fullname as string,
-      infirmary: schedule?.infirmary as string,
-      bed: schedule?.bed as string,
+      patient: patient?.fullname as string,
+      //infirmary: schedule?.infirmary as string,
+      //bed: schedule?.bed as string,
       sugeryType: sugeryType?.name.toString() as string,
-      date: `${getDateInSlashFormat(schedule?.doctorDay as Date)} ${schedule?.doctorTime}` as string,
+      doctor: doctor.fullname as string,
+      //date: `${getDateInSlashFormat(schedule?.doctorDay as Date)} ${schedule?.doctorTime}` as string,
     })
   }
 

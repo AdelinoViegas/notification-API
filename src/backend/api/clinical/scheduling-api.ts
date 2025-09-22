@@ -1114,11 +1114,11 @@ async function getScheduleSugery(scheduleId: string){
       type: sugeryType?.name as string,
       price: sugeryType?.price as number,
     },
-    date: {
-      pt: getDateInSlashFormat(schedule?.doctorDay as Date),
+    /*date: {
+      pt: getDataAndHoursFormat(schedule?.createdAt as Date).split(" ")[0],
       en: schedule?.doctorDay as Date,
     },
-    hour: schedule?.doctorTime as string,
+    hour: schedule?.createdAt as Date,*/ 
     payment: {
       code: schedule?.payment?.invoice?.code as string,
       proof: schedule?.payment?.invoice?.proof as string,

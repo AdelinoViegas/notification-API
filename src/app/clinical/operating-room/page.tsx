@@ -23,11 +23,8 @@ export default async function Page({
   const patientRows = formater(patients, {
     order: [
       "requestingService",
-      "date",
       "patient",
       "sugeryType",
-      "infirmary",
-      "bed",
       "doctor",
     ]
   }) ;
@@ -60,15 +57,11 @@ export default async function Page({
 
       <Table
         baseRowLink="/clinical/operating-room"
-        rowLength={7}
-        priorityCol
+        rowLength={4}
         columns={[
-          "Serv. Solicitante",
-          "Data e Hora", 
+          "Serv. Solicitante", 
           "Nome do Utente", 
           "Tipo de cirurgia",
-          "Efermaria",
-          "Cama",
           "Nome do Médico",
         ]}
         rows={patientRows} 

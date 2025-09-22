@@ -6,7 +6,7 @@ import ArchivingSugery from "@/components/archiving-sugery";
 import TitleAndSubtitle from "@/components/title-subtitle";
 //import PDFButton from "@/components/pdf-button";
 import ValidateSugery from "@/components/validate-sugery";
-import RescheduleSugery from "@/components/reschedule-sugery";
+//import RescheduleSugery from "@/components/reschedule-sugery";
 import Button from "@/components/ui/button";
 import SendScheduleSugery from "@/components/send-schedule-sugery";
 import { getScheduleSugery } from "@/backend/api/clinical/scheduling-api";
@@ -55,17 +55,17 @@ export default async function Page({
 
               <TitleAndSubtitle
                 label="Responsável"
-                value={'schedule.responsable'} 
+                value={schedule.doctor} 
               />
 
               <TitleAndSubtitle
                 label="Data da Cirurgia"
-                value={schedule.date.pt} 
+                value={"indefinido"} 
               />
 
               <TitleAndSubtitle
                 label="Hora da Cirurgia"
-                value={schedule.hour} 
+                value={"indefinido"} 
               />
 
               <TitleAndSubtitle
@@ -120,12 +120,12 @@ export default async function Page({
             />*/}
             <Button>Visualizar</Button>                    
 
-            <RescheduleSugery
+            {/*<RescheduleSugery
               scheduleId={scheduleId}
               doctorId={schedule.doctorId}
-              date={schedule.date.en}
-              hour={schedule.hour}
-            />
+              date={date[0] as unknown as Date}
+              hour={date[1]}
+            />*/}
               
             <ValidateSugery 
               disabled={!schedule.sugery.price || schedule.payment.status === "Confirmado"}
