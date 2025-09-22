@@ -499,7 +499,7 @@ export async function getPatients({
 }: {
   fullname?: string;
   page: number;
-}): Promise<ListPatient<Patient>>{
+}){
   try{
     const patients = await hospitalizationModel.find();
     const formated = [];
@@ -509,23 +509,24 @@ export async function getPatients({
       const personalData = await patientModel.findById({ _id: patient.patientId }).select({ fullname: 1 });
       const serviceSource = await urgencyServiceModel.findById({ _id: patient?.fromServiceId })?.select({ label: 1 });
       const reason = await patientHospitalizedModel.findOne({ hospitalizedId: patient?._id }).select({ patientState: 1 });
-      console.log(personalData, serviceSource, reason, doctor);
 
       formated.push({
-        _id: patient?.patientId?.toString() as string,
         id: patient?.patientId?.toString() as string,
+        service: serviceSource?.label as string,
+        createdAt: patient?.createdAt as Date,
         fullname: personalData?.fullname as string,
-        currentState: reason?.currentState as string,
+        currentState: reason?.currentState as string ?? "Vazio",
         user: doctor?.fullname as string,
-        createdAt: patient?.createdAt as Date
       });
     }
 
+    console.log(formated);
+
     return {
-      patients: mockPatients.slice(0, 9),
-      availablePages:  mockPatients.length/10,
+      patients: formated.slice(0, 9),
+      availablePages:  formated.length/10,
       currentPage: page,
-      totalItems: mockPatients.length
+      totalItems: formated.length
     }
   }catch {
     return {
