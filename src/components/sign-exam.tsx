@@ -106,7 +106,7 @@ export default function SignExam(){
           <input type="hidden" name="type" value="group" />
           <InputField
             textLabel="Nome do Grupo" 
-            placeholder="Descrição do nome do exame"
+            placeholder="Descrição do nome do serviço"
             required
             name="name"
           />
@@ -131,7 +131,7 @@ export default function SignExam(){
       </Modal>
 
       <Modal 
-        title="Nova Categoria de Exames"
+        title="Nova Categoria de serviço"
         open={categoryState}
         onClose={toggleCategory}>
         <form action={ccgAction}>
@@ -163,7 +163,7 @@ export default function SignExam(){
       </Modal>
 
       <Modal 
-        title="Nova Classificação de Exames"
+        title="Nova Classificação de serviço"
         open={classificationState}
         onClose={toggleClassification}>
         <form action={ccgAction}>
@@ -278,7 +278,7 @@ export default function SignExam(){
             textLabel="Preço"
             type="number"
             min={0}
-            placeholder="Descreva o preço do exame"
+            placeholder="Descreva o preço do serviço"
             name="price"
           />
 

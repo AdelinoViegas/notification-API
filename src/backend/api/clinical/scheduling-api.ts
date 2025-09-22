@@ -148,7 +148,6 @@ async function getExams(specialtyId?: string){
       groupId: data.groupId?.toString() as string,
       group: group?.name as string,
       price: data.price.toString(), // por causa das tabelas
-      specialtyId: data.specialtyId?.toString() as string // para agendar as cirurgias
     });
   }
 
@@ -1078,13 +1077,13 @@ async function getScheduleSugeries({
 
     formatedList.push({
       id: items.id.toString() as string,
-      patient: patient?.fullname as string,
       requestingService: surgerySchedulingArea.find( props => props._id === items.requestingService)?.label as string,
-      doctor: doctor.fullname as string,
-      infirmary: items.infirmary as string,
-      bed: items.bed as string,
+      patient: patient?.fullname as string,
+      //infirmary: items.infirmary as string,
+      //bed: items.bed as string,
       sugeryType: sugeryType?.name.toString() as string,
-      date: `${getDateInSlashFormat(items.doctorDay as Date)} ${items.doctorTime}` as string,
+      //date: `${getDateInSlashFormat(items.doctorDay as Date)} ${items.doctorTime}` as string,
+      doctor: doctor.fullname as string,
       status: items.payment?.status === "confirmed"?"Confirmado":"Pendente" as string,
     })
   }
