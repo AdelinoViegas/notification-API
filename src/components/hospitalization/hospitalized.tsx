@@ -7,7 +7,8 @@ import { getHospitalized } from "@/backend/api/clinical/hospitalization-api";
 import Filter from "./filter";
 
 export default async function Hospitalized({ page }: {
-  fullname?: string;
+  pfn?: string;
+  _fn?: string;
   page?: number;
 }){
   // const { name, page } = await searchParams;
@@ -32,7 +33,7 @@ export default async function Hospitalized({ page }: {
         
         <Search
           className="flex items-center gap-3"
-          filterKey="name"
+          filterKey="pfn" // patient fullname
           label="Filtar por nome"
           placeholder="Buscar pelo nome do utente..."
         />
