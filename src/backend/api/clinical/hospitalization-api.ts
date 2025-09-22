@@ -656,9 +656,9 @@ export async function getInternalServices(){
   }
 }
 
-export async function getBeds(){
+export async function getBeds(nursingId?: string){
   try{
-    const beds = await bedNursingModel.find();
+    const beds = await bedNursingModel.find(omitUndefined({ nursingId }));
     const formatedBeds = [];
 
     for (const bed of beds){
@@ -672,7 +672,9 @@ export async function getBeds(){
         internalService: internalService?.name as string,
         section: section?.name as string,
         nursing: nursing?.name as string,
-        bed: bed?.bed as string
+        bed: bed?.bed as string,
+        _id: bed._id.toString(),
+        label: bed?.bed as string,
       });
     }
 
