@@ -17,7 +17,7 @@ import InputDetails from "@/components/ui/input-details";
 import Alert from "@/components/ui/alert";
 import { getDateInDashFormat } from "@/lib/date-formater";
 import { Types } from "mongoose";
-import { getDoctors } from "@/backend/api/clinical/api";
+import { getDoctors, getUser } from "@/backend/api/clinical/api";
 import type { DoctorCalendarReference, DoctorDayAndTime } from "@/backend/api/clinical/types";
 import { 
   findDoctorCalendar,
@@ -25,6 +25,7 @@ import {
   scheduleSugery
 } from "@/backend/api/clinical/scheduling-api";
 import { toast } from "react-toastify";
+import { getMyProfile, getUsers } from "@/backend/api/admin";
 
 export type DoctorRole = {
   _id: string;
@@ -56,9 +57,11 @@ export default function ScheduleSugery(
     const loadData = async ()=>{  
       const doctors = await getDoctors() as SelectionOption[];
       doctorsRef.current = doctors as unknown as DoctorRole[];
-
-      setDoctors(doctors);
+      
+      if(doctors)
+        setDoctors(doctors);
     }
+
     loadData();
 
     const dataSugeries:SelectionOption[] = [];
@@ -77,6 +80,11 @@ export default function ScheduleSugery(
     })
   }, []);
   
+  /* Função de teste */
+  (async () => {
+    const user = await getMyProfile();
+    console.log(user);
+  })(); 
 
   const filterDoctors = useCallback(async (e: ChangeEvent<HTMLSelectElement>)=>{
     const specialtyId = e.target.value;
@@ -91,62 +99,6 @@ export default function ScheduleSugery(
 
     const newDoctorsList = doctorsRef.current.filter(doctor => doctor?.roleId === specialtyId) as unknown as SelectionOption[];
     setDoctors(newDoctorsList);
-  }, []);
-
-  const handleSelectDoctor = useCallback(async(e: ChangeEvent<HTMLSelectElement>)=>{
-    const doctorId = e.target.value;
-
-    if(doctorId){
-      const doctorCalendars = await findDoctorCalendar({doctorId});
-      const formatedCalendars = []; 
-
-      if(doctorCalendars.length){
-        for(const calendar of doctorCalendars){
-          formatedCalendars.push({
-            _id: new Types.ObjectId().toString(),
-            label: getDateInDashFormat(calendar.day),
-            calendar,
-          });
-        }
-
-        setDoctorDays(formatedCalendars);
-        doctorDayRef.current = formatedCalendars;
-      }else{
-        setCloseAlert(false);
-        setDoctorDays([]);
-        setDoctorTime(undefined);
-      }
-    }else{
-      setCloseAlert(false);
-      setDoctorDays([]);
-      setDoctorTime(undefined);
-    }
-  }, []);
-
-  const handleDoctorDay = useCallback(async(e: ChangeEvent<HTMLSelectElement>)=>{
-    const dateId = e.target.value;
-    const doctorCalendar = doctorDayRef.current?.find(props => props._id === dateId);
-
-    if(doctorCalendar){
-      const { calendar: { 
-        initialTime, 
-        finalTime,
-        day,
-        availableDoctorSpace
-      }} = doctorCalendar;
-      
-      setDoctorTime({ 
-        startAt: initialTime, 
-        endAt: finalTime,
-        day,
-        availableDoctorSpace
-      });
-      
-      setCloseAlert(true);
-    }else{
-      setCloseAlert(false);
-      setDoctorTime(undefined);
-    }
   }, []);
 
   useEffect(()=>{
@@ -170,7 +122,7 @@ export default function ScheduleSugery(
   return(
     <main className="w-full">
       <form {...{action}} ref={formRef}>
-        <div className="grid xl:grid-cols-5 gap-3">
+        <div className="2xl:flex 2xl:gap-x-2">
           <input 
             type="hidden" 
             name="patientId" 
@@ -185,12 +137,6 @@ export default function ScheduleSugery(
 
           <input
             type="hidden"
-            name="date"
-            defaultValue={doctorTime?.day.toISOString()}
-          />
-
-          <input
-            type="hidden"
             name="requestingService"
             defaultValue={path.split("/")[2]}
           />          
@@ -199,62 +145,18 @@ export default function ScheduleSugery(
             label="Tipo de Cirurgia"
             defaultOptionLabel="Todas"
             options={sugeriesType}
-            className="lg:col-span-2"
+            className="w-full"
             onChange={filterDoctors}
           />
 
           <Selection
             label="Médico"
             name="doctorId"
-            className="lg:col-span-2"
-            options={doctors}
-            onChange={handleSelectDoctor}
+            options={[]}
+            className="w-full"
+            defaultValue={"dd"}
             required
           />
-
-          <Selection
-            label="Data da Cirurgia"
-            options={doctorDays}
-            onChange={handleDoctorDay}
-            required
-          />
-
-          <InputField
-            textLabel="Hora da Cirurgia"
-            className="lg:col-span-2"
-            type="time" 
-            name="time"
-            min={doctorTime?.startAt}
-            max={doctorTime?.endAt}
-            required
-          />
-
-          <InputField
-            textLabel="Efermaria"
-            className="lg:col-span-2"
-            placeholder="insira a efermaria"
-            name="infirmary"
-            required
-          />
-
-          <InputField
-            textLabel="Cama"
-            placeholder="número da cama" 
-            name="bed"
-            required
-          />
-        </div>
-
-        <div className="flex flex-col lg:flex-row items-end justify-between gap-3">
-          <div className="min-w-96">
-            { closeAlert && !!doctorTime?.startAt && 
-              <Alert
-                type="warn"
-                message={`Horário disponivel das ${doctorTime?.startAt} 
-                até ${doctorTime?.endAt} e com ${doctorTime.availableDoctorSpace.spaces} vagas`} 
-              />
-            }
-          </div>
         </div>
 
         <InputDetails

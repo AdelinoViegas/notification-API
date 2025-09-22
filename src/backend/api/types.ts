@@ -14,6 +14,7 @@ export interface UserRole {
 }
 
 export interface MyProfile {
+  _id: string;
   fullname: string;
   tel: string;
   email: string;
