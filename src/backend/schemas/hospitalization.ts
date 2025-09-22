@@ -3,8 +3,16 @@ import { Schema } from "mongoose";
 export const hospitalizationSchema = new Schema({
   fromServiceId: Schema.Types.ObjectId,
   patientId: Schema.Types.ObjectId,
-  userId: Schema.Types.ObjectId
+  userId: Schema.Types.ObjectId,
+  served: {
+    type: Boolean,
+    default: false
+  }
+}, {
+  timestamps: true
 });
+
+hospitalizationSchema.index({ patientId: 1, served: 1}, { unique: true }); 
 
 export const internalServiceSchema = new Schema({ 
   name: {

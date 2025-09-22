@@ -1,8 +1,9 @@
 "use server";
 
-import { bedNursingModel, internalServiceModel, nursingModel, sectionModel } from "@/backend/model";
+import { bedNursingModel, hospitalizationModel, internalServiceModel, nursingModel, patientHospitalizedModel, patientModel, sectionModel, urgencyServiceModel } from "@/backend/model";
 import { ListPatient } from "./types";
 import { omitUndefined } from "mongoose";
+import { getUser } from "./api";
 
 interface Patient {
   id: string;
@@ -500,7 +501,26 @@ export async function getPatients({
   page: number;
 }): Promise<ListPatient<Patient>>{
   try{
-    
+    const patients = await hospitalizationModel.find();
+    const formated = [];
+
+    for(const patient of patients){
+      const doctor = await getUser(patient.userId?.toString() as string);
+      const personalData = await patientModel.findById({ _id: patient.patientId }).select({ fullname: 1 });
+      const serviceSource = await urgencyServiceModel.findById({ _id: patient?.fromServiceId })?.select({ label: 1 });
+      const reason = await patientHospitalizedModel.findOne({ hospitalizedId: patient?._id }).select({ patientState: 1 });
+      console.log(personalData, serviceSource, reason, doctor);
+
+      formated.push({
+        _id: patient?.patientId?.toString() as string,
+        id: patient?.patientId?.toString() as string,
+        fullname: personalData?.fullname as string,
+        currentState: reason?.currentState as string,
+        user: doctor?.fullname as string,
+        createdAt: patient?.createdAt as Date
+      });
+    }
+
     return {
       patients: mockPatients.slice(0, 9),
       availablePages:  mockPatients.length/10,
@@ -692,6 +712,30 @@ export async function getBeds(nursingId?: string){
       availablePages: 1,
       currentPage: 1,
       totalItems: 1
+    }
+  }
+}
+
+export async function signToHospitalize(p: unknown, formData: FormData){
+  try{
+    const internalService = formData.get("serviceId");
+    const patientId = formData.get("patientId");
+    const sectionId = formData.get("sectionId");
+    const nursingId = formData.get("nursingId");
+    const bedId = formData.get("bedId");
+
+    console.log([...formData.entries()]);
+
+    return {
+      message: "Registrado com sucesso!",
+      status: true
+    }
+  }catch(e) {
+    console.error(e);
+
+    return {
+      message: "Não foi possivel registrar!",
+      status: false
     }
   }
 }

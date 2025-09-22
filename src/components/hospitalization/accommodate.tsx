@@ -40,6 +40,7 @@
 "use client";
 
 import { useState, useActionState, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
 import Modal from "@/components/modal";
 import Button from "@/components/ui/button";
 import InputField from "@/components/ui/input-field";
@@ -49,7 +50,8 @@ import {
   getSections, 
   signInternalService, 
   signNursing ,
-  getBeds
+  getBeds,
+  signToHospitalize
 } from "@/backend/api/clinical/hospitalization-api";
 
 import { toast } from "react-toastify";
@@ -57,7 +59,7 @@ import Selection, { SelectionOption } from "@/components/ui/selection";
 
 export default function Accommodate(){
   const [ state, action ] = useActionState(signNursing, { message: "", status: false }); 
-  const [ serviceState, serviceAction ]= useActionState(signInternalService, { message: "", status: false});
+  const [ serviceState, serviceAction ]= useActionState(signToHospitalize, { message: "", status: false});
   const [ newSectionState, setNewSectionState ] = useState(false);
   const [ modal, setModal ] = useState(false);
   const [ modalService, setModalService ] = useState(false);
@@ -70,6 +72,8 @@ export default function Accommodate(){
   const [ selectedSection, setSelectedSection ] = useState<string>();
   const [ selectedNursing, setSelectedNursing ] = useState<string>();
 
+  const router = useRouter();
+  const params = useParams();
 
   const reset = ()=>{
     setNewSectionState(false);
@@ -88,7 +92,7 @@ export default function Accommodate(){
     getSections().then(setSections);
     getNursings(selectedSection).then(setNursings);
     getBeds(selectedNursing).then(e => setBeds(e.beds));
-    
+
   }, [state, selectedSection]);
 
   useEffect(()=>{
@@ -106,6 +110,7 @@ export default function Accommodate(){
   return(
     <div>
       <form action={action}>
+        <input type="hidden" name="patientId" value={params.id} />
         <div className="flex gap-x-3 items-center">
           <Selection
             label="Serviço de Internamento"
@@ -136,7 +141,7 @@ export default function Accommodate(){
 
         <Selection
           label="Nº da Cama"
-          name="bed"
+          name="bedId"
           options={beds} 
           required
         />

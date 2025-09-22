@@ -191,11 +191,13 @@ const urgencyService = new Schema({
 });
 
 const patientHospitalizedSchema = new Schema({
-  urgencyId: Schema.Types.ObjectId,
-  userId: Schema.Types.ObjectId,
+  urgencyId: Schema.ObjectId,
+  userId: Schema.ObjectId,
   description: String,
   donedAt: Date,
-  patientState: String
+  patientState: String,
+  hospitalizedId: Schema.ObjectId,
+  currentState: String
 }, {
   timestamps: true
 });

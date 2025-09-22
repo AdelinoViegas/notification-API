@@ -9,7 +9,13 @@ import { finishHospitalization } from "@/backend/api/clinical/urgency-bank-api";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 
-export default function Hospitalization({ id }: { id: string }){
+export default function Hospitalization({ 
+  id,
+  patientId 
+}:{ 
+  id: string;
+  patientId: string; 
+}){
   const [modalstate, setModalState] = useState(false);
   const [ state, action ] = useActionState(finishHospitalization, { message: "", status: false });
   const  openModal = ()=> setModalState(true);
@@ -48,6 +54,8 @@ export default function Hospitalization({ id }: { id: string }){
         <form action={action}>
           <div className="my-4">
             <input type="hidden" name="urgencyId" value={id} />
+            <input type="hidden" name="patientId" value={patientId} />
+            
             <InputDetails
               textLabel="Descrição"
               placeholder="Descreva"

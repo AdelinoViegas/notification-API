@@ -19,7 +19,8 @@ import {
   patientHospitalizedModel,
   prescriptionModel,
   surgeryModel,
-  processStateModel
+  processStateModel,
+  hospitalizationModel
 } from "@/backend/model";
 import { 
   patientAccess,
@@ -963,12 +964,13 @@ async function getUrgencyService(serviceId: string){
   }
 }
 
-async function finishHospitalization(prev: unknown, form: FormData){
+async function finishHospitalization(prev: unknown, formData: FormData){
   try{
-    const urgencyId = form.get("urgencyId") as string;
-    const description = form.get("description");
-    const donedAt = form.get("donedAt") as string;
-    const patientState = form.get("patientState") as string;
+    const urgencyId = formData.get("urgencyId") as string;
+    const description = formData.get("description");
+    const donedAt = formData.get("donedAt") as string;
+    const patientState = formData.get("patientState") as string;
+    const patientId = formData.get("patientId") as string;
 
     const urgency = await urgencyBankModel.findById({ _id: urgencyId });
 
@@ -980,14 +982,22 @@ async function finishHospitalization(prev: unknown, form: FormData){
       served: true
     });
 
+    const hospitalized = await hospitalizationModel.create({
+      fromServiceId: tried?.serviceId,
+      userId: await getUserId(),
+      patientId
+    });
+
     await patientHospitalizedModel.create({
+      hospitalizedId: hospitalized._id,
       urgencyId: urgency?._id,
       userId: await getUserId(),
       description,
       donedAt,
-      patientState,
+      currentState: patientState,
     });
 
+    await syncPatientRegister(patientId);
     await closePatientProcess(tried?.patientId?.toString() as string, "urgency")
 
     return {
