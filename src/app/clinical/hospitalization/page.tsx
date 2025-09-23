@@ -22,7 +22,7 @@ export default async function Page({
         idAsIndexPage
         baseUrl="/clinical/hospitalization"
         subPaths={[
-          { path: "r", title: "Em Espera" },
+          { path: "r", title: "Lista de Espera" },
           { path: "h", title: "Internados" },
           { path: "n", title: "Infermagens" }
         ]}

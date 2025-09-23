@@ -5,6 +5,7 @@ import { formater } from "@/lib/table-formater";
 import Pagination from "@/components/pagination";
 import Refresh from "@/components/refresh";
 import { getPatients } from "@/backend/api/clinical/hospitalization-api";
+import { getDataAndHoursFormat } from "@/lib/date-formater";
 
 export default async function Reception({ page }: {
   fullname?: string;
@@ -17,7 +18,12 @@ export default async function Reception({ page }: {
     page: page?Number(page):1,
   });
 
-  const rows = formater(patientsData.patients);
+  const rows = formater(patientsData.patients, {
+    transform: {
+      targetKey: "createdAt",
+      fn: e => getDataAndHoursFormat(new Date(e))
+    }
+  });
   
   return (
     <main className="space-y-3">

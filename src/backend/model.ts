@@ -50,6 +50,8 @@ import {
 } from "@/backend/schemas/urgency-bank";
 import { 
   bedNursingSchema, 
+  hospitalizationSchema, 
+  inHospitalizeSchema, 
   internalServiceSchema, 
   nursingSchema, 
   sectionSchema 
@@ -108,6 +110,8 @@ const bedNursingModel = clinical.model("bedNursing", bedNursingSchema);
 const nursingModel = clinical.model("Nursing", nursingSchema);
 const sectionModel = clinical.model("Section", sectionSchema);
 const internalServiceModel = clinical.model("InternalService", internalServiceSchema);
+const hospitalizationModel = clinical.model("Hospitalization", hospitalizationSchema);
+const inHospitalizeModel = clinical.model("inHospitalize", inHospitalizeSchema);
 
 export {
   userModel,
@@ -153,5 +157,7 @@ export {
   bedNursingModel,
   nursingModel,
   sectionModel,
-  internalServiceModel
+  internalServiceModel,
+  hospitalizationModel,
+  inHospitalizeModel
 };

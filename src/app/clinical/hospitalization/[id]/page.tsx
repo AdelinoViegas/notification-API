@@ -1,18 +1,14 @@
 import Accommodate from "@/components/hospitalization/accommodate";
 
-export default async function Page({ 
-  params,
-  searchParams 
-}:{ 
+export default async function Page({ }:{ 
   params: Promise<{ id: string }>;
   searchParams: Promise<{ r: "r" | "h" | "n" }>;
 }){
-  const [{ id }] = await Promise.all([ params,  searchParams ]);
   
   return(
     <div>
       <div className="w-1/2">
-        <Accommodate id={id} />
+        <Accommodate />
       </div>
     </div>
   )

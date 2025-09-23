@@ -3,21 +3,29 @@ import Search from "@/components/ui/search";
 import { formater } from "@/lib/table-formater";
 import Pagination from "@/components/pagination";
 import Refresh from "@/components/refresh";
-import { getHospitalized } from "@/backend/api/clinical/hospitalization-api";
+import { getPatients } from "@/backend/api/clinical/hospitalization-api";
 import Filter from "./filter";
+import { getDataAndHoursFormat } from "@/lib/date-formater";
 
 export default async function Hospitalized({ page }: {
-  fullname?: string;
+  pfn?: string;
+  _fn?: string;
   page?: number;
 }){
   // const { name, page } = await searchParams;
 
-  const patients = await getHospitalized({ 
+  const patients = await getPatients({ 
     // fullname: name, 
     page: page?Number(page):1,
+    served: true
   });
 
-  const rows = formater(patients.patients);
+  const rows = formater(patients.patients, {
+    transform: {
+      targetKey: "createdAt",
+      fn: e => getDataAndHoursFormat(new Date(e))
+    }
+  });
   
   return (
     <main className="space-y-3">
@@ -32,7 +40,7 @@ export default async function Hospitalized({ page }: {
         
         <Search
           className="flex items-center gap-3"
-          filterKey="name"
+          filterKey="pfn" // patient fullname
           label="Filtar por nome"
           placeholder="Buscar pelo nome do utente..."
         />

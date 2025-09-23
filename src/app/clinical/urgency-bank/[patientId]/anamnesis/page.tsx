@@ -15,11 +15,7 @@ import {
 } from "@/lib/internal-components";
 import { getPatientUrgencyBank } from "@/backend/api/clinical/urgency-bank-api";
 
-export default async function Page({ params }: {
-	params: Promise<{
-		patientId: string;
-	}>
-}){
+export default async function Page({ params }: { params: Promise<{ patientId: string }>}){
   const { patientId } = await params;
 	const anamnesis = await getPatientUrgencyBank(patientId);
 
@@ -51,7 +47,7 @@ export default async function Page({ params }: {
 		<main className="relative">
 			<div className="flex gap-x-3">
 				<Button>Visualizar</Button>
-				<Hospitalization id={anamnesis.id} />
+				<Hospitalization id={anamnesis.id} patientId={patientId} />
 			</div>
 
 			<div className="flex flex-col gap-y-3 pt-8">

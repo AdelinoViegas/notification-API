@@ -3,10 +3,24 @@ import { Schema } from "mongoose";
 export const hospitalizationSchema = new Schema({
   fromServiceId: Schema.Types.ObjectId,
   patientId: Schema.Types.ObjectId,
-  userId: Schema.Types.ObjectId
+  userId: Schema.Types.ObjectId,
+  served: {
+    type: Boolean,
+    default: false
+  }
+}, {
+  timestamps: true
 });
 
-export const internalServiceSchema = new Schema({ name: String });
+hospitalizationSchema.index({ patientId: 1, served: 1}, { unique: true }); 
+
+export const internalServiceSchema = new Schema({ 
+  name: {
+    type: String,
+    required: true,
+    unique: true
+  } 
+});
 
 export const bedNursingSchema = new Schema({
   internalServiceId: Schema.ObjectId,
@@ -34,3 +48,17 @@ export const nursingSchema = new Schema({
 });
 
 export const sectionSchema = new Schema({ name: String });
+
+export const inHospitalizeSchema = new Schema({
+  patientId: String,
+  bedId: Schema.ObjectId,
+  served: {
+    type: Boolean,
+    default: false
+  },
+  userId: Schema.ObjectId
+}, {
+  timestamps: true
+});
+
+inHospitalizeSchema.index({ patientId: 1, served: 1 }, { unique: true });

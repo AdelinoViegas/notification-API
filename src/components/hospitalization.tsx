@@ -3,13 +3,19 @@
 import Button from "@/components/ui/button";
 import Modal from "@/components/modal";
 import { useActionState, useEffect, useState } from "react";
-import InputDetails from "./ui/input-details";
-import InputField from "./ui/input-field";
+import InputDetails from "@/components/ui/input-details";
+import InputField from "@/components/ui/input-field";
 import { finishHospitalization } from "@/backend/api/clinical/urgency-bank-api";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 
-export default function Hospitalization({ id }: { id: string }){
+export default function Hospitalization({ 
+  id,
+  patientId 
+}:{ 
+  id: string;
+  patientId: string; 
+}){
   const [modalstate, setModalState] = useState(false);
   const [ state, action ] = useActionState(finishHospitalization, { message: "", status: false });
   const  openModal = ()=> setModalState(true);
@@ -43,22 +49,25 @@ export default function Hospitalization({ id }: { id: string }){
         title="Internamento"
         open={modalstate}
         onClose={closeModal}
+        asWindow
       >
-
         <form action={action}>
           <div className="my-4">
             <input type="hidden" name="urgencyId" value={id} />
+            <input type="hidden" name="patientId" value={patientId} />
+            
             <InputDetails
               textLabel="Descrição"
               placeholder="Descreva"
               name="description"
+              required
               rows={3}
             />
 
             <InputField
               type="datetime-local"
               textLabel="Data e Hora"
-              name="createdAt"
+              name="donedAt"
               required
             />
 
@@ -72,11 +81,7 @@ export default function Hospitalization({ id }: { id: string }){
           </div>
 
           <div className="flex gap-x-3 justify-end">
-            <Button 
-              cancel 
-              type="button"
-              onClick={closeModal}
-              >Cancelar</Button>
+            <Button cancel type="button" onClick={closeModal}>Cancelar</Button>
             <Button>Salvar</Button>
           </div>
         </form>
