@@ -512,15 +512,13 @@ export async function getPatients({
 
       formated.push({
         id: patient?.patientId?.toString() as string,
-        service: serviceSource?.label as string,
+        service: serviceSource?.label as string ?? "Desconhecido",
         createdAt: patient?.createdAt as Date,
         fullname: personalData?.fullname as string,
         currentState: reason?.currentState as string ?? "Sem motivo",
         user: doctor?.fullname as string,
       });
     }
-
-    //console.log(formated);
 
     return {
       patients: formated.slice(0, 9),

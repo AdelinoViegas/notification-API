@@ -35,7 +35,7 @@ import {
 import { getUser, patientFilters } from "@/backend/api/clinical/api";
 import { DoctorCalendar } from "@/backend/api/clinical/types";
 import { getPatient as mainPatient } from "@/backend/api/clinical/api";
-import { closePatientProcess, syncPatientRegister } from "@/backend/api/clinical/process-control";
+import { closePatientProcess, getSyncedHistories, syncPatientRegister } from "@/backend/api/clinical/process-control";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
 import { omitUndefined } from "mongoose";
 
@@ -972,15 +972,17 @@ async function finishHospitalization(prev: unknown, formData: FormData){
     const currentState = formData.get("currentState") as string;
     const patientId = formData.get("patientId") as string;
 
+    const patient = await getSyncedHistories(patientId);
+    const lastPatientId = patient?.secondaries.pop();
+    const hospitalizedPatient = await hospitalizationModel.findOne({ patientId: lastPatientId });
+    
+    if(typeof hospitalizedPatient?.served === "boolean")
+      if(!hospitalizedPatient.served)
+        throw new Error("Paciente ja está no internamento!");
+
     const urgency = await urgencyBankModel.findById({ _id: urgencyId });
-
-    const tried = await triedModel.findOneAndUpdate({ _id: urgency?.triedId }, {
-      served: true
-    });
-
-    await urgencyBankModel.updateOne({ _id: urgencyId }, {
-      served: true
-    });
+    const tried = await triedModel.findOneAndUpdate({ _id: urgency?.triedId }, { served: true });
+    await urgencyBankModel.updateOne({ _id: urgencyId }, { served: true });
 
     const hospitalized = await hospitalizationModel.create({
       fromServiceId: tried?.serviceId,
