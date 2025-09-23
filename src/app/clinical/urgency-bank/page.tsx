@@ -24,7 +24,7 @@ export default async function Page({
   const patientData = await getPatients({
     name: name, 
     priority: priority
-  });
+  }); console.log(patientData);
   const patientRows = formater(patientData, {
     order: [
       "priorityType",

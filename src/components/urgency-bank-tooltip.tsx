@@ -1,4 +1,5 @@
 "use client";
+
 import { useCallback } from "react";
 import { 
   usePathname, 
@@ -21,6 +22,7 @@ export default function Tooltip({data}: TooltipProps){
   const handleFilterButton = useCallback((priority: string)=>{
     if(priority === "white")
       return router.push(pathname);
+    
     const searchParams = new URLSearchParams();
     searchParams.set("priority", priority);
     router.push(`${pathname}?${searchParams.toString()}`);

@@ -31,9 +31,9 @@ function orderByPriority(dataElements: GETpatient[]){
 }
 
 function priorityInOperatingRoom(dataElements: { requestingService: string }[]){
-  const reference = [ "urgency-bank", "hospitalization", "office", "patient",];
+  const reference = ["urgency-bank", "hospitalization", "office", "patient",];
   const orderElements = [];
-  const areasToSchedule = [];
+  const summary = [];
 
   for(const area of reference){
     let count = 0;
@@ -44,18 +44,18 @@ function priorityInOperatingRoom(dataElements: { requestingService: string }[]){
       }
     }
 
-    areasToSchedule.push({
+    summary.push({
       label: surgerySchedulingArea.find((item)=>item._id === area)?.label,
       quantity: count,
       id: area
     });
   }
 
-  areasToSchedule.push({ label: "Todos", quantity: dataElements.length, id: "white" });
+  summary.push({ label: "Todos", quantity: dataElements.length, id: "all" });
 
   return {
     orderElements,
-    areasToSchedule,
+    summary,
   };
 }
 

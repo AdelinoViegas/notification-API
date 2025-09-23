@@ -17,7 +17,7 @@ export default async function Page({
     name: string;
     priority?: string;
   }>
-}){ 
+}){
   const { name, priority } = await searchParams;
   const patients = await getPatients({ name, priority});
   const patientRows = formater(patients, {
@@ -28,7 +28,7 @@ export default async function Page({
       "doctor",
     ]
   }) ;
-  const dataPriority = priorityInOperatingRoom(patients);
+  const dataPriority = priorityInOperatingRoom(await getPatients({ name })).summary;
  
   return(
     <main className="space-y-3">
@@ -45,7 +45,7 @@ export default async function Page({
       </div>
       
       <div className="flex justify-between items-center">
-        <TooltipInOperatingRoom data={dataPriority.areasToSchedule} />
+        <TooltipInOperatingRoom data={dataPriority} />
 
         <Search
           className="flex items-center gap-x-3"

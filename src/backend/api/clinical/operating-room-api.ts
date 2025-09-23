@@ -47,7 +47,7 @@ async function getPatients({
   }
 
   return name?priorityInOperatingRoom(formatedList.filter((item)=>item.patient.match(new RegExp(`^${name}`, 'i')))).orderElements:
-  priority?priorityInOperatingRoom(formatedList.filter((item)=>item.requestingService === surgerySchedulingArea.find((props)=>props.color === priority)?.label)).orderElements:
+  priority?priorityInOperatingRoom(formatedList.filter((item)=>item.requestingService === surgerySchedulingArea.find((props)=>props._id === priority)?.label)).orderElements:
   priorityInOperatingRoom(formatedList).orderElements;
 }
 

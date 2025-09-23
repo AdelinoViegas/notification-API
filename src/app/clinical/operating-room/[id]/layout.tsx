@@ -33,7 +33,7 @@ export default async function Layout({
         basePathname="/clinical/operating-room" 
       />
 
-      <div className="my-4 text-center pt-3 text-white bg-red-300 rounded-lg">
+      <div className="my-4 text-center pt-3 text-white bg-blue-400 rounded-lg">
 			 	<Header 
           center 
           title={data.fullname as string}

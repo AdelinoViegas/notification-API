@@ -55,12 +55,12 @@ export default async function Page({
 
               <TitleAndSubtitle
                 label="Data da Cirurgia"
-                value={schedule.date.pt} 
+                value={'schedule.date.pt'} 
               />
 
               <TitleAndSubtitle
                 label="Hora da Cirurgia"
-                value={schedule.hour} 
+                value={'schedule.hour'} 
               />
 
               <TitleAndSubtitle
