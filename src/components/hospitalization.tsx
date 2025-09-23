@@ -3,8 +3,8 @@
 import Button from "@/components/ui/button";
 import Modal from "@/components/modal";
 import { useActionState, useEffect, useState } from "react";
-import InputDetails from "./ui/input-details";
-import InputField from "./ui/input-field";
+import InputDetails from "@/components/ui/input-details";
+import InputField from "@/components/ui/input-field";
 import { finishHospitalization } from "@/backend/api/clinical/urgency-bank-api";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
@@ -49,8 +49,8 @@ export default function Hospitalization({
         title="Internamento"
         open={modalstate}
         onClose={closeModal}
+        asWindow
       >
-
         <form action={action}>
           <div className="my-4">
             <input type="hidden" name="urgencyId" value={id} />
@@ -60,13 +60,14 @@ export default function Hospitalization({
               textLabel="Descrição"
               placeholder="Descreva"
               name="description"
+              required
               rows={3}
             />
 
             <InputField
               type="datetime-local"
               textLabel="Data e Hora"
-              name="createdAt"
+              name="donedAt"
               required
             />
 
@@ -80,11 +81,7 @@ export default function Hospitalization({
           </div>
 
           <div className="flex gap-x-3 justify-end">
-            <Button 
-              cancel 
-              type="button"
-              onClick={closeModal}
-              >Cancelar</Button>
+            <Button cancel type="button" onClick={closeModal}>Cancelar</Button>
             <Button>Salvar</Button>
           </div>
         </form>

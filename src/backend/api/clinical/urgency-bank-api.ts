@@ -969,7 +969,7 @@ async function finishHospitalization(prev: unknown, formData: FormData){
     const urgencyId = formData.get("urgencyId") as string;
     const description = formData.get("description");
     const donedAt = formData.get("donedAt") as string;
-    const patientState = formData.get("patientState") as string;
+    const currentState = formData.get("currentState") as string;
     const patientId = formData.get("patientId") as string;
 
     const urgency = await urgencyBankModel.findById({ _id: urgencyId });
@@ -994,7 +994,7 @@ async function finishHospitalization(prev: unknown, formData: FormData){
       userId: await getUserId(),
       description,
       donedAt,
-      currentState: patientState,
+      currentState
     });
 
     await syncPatientRegister(patientId);

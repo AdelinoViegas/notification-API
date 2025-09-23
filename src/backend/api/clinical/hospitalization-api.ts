@@ -508,19 +508,19 @@ export async function getPatients({
       const doctor = await getUser(patient.userId?.toString() as string);
       const personalData = await patientModel.findById({ _id: patient.patientId }).select({ fullname: 1 });
       const serviceSource = await urgencyServiceModel.findById({ _id: patient?.fromServiceId })?.select({ label: 1 });
-      const reason = await patientHospitalizedModel.findOne({ hospitalizedId: patient?._id }).select({ patientState: 1 });
+      const reason = await patientHospitalizedModel.findOne({ hospitalizedId: patient?._id }).select({ currentState: 1 });
 
       formated.push({
         id: patient?.patientId?.toString() as string,
         service: serviceSource?.label as string,
         createdAt: patient?.createdAt as Date,
         fullname: personalData?.fullname as string,
-        currentState: reason?.currentState as string ?? "Vazio",
+        currentState: reason?.currentState as string ?? "Sem motivo",
         user: doctor?.fullname as string,
       });
     }
 
-    console.log(formated);
+    //console.log(formated);
 
     return {
       patients: formated.slice(0, 9),
