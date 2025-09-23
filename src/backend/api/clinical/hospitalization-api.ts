@@ -1,6 +1,6 @@
 "use server";
 
-import { bedNursingModel, hospitalizationModel, internalServiceModel, nursingModel, patientHospitalizedModel, patientModel, sectionModel, urgencyServiceModel } from "@/backend/model";
+import { bedNursingModel, hospitalizationModel, inHospitalizeModel, internalServiceModel, nursingModel, patientHospitalizedModel, patientModel, sectionModel, urgencyServiceModel } from "@/backend/model";
 import { ListPatient } from "./types";
 import { omitUndefined } from "mongoose";
 import { getUser } from "./api";
@@ -495,13 +495,18 @@ const mockHospitalized: Hospitalized[] = [
 ];
 
 export async function getPatients({
-  page
+  page,
+  served
 }: {
   fullname?: string;
   page: number;
+  served?: boolean;
 }){
   try{
-    const patients = await hospitalizationModel.find();
+    const patients = await hospitalizationModel.find(omitUndefined({
+      served: served ?? false
+    }));
+
     const formated = [];
 
     for(const patient of patients){
@@ -525,30 +530,6 @@ export async function getPatients({
       availablePages:  formated.length/10,
       currentPage: page,
       totalItems: formated.length
-    }
-  }catch {
-    return {
-      patients: [],
-      availablePages: 1,
-      currentPage: 1,
-      totalItems: 1
-    }
-  }
-}
-
-export async function getHospitalized({
-  page
-}: {
-  fullname?: string;
-  page: number;
-}): Promise<ListPatient<Hospitalized>>{
-  try{
-    
-    return {
-      patients: mockHospitalized.slice(0, 9),
-      availablePages:  mockPatients.length/10,
-      currentPage: page,
-      totalItems: mockPatients.length
     }
   }catch {
     return {
@@ -725,6 +706,13 @@ export async function signToHospitalize(p: unknown, formData: FormData){
 
     console.log([...formData.entries()]);
 
+    await inHospitalizeModel.create({
+      patientId,
+      bedId
+    });
+
+    await hospitalizationModel.updateOne({ patientId }, { served: true });
+
     return {
       message: "Registrado com sucesso!",
       status: true
@@ -735,6 +723,46 @@ export async function signToHospitalize(p: unknown, formData: FormData){
     return {
       message: "Não foi possivel registrar!",
       status: false
+    }
+  }
+}
+
+export async function getHospitalizeds(nursingId?: string){
+  try{
+    const beds = await bedNursingModel.find(omitUndefined({ nursingId }));
+    const formatedBeds = [];
+
+    for (const bed of beds){
+      const nursing = await nursingModel.findById({ _id: bed.nursingId });
+      const internalService = await internalServiceModel.findById({_id: bed.internalServiceId });
+      const section = await sectionModel.findById({ _id: nursing?.sectionId });
+
+      formatedBeds.push({
+        id: bed._id.toString(),
+        createdAt: new Date(),
+        internalService: internalService?.name as string,
+        section: section?.name as string,
+        nursing: nursing?.name as string,
+        bed: bed?.bed as string,
+        _id: bed._id.toString(),
+        label: bed?.bed as string,
+      });
+    }
+
+    return {
+      beds: formatedBeds,
+      availablePages:  Number(formatedBeds.length/10 < 1 ? 1: formatedBeds.length/10),
+      currentPage: 1,
+      totalItems: formatedBeds.length
+    }
+  }catch (e) {
+    console.error(e);
+
+    return {
+      beds: [],
+      availablePages: 1,
+      currentPage: 1,
+      totalItems: 1
     }
   }
 }

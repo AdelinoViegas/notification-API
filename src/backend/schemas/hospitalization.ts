@@ -48,3 +48,17 @@ export const nursingSchema = new Schema({
 });
 
 export const sectionSchema = new Schema({ name: String });
+
+export const inHospitalizeSchema = new Schema({
+  patientId: String,
+  bedId: Schema.ObjectId,
+  served: {
+    type: Boolean,
+    default: false
+  },
+  userId: Schema.ObjectId
+}, {
+  timestamps: true
+});
+
+inHospitalizeSchema.index({ patientId: 1, served: 1 }, { unique: true });

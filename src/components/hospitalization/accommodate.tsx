@@ -48,18 +48,17 @@ import {
   getInternalServices, 
   getNursings, 
   getSections, 
-  signInternalService, 
-  signNursing ,
   getBeds,
-  signToHospitalize
+  signToHospitalize,
+  signInternalService
 } from "@/backend/api/clinical/hospitalization-api";
 
 import { toast } from "react-toastify";
 import Selection, { SelectionOption } from "@/components/ui/selection";
 
 export default function Accommodate(){
-  const [ state, action ] = useActionState(signNursing, { message: "", status: false }); 
-  const [ serviceState, serviceAction ]= useActionState(signToHospitalize, { message: "", status: false});
+  const [ state, action ] = useActionState(signToHospitalize, { message: "", status: false }); 
+  const [ serviceState, serviceAction ]= useActionState(signInternalService, { message: "", status: false});
   const [ newSectionState, setNewSectionState ] = useState(false);
   const [ modal, setModal ] = useState(false);
   const [ modalService, setModalService ] = useState(false);
@@ -74,17 +73,12 @@ export default function Accommodate(){
 
   const router = useRouter();
   const params = useParams();
-
-  const reset = ()=>{
-    setNewSectionState(false);
-    setNewNursingState(false);
-  }
   
   useEffect(()=>{
     if(state.message)
       if(state.status)
         toast.success(state.message, { 
-          onClose: reset
+          onClose: () => router.replace("/clinical/hospitalization")
         });
       else
         toast.error(state.message);
@@ -99,7 +93,7 @@ export default function Accommodate(){
     if(serviceState.message)
       if(serviceState.status)
         toast.success(serviceState.message, { 
-          onClose: () => setModalService(false)
+          onClose: () => setModalService(false),
         });
       else
         toast.error(serviceState.message);
