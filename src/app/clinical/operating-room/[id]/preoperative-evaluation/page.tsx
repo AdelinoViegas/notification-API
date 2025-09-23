@@ -2,7 +2,7 @@ import Accordium from "@/components/ui/accordium";
 //import TitleAndSubtitle from "@/components/title-subtitle";
 import InputDetails from "@/components/ui/input-details";
 import Button from "@/components/ui/button";
-import { UploadExternalExam } from "@/components/forms/office-form";
+import { UploadExamBlock } from "@/components/forms/upload-exam-block";
 
 export default async function Page(){
   return(
@@ -28,11 +28,11 @@ export default async function Page(){
       </Accordium>
 
       <Accordium title="Exames Laboratoriais">
-        <UploadExternalExam patientId="" officeId=""/>
+        <UploadExamBlock />
       </Accordium>
 
       <Accordium title="Exames Imagiológicos">
-        <UploadExternalExam patientId="" officeId=""/>
+        <UploadExamBlock />
       </Accordium>
 
       <Accordium title="Estado Clínico Actual">

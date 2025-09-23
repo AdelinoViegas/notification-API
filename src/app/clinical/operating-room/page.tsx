@@ -7,6 +7,8 @@ import Search from "@/components/ui/search";
 import Refresh from "@/components/refresh";
 import TooltipInOperatingRoom from "@/components/operating-room-tooltip";
 import { getPatients } from "@/backend/api/clinical/operating-room-api";
+import { PiArchiveDuotone } from "react-icons/pi";
+import Button from "@/components/ui/button";
 
 export const dynamic = "force-dynamic";
 
@@ -36,6 +38,11 @@ export default async function Page({
       <div className="mt-6">
         <Header title="Bloco Operatório"/>
       </div>
+      
+      <Button className="flex gap-x-2 bg-slate-700">
+        <PiArchiveDuotone/>
+        Pacientes Atendidos
+      </Button>
 
       <div className="flex lg:flex-row justify-between items-center m-0">
         <Alert 

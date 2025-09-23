@@ -1,9 +1,9 @@
+import { redirect } from "next/navigation";
 import Header from "@/components/header";
 import TabNav from "@/components/tabnav";
 import Card from "@/components/ui/card";
-import { getPatient } from "@/backend/api/clinical/operating-room-api";
 import { MonitorAccess, UnlockProcessAccess } from "@/components/lock-unlock-monitor-process";
-import { redirect } from "next/navigation";
+import { getPatient } from "@/backend/api/clinical/operating-room-api";
 
 export default async function Layout({ 
   children,
