@@ -1,20 +1,19 @@
-import { redirect } from "next/navigation";
-import clsx from "clsx";
-import Header from "@/components/header";
+// import { redirect } from "next/navigation";
+// import clsx from "clsx";
+// import Header from "@/components/header";
 import TabNav from "@/components/tabnav";
 import Card from "@/components/ui/card";
-import { MonitorAccess, UnlockProcessAccess } from "@/components/lock-unlock-monitor-process";
+// import { MonitorAccess, UnlockProcessAccess } from "@/components/lock-unlock-monitor-process";
 // import { getPatient } from "@/backend/api/clinical/urgency-bank-api";
-import { getPatient } from "@/backend/api/clinical/api";
+// import { getPatient } from "@/backend/api/clinical/api";
 export default async function Layout({ 
-  children,
-  params
+  children
 }:{ 
   children: React.ReactNode;
   params: Promise<{ patientId: string }>
 }){
-  const { patientId } = await params;
-  const patient = await getPatient(patientId); 
+  // const { patientId } = await params;
+  // const patient = await getPatient(patientId); 
   
   // if(patient?.message || !patient.screening){
   //   redirect("/clinical/urgency-bank");

@@ -414,10 +414,8 @@ async function getPatient(patientId: string){
         externalUnitId: accessType?.externalUnitId,
       }
     };
-  }catch (e){
-    console.error(e);
+  }finally {
     
-    return null;
   }
 }
 
