@@ -414,7 +414,11 @@ async function getPatient(patientId: string){
         externalUnitId: accessType?.externalUnitId,
       }
     };
-  }finally{}
+  }catch (e){
+    console.error(e);
+    
+    return null;
+  }
 }
 
 // update zone

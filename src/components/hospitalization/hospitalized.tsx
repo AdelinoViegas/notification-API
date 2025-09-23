@@ -47,7 +47,7 @@ export default async function Hospitalized({ page }: {
       </div>
 
       <Table
-        baseRowLink="/clinical/hospitalization"
+        baseRowLink="/clinical/hospitalization/hosted"
         columns={[
           "Nome Completo", 
           "Enfermaria/Quarto", 
