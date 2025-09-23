@@ -53,7 +53,7 @@ export default async function Layout({
           idAsIndexPage
           isAside
           keyParam="patientId"
-          baseUrl="/clinical/urgency-bank"
+          baseUrl="/clinical/hospitalization/hosted"
           subPaths={[
             { path: "", title: "Ficha de Cadastro" },
             // { path: "screening", title: "Ficha de Triagem" },
