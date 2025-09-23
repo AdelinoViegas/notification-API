@@ -7,7 +7,8 @@ import {
   examModel, 
   patientModel,
   scheduleSugeryModel,
-  operatingRoomModel
+  operatingRoomModel,
+  processStateModel
 } from "@/backend/model";
 import { getUser } from "@/backend/api/clinical/api";
 import { calculateAge } from "@/lib/calculate-age";
@@ -33,6 +34,15 @@ async function getPatients({
     const patient = await patientModel.findById({_id: schedule?.patientId}).select({fullname: 1});
     const doctor = await getUser(schedule?.doctorId?.toString() as string);
     const sugeryType = await examModel.findById({_id: schedule?.sugeryType}).select({name: 1});
+    
+    const isProcess = await processStateModel.findOne({
+        patientId: patient?._id,
+        location: "block",
+        isInUse: true
+    });
+
+    if(isProcess && isProcess.userId?.toString() !== await getUserId())
+      continue;
 
     formatedList.push({
       id: items?.id.toString() as string,
@@ -154,7 +164,7 @@ async function getPatient({ id }: { id: string}){
      const operatingRoom = await operatingRoomModel.findOne({_id: id}).select({scheduleId: 1}); 
      const schedule = await scheduleSugeryModel.findById({ _id: operatingRoom?.scheduleId });
      const patient = await patientModel.findById({_id: schedule?.patientId})
-
+     
      return {
       _id: patient?._id.toString() as string,
       scheduleId: schedule?._id.toString() as string,

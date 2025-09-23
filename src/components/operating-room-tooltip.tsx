@@ -18,7 +18,7 @@ type TooltipProps = {
 export default function TooltipInOperatingRoom({data}: TooltipProps){
   const pathname = usePathname();
   const router = useRouter();
-  console.log(data);
+  
   const handleFilterButton = useCallback((priority: string)=>{
     if(priority === "all")
       return router.push(pathname);

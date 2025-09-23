@@ -7,7 +7,7 @@ import Modal from '@/components/modal';
 import { HiArrowUturnLeft as ArrowUturnLeftIcon } from 'react-icons/hi2';
 import { closePatientProcess, openPatientProcess } from '@/backend/api/clinical/process-control';
 import { toast } from 'react-toastify';
-type Places = "laboratory" | "screening" | "imaging" | "urgency"; 
+type Places = "laboratory" | "screening" | "imaging" | "urgency" | "block"; 
 
 export function UnlockProcessAccess({
   patientId,

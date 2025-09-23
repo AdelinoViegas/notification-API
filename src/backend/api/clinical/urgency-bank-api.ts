@@ -52,7 +52,7 @@ async function getPatients({
 
     for(const patient of patients){
       const urgency = await patientModel.findById({ _id: patient.patientId });
-
+ 
       const isProcess = await processStateModel.findOne({
          patientId: patient.patientId,
          location: "urgency",

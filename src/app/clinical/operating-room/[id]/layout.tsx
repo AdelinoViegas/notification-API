@@ -15,21 +15,20 @@ export default async function Layout({
   const { id } = await params;
   const data = await getPatient({id}); 
 
- if(data?.message || !data){
+  if(data?.message || !data)
     redirect("/clinical/operating-room");
-  }
     
   return(
     <div>
       <MonitorAccess
-        patientId={id}
-        place="urgency"
+        patientId={data._id as string}
+        place="block"
         basePathname="/clinical/operating-room" 
       />
 
       <UnlockProcessAccess
-        patientId={id}
-        place="urgency"
+        patientId={data._id as string}
+        place="block"
         basePathname="/clinical/operating-room" 
       />
 
