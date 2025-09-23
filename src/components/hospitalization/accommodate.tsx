@@ -59,10 +59,7 @@ import Selection, { SelectionOption } from "@/components/ui/selection";
 export default function Accommodate(){
   const [ state, action ] = useActionState(signToHospitalize, { message: "", status: false }); 
   const [ serviceState, serviceAction ]= useActionState(signInternalService, { message: "", status: false});
-  const [ newSectionState, setNewSectionState ] = useState(false);
-  const [ modal, setModal ] = useState(false);
   const [ modalService, setModalService ] = useState(false);
-  const [ newNursingState, setNewNursingState ] = useState(false);
   
   const [ internalServices, setInternalServices ] = useState<SelectionOption[]>([]);
   const [ sections, setSections ] = useState<SelectionOption[]>([]);
