@@ -978,7 +978,7 @@ async function finishHospitalization(prev: unknown, formData: FormData){
     
     if(typeof hospitalizedPatient?.served === "boolean")
       if(!hospitalizedPatient.served)
-        throw new Error("Paciente ja está no internamento!");
+        throw new Error("Paciente ja está no internamento!", { cause: "exist" });
 
     const urgency = await urgencyBankModel.findById({ _id: urgencyId });
     const tried = await triedModel.findOneAndUpdate({ _id: urgency?.triedId }, { served: true });
@@ -1006,9 +1006,12 @@ async function finishHospitalization(prev: unknown, formData: FormData){
       message: "Patiente internado com sucesso!",
       status: true
     }
-  }catch {
+  }catch (e) {
+    const err = e as Error;
+    console.log(err);
+
     return {
-      message: "Não foi possivel finalizar!",
+      message: err.cause ? err.message : "Não foi possivel finalizar!",
       status: false
     }
   }
