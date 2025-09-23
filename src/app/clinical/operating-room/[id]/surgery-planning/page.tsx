@@ -2,7 +2,7 @@ import TitleAndSubtitle from "@/components/title-subtitle";
 import Accordium from "@/components/ui/accordium";
 import Button from "@/components/ui/button";
 import InputDetails from "@/components/ui/input-details";
-import InputField from "@/components/ui/input-field";
+//import InputField from "@/components/ui/input-field";
 //import Button from "@/components/ui/button";
 //import InputDetails from "@/components/ui/input-details";
 
@@ -32,18 +32,17 @@ export default async function Page(){
       </Accordium>
       
       <Accordium title="Equipa Cirúrgia e Sala">
-        <div className="grid grid-cols-2 gap-x-4">
-          <InputField
-            textLabel="Equipa Cirúrgica"
-            placeholder="digite a equipa"
-            name="team"
-          />
-          <InputField
-            textLabel="Sala Designada"
-            placeholder="Digire a Salaa"
-            name="room"
-          />
-        </div>
+        <InputDetails
+          textLabel="Equipa cirúrgica"
+          placeholder="Descreva"
+          rows={3}
+        />
+
+        <InputDetails
+          textLabel="Sala designada"
+          placeholder="Descreva"
+          rows={3}
+        />
 
         <Button>Salvar</Button>
       </Accordium>

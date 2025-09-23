@@ -5,7 +5,7 @@ import InputDetails from "@/components/ui/input-details";
 import Accordium from "@/components/ui/accordium";
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
-import { PiArchiveDuotone } from "react-icons/pi";
+//import { PiArchiveDuotone } from "react-icons/pi";
 //import { getScheduleSugery } from "@/backend/api/clinical/scheduling-api";
 
 export default async function Page({ params }:{
@@ -26,11 +26,6 @@ export default async function Page({ params }:{
           date={schedule.date.en}
           hour={schedule.hour}
         />*/}
-        
-        <Button className="flex gap-x-2 bg-slate-700">
-          <PiArchiveDuotone/>
-          Pacientes Atendidos
-        </Button>
       </div> 
                 
       <Accordium title="Informações do Utente">

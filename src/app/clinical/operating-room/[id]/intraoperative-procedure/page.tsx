@@ -11,49 +11,48 @@ export default async function Page(){
             type="datetime-local"
             name="date-start"
           />
-
-          <InputField
-            textLabel="Horário de fim"
-            type="datetime-local"
-            name="date-end"
-          />
           
           <InputField
             textLabel="Tipo de anestesia utilizada:"
             name="date"
             placeholder="digite o tipo de anestesia"
           />
-
-          <InputField
-            textLabel="Técnica cirúrgica aplicada"
-            name="date"
-            placeholder="descreva a técnica utilizada"
-          />
-
-          <InputField
-            textLabel="Implantes/protéses utilizados"
-            name="date"
-            placeholder="Implantes e protéses"
-          />
-
-          <InputField
-            textLabel="Ocorrências ou complicações intraoperatórias"
-            name="date"
-            placeholder="descreva as complicações intraoperatórias"
-          />
-
-          <InputField
-            textLabel=" Volume de fluidos administrados / perdas sanguíneas"
-            name="date"
-            placeholder="descreva"
-          />
-
-          <InputField
-            textLabel="Medicação administrada durante e antes do fecho"
-            name="date"
-            placeholder="medicação administrada"
-          />
         </div>
+
+        <InputDetails
+          textLabel="Técnica cirúrgica aplicada"
+          rows={3}
+          name="date"
+          placeholder="descreva a técnica utilizada"
+        />
+
+        <InputDetails
+          textLabel="Implantes/protéses utilizados"
+          rows={3}
+          name="date"
+          placeholder="Implantes e protéses"
+        />
+
+        <InputDetails
+          textLabel="Ocorrências ou complicações intraoperatórias"
+          rows={3}
+          name="date"
+          placeholder="descreva as complicações intraoperatórias"
+        />
+
+        <InputDetails
+          textLabel=" Volume de fluidos administrados / perdas sanguíneas"
+          rows={3}
+          name="date"
+          placeholder="descreva"
+        />
+
+        <InputDetails
+          textLabel="Medicação administrada durante e antes do fecho"
+          rows={3}
+          name="date"
+          placeholder="medicação administrada"
+        />
 
         <InputDetails
           textLabel="Outro Procedimento"
