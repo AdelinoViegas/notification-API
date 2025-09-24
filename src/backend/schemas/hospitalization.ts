@@ -51,6 +51,10 @@ export const sectionSchema = new Schema({ name: String });
 
 export const inHospitalizeSchema = new Schema({
   patientId: String,
+  processNumber: {
+    type: Number,
+    default: Date.now() + Math.ceil(Math.random() * 10)
+  },
   bedId: Schema.ObjectId,
   served: {
     type: Boolean,

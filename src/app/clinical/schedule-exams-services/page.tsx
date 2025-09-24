@@ -1,6 +1,5 @@
 import { formater } from "@/lib/table-formater";
 import Link from "next/link";
-import Header from "@/components/header";
 import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
 import Button from "@/components/ui/button";
@@ -43,10 +42,6 @@ export default async function Page({
   return (
     <main className="space-y-3">
       <Refresh />
-      
-      <div className="mt-6">
-        <Header title="Exames/Serviços Agendados"/>
-      </div>
 
       <div className="flex gap-x-3">
         <Link href="/clinical/schedule-exams-services/serveds">
