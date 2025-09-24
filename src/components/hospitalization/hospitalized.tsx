@@ -21,10 +21,21 @@ export default async function Hospitalized({ page }: {
   });
 
   const rows = formater(patients.patients, {
-    transform: {
-      targetKey: "createdAt",
-      fn: e => getDataAndHoursFormat(new Date(e))
-    }
+    filterKey: [
+      "id",
+      "fullname",
+      "nursing",
+      "bed",
+      "processNumber",
+      "user"
+    ],
+    order: [
+      "fullname",
+      "nursing",
+      "bed",
+      "processNumber",
+      "user"
+    ]
   });
   
   return (

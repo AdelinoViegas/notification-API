@@ -34,14 +34,34 @@ export async function getPatients({
       const personalData = await patientModel.findById({ _id: patient.patientId }).select({ fullname: 1 });
       const serviceSource = await urgencyServiceModel.findById({ _id: patient?.fromServiceId })?.select({ label: 1 });
       const reason = await patientHospitalizedModel.findOne({ hospitalizedId: patient?._id }).select({ currentState: 1 });
+      const inHospitalized = await inHospitalizeModel.findOne({ patientId: patient.patientId });
 
+      if(inHospitalized){
+        const bed = await bedNursingModel.findById({ _id: inHospitalized?.bedId });
+        const nursing = await nursingModel.findById({ _id: bed?.nursingId });
+
+        formated.push({
+          id: patient?.patientId?.toString() as string,
+          service: serviceSource?.label as string ?? "Desconhecido",
+          createdAt: patient?.createdAt as Date,
+          fullname: personalData?.fullname as string,
+          currentState: reason?.currentState as string ?? "Sem motivo",
+          user: doctor?.fullname as string,
+          processNumber: inHospitalized?.processNumber,
+          bed: bed?.bed,
+          nursing: nursing?.name
+        });
+
+        continue;
+      }
+     
       formated.push({
         id: patient?.patientId?.toString() as string,
         service: serviceSource?.label as string ?? "Desconhecido",
         createdAt: patient?.createdAt as Date,
         fullname: personalData?.fullname as string,
         currentState: reason?.currentState as string ?? "Sem motivo",
-        user: doctor?.fullname as string,
+        user: doctor?.fullname as string
       });
     }
 
@@ -51,7 +71,9 @@ export async function getPatients({
       currentPage: page,
       totalItems: formated.length
     }
-  }catch {
+  }catch (e){
+    console.error(e);
+
     return {
       patients: [],
       availablePages: 1,
@@ -240,42 +262,42 @@ export async function signToHospitalize(p: unknown, formData: FormData){
   }
 }
 
-export async function getHospitalizeds(nursingId?: string){
-  try{
-    const beds = await bedNursingModel.find(omitUndefined({ nursingId }));
-    const formatedBeds = [];
+// export async function getHospitalizeds(nursingId?: string){
+//   try{
+//     const beds = await bedNursingModel.find(omitUndefined({ nursingId }));
+//     const formatedBeds = [];
 
-    for (const bed of beds){
-      const nursing = await nursingModel.findById({ _id: bed.nursingId });
-      const internalService = await internalServiceModel.findById({_id: bed.internalServiceId });
-      const section = await sectionModel.findById({ _id: nursing?.sectionId });
+//     for (const bed of beds){
+//       const nursing = await nursingModel.findById({ _id: bed.nursingId });
+//       const internalService = await internalServiceModel.findById({_id: bed.internalServiceId });
+//       const section = await sectionModel.findById({ _id: nursing?.sectionId });
 
-      formatedBeds.push({
-        id: bed._id.toString(),
-        createdAt: new Date(),
-        internalService: internalService?.name as string,
-        section: section?.name as string,
-        nursing: nursing?.name as string,
-        bed: bed?.bed as string,
-        _id: bed._id.toString(),
-        label: bed?.bed as string,
-      });
-    }
+//       formatedBeds.push({
+//         id: bed._id.toString(),
+//         createdAt: new Date(),
+//         internalService: internalService?.name as string,
+//         section: section?.name as string,
+//         nursing: nursing?.name as string,
+//         bed: bed?.bed as string,
+//         _id: bed._id.toString(),
+//         label: bed?.bed as string,
+//       });
+//     }
 
-    return {
-      beds: formatedBeds,
-      availablePages:  Number(formatedBeds.length/10 < 1 ? 1: formatedBeds.length/10),
-      currentPage: 1,
-      totalItems: formatedBeds.length
-    }
-  }catch (e) {
-    console.error(e);
+//     return {
+//       beds: formatedBeds,
+//       availablePages:  Number(formatedBeds.length/10 < 1 ? 1: formatedBeds.length/10),
+//       currentPage: 1,
+//       totalItems: formatedBeds.length
+//     }
+//   }catch (e) {
+//     console.error(e);
 
-    return {
-      beds: [],
-      availablePages: 1,
-      currentPage: 1,
-      totalItems: 1
-    }
-  }
-}
+//     return {
+//       beds: [],
+//       availablePages: 1,
+//       currentPage: 1,
+//       totalItems: 1
+//     }
+//   }
+// }
