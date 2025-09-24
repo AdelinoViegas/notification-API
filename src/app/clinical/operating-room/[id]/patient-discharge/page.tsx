@@ -2,7 +2,6 @@ import Button from "@/components/ui/button"
 import InputDetails from "@/components/ui/input-details"
 import Selection from "@/components/ui/selection"
 import Accordium from "@/components/ui/accordium"
-import InputField from "@/components/ui/input-field"
 
 export default async function Page(){
   return(
@@ -49,31 +48,33 @@ export default async function Page(){
         </Accordium>
 
         <Accordium title="Indicações pós-operatórias imediatas">
-          <div className="grid grid-cols-2 gap-x-4">
-            <InputField
-              textLabel="Dieta"
-              name=""
-              placeholder="descreva a dieta"
-            />
-            
-            <InputField
-              textLabel="Analgesia"
-              name=""
-              placeholder="descreva a analgesia"
-            />
-            
-            <InputField
-              textLabel="Mobilização"
-              name=""
-              placeholder="descreva a mobilização"
-            />
-            
-            <InputField
-              textLabel="Antibióticos"
-              name=""
-              placeholder="descreva o antibiótico"
-            />
-          </div>
+          <InputDetails
+            textLabel="Dieta"
+            rows={3}
+            name=""
+            placeholder="descreva a dieta"
+          />
+
+          <InputDetails
+            textLabel="Analgesia"
+            rows={3}
+            name=""
+            placeholder="descreva a analgesia"
+          />
+
+          <InputDetails
+            textLabel="Mobilização"
+            rows={3}
+            name=""
+            placeholder="descreva a mobilização"
+          />
+
+          <InputDetails
+            textLabel="Antibióticos"
+            rows={3}
+            name=""
+            placeholder="descreva a antibiótico"
+          />
 
           <Button>Salvar</Button>
         </Accordium>

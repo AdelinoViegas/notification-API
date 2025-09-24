@@ -27,15 +27,15 @@ export default async function Page(){
         <Button>Salvar</Button>
       </Accordium>
 
-      <Accordium title="Exames Laboratoriais">
+      <Accordium title="Exames laboratoriais">
         <UploadExamBlock />
       </Accordium>
 
-      <Accordium title="Exames Imagiológicos">
+      <Accordium title="Exames imagiológicos">
         <UploadExamBlock />
       </Accordium>
 
-      <Accordium title="Estado Clínico Actual">
+      <Accordium title="Estado clínico actual">
         <InputDetails
           textLabel="Descreva"
           rows={3}
@@ -45,7 +45,7 @@ export default async function Page(){
         <Button>Salvar</Button>
       </Accordium>
 
-      <Accordium title="Riscos Cirúrgico">
+      <Accordium title="Riscos cirúrgico">
         <InputDetails
           textLabel="Descreva"
           rows={3}
@@ -55,7 +55,7 @@ export default async function Page(){
         <Button>Salvar</Button>
       </Accordium>
 
-      <Accordium title="Jejum Confirmado">
+      <Accordium title="Jejum confirmado">
         <InputDetails
           textLabel="Descreva"
           rows={3}
@@ -65,7 +65,7 @@ export default async function Page(){
         <Button>Salvar</Button>
       </Accordium>
 
-      <Accordium title="Medicação Prévia">
+      <Accordium title="Medicação prévia">
         <InputDetails
           textLabel="Descreva"
           rows={3}

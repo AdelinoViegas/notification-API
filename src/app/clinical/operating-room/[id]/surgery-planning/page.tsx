@@ -31,7 +31,7 @@ export default async function Page(){
         </div>
       </Accordium>
       
-      <Accordium title="Equipa Cirúrgia e Sala">
+      <Accordium title="Equipa cirúrgica e sala">
         <InputDetails
           textLabel="Equipa cirúrgica"
           placeholder="Descreva"
@@ -47,9 +47,9 @@ export default async function Page(){
         <Button>Salvar</Button>
       </Accordium>
       
-      <Accordium title="Materiais e Equipamentos Necessários">
+      <Accordium title="Materiais e equipamentos necessários">
         <InputDetails
-          textLabel="Materiais e Equipamentos Necessários"
+          textLabel="Materiais e equipamentos necessários"
           placeholder="Descreva"
           rows={3}
         />
@@ -57,9 +57,9 @@ export default async function Page(){
         <Button>Salvar</Button>
       </Accordium>
 
-      <Accordium title="Dispositivos Implantáveis">
+      <Accordium title="Dispositivos implantáveis">
         <InputDetails
-          textLabel="Dispositivos Implantáveis"
+          textLabel="Dispositivos implantáveis"
           placeholder="Descreva"
           rows={3}
         />

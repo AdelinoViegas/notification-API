@@ -28,7 +28,7 @@ export default async function Page({ params }:{
         />*/}
       </div> 
                 
-      <Accordium title="Informações do Utente">
+      <Accordium title="Informações do utente">
         <div className="flex flex-row gap-x-12">
           <TitleAndSubtitle
             className={{content: "ml-0 mt-1"}}
@@ -55,7 +55,7 @@ export default async function Page({ params }:{
         </div>
       </Accordium>
 
-      <Accordium title="Diganóstico pré-Operatório">
+      <Accordium title="Diganóstico pré-operatório">
         <form>
           <InputDetails
             textLabel="Descreva"
