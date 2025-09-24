@@ -12,13 +12,13 @@ export default async function Page(){
         <div className="grid grid-cols-2 gap-x-4">
           <InputField
             textLabel="Hora de entrada"
-            type="time"
+            type="datetime-local"
             name="date-start"
           />
 
           <InputField
             textLabel="Hora de saída"
-            type="time"
+            type="datetime-local"
             name="date-end"
           />
         </div>

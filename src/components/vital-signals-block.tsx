@@ -102,6 +102,12 @@ export default function VitalSignalInBlock(){
         <form {...{action}}>
           <div className="grid grid-cols-2 gap-x-3">
             <InputField
+              type="datetime-local"
+              textLabel="Data e hora"
+              name="date" 
+            />
+
+            <InputField
               type="number"
               textLabel="FC(pulso)"
               name="pulse" 
