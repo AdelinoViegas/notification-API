@@ -190,20 +190,47 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
     const diagnostic = formData.get("preoperative-diagnosis") as string;
     const informedConsent = formData.get("Informed-consent") as string;
     const responsible = formData.get("responsible") as string;
+    const surgicalHistory = formData.get("medicalAndsurgicalHistory") as string;
+    const allergies = formData.get("allergies") as string;
+    const clinicalStatus = formData.get("currentClinicalStatus") as string;
+    const surgicalRisk = formData.get("surgicalRisk") as string;
+    const fastingConfirmed = formData.get("fastingConfirmed") as string;
+    const previousMedication = formData.get("previousMedication") as string;
     
     const hasPatientOperatingRoom = await patientOperatingRoomModel.findOne({ patientId });
-    const patient = hasPatientOperatingRoom?.patientIdentification
+    const patient = hasPatientOperatingRoom?.patientIdentification;
+    const evaluation = hasPatientOperatingRoom?.preoperativeEvaluation;
 
     const patientIdentification = {
       preoperativeDiagnosis: diagnostic || patient?.preoperativeDiagnosis,
       informedConsent: informedConsent || patient?.informedConsent,
       responsible: responsible || patient?.responsible,
     }
+
+    const preoperativeEvaluation = {
+      medicalAndsurgicalHistory: surgicalHistory || evaluation?.medicalAndsurgicalHistory,
+      allergies: allergies || evaluation?.allergies,
+      laboratoryTests: false || evaluation?.laboratoryTests,
+      imagingTests: false || evaluation?.imagingTests,
+      currentClinicalStatus: clinicalStatus || evaluation?.currentClinicalStatus,
+      surgicalRisk: surgicalRisk || evaluation?.surgicalRisk,
+      fastingConfirmed: fastingConfirmed || evaluation?.fastingConfirmed,
+      previousMedication: previousMedication || evaluation?.previousMedication,
+    }
     
     if(!hasPatientOperatingRoom)     
-      await patientOperatingRoomModel.create({ patientId , patientIdentification });
+      await patientOperatingRoomModel.create({ 
+        patientId, 
+        patientIdentification,
+        preoperativeEvaluation
+      });
     else
-      await patientOperatingRoomModel.updateOne({ _id: hasPatientOperatingRoom._id },{ patientIdentification });
+      await patientOperatingRoomModel.updateOne({ 
+        _id: hasPatientOperatingRoom._id 
+      },{ 
+        patientIdentification,
+        preoperativeEvaluation 
+      });
 
     return {
       message: `Informação ${!hasPatientOperatingRoom?'registrada':'actualizada'} com sucesso!`,
@@ -230,6 +257,18 @@ async function getOperatingRoom(patientId: string){
       informedConsent: operatingRoom?.patientIdentification?.informedConsent as string,
       responsible: operatingRoom?.patientIdentification?.responsible as string,
     },
+    preoperativeEvaluation: {
+      medicalAndsurgicalHistory: operatingRoom?.preoperativeEvaluation?.medicalAndsurgicalHistory as string,
+      allergies: operatingRoom?.preoperativeEvaluation?.allergies as string,
+      laboratoryTests: operatingRoom?.preoperativeEvaluation?.laboratoryTests as string,
+      imagingTests: operatingRoom?.preoperativeEvaluation?.imagingTests as string,
+      currentClinicalStatus: operatingRoom?.preoperativeEvaluation?.currentClinicalStatus as string,
+      surgicalRisk: operatingRoom?.preoperativeEvaluation?.surgicalRisk as string,
+      fastingConfirmed: operatingRoom?.preoperativeEvaluation?.fastingConfirmed as string,
+      previousMedication: operatingRoom?.preoperativeEvaluation?.previousMedication as string,
+    },
+
+
   }
   
 }

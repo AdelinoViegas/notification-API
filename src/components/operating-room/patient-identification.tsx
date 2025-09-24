@@ -15,7 +15,7 @@ export default function PatientIdentification({
   patientIdentification, 
   patientId 
 }: {
-  patientId?: string,
+  patientId: string,
   patientIdentification: {
     preoperativeDiagnosis: string,
     informedConsent: string,
@@ -31,13 +31,12 @@ export default function PatientIdentification({
       if(state.status)
         toast.success(state.message, {
           autoClose: 1500,
-          onClose: ()=>{
-            router.refresh();
-          }
+          onClose: ()=> router.refresh(),
         });
       else
         toast.error(state.message);
   }, [state, router]);
+
 	return (
     <form {...{action}} ref={formRef}>
       <input

@@ -7,6 +7,16 @@ const blockSchema = new Schema({
     informedConsent: String,
     responsible: String,
   },
+  preoperativeEvaluation: {
+    medicalAndsurgicalHistory: String,
+    allergies: String,
+    laboratoryTests: String,
+    imagingTests: String,
+    currentClinicalStatus: String,
+    surgicalRisk: String,
+    fastingConfirmed: String,
+    previousMedication: String,
+  },
   served: {
     type: Boolean,
     default: false

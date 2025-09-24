@@ -12,9 +12,10 @@ export default async function Page({ params }:{
 	}>
 }){
 	const { id } = await params;
-  const {scheduleId,...patient} = await getPatient({id});
+  const {...patient} = await getPatient({id});
   //const schedule = await getScheduleSugery(scheduleId as string)
-  const { patientIdentification } = await getOperatingRoom(patient._id as string);
+  const patientId = patient._id as string;
+  const { patientIdentification } = await getOperatingRoom(patientId);
 
 	return (
     <div className="flex flex-col gap-y-4 py-2"> 
@@ -54,7 +55,10 @@ export default async function Page({ params }:{
         </div>
       </Accordium>
       
-     <PatientIdentification {...{patientIdentification}} patientId={patient._id}/> 
+      <PatientIdentification 
+        {...{patientIdentification}} 
+        {...{patientId}}
+      /> 
     </div>
 	) 
 }
