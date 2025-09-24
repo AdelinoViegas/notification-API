@@ -19,7 +19,8 @@ import {
   patientHospitalizedModel,
   prescriptionModel,
   surgeryModel,
-  processStateModel
+  processStateModel,
+  hospitalizationModel
 } from "@/backend/model";
 import { 
   patientAccess,
@@ -34,7 +35,7 @@ import {
 import { getUser, patientFilters } from "@/backend/api/clinical/api";
 import { DoctorCalendar } from "@/backend/api/clinical/types";
 import { getPatient as mainPatient } from "@/backend/api/clinical/api";
-import { closePatientProcess, syncPatientRegister } from "@/backend/api/clinical/process-control";
+import { closePatientProcess, getSyncedHistories, syncPatientRegister } from "@/backend/api/clinical/process-control";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
 import { omitUndefined } from "mongoose";
 
@@ -963,40 +964,54 @@ async function getUrgencyService(serviceId: string){
   }
 }
 
-async function finishHospitalization(prev: unknown, form: FormData){
+async function finishHospitalization(prev: unknown, formData: FormData){
   try{
-    const urgencyId = form.get("urgencyId") as string;
-    const description = form.get("description");
-    const donedAt = form.get("donedAt") as string;
-    const patientState = form.get("patientState") as string;
+    const urgencyId = formData.get("urgencyId") as string;
+    const description = formData.get("description");
+    const donedAt = formData.get("donedAt") as string;
+    const currentState = formData.get("currentState") as string;
+    const patientId = formData.get("patientId") as string;
+
+    const patient = await getSyncedHistories(patientId);
+    const lastPatientId = patient?.secondaries.pop();
+    const hospitalizedPatient = await hospitalizationModel.findOne({ patientId: lastPatientId });
+    
+    if(typeof hospitalizedPatient?.served === "boolean")
+      if(!hospitalizedPatient.served)
+        throw new Error("Paciente ja está no internamento!", { cause: "exist" });
 
     const urgency = await urgencyBankModel.findById({ _id: urgencyId });
+    const tried = await triedModel.findOneAndUpdate({ _id: urgency?.triedId }, { served: true });
+    await urgencyBankModel.updateOne({ _id: urgencyId }, { served: true });
 
-    const tried = await triedModel.findOneAndUpdate({ _id: urgency?.triedId }, {
-      served: true
-    });
-
-    await urgencyBankModel.updateOne({ _id: urgencyId }, {
-      served: true
+    const hospitalized = await hospitalizationModel.create({
+      fromServiceId: tried?.serviceId,
+      userId: await getUserId(),
+      patientId
     });
 
     await patientHospitalizedModel.create({
+      hospitalizedId: hospitalized._id,
       urgencyId: urgency?._id,
       userId: await getUserId(),
       description,
       donedAt,
-      patientState,
+      currentState
     });
 
+    await syncPatientRegister(patientId);
     await closePatientProcess(tried?.patientId?.toString() as string, "urgency")
 
     return {
       message: "Patiente internado com sucesso!",
       status: true
     }
-  }catch {
+  }catch (e) {
+    const err = e as Error;
+    console.log(err);
+
     return {
-      message: "Não foi possivel finalizar!",
+      message: err.cause ? err.message : "Não foi possivel finalizar!",
       status: false
     }
   }
