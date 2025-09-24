@@ -8,7 +8,8 @@ import {
   patientModel,
   scheduleSugeryModel,
   operatingRoomModel,
-  processStateModel
+  processStateModel,
+  patientOperatingRoomModel
 } from "@/backend/model";
 import { getUser } from "@/backend/api/clinical/api";
 import { calculateAge } from "@/lib/calculate-age";
@@ -183,12 +184,62 @@ async function getPatient({ id }: { id: string}){
   }
 }
 
+async function signOperatingRoom(prev: unknown, formData: FormData){
+  try{
+    const patientId = formData.get("patientId") as string;
+    const diagnostic = formData.get("preoperative-diagnosis") as string;
+    const informedConsent = formData.get("Informed-consent") as string;
+    const responsible = formData.get("responsible") as string;
+    
+    const hasPatientOperatingRoom = await patientOperatingRoomModel.findOne({ patientId });
+    const patient = hasPatientOperatingRoom?.patientIdentification
 
+    const patientIdentification = {
+      preoperativeDiagnosis: diagnostic || patient?.preoperativeDiagnosis,
+      informedConsent: informedConsent || patient?.informedConsent,
+      responsible: responsible || patient?.responsible,
+    }
+    
+    if(!hasPatientOperatingRoom)     
+      await patientOperatingRoomModel.create({ patientId , patientIdentification });
+    else
+      await patientOperatingRoomModel.updateOne({ _id: hasPatientOperatingRoom._id },{ patientIdentification });
+
+    return {
+      message: `Informação ${!hasPatientOperatingRoom?'registrada':'actualizada'} com sucesso!`,
+      status: true,
+    }
+  }catch(e: unknown){
+    const err = e as Error;
+
+    return {
+      message: err.cause?err.message:"Não foi possivel realizar esta operação!",
+      status: false,
+    }
+  }
+}
+
+
+async function getOperatingRoom(patientId: string){
+  const operatingRoom = await patientOperatingRoomModel.findOne({ patientId, served: false });
+  
+  return {
+    id: operatingRoom?._id.toString() as string,
+    patientIdentification: {
+      preoperativeDiagnosis: operatingRoom?.patientIdentification?.preoperativeDiagnosis as string,
+      informedConsent: operatingRoom?.patientIdentification?.informedConsent as string,
+      responsible: operatingRoom?.patientIdentification?.responsible as string,
+    },
+  }
+  
+}
 
 export {
   getPatients,
   getPatient,
+  getOperatingRoom,
   sendPatientToOperatingRoom,
   archivingSugery,
   //rescheduleSugery,
+  signOperatingRoom,
 }
