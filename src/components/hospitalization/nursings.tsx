@@ -16,10 +16,18 @@ export default async function Nursings({}: {
   const beds = await getBeds();
 
   const rows = formater(beds.beds, {
+    filterKey: [
+      "id",
+      "createdAt",
+      "internalService",
+      "section",
+      "nursing",
+      "bed"
+    ],
     transform: {
       targetKey: "createdAt",
       fn: e => getDateInSlashFormat(new Date(e))
-    }
+    },
   });
   
   return (

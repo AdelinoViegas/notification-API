@@ -71,8 +71,6 @@ export async function signNursing(p: unknown, formData: FormData){
     const nursingName = formData.get("nursingName");
     const bedNumber = formData.get("bed");
 
-    console.log([...formData.entries()]);
-
     if(sectionName && nursingName){
       const section = await sectionModel.create({ name: sectionName });
 

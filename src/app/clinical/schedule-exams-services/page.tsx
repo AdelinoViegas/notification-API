@@ -43,10 +43,6 @@ export default async function Page({
   return (
     <main className="space-y-3">
       <Refresh />
-      
-      <div className="mt-6">
-        <Header title="Exames/Serviços Agendados"/>
-      </div>
 
       <div className="flex gap-x-3">
         <Link href="/clinical/schedule-exams-services/serveds">
