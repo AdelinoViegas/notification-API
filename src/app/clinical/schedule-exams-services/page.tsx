@@ -1,6 +1,5 @@
 import { formater } from "@/lib/table-formater";
 import Link from "next/link";
-import Header from "@/components/header";
 import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
 import Button from "@/components/ui/button";

@@ -5,7 +5,6 @@ import Pagination from "@/components/pagination";
 import Refresh from "@/components/refresh";
 import { getPatients } from "@/backend/api/clinical/hospitalization-api";
 import Filter from "./filter";
-import { getDataAndHoursFormat } from "@/lib/date-formater";
 
 export default async function Hospitalized({ page }: {
   pfn?: string;
