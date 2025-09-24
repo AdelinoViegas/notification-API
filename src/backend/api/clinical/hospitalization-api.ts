@@ -262,6 +262,30 @@ export async function signToHospitalize(p: unknown, formData: FormData){
   }
 }
 
+export async function getCurrentLocation(patientId: string){
+  try{
+    const inHospitalized = await inHospitalizeModel.findOne({ patientId, served: false });
+
+    if(!inHospitalized)
+      throw new Error();
+
+    const bed = await bedNursingModel.findById({ _id: inHospitalized.bedId });
+    const nursing = await nursingModel.findById({ _id: bed?.nursingId });
+    const section = await sectionModel.findById({ _id: nursing?.sectionId });
+    const internalService = await internalServiceModel.findById({ _id: bed?.internalServiceId });
+
+    return [
+      internalService?.name,
+      section?.name,
+      nursing?.name,
+      bed?.bed
+    ].join("/");
+
+  }catch(e){
+    console.error(e)
+  }
+}
+
 // export async function getHospitalizeds(nursingId?: string){
 //   try{
 //     const beds = await bedNursingModel.find(omitUndefined({ nursingId }));
