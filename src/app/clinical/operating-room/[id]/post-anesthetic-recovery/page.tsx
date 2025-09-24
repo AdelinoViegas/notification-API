@@ -3,6 +3,7 @@ import Button from "@/components/ui/button";
 import InputDetails from "@/components/ui/input-details";
 import InputField from "@/components/ui/input-field";
 import Selection from "@/components/ui/selection";
+import VitalSignalInBlock from "@/components/vital-signals-block";
 
 export default async function Page(){
   return(
@@ -24,42 +25,8 @@ export default async function Page(){
 
         <Button>Salvar</Button>
       </Accordium>
-
-      <Accordium title="Sinais Vitais à Admissão">
-        <div className="flex gap-x-5">
-          <InputField
-            textLabel="FC(pulso)"
-            name="date"
-            placeholder="pulso"
-          />
-
-          <InputField
-            textLabel="FR"
-            name="date"
-            placeholder="fr"
-          />
-
-          <InputField
-            textLabel="SpO2"
-            name="date"
-            placeholder="SpO2"
-          />
-
-          <InputField
-            textLabel="T/A"
-            name="date"
-            placeholder="t/a"
-          />
-
-          <InputField
-            textLabel="Tº"
-            name="date"
-            placeholder="tº"
-          />
-        </div>
-
-        <Button>Salvar</Button>
-      </Accordium>
+      
+      <VitalSignalInBlock />
 
       <Accordium title="Nível de conciência">
         <div className="grid grid-cols-2 gap-x-4">
