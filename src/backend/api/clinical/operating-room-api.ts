@@ -70,7 +70,7 @@ async function sendPatientToOperatingRoom(prev: unknown, formData: FormData){
     const scheduleInOperatingRoom = await operatingRoomModel.find({ served: false });
     
     if(!sugery?.sugeryDate && !sugery?.sugeryHour)
-      throw new Error("Defina antes a Data e Hora da cirurgia");
+      throw new Error("Defina antes a Data e Hora da cirurgia", { cause: "not_configured"});
 
     if(scheduleInOperatingRoom.length){
       for(const schedule of scheduleInOperatingRoom){
@@ -199,10 +199,15 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
     const surgicalRisk = formData.get("surgicalRisk") as string;
     const fastingConfirmed = formData.get("fastingConfirmed") as string;
     const previousMedication = formData.get("previousMedication") as string;
-    
+    const surgicalTeam = formData.get("surgicalTeam") as string;
+    const designatedRoom = formData.get("designatedRoom") as string;
+    const materialsAndEquipment = formData.get("materialsAndEquipment") as string;
+    const implantableDevices = formData.get("implantableDevices") as string;
+
     const hasPatientOperatingRoom = await patientOperatingRoomModel.findOne({ patientId });
     const patient = hasPatientOperatingRoom?.patientIdentification;
     const evaluation = hasPatientOperatingRoom?.preoperativeEvaluation;
+    const planning = hasPatientOperatingRoom?.sugeryPlanning;
 
     const patientIdentification = {
       preoperativeDiagnosis: diagnostic || patient?.preoperativeDiagnosis,
@@ -221,18 +226,27 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
       previousMedication: previousMedication || evaluation?.previousMedication,
     }
     
+    const sugeryPlanning = {
+      surgicalTeam: surgicalTeam || planning?.surgicalTeam as string,
+      designatedRoom: designatedRoom || planning?.designatedRoom as string,
+      materialsAndEquipment: materialsAndEquipment || planning?.materialsAndEquipment as string,
+      implantableDevices: implantableDevices || planning?.implantableDevices as string,
+    }
+
     if(!hasPatientOperatingRoom)     
       await patientOperatingRoomModel.create({ 
         patientId, 
         patientIdentification,
-        preoperativeEvaluation
+        preoperativeEvaluation,
+        sugeryPlanning
       });
     else
       await patientOperatingRoomModel.updateOne({ 
         _id: hasPatientOperatingRoom._id 
       },{ 
         patientIdentification,
-        preoperativeEvaluation 
+        preoperativeEvaluation,
+        sugeryPlanning 
       });
 
     return {
@@ -270,7 +284,12 @@ async function getOperatingRoom(patientId: string){
       fastingConfirmed: operatingRoom?.preoperativeEvaluation?.fastingConfirmed as string,
       previousMedication: operatingRoom?.preoperativeEvaluation?.previousMedication as string,
     },
-
+    sugeryPlanning: {
+      surgicalTeam: operatingRoom?.sugeryPlanning?.surgicalTeam as string,
+      designatedRoom: operatingRoom?.sugeryPlanning?.designatedRoom as string,
+      materialsAndEquipment: operatingRoom?.sugeryPlanning?.materialsAndEquipment as string,
+      implantableDevices: operatingRoom?.sugeryPlanning?.implantableDevices as string,
+    },
 
   }
   

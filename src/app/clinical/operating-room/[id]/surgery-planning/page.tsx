@@ -1,71 +1,51 @@
+import SugeryPlanning from "@/components/operating-room/surgery-planning";
 import TitleAndSubtitle from "@/components/title-subtitle";
 import Accordium from "@/components/ui/accordium";
-import Button from "@/components/ui/button";
-import InputDetails from "@/components/ui/input-details";
-//import InputField from "@/components/ui/input-field";
-//import Button from "@/components/ui/button";
-//import InputDetails from "@/components/ui/input-details";
+import { getOperatingRoom, getPatient } from "@/backend/api/clinical/operating-room-api";
+import { getScheduleSugery } from "@/backend/api/clinical/scheduling-api";
+import { getDateInSlashFormat } from "@/lib/date-formater";
 
-export default async function Page(){
+export default async function Page({ params }:{
+	params: Promise<{
+		id: string;
+	}>
+}){
+	const { id } = await params;
+  const personal = await getPatient({id});
+  const patientId = personal._id as string;
+  const schedule = await getScheduleSugery(personal.scheduleId as string);
+  const { sugeryPlanning } = await getOperatingRoom(patientId);
+
   return(
-    <div className="flex flex-col gap-y-3 py-8">
-      <Accordium title="Dados predefinidos">
-        <div className="flex gap-x-12">
-          <TitleAndSubtitle
-            className={{content: "ml-0 mt-1"}}
-            label="Tipo de cirurgia"
-            value="teste"
-          />
-          
-          <TitleAndSubtitle
-            className={{content: "ml-0 mt-1"}}
-            label="Responsável pela cirurgia"
-            value="teste"
-          />
+    <div>
+      <div className="pt-8 pb-3">
+        <Accordium title="Dados predefinidos">
+          <div className="flex gap-x-12">
+            <TitleAndSubtitle
+              className={{content: "ml-0 mt-1"}}
+              label="Tipo de cirurgia"
+              value={schedule.sugery.type}
+            />
+            
+            <TitleAndSubtitle
+              className={{content: "ml-0 mt-1"}}
+              label="Responsável pela cirurgia"
+              value={schedule.doctor}
+            />
 
-          <TitleAndSubtitle
-            className={{content: "ml-0 mt-1"}}
-            label="Data da cirurgia"
-            value="teste"
-          />
-        </div>
-      </Accordium>
-      
-      <Accordium title="Equipa cirúrgica e sala">
-        <InputDetails
-          textLabel="Equipa cirúrgica"
-          placeholder="Descreva"
-          rows={3}
-        />
+            <TitleAndSubtitle
+              className={{content: "ml-0 mt-1"}}
+              label="Data da cirurgia"
+              value={getDateInSlashFormat(schedule.date)}
+            />
+          </div>
+        </Accordium>
+      </div>
 
-        <InputDetails
-          textLabel="Sala designada"
-          placeholder="Descreva"
-          rows={3}
-        />
-
-        <Button>Salvar</Button>
-      </Accordium>
-      
-      <Accordium title="Materiais e equipamentos necessários">
-        <InputDetails
-          textLabel="Materiais e equipamentos necessários"
-          placeholder="Descreva"
-          rows={3}
-        />
-
-        <Button>Salvar</Button>
-      </Accordium>
-
-      <Accordium title="Dispositivos implantáveis">
-        <InputDetails
-          textLabel="Dispositivos implantáveis"
-          placeholder="Descreva"
-          rows={3}
-        />
-
-        <Button>Salvar</Button>
-      </Accordium>
+      <SugeryPlanning
+        {...{ patientId }}
+        {...{ sugeryPlanning }}
+      />
     </div>
   )
 }

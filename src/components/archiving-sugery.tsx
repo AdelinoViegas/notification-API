@@ -45,7 +45,7 @@ export default function ArchivingSugery({
     <div>
       <Button 
         onClick={()=>setModalState(true)} 
-        className="gap-2 items-center bg-slate-700">
+        className="gap-x-2 items-center bg-slate-700">
         <LuArchiveRestore className="size-5" />
         {isArchived?"Desarquivar":"Arquivar"}
       </Button>

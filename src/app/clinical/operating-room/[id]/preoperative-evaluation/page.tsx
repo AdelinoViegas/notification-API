@@ -1,6 +1,6 @@
-//import TitleAndSubtitle from "@/components/title-subtitle";
 import PreoperativeEvaluation from "@/components/operating-room/preoperative-evaluation";
 import { getOperatingRoom, getPatient } from "@/backend/api/clinical/operating-room-api";
+
 
 export default async function Page({ params }:{
 	params: Promise<{

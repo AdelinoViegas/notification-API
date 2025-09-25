@@ -39,7 +39,7 @@ export default function SignDateSugery({ scheduleId }:{ scheduleId: string;}){
   return(
     <div>
       <Button
-        className="flex gap-x-2 bg-gray-700"
+        className="gap-x-1 bg-slate-700"
         onClick={openModal}>
         <BiPlus className="w-5" />
         Definir data da cirurgia 

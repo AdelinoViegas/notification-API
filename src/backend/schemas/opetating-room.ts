@@ -17,6 +17,12 @@ const blockSchema = new Schema({
     fastingConfirmed: String,
     previousMedication: String,
   },
+  sugeryPlanning: {
+    surgicalTeam: String,
+    designatedRoom: String,
+    materialsAndEquipment: String,
+    implantableDevices: String,
+  },
   served: {
     type: Boolean,
     default: false

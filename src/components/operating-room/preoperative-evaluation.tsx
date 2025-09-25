@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect/*, useRef*/ } from "react";
+import { useActionState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import Accordium from "@/components/ui/accordium";
@@ -27,7 +27,6 @@ export default function PreoperativeEvaluation({
 }){
   const [state, action] = useActionState(signOperatingRoom, { message:"", status: false });
   const router = useRouter();
- // const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(()=>{
     if(state.message)
