@@ -69,6 +69,9 @@ async function sendPatientToOperatingRoom(prev: unknown, formData: FormData){
     const service = await examModel.findById({_id: sugery?.sugeryType}).select({price: 1});
     const scheduleInOperatingRoom = await operatingRoomModel.find({ served: false });
     
+    if(!sugery?.sugeryDate && !sugery?.sugeryHour)
+      throw new Error("Defina antes a Data e Hora da cirurgia");
+
     if(scheduleInOperatingRoom.length){
       for(const schedule of scheduleInOperatingRoom){
         const operatingRoom = await scheduleSugeryModel.findOne({ _id: schedule.scheduleId });

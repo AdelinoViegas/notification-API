@@ -1013,8 +1013,6 @@ async function scheduleSugery(prev: unknown, formData: FormData){
     const patientId = formData.get("patientId") as string;
     const doctorId = formData.get("doctorId") as string;
     const sugeryType = formData.get("sugeryType") as string;
-    const doctorDay = new Date(formData.get("date") as string);
-    const doctorTime = formData.get("time");
     const requestingService = formData.get("requestingService") as string;
     const description = formData.get("description") as string;
     const infirmary = formData.get("infirmary") as string;
@@ -1027,8 +1025,6 @@ async function scheduleSugery(prev: unknown, formData: FormData){
       patientId,
       doctorId,
       sugeryType,
-      doctorDay,
-      doctorTime,
       description,
       requestingService,
       infirmary,
@@ -1043,11 +1039,31 @@ async function scheduleSugery(prev: unknown, formData: FormData){
     }
   }catch(e: unknown){
     const err = e as Error;
+    return {
+      message: err.cause?err.message:"Desculpe, não foi possível realizar o agendamento!",
+      status: false,
+    };
+  }
+}
+
+async function signDateSugery(prev: unknown, formData: FormData){
+  try{
+    const scheduleId = formData.get("scheduleId") as string;
+    const sugeryDate = formData.get("sugeryDate") as string;
+    const sugeryHour = formData.get("sugeryHour") as string;
+
+    await scheduleSugeryModel.updateOne({ _id: scheduleId }, { sugeryDate, sugeryHour});
+    
+    return {
+      message: "Data e Hora cadastrado com sucesso!",
+      status: true,
+    }
+  }catch(e: unknown){
+    const err = e as Error;
 
     return {
-      message: err.cause ? err.message : "Desculpe, não foi possível realizar o agendamento!",
+      message: err.cause?err.message:"Falha ao cadastrar!",
       status: false,
-      detail: err.message
     };
   }
 }
@@ -1114,11 +1130,8 @@ async function getScheduleSugery(scheduleId: string){
       type: sugeryType?.name as string,
       price: sugeryType?.price as number,
     },
-    /*date: {
-      pt: getDataAndHoursFormat(schedule?.createdAt as Date).split(" ")[0],
-      en: schedule?.doctorDay as Date,
-    },
-    hour: schedule?.createdAt as Date,*/ 
+    date: schedule?.sugeryDate as Date,
+    hour: schedule?.sugeryHour as string, 
     payment: {
       code: schedule?.payment?.invoice?.code as string,
       proof: schedule?.payment?.invoice?.proof as string,
@@ -1278,6 +1291,7 @@ async function getExamResultDetail(id: string){
 export {
   signExam,
   signExamResult,
+  signDateSugery,
   getExams,
   getExam,
   getExamResults,

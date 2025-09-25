@@ -1,4 +1,5 @@
 import { angolaCurrency } from "@/lib/table-formater";
+import { getDateInSlashFormat } from "@/lib/date-formater";
 import Header from "@/components/header";
 import Card from "@/components/ui/card";
 import SubTitle from "@/components/ui/subtitle";
@@ -10,6 +11,7 @@ import ValidateSugery from "@/components/validate-sugery";
 import Button from "@/components/ui/button";
 import SendScheduleSugery from "@/components/send-schedule-sugery";
 import { getScheduleSugery } from "@/backend/api/clinical/scheduling-api";
+import SignDateSugery from "@/components/sign-date-sugery";
 
 export default async function Page({
   params
@@ -60,12 +62,12 @@ export default async function Page({
 
               <TitleAndSubtitle
                 label="Data da Cirurgia"
-                value={"indefinido"} 
+                value={schedule.date?getDateInSlashFormat(schedule.date):"Indefinido"} 
               />
 
               <TitleAndSubtitle
                 label="Hora da Cirurgia"
-                value={"indefinido"} 
+                value={schedule.hour || "Indefinido"} 
               />
 
               <TitleAndSubtitle
@@ -118,7 +120,8 @@ export default async function Page({
                 consultationPrice: schedule.consult.price,
               }}
             />*/}
-            <Button>Visualizar</Button>                    
+            <Button>Visualizar</Button>
+            <Button>Reagendar</Button>                       
 
             {/*<RescheduleSugery
               scheduleId={scheduleId}
@@ -126,6 +129,8 @@ export default async function Page({
               date={date[0] as unknown as Date}
               hour={date[1]}
             />*/}
+
+            <SignDateSugery {...{scheduleId}} />
               
             <ValidateSugery 
               disabled={!schedule.sugery.price || schedule.payment.status === "Confirmado"}
