@@ -7,9 +7,9 @@ export default async function Page({ params }: { params: Promise<{ patientId: st
 
   return(
     <div>
-      <div className="ring ring-gray-400 inline-flex flex-col rounded-lg">
+      <div className="ring ring-1 ring-gray-400 inline-flex flex-col rounded-lg">
         <h2 className="font-bold text-lg text-center">Localização Atual</h2>
-        <h2 className="bg-gray-500 text-white inline-flex px-3 font-medium">{currentLocation}</h2>
+        <h2 className="bg-gray-500 text-white inline-flex px-3 font-medium">{currentLocation?.direction}</h2>
       </div>
       <InternalMoviment />
     </div>

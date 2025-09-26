@@ -50,14 +50,15 @@ import {
   getSections, 
   getBeds,
   signToHospitalize,
-  signInternalService
+  signInternalService,
+  movePatientTo
 } from "@/backend/api/clinical/hospitalization-api";
 
 import { toast } from "react-toastify";
 import Selection, { SelectionOption } from "@/components/ui/selection";
 
 export default function InternalMoviment(){
-  const [ state, action ] = useActionState(signToHospitalize, { message: "", status: false }); 
+  const [ state, action ] = useActionState(movePatientTo, { message: "", status: false }); 
   const [ serviceState, serviceAction ]= useActionState(signInternalService, { message: "", status: false});
   const [ modalService, setModalService ] = useState(false);
   
@@ -74,9 +75,7 @@ export default function InternalMoviment(){
   useEffect(()=>{
     if(state.message)
       if(state.status)
-        toast.success(state.message, { 
-          onClose: () => router.replace("/clinical/hospitalization")
-        });
+        toast.success(state.message);
       else
         toast.error(state.message);
 
@@ -101,7 +100,7 @@ export default function InternalMoviment(){
   return(
     <div>
       <form action={action}>
-        <input type="hidden" name="patientId" value={params.id} />
+        <input type="hidden" name="patientId" value={params.patientId} />
         <div className="flex gap-x-3 items-center">
           <Selection
             label="Serviço de Internamento"
