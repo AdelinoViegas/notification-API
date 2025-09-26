@@ -1,17 +1,19 @@
   "use client";
 
 //import { useActionState, useEffect } from "react";
-import { InternalComponent, RenderUIElement } from "./global-component";
-import Button from "./ui/button";
+import { InternalComponent, RenderUIElement } from "@/components/global-component";
+import Button from "@/components/ui/button";
 //import { useRouter } from "next/navigation";
 //import { toast } from "react-toastify";
 
   
   export function CheckSecurity({
-    /*itemId,*/
+   /*patientId,*/
     className,
     childrens,
-  }: InternalComponent){
+  }: InternalComponent /*& {
+    patientId: string, 
+  }*/){
     //const [ state, action ] = useActionState(apiFn,initialState);
     //const router = useRouter();
     

@@ -23,6 +23,40 @@ const blockSchema = new Schema({
     materialsAndEquipment: String,
     implantableDevices: String,
   },
+  checkSecurity: {
+    patientIdentity: {
+      type: Boolean,
+      required: false,
+      default: null,
+    },
+    surgerySite: String,
+    validConsent: {
+      type: Boolean,
+      required: false,
+      default: null,
+    },
+    anestheticRisk: {
+      type: Boolean,
+      required: false,
+      default: null,
+    },
+    bloodAndEmergencySupplies: {
+      type: Boolean,
+      required: false,
+      default: null,
+    }
+  },
+  intraoperativeProcedure:{
+    startTime: Date,
+    endTime: Date,
+    typeOfAnesthesia: String,
+    surgicalTechnique: String, 
+    implantsAndProsthesesUsed: String,
+    intraoperativeComplications: String,
+    fluidVolumeAndBloodLoss: String,
+    medicationAdministered: String,
+    otherProcedure: String,
+  },
   served: {
     type: Boolean,
     default: false

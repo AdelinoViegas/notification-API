@@ -203,11 +203,22 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
     const designatedRoom = formData.get("designatedRoom") as string;
     const materialsAndEquipment = formData.get("materialsAndEquipment") as string;
     const implantableDevices = formData.get("implantableDevices") as string;
+    const startTime = formData.get("startTime") as string;
+    const endTime = formData.get("endTime") as string;
+    const typeOfAnesthesia = formData.get("typeOfAnesthesia") as string;
+    const surgicalTechnique = formData.get("surgicalTechnique") as string;
+    const implantsAndProsthesesUsed = formData.get("implantsAndProsthesesUsed") as string;
+    const intraoperativeComplications = formData.get("intraoperativeComplications") as string;
+    const fluidVolumeAndBloodLoss = formData.get("fluidVolumeAndBloodLoss") as string;
+    const medicationAdministered = formData.get("medicationAdministered") as string;
+    const otherProcedure = formData.get("otherProcedure") as string;
 
     const hasPatientOperatingRoom = await patientOperatingRoomModel.findOne({ patientId });
     const patient = hasPatientOperatingRoom?.patientIdentification;
     const evaluation = hasPatientOperatingRoom?.preoperativeEvaluation;
     const planning = hasPatientOperatingRoom?.sugeryPlanning;
+    //const security = hasPatientOperatingRoom?.checkSecurity;
+    const procedure = hasPatientOperatingRoom?.intraoperativeProcedure;
 
     const patientIdentification = {
       preoperativeDiagnosis: diagnostic || patient?.preoperativeDiagnosis,
@@ -233,12 +244,33 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
       implantableDevices: implantableDevices || planning?.implantableDevices as string,
     }
 
+    /*const checkSecurity = {
+      patientIdentity: security?.patientIdentity as boolean,
+      surgerySite: security?.surgerySite as string,
+      validConsent: security?.validConsent as boolean,
+      anestheticRisk: security?.anestheticRisk as boolean,
+      bloodAndEmergencySupplies: security?.bloodAndEmergencySupplies as boolean,
+    }*/
+
+    const intraoperativeProcedure = {
+      startTime: startTime ||  procedure?.startTime as Date,
+      endTime: endTime || procedure?.endTime as Date,
+      typeOfAnesthesia: typeOfAnesthesia || procedure?.typeOfAnesthesia as string,
+      surgicalTechnique: surgicalTechnique || procedure?.surgicalTechnique as string,
+      implantsAndProsthesesUsed: implantsAndProsthesesUsed || procedure?.implantsAndProsthesesUsed as string,
+      intraoperativeComplications: intraoperativeComplications || procedure?.intraoperativeComplications as string,
+      fluidVolumeAndBloodLoss: fluidVolumeAndBloodLoss || procedure?.fluidVolumeAndBloodLoss as string,
+      medicationAdministered: medicationAdministered || procedure?.medicationAdministered as string,
+      otherProcedure: otherProcedure || procedure?.otherProcedure as string,
+    }
+
     if(!hasPatientOperatingRoom)     
       await patientOperatingRoomModel.create({ 
         patientId, 
         patientIdentification,
         preoperativeEvaluation,
-        sugeryPlanning
+        sugeryPlanning,
+        intraoperativeProcedure
       });
     else
       await patientOperatingRoomModel.updateOne({ 
@@ -246,7 +278,8 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
       },{ 
         patientIdentification,
         preoperativeEvaluation,
-        sugeryPlanning 
+        sugeryPlanning,
+        intraoperativeProcedure, 
       });
 
     return {
@@ -266,8 +299,8 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
 
 async function getOperatingRoom(patientId: string){
   const operatingRoom = await patientOperatingRoomModel.findOne({ patientId, served: false });
-  
-  return {
+
+   return {
     id: operatingRoom?._id.toString() as string,
     patientIdentification: {
       preoperativeDiagnosis: operatingRoom?.patientIdentification?.preoperativeDiagnosis as string,
@@ -290,9 +323,25 @@ async function getOperatingRoom(patientId: string){
       materialsAndEquipment: operatingRoom?.sugeryPlanning?.materialsAndEquipment as string,
       implantableDevices: operatingRoom?.sugeryPlanning?.implantableDevices as string,
     },
-
+    checkSecurity: {
+      patientIdentity: operatingRoom?.checkSecurity?.patientIdentity as boolean,
+      surgerySite: operatingRoom?.checkSecurity?.surgerySite as string,
+      validConsent: operatingRoom?.checkSecurity?.validConsent as boolean,
+      anestheticRisk: operatingRoom?.checkSecurity?.anestheticRisk as boolean,
+      bloodAndEmergencySupplies: operatingRoom?.checkSecurity?.bloodAndEmergencySupplies as boolean,
+    },
+    intraoperativeProcedure: {
+      startTime: operatingRoom?.intraoperativeProcedure?.startTime as Date,
+      endTime: operatingRoom?.intraoperativeProcedure?.endTime as Date,
+      typeOfAnesthesia: operatingRoom?.intraoperativeProcedure?.typeOfAnesthesia as string,
+      surgicalTechnique: operatingRoom?.intraoperativeProcedure?.surgicalTechnique as string,
+      implantsAndProsthesesUsed: operatingRoom?.intraoperativeProcedure?.implantsAndProsthesesUsed as string,
+      intraoperativeComplications: operatingRoom?.intraoperativeProcedure?.intraoperativeComplications as string,
+      fluidVolumeAndBloodLoss: operatingRoom?.intraoperativeProcedure?.fluidVolumeAndBloodLoss as string,
+      medicationAdministered: operatingRoom?.intraoperativeProcedure?.medicationAdministered as string,
+      otherProcedure: operatingRoom?.intraoperativeProcedure?.otherProcedure as string,
+    }
   }
-  
 }
 
 export {
