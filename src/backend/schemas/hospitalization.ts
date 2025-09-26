@@ -66,3 +66,12 @@ export const inHospitalizeSchema = new Schema({
 });
 
 inHospitalizeSchema.index({ patientId: 1, served: 1 }, { unique: true });
+
+export const internalMovimentsSchema = new Schema({
+  patientId: Schema.ObjectId,
+  from: Schema.ObjectId,
+  to: Schema.ObjectId,
+  by: Schema.ObjectId
+}, {
+  timestamps: true
+});

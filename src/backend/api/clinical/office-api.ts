@@ -416,6 +416,11 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
   }catch(e){
     const err = e as CustonAxiosError;
     console.log(err);
+    
+    if(err.cause.code === "ECONNREFUSED"){
+      console.error("[-] A api do serviço de arquivo não está rodando!");
+      console.error("[!] ajuda: https://github.com/mr0xff/master-clinical");
+    }
 
     return {
       message: err.cause 

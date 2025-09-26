@@ -3,16 +3,17 @@
 // import Header from "@/components/header";
 import TabNav from "@/components/tabnav";
 import Card from "@/components/ui/card";
-// import { MonitorAccess, UnlockProcessAccess } from "@/components/lock-unlock-monitor-process";
+import { MonitorAccess, UnlockProcessAccess } from "@/components/lock-unlock-monitor-process";
 // import { getPatient } from "@/backend/api/clinical/urgency-bank-api";
 // import { getPatient } from "@/backend/api/clinical/api";
 export default async function Layout({ 
-  children
+  children,
+  params
 }:{ 
   children: React.ReactNode;
   params: Promise<{ patientId: string }>
 }){
-  // const { patientId } = await params;
+  const { patientId } = await params;
   // const patient = await getPatient(patientId); 
   
   // if(patient?.message || !patient.screening){
@@ -21,7 +22,7 @@ export default async function Layout({
     
   return(
     <div>
-      {/* <MonitorAccess
+      <MonitorAccess
         patientId={patientId}
         place="urgency"
         basePathname="/clinical/urgency-bank" 
@@ -31,7 +32,7 @@ export default async function Layout({
         patientId={patientId}
         place="urgency"
         basePathname="/clinical/urgency-bank" 
-      /> */}
+      />
 
       {/* <div className={clsx("my-4 text-center pt-3 text-white rounded-lg",
         {"bg-red-500 animate-pulse": patient.screening.priority === "red"},
@@ -46,7 +47,7 @@ export default async function Layout({
         />
 			</div>
        */}
-      <div className="flex h-[70vh] gap-x-3">
+      <div className="flex h-[70vh] gap-x-3 mt-3">
         <Card className="h-full w-full overflow-y-scroll">{children}</Card>
        
         <TabNav
@@ -57,13 +58,14 @@ export default async function Layout({
           subPaths={[
             { path: "", title: "Ficha de Cadastro" },
             // { path: "screening", title: "Ficha de Triagem" },
-            //{ path: "anamnesis", title: "Anamneses" },
+            { path: "anamnesis", title: "Anamneses" },
             { path: "exam", title: "Exames" },
             { path: "clinical-diary", title: "Diário Clínico" },
-            // { path: "office", title: "Consultas" },
+            { path: "office", title: "Consultas" },
             { path: "prescription", title: "Receituário" },
             { path: "surgery", title: "Cirurgia"},
-            { path: "discharge", title: "Título de Alta" }
+            { path: "discharge", title: "Título de Alta" },
+            { path: "im", title: "Movimento Interno" }
           ]}
         />
       </div>

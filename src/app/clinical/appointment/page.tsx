@@ -7,9 +7,7 @@ import Alert from "@/components/ui/alert";
 import Button from "@/components/ui/button";
 import Search from "@/components/ui/search";
 import Refresh from "@/components/refresh";
-import Header from "@/components/header";
 import { getScheduleAppointments } from "@/backend/api/clinical/scheduling-api";
-
 
 export const dynamic = "force-dynamic";
 
@@ -21,7 +19,7 @@ export default async function Page({
   }>
 }) {
   const { name } = await searchParams;
-  const appointmentData = await await getScheduleAppointments({ patientName: name }); 
+  const appointmentData = await getScheduleAppointments({ patientName: name }); 
   const patientRows = formater(appointmentData, {
     order: [
       "dateTime",
@@ -36,9 +34,6 @@ export default async function Page({
     <main className="space-y-3">
       <Refresh />
 
-      <div className="mt-6">
-        <Header title="Consultas Agendadas"/>
-      </div>
        <div className="flex gap-x-3">
         <Link href="/clinical/appointment/serveds">
           <Button className="flex gap-3">
