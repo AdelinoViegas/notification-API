@@ -1,42 +1,3 @@
-// "use client";
-
-// import Selection from "@/components/ui/selection";
-// import Button from "../ui/button";
-
-// export default function Accommodate({ }: { id: string }){
-
-//   return(
-//     <form>
-//       <Selection
-//         label="Serviço de Intenamento"
-//         name="serviceId"
-//         options={[]} 
-//       />
-
-//       <Selection
-//         label="Ala"
-//         name="section"
-//         options={[]} 
-//       />
-
-//       <Selection
-//         label="Enfermaria"
-//         name="nursing"
-//         options={[]} 
-//       />
-
-//       <Selection
-//         label="Nº da Cama"
-//         name="bed"
-//         options={[]} 
-//       />
-
-//       <Button>Salvar</Button>
-//     </form>
-//   )
-// }
-
-
 "use client";
 
 import { useState, useActionState, useEffect } from "react";
@@ -49,7 +10,6 @@ import {
   getNursings, 
   getSections, 
   getBeds,
-  signToHospitalize,
   signInternalService,
   movePatientTo
 } from "@/backend/api/clinical/hospitalization-api";
@@ -75,7 +35,7 @@ export default function InternalMoviment(){
   useEffect(()=>{
     if(state.message)
       if(state.status)
-        toast.success(state.message);
+        toast.success(state.message, { onOpen: router.refresh });
       else
         toast.error(state.message);
 

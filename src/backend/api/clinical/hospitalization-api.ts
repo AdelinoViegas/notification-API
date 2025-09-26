@@ -344,6 +344,9 @@ export async function movePatientTo(p: unknown, formData: FormData){
     if(!direction || !toBed)
       throw new Error("critial error");
 
+    if(to === direction.ids.bed)
+      throw new Error("Mova o utente para um lugar diferente", { cause: "same"});
+
     await Promise.all([
       inHospitalizeModel.updateOne({ _id: direction.id }, { bedId: toBed.bed.id }),
       internalMovimentModel.create({
@@ -359,10 +362,11 @@ export async function movePatientTo(p: unknown, formData: FormData){
       status: true
     }
   }catch(e) {
-    console.error(e);
-
+    const err = e as Error;
+    console.error(err.message);
+    
     return {
-      message: "Não foi possivel!",
+      message: err?.cause ? err.message : "Não foi possivel!",
       status: false
     }
   }
