@@ -51,6 +51,10 @@ export const sectionSchema = new Schema({ name: String });
 
 export const inHospitalizeSchema = new Schema({
   patientId: String,
+  processNumber: {
+    type: Number,
+    default: Date.now() + Math.ceil(Math.random() * 10)
+  },
   bedId: Schema.ObjectId,
   served: {
     type: Boolean,
@@ -62,3 +66,12 @@ export const inHospitalizeSchema = new Schema({
 });
 
 inHospitalizeSchema.index({ patientId: 1, served: 1 }, { unique: true });
+
+export const internalMovimentsSchema = new Schema({
+  patientId: Schema.ObjectId,
+  from: Schema.ObjectId,
+  to: Schema.ObjectId,
+  by: Schema.ObjectId
+}, {
+  timestamps: true
+});

@@ -52,6 +52,7 @@ import {
   bedNursingSchema, 
   hospitalizationSchema, 
   inHospitalizeSchema, 
+  internalMovimentsSchema, 
   internalServiceSchema, 
   nursingSchema, 
   sectionSchema 
@@ -115,6 +116,7 @@ const sectionModel = clinical.model("Section", sectionSchema);
 const internalServiceModel = clinical.model("InternalService", internalServiceSchema);
 const hospitalizationModel = clinical.model("Hospitalization", hospitalizationSchema);
 const inHospitalizeModel = clinical.model("inHospitalize", inHospitalizeSchema);
+const internalMovimentModel = clinical.model("InternalMoviments", internalMovimentsSchema);
 
 export {
   userModel,
@@ -163,5 +165,6 @@ export {
   sectionModel,
   internalServiceModel,
   hospitalizationModel,
-  inHospitalizeModel
+  inHospitalizeModel,
+  internalMovimentModel
 };

@@ -4,6 +4,7 @@ import {
   bedNursingModel, 
   hospitalizationModel, 
   inHospitalizeModel, 
+  internalMovimentModel, 
   internalServiceModel, 
   nursingModel, 
   patientHospitalizedModel, 
@@ -13,6 +14,7 @@ import {
 } from "@/backend/model";
 import { omitUndefined } from "mongoose";
 import { getUser } from "@/backend/api/clinical/api";
+import { getUserId } from "@/lib/web-token";
 
 export async function getPatients({
   page,
@@ -34,14 +36,34 @@ export async function getPatients({
       const personalData = await patientModel.findById({ _id: patient.patientId }).select({ fullname: 1 });
       const serviceSource = await urgencyServiceModel.findById({ _id: patient?.fromServiceId })?.select({ label: 1 });
       const reason = await patientHospitalizedModel.findOne({ hospitalizedId: patient?._id }).select({ currentState: 1 });
+      const inHospitalized = await inHospitalizeModel.findOne({ patientId: patient.patientId });
 
+      if(inHospitalized){
+        const bed = await bedNursingModel.findById({ _id: inHospitalized?.bedId });
+        const nursing = await nursingModel.findById({ _id: bed?.nursingId });
+
+        formated.push({
+          id: patient?.patientId?.toString() as string,
+          service: serviceSource?.label as string ?? "Desconhecido",
+          createdAt: patient?.createdAt as Date,
+          fullname: personalData?.fullname as string,
+          currentState: reason?.currentState as string ?? "Sem motivo",
+          user: doctor?.fullname as string,
+          processNumber: inHospitalized?.processNumber,
+          bed: bed?.bed,
+          nursing: nursing?.name
+        });
+
+        continue;
+      }
+     
       formated.push({
         id: patient?.patientId?.toString() as string,
         service: serviceSource?.label as string ?? "Desconhecido",
         createdAt: patient?.createdAt as Date,
         fullname: personalData?.fullname as string,
         currentState: reason?.currentState as string ?? "Sem motivo",
-        user: doctor?.fullname as string,
+        user: doctor?.fullname as string
       });
     }
 
@@ -51,7 +73,9 @@ export async function getPatients({
       currentPage: page,
       totalItems: formated.length
     }
-  }catch {
+  }catch (e){
+    console.error(e);
+
     return {
       patients: [],
       availablePages: 1,
@@ -70,8 +94,6 @@ export async function signNursing(p: unknown, formData: FormData){
     let nursingId = formData.get("nursingId") as string;
     const nursingName = formData.get("nursingName");
     const bedNumber = formData.get("bed");
-
-    console.log([...formData.entries()]);
 
     if(sectionName && nursingName){
       const section = await sectionModel.create({ name: sectionName });
@@ -216,6 +238,40 @@ export async function getBeds(nursingId?: string){
   }
 }
 
+export async function resolvedBed(id: string){
+  try{
+    const bed = await bedNursingModel.findById({ _id: id });
+
+    if(!bed)
+      throw new Error("bed not found!");
+
+    const service = await internalServiceModel.findById({ _id: bed?.internalServiceId });
+    const nursing = await nursingModel.findById({ _id: bed?.nursingId });
+    const section = await sectionModel.findById({ _id: nursing?.sectionId });
+    
+    return {
+      internalService: {
+        id: service?._id?.toString() as string,
+        name: service?.name as string
+      },
+      section: {
+        id: section?._id.toString() as string,
+        name: section?.name as string
+      },
+      nursing: {
+        id: nursing?._id.toString() as string,
+        name: nursing?.name as string
+      },
+      bed: {
+        id: bed?._id?.toString() as string,
+        name: bed?.bed as string
+      }
+    }
+  }catch(e){
+    console.error(e);
+  }
+}
+
 export async function signToHospitalize(p: unknown, formData: FormData){
   try{
     const patientId = formData.get("patientId");
@@ -242,42 +298,76 @@ export async function signToHospitalize(p: unknown, formData: FormData){
   }
 }
 
-export async function getHospitalizeds(nursingId?: string){
+export async function getCurrentLocation(patientId: string){
   try{
-    const beds = await bedNursingModel.find(omitUndefined({ nursingId }));
-    const formatedBeds = [];
+    const inHospitalized = await inHospitalizeModel.findOne({ patientId, served: false });
 
-    for (const bed of beds){
-      const nursing = await nursingModel.findById({ _id: bed.nursingId });
-      const internalService = await internalServiceModel.findById({_id: bed.internalServiceId });
-      const section = await sectionModel.findById({ _id: nursing?.sectionId });
+    if(!inHospitalized)
+      throw new Error();
 
-      formatedBeds.push({
-        id: bed._id.toString(),
-        createdAt: new Date(),
-        internalService: internalService?.name as string,
-        section: section?.name as string,
-        nursing: nursing?.name as string,
-        bed: bed?.bed as string,
-        _id: bed._id.toString(),
-        label: bed?.bed as string,
-      });
-    }
+    const bed = await bedNursingModel.findById({ _id: inHospitalized.bedId });
+    const nursing = await nursingModel.findById({ _id: bed?.nursingId });
+    const section = await sectionModel.findById({ _id: nursing?.sectionId });
+    const internalService = await internalServiceModel.findById({ _id: bed?.internalServiceId });
+
 
     return {
-      beds: formatedBeds,
-      availablePages:  Number(formatedBeds.length/10 < 1 ? 1: formatedBeds.length/10),
-      currentPage: 1,
-      totalItems: formatedBeds.length
+      id: inHospitalized._id.toString() as string,
+      ids: {
+        internalService: internalService?._id.toString() as string,
+        section: section?._id.toString() as string,
+        nursing: nursing?._id.toString() as string,
+        bed: bed?._id?.toString() as string
+      },
+      direction:  [
+        internalService?.name,
+        section?.name,
+        nursing?.name,
+        bed?.bed
+      ].join("/")
     }
-  }catch (e) {
-    console.error(e);
+  }catch(e){
+    console.error(e)
+  }
+}
+
+export async function movePatientTo(p: unknown, formData: FormData){
+  try{
+    const patientId = formData.get("patientId") as string;
+    const to = formData.get("bedId") as string;
+
+    const [ direction, toBed ] = await Promise.all([
+      getCurrentLocation(patientId),
+      resolvedBed(to)
+    ]); // transação das funções
+    
+    if(!direction || !toBed)
+      throw new Error("critial error");
+
+    if(to === direction.ids.bed)
+      throw new Error("Mova o utente para um lugar diferente", { cause: "same"});
+
+    await Promise.all([
+      inHospitalizeModel.updateOne({ _id: direction.id }, { bedId: toBed.bed.id }),
+      internalMovimentModel.create({
+        patientId,
+        by: await getUserId(),
+        from: direction.ids.bed,
+        to
+      })
+    ]); // transação do movimento
 
     return {
-      beds: [],
-      availablePages: 1,
-      currentPage: 1,
-      totalItems: 1
+      message: "Movido com sucesso!",
+      status: true
+    }
+  }catch(e) {
+    const err = e as Error;
+    console.error(err.message);
+    
+    return {
+      message: err?.cause ? err.message : "Não foi possivel!",
+      status: false
     }
   }
 }

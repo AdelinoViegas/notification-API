@@ -32,7 +32,6 @@ import {
   getUser as RESTgetUser 
 } from "@/backend/api/admin";
 import { omitUndefined } from "mongoose";
-import { randomInt } from "node:crypto";
 import { calculateAge } from "@/lib/calculate-age";
 
 type ChoosedGroup = Assured | Employee | Enterprise | undefined;
@@ -170,7 +169,7 @@ async function signPatient(prev: unknown, formData: FormData){
     
     const patient = new patientModel({
       fullname: patientName,
-      registerNumber: randomInt(111111111, 999999999),
+      registerNumber: Date.now(),
       birthDate: patientBirthDate,
       civilState,
       gender,
