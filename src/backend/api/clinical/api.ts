@@ -170,7 +170,7 @@ async function signPatient(prev: unknown, formData: FormData){
     
     const patient = new patientModel({
       fullname: patientName,
-      registerNumber: randomInt(111111111, 999999999),
+      registerNumber: Date.now(),
       birthDate: patientBirthDate,
       civilState,
       gender,
