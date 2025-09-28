@@ -13,6 +13,7 @@ import {
 } from "@/backend/model";
 import { getUser } from "@/backend/api/clinical/api";
 import { calculateAge } from "@/lib/calculate-age";
+import { PiUserCircleDashedBold } from "react-icons/pi";
 //import { findDoctorCalendar } from "./scheduling-api";
 //import { findDoctorCalendar, getNumberDoctorAppointment } from "./scheduling-api";
 
@@ -212,6 +213,22 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
     const fluidVolumeAndBloodLoss = formData.get("fluidVolumeAndBloodLoss") as string;
     const medicationAdministered = formData.get("medicationAdministered") as string;
     const otherProcedure = formData.get("otherProcedure") as string;
+    const checkInTime = formData.get("checkInTime") as string;
+    const checkOutTime = formData.get("checkOutTime") as string;
+    const vitalSignsData = formData.get("date") as string;
+    const fr = formData.get("fr") as string;
+    const pulse = formData.get("pulse") as string;
+    const spo2 = formData.get("spo2") as string;
+    const ta = formData.get("ta") as string;
+    const t = formData.get("t") as string;
+    const motorActivity = formData.get("motorActivity") as string;
+    const respiration = formData.get("respiration") as string;
+    const circulation = formData.get("circulation") as string;
+    const consciousness = formData.get("consciousness") as string;
+    const saturation = formData.get("saturation") as string;
+    const result = formData.get("result") as string;
+    const medication = formData.get("medication") as string;
+    const postAnestheticoccurrences = formData.get("postAnestheticoccurrences") as string;
 
     const hasPatientOperatingRoom = await patientOperatingRoomModel.findOne({ patientId });
     const patient = hasPatientOperatingRoom?.patientIdentification;
@@ -219,6 +236,7 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
     const planning = hasPatientOperatingRoom?.sugeryPlanning;
     //const security = hasPatientOperatingRoom?.checkSecurity;
     const procedure = hasPatientOperatingRoom?.intraoperativeProcedure;
+    const anesthetic = hasPatientOperatingRoom?.postAnestheticRecovery;
 
     const patientIdentification = {
       preoperativeDiagnosis: diagnostic || patient?.preoperativeDiagnosis,
@@ -260,8 +278,31 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
       implantsAndProsthesesUsed: implantsAndProsthesesUsed || procedure?.implantsAndProsthesesUsed as string,
       intraoperativeComplications: intraoperativeComplications || procedure?.intraoperativeComplications as string,
       fluidVolumeAndBloodLoss: fluidVolumeAndBloodLoss || procedure?.fluidVolumeAndBloodLoss as string,
-      medicationAdministered: medicationAdministered || procedure?.medicationAdministered as string,
+      medicationAdministered: medication || procedure?.medicationAdministered as string,
       otherProcedure: otherProcedure || procedure?.otherProcedure as string,
+    }
+
+   const postAnestheticRecovery = {
+      checkInTime: checkInTime || anesthetic?.checkInTime as Date,
+      checkOutTime:checkOutTime || anesthetic?.checkOutTime as Date,
+      vitalSignal: {
+        date: vitalSignsData || anesthetic?.vitalSignal?.date as Date,
+        fr: fr || anesthetic?.vitalSignal?.fr as number, 
+        pulse: pulse || anesthetic?.vitalSignal?.pulse as number, 
+        spo2: spo2 || anesthetic?.vitalSignal?.spo2 as number, 
+        ta: ta || anesthetic?.vitalSignal?.ta as number, 
+        t: t || anesthetic?.vitalSignal?.t as number, 
+      },
+      levelofConsciousness: {
+        motorActivity: motorActivity || anesthetic?.levelofConsciousness?.motorActivity as number,
+        respiration: respiration || anesthetic?.levelofConsciousness?.respiration as number,
+        circulation: circulation || anesthetic?.levelofConsciousness?.circulation as number,
+        consciousness: consciousness || anesthetic?.levelofConsciousness?.consciousness as number,
+        saturation: saturation || anesthetic?.levelofConsciousness?.saturation as number,
+        result: result || anesthetic?.levelofConsciousness?.result as string,
+      },
+      medicationAdministered: medicationAdministered || anesthetic?.medicationAdministered as string,
+      postAnestheticEvents: postAnestheticoccurrences|| anesthetic?.postAnestheticEvents as string,
     }
 
     if(!hasPatientOperatingRoom)     
@@ -270,7 +311,8 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
         patientIdentification,
         preoperativeEvaluation,
         sugeryPlanning,
-        intraoperativeProcedure
+        intraoperativeProcedure,
+        postAnestheticRecovery
       });
     else
       await patientOperatingRoomModel.updateOne({ 
@@ -279,7 +321,8 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
         patientIdentification,
         preoperativeEvaluation,
         sugeryPlanning,
-        intraoperativeProcedure, 
+        intraoperativeProcedure,
+        postAnestheticRecovery, 
       });
 
     return {
@@ -340,6 +383,28 @@ async function getOperatingRoom(patientId: string){
       fluidVolumeAndBloodLoss: operatingRoom?.intraoperativeProcedure?.fluidVolumeAndBloodLoss as string,
       medicationAdministered: operatingRoom?.intraoperativeProcedure?.medicationAdministered as string,
       otherProcedure: operatingRoom?.intraoperativeProcedure?.otherProcedure as string,
+    },
+    postAnestheticRecovery: {
+      checkInTime: operatingRoom?.postAnestheticRecovery?.checkInTime as Date,
+      checkOutTime: operatingRoom?.postAnestheticRecovery?.checkOutTime as Date,
+      vitalSignal: {
+        date: operatingRoom?.postAnestheticRecovery?.vitalSignal?.date as Date,
+        fr: operatingRoom?.postAnestheticRecovery?.vitalSignal?.fr as number,
+        pulse: operatingRoom?.postAnestheticRecovery?.vitalSignal?.pulse as number,
+        spo2: operatingRoom?.postAnestheticRecovery?.vitalSignal?.spo2 as number,
+        ta: operatingRoom?.postAnestheticRecovery?.vitalSignal?.ta as number,
+        t: operatingRoom?.postAnestheticRecovery?.vitalSignal?.t as number,
+      },
+      levelofConsciousness: {
+        motorActivity: operatingRoom?.postAnestheticRecovery?.levelofConsciousness?.motorActivity as number,
+        respiration: operatingRoom?.postAnestheticRecovery?.levelofConsciousness?.respiration as number,
+        circulation: operatingRoom?.postAnestheticRecovery?.levelofConsciousness?.circulation as number,
+        consciousness: operatingRoom?.postAnestheticRecovery?.levelofConsciousness?.consciousness as number,
+        saturation: operatingRoom?.postAnestheticRecovery?.levelofConsciousness?.saturation as number,
+        result: operatingRoom?.postAnestheticRecovery?.levelofConsciousness?.result as string,
+      },
+      medicationAdministered: operatingRoom?.postAnestheticRecovery?.medicationAdministered as string,
+      postAnestheticEvents: operatingRoom?.postAnestheticRecovery?.postAnestheticEvents as string,
     }
   }
 }

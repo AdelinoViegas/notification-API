@@ -137,10 +137,7 @@ async function getPatients({
   try{
     const appointments = await officeModel.find({ served: served ?? false });
     const formated = [];
-    console.log(await getUserId());
-    console.log( await scheduleAppointmentModel.findOne({ 
-        _id: appointments[0].scheduleId
-      }));
+
     for(const appointment of appointments){
       const scheduledAppointment = inAppointment?
       await scheduleAppointmentModel.findOne({ _id: appointment.scheduleId }):
@@ -148,7 +145,7 @@ async function getPatients({
         _id: appointment.scheduleId,
         doctorId: await getUserId(),
       });
-      //console.log(scheduledAppointment);
+      
       if(!scheduledAppointment)
         continue;
 

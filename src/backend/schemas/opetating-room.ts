@@ -1,7 +1,7 @@
 import { Schema } from "mongoose";
 
-const blockSchema = new Schema({
-  patientId: Schema.Types.ObjectId,
+const operatingRoomSchema = new Schema({
+  scheduleId: Schema.Types.ObjectId,
   patientIdentification: {
     preoperativeDiagnosis: String,
     informedConsent: String,
@@ -57,10 +57,37 @@ const blockSchema = new Schema({
     medicationAdministered: String,
     otherProcedure: String,
   },
+  postAnestheticRecovery:{
+    checkInTime: Date,
+    checkOutTime: Date,
+    vitalSignal: {
+      date: Date,
+      fr: Number,
+      pulse: Number,
+      spo2: Number,
+      ta: Number,
+      t: Number,
+    },
+    levelofConsciousness: {
+      motorActivity: Number,
+      respiration: Number,
+      circulation: Number,
+      consciousness: Number,
+      saturation: Number,
+      result: String,
+    },
+    medicationAdministered: String,
+    postAnestheticEvents: String,
+  },
   served: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
+  archiving: {
+    reason: String,
+    userId: Schema.Types.ObjectId,
+  },
+  userId: Schema.Types.ObjectId,
 
 }, {
   collection: "patient_operating_room",
@@ -68,5 +95,5 @@ const blockSchema = new Schema({
 });
 
 export {
-  blockSchema
+  operatingRoomSchema
 }
