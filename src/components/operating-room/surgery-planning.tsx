@@ -10,9 +10,9 @@ import { signOperatingRoom } from "@/backend/api/clinical/operating-room-api";
 
 export default function SugeryPlanning({ 
   sugeryPlanning, 
-  patientId 
+  scheduleId 
 }: {
-  patientId: string,
+  scheduleId: string,
   sugeryPlanning: {
     surgicalTeam: string,
     designatedRoom: string,
@@ -39,8 +39,8 @@ export default function SugeryPlanning({
       <div className="flex flex-col gap-y-3">
         <input 
           className="hidden"
-          name="patientId"
-          defaultValue={patientId}
+          name="scheduleId"
+          defaultValue={scheduleId}
         />
 
         <Accordium title="Equipa cirúrgica e sala">

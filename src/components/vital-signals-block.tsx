@@ -1,7 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useActionState, useEffect, useState } from "react";
+//import { useRouter } from "next/navigation";
+import { /*useActionState, useEffect,*/ useState } from "react";
 import Accordium from "@/components/ui/accordium";
 import Modal from "@/components/modal";
 import Button from "@/components/ui/button";
@@ -9,8 +9,8 @@ import Table from "@/components/table";
 import InputField from "@/components/ui/input-field";
 //import InputDetails from "@/components/ui/input-details";
 //import Selection from "@/components/ui/selection";
-import { toast } from "react-toastify";
-import { signOperatingRoom } from "@/backend/api/clinical/operating-room-api";
+//import { toast } from "react-toastify";
+//import { signOperatingRoom } from "@/backend/api/clinical/operating-room-api";
 
 export type DiaryTypeProps = {
   vitalSignals?:{
@@ -36,10 +36,16 @@ export type ClinicalDiaryProps = {
   dataDiary: DiaryTypeProps;
 }
 
-export default function VitalSignalInBlock({ action }:{ action : (payload: FormData)=> void}){
+export default function VitalSignalInBlock({
+  scheduleId,
+  action, 
+}:{ 
+  action : (payload: FormData)=> void,
+  scheduleId: string,
+}){
   //const [ state, action ] = useActionState(signOperatingRoom, {message: "", status: false});
   const [ modalState, setModalState ] = useState(false);
-  const router = useRouter();
+  //const router = useRouter();
 
   /*useEffect(()=>{
     if(state.message){
@@ -98,59 +104,65 @@ export default function VitalSignalInBlock({ action }:{ action : (payload: FormD
         open={modalState}
       >
         <form {...{action}}>
-        <div className="grid grid-cols-2 gap-x-3">
-          <InputField
-            type="datetime-local"
-            textLabel="Data e hora"
-            name="date" 
+          <input 
+            className="hidden"
+            name="scheduleId"
+            defaultValue={scheduleId}
           />
 
-          <InputField
-            type="number"
-            textLabel="FC(pulso)"
-            name="pulse" 
-            placeholder="pulso"
-            required
-          />
+          <div className="grid grid-cols-2 gap-x-3">
+            <InputField
+              type="datetime-local"
+              textLabel="Data e hora"
+              name="date" 
+            />
 
-          <InputField
-            type="number"
-            textLabel="FR"
-            name="fr" 
-            placeholder="fr"
-            required
-          />
-          
-          <InputField
-            type="number"
-            textLabel="SpO2"
-            name="spo2" 
-            placeholder="SpO2"
-            required 
-          />
+            <InputField
+              type="number"
+              textLabel="FC(pulso)"
+              name="pulse" 
+              placeholder="pulso"
+              required
+            />
 
-          <InputField
-            type="number"
-            step={0.01}
-            textLabel="T/A"
-            name="ta"
-            required 
-            placeholder="t/a"
-          />
+            <InputField
+              type="number"
+              textLabel="FR"
+              name="fr" 
+              placeholder="fr"
+              required
+            />
+            
+            <InputField
+              type="number"
+              textLabel="SpO2"
+              name="spo2" 
+              placeholder="SpO2"
+              required 
+            />
 
-          <InputField
-            type="number"
-            textLabel="tª"
-            name="t" 
-            required
-            placeholder="tsª"
-          />
-        </div>
+            <InputField
+              type="number"
+              step={0.01}
+              textLabel="T/A"
+              name="ta"
+              required 
+              placeholder="t/a"
+            />
 
-        <div className="flex gap-x-3">
-          <Button cancel type="button" onClick={()=>setModalState(false)}>Fechar</Button>
-          <Button type="submit">Salvar</Button>
-        </div>
+            <InputField
+              type="number"
+              textLabel="tª"
+              name="t" 
+              required
+              placeholder="tsª"
+            />
+          </div>
+
+          <div className="flex gap-x-3">
+            <Button cancel type="button" onClick={()=>setModalState(false)}>Fechar</Button>
+            <Button type="submit">Salvar</Button>
+          </div>
         </form>
       </Modal>
     </Accordium>

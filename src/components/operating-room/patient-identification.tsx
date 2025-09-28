@@ -13,9 +13,9 @@ import { toast } from "react-toastify";
 
 export default function PatientIdentification({ 
   patientIdentification, 
-  patientId 
+  scheduleId
 }: {
-  patientId: string,
+  scheduleId: string,
   patientIdentification: {
     preoperativeDiagnosis: string,
     informedConsent: string,
@@ -41,8 +41,8 @@ export default function PatientIdentification({
     <form {...{action}} ref={formRef}>
       <input
         className="hidden"
-        name="patientId"
-        defaultValue={patientId}
+        name="scheduleId"
+        defaultValue={scheduleId}
       />
 
       <div className="flex flex-col gap-y-4">

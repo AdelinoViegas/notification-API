@@ -10,9 +10,9 @@ import { signOperatingRoom } from "@/backend/api/clinical/operating-room-api";
 
 export default function IntraoperativeProcedure({ 
   intraoperativeProcedure, 
-  patientId 
+  scheduleId 
 }: {
-  patientId: string,
+  scheduleId: string,
     intraoperativeProcedure: {
       startTime?: Date,
       endTime?: Date,
@@ -45,8 +45,8 @@ export default function IntraoperativeProcedure({
       <form {...{action}}>
         <input 
           className="hidden"
-          name="patientId"
-          defaultValue={patientId}
+          name="scheduleId"
+          defaultValue={scheduleId}
         />
         
         <div className="grid grid-cols-2 gap-x-4 gap-y-2 items-center">

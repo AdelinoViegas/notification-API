@@ -9,13 +9,9 @@ import {
   scheduleSugeryModel,
   operatingRoomModel,
   processStateModel,
-  patientOperatingRoomModel
 } from "@/backend/model";
 import { getUser } from "@/backend/api/clinical/api";
 import { calculateAge } from "@/lib/calculate-age";
-import { PiUserCircleDashedBold } from "react-icons/pi";
-//import { findDoctorCalendar } from "./scheduling-api";
-//import { findDoctorCalendar, getNumberDoctorAppointment } from "./scheduling-api";
 
 async function getPatients({
   name,
@@ -190,7 +186,7 @@ async function getPatient({ id }: { id: string}){
 
 async function signOperatingRoom(prev: unknown, formData: FormData){
   try{
-    const patientId = formData.get("patientId") as string;
+    const scheduleId = formData.get("scheduleId") as string;
     const diagnostic = formData.get("preoperative-diagnosis") as string;
     const informedConsent = formData.get("Informed-consent") as string;
     const responsible = formData.get("responsible") as string;
@@ -230,7 +226,7 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
     const medication = formData.get("medication") as string;
     const postAnestheticoccurrences = formData.get("postAnestheticoccurrences") as string;
 
-    const hasPatientOperatingRoom = await patientOperatingRoomModel.findOne({ patientId });
+    const hasPatientOperatingRoom = await operatingRoomModel.findOne({ scheduleId });
     const patient = hasPatientOperatingRoom?.patientIdentification;
     const evaluation = hasPatientOperatingRoom?.preoperativeEvaluation;
     const planning = hasPatientOperatingRoom?.sugeryPlanning;
@@ -306,8 +302,8 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
     }
 
     if(!hasPatientOperatingRoom)     
-      await patientOperatingRoomModel.create({ 
-        patientId, 
+      await operatingRoomModel.create({ 
+        scheduleId, 
         patientIdentification,
         preoperativeEvaluation,
         sugeryPlanning,
@@ -315,7 +311,7 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
         postAnestheticRecovery
       });
     else
-      await patientOperatingRoomModel.updateOne({ 
+      await operatingRoomModel.updateOne({ 
         _id: hasPatientOperatingRoom._id 
       },{ 
         patientIdentification,
@@ -339,9 +335,8 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
   }
 }
 
-
-async function getOperatingRoom(patientId: string){
-  const operatingRoom = await patientOperatingRoomModel.findOne({ patientId, served: false });
+async function getOperatingRoom(scheduleId: string){
+  const operatingRoom = await operatingRoomModel.findOne({ scheduleId, served: false });
 
    return {
     id: operatingRoom?._id.toString() as string,

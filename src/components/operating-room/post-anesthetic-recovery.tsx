@@ -37,18 +37,10 @@ type recovery = {
 }
 
 export default function PostAnestheticRecovery({
-patientId,
+scheduleId,
 postAnestheticRecovery:{  
   checkInTime,
   checkOutTime,
-  vitalSignal:{
-    date,
-    fr,
-    pulse,
-    spo2,
-    ta,
-    t,
-  },
   levelofConsciousness:{
     motorActivity,
     respiration,
@@ -61,7 +53,7 @@ postAnestheticRecovery:{
   postAnestheticEvents,
 }
 }:recovery & {
-  patientId: string,
+  scheduleId: string,
 }){
   const [state, action] = useActionState(signOperatingRoom, { message:"", status: false });
   const router = useRouter();
@@ -83,6 +75,12 @@ postAnestheticRecovery:{
     <div className="flex flex-col gap-y-4 py-8">         
       <Accordium title="Horários de entrada e saída">
         <form {...{action}}>
+          <input 
+            className="hidden"
+            name="scheduleId"
+            defaultValue={scheduleId}
+          />
+
           <div className="grid grid-cols-2 gap-x-4">
             <InputField
               textLabel="Hora de entrada"
@@ -103,10 +101,16 @@ postAnestheticRecovery:{
         </form>
       </Accordium>
       
-      <VitalSignalInBlock {...{action}}/>
+      <VitalSignalInBlock {...{scheduleId}} {...{action}}/>
 
       <Accordium title="Nível de conciência">
         <form {...{action}}>
+          <input 
+            className="hidden"
+            name="scheduleId"
+            defaultValue={scheduleId}
+          />
+
           <div className="grid grid-cols-2 gap-x-4">
             <Selection
               label="Actividade Motora"
@@ -116,6 +120,7 @@ postAnestheticRecovery:{
                 {_id:"2", label:"Capaz de mover 4 membros"},
               ]}
               name="motorActivity"
+              defaultValue={motorActivity}
             />
 
             <Selection
@@ -126,6 +131,7 @@ postAnestheticRecovery:{
                 {_id:"2", label:"Respira profundamente e tosse"},
               ]}
               name="respiration"
+              defaultValue={respiration}
             />
 
             <Selection
@@ -136,6 +142,7 @@ postAnestheticRecovery:{
                 {_id:"2", label:"P/A dentro de +/-20% do valor pré-anestésico"},
               ]}
               name="circulation"
+              defaultValue={circulation}
             />
 
             <Selection
@@ -146,6 +153,7 @@ postAnestheticRecovery:{
                 {_id:"2", label:"Acordado e orientado"},
               ]}
               name="consciousness"
+              defaultValue={consciousness}
             />
 
             <Selection
@@ -156,12 +164,14 @@ postAnestheticRecovery:{
                 {_id:"2", label:"SpO2 > 92% em ar ambiente"},
               ]}
               name="saturation"
+              defaultValue={saturation}
             />
 
             <InputField
               textLabel="Resultado"
               name="result"
               placeholder="descreva o resultado"
+              defaultValue={result}
             />
           </div>
 
@@ -171,11 +181,18 @@ postAnestheticRecovery:{
       
       <Accordium title="Medicação administrada">
         <form {...{action}}>
+          <input 
+            className="hidden"
+            name="scheduleId"
+            defaultValue={scheduleId}
+          />
+
           <InputDetails
             textLabel="Medicação administrada"
             name="medication"
             rows={3}
             placeholder="descreva"
+            defaultValue={medicationAdministered}
           />
 
           <Button>Salvar</Button>
@@ -184,11 +201,18 @@ postAnestheticRecovery:{
 
       <Accordium title="Ocorrências pós-anestésicas imediatas">
         <form {...{action}}>
+          <input 
+            className="hidden"
+            name="scheduleId"
+            defaultValue={scheduleId}
+          />
+
           <InputDetails
             textLabel="Ocorrências pós-anestésicas imediatas"
             name="postAnestheticoccurrences"
             rows={3}
             placeholder="descreva"
+            defaultValue={postAnestheticEvents}
           />
 
           <Button>Salvar</Button>

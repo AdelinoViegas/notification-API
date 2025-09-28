@@ -14,8 +14,8 @@ export default async function Page({ params }:{
 	const { id } = await params;
   const {...patient} = await getPatient({id});
   //const schedule = await getScheduleSugery(scheduleId as string)
-  const patientId = patient._id as string;
-  const { patientIdentification } = await getOperatingRoom(patientId);
+  const scheduleId = patient.scheduleId as string;
+  const { patientIdentification } = await getOperatingRoom(scheduleId);
 
 	return (
     <div className="flex flex-col gap-y-4 py-2"> 
@@ -57,7 +57,7 @@ export default async function Page({ params }:{
       
       <PatientIdentification 
         {...{patientIdentification}} 
-        {...{patientId}}
+        {...{scheduleId}}
       /> 
     </div>
 	) 

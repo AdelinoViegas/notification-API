@@ -9,14 +9,14 @@ export default async function Page({ params }:{
 }){
 	const { id } = await params;
   const personal = await getPatient({id});
-  const patientId = personal._id as string;
-  const { preoperativeEvaluation } = await getOperatingRoom(patientId);
+  const scheduleId = personal.scheduleId as string;
+  const { preoperativeEvaluation } = await getOperatingRoom(scheduleId);
   
   return(
     <div>
       <PreoperativeEvaluation 
         {...{preoperativeEvaluation}} 
-        {...{patientId}}
+        {...{scheduleId}}
       />
     </div>
   )

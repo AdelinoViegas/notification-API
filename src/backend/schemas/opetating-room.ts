@@ -2,6 +2,7 @@ import { Schema } from "mongoose";
 
 const operatingRoomSchema = new Schema({
   scheduleId: Schema.Types.ObjectId,
+  userId: Schema.Types.ObjectId,
   patientIdentification: {
     preoperativeDiagnosis: String,
     informedConsent: String,
@@ -87,8 +88,6 @@ const operatingRoomSchema = new Schema({
     reason: String,
     userId: Schema.Types.ObjectId,
   },
-  userId: Schema.Types.ObjectId,
-
 }, {
   collection: "patient_operating_room",
   timestamps: true,

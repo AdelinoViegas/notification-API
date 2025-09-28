@@ -8,7 +8,7 @@ export default async function Page({ params }:{
 }){
   const { id } = await params;
   const personal = await getPatient({id});
-  const patientId = personal._id as string;
-  const { intraoperativeProcedure } = await getOperatingRoom(patientId);
-  return <IntraoperativeProcedure {...{patientId}} {...{intraoperativeProcedure}}/>
+  const scheduleId = personal.scheduleId as string;
+  const { intraoperativeProcedure } = await getOperatingRoom(scheduleId);
+  return <IntraoperativeProcedure {...{scheduleId}} {...{intraoperativeProcedure}}/>
 }

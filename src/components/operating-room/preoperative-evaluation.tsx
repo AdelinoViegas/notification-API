@@ -11,9 +11,9 @@ import { signOperatingRoom } from "@/backend/api/clinical/operating-room-api";
 
 export default function PreoperativeEvaluation({ 
   preoperativeEvaluation, 
-  patientId 
+  scheduleId 
 }: {
-  patientId: string,
+  scheduleId: string,
   preoperativeEvaluation: {
     medicalAndsurgicalHistory: string,
     allergies: string,
@@ -43,8 +43,8 @@ export default function PreoperativeEvaluation({
     <form {...{action}}>
       <input 
         className="hidden"
-        name="patientId"
-        defaultValue={patientId}
+        name="scheduleId"
+        defaultValue={scheduleId}
       />
       
       <div className="flex flex-col gap-y-4 py-8">

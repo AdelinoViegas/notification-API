@@ -85,8 +85,6 @@ export default async function Page({
         />
       </div>
 
-
-
       <Table
         status
         rowLength={8}
