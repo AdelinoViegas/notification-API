@@ -14,7 +14,7 @@ import Alert from "@/components/ui/alert";
 import { BiPlus as PlusIcon } from "react-icons/bi";
 import { signSpecialty } from "@/backend/api/clinical/api";
 
-export default function SpecialtyModal({ isExamServices }: { isExamServices?: boolean; }){
+export default function SpecialtyModal({ shortWord }: { shortWord?: boolean; }){
   const [ state, action ] = useActionState(signSpecialty, { message: "", status: false });
   const [ modalState, setModalState ] = useState(false);
   const closeModal = ()=> setModalState(false);
@@ -42,7 +42,7 @@ export default function SpecialtyModal({ isExamServices }: { isExamServices?: bo
     <div>
       <Button type="button" onClick={openModal} className="flex gap-x-1">
         <PlusIcon className="w-5" />
-        {isExamServices?"Nova":"Nova Especialidade"}
+        {shortWord?"Nova":"Nova Especialidade"}
       </Button>
 
       <Modal 
