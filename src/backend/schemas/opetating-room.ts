@@ -1,5 +1,28 @@
 import { Schema } from "mongoose";
 
+const postAnestheticRecovery = new Schema({
+  checkInTime: Date,
+  checkOutTime: Date,
+  vitalSignal: [{
+    date: Date,
+    fr: Number,
+    pulse: Number,
+    spo2: Number,
+    ta: Number,
+    t: Number,
+  }],
+  levelofConsciousness: {
+    motorActivity: Number,
+    respiration: Number,
+    circulation: Number,
+    consciousness: Number,
+    saturation: Number,
+    result: String,
+  },
+  medicationAdministered: String,
+  postAnestheticEvents: String,
+}, {_id: false});
+
 const operatingRoomSchema = new Schema({
   scheduleId: Schema.Types.ObjectId,
   userId: Schema.Types.ObjectId,
@@ -58,28 +81,7 @@ const operatingRoomSchema = new Schema({
     medicationAdministered: String,
     otherProcedure: String,
   },
-  postAnestheticRecovery:{
-    checkInTime: Date,
-    checkOutTime: Date,
-    vitalSignal: {
-      date: Date,
-      fr: Number,
-      pulse: Number,
-      spo2: Number,
-      ta: Number,
-      t: Number,
-    },
-    levelofConsciousness: {
-      motorActivity: Number,
-      respiration: Number,
-      circulation: Number,
-      consciousness: Number,
-      saturation: Number,
-      result: String,
-    },
-    medicationAdministered: String,
-    postAnestheticEvents: String,
-  },
+  postAnestheticRecovery,
   served: {
     type: Boolean,
     default: false,

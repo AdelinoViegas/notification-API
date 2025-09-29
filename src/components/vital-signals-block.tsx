@@ -1,85 +1,47 @@
 "use client";
 
-//import { useRouter } from "next/navigation";
-import { /*useActionState, useEffect,*/ useState } from "react";
+import { useState } from "react";
+import { getDataAndHoursFormat } from "@/lib/date-formater";
 import Accordium from "@/components/ui/accordium";
 import Modal from "@/components/modal";
 import Button from "@/components/ui/button";
 import Table from "@/components/table";
 import InputField from "@/components/ui/input-field";
-//import InputDetails from "@/components/ui/input-details";
-//import Selection from "@/components/ui/selection";
-//import { toast } from "react-toastify";
-//import { signOperatingRoom } from "@/backend/api/clinical/operating-room-api";
 
-export type DiaryTypeProps = {
-  vitalSignals?:{
-    date: string,  
-    description: string,
-    vitalSignals: {
-      fr:number
-      ta: number,
-      tª: number,
-      sp02: number,
-      pulse: number,
-
-    }
-  }[],
-}
-
-export type ClinicalDiaryProps = {
-  accordiumTitle: string;
-  modalTitle: string;
-  apiType: "diary" | "therapeutic" | "treatment" | "vital" | "annotation" | "balance";
-  patientId: string;
-  columns: string[];
-  dataDiary: DiaryTypeProps;
-}
+type vitalSignalProps = {
+    date: Date,
+    fr: number,
+    pulse: number,
+    spo2: number,
+    ta: number,
+    t: number,
+}[];
 
 export default function VitalSignalInBlock({
+  vitalSignal,
   scheduleId,
   action, 
 }:{ 
   action : (payload: FormData)=> void,
   scheduleId: string,
+  vitalSignal: vitalSignalProps,
 }){
-  //const [ state, action ] = useActionState(signOperatingRoom, {message: "", status: false});
   const [ modalState, setModalState ] = useState(false);
-  //const router = useRouter();
+  const data: Array<{ id: string; row: string[] }> = [];
 
-  /*useEffect(()=>{
-    if(state.message){
-      if(state.status)
-        toast.success(state.message, {
-          onClose: router.refresh,
-        });
-      else 
-        toast.error(state.message);
-    }   
-  },[state, router])*/
-   
-    //const data: Array<{ id: string; row: string[] }> = [];
-
-    /*if(dataDiary.vitalSignals)
-      dataDiary?.vitalSignals.forEach((value, index) => {
-        data.push({
-          id: String(index),
-          row: [
-            value.date,
-            value.description,
-            String(value.vitalSignals.paMax),
-            String(value.vitalSignals.paMin),
-            String(value.vitalSignals.jump),
-            String(value.vitalSignals.pvc),
-            String(value.vitalSignals.imc),
-            String(value.vitalSignals.sp02),
-            String(value.vitalSignals.temperature),
-            String(value.vitalSignals.breathing),
-            String(value.vitalSignals.weight),
-            String(value.vitalSignals.height),
-            String(value.vitalSignals.bloodGlucose),
-          ]
-      })});*/
+  if(vitalSignal)
+    vitalSignal.forEach((props, index) => {
+      data.push({
+        id: String(index),
+        row: [
+          getDataAndHoursFormat(props.date),
+          String(props.pulse),
+          String(props.fr),
+          String(props.spo2),
+          String(props.ta),
+          String(props.t),
+        ]
+    })});
 
   return(
     <Accordium className="bg-primary/15 hover:bg-primary/20" title="Sinal vital à admissão">
@@ -87,6 +49,7 @@ export default function VitalSignalInBlock({
  
       <Table
         columns={[
+          "Data-hora",
           "FC(pulso)",
           "FR",
           "SpO2",
@@ -94,14 +57,14 @@ export default function VitalSignalInBlock({
           "Tª",
           
         ]} 
-        rows={[]}
+        rows={data}
       />
 
       <Modal
         title={"Cadastrar novos sinais vitais"}
-        asWindow
-        onClose={()=>setModalState(false)}
+
         open={modalState}
+        onClose={()=> setModalState(false)}
       >
         <form {...{action}}>
           <input 

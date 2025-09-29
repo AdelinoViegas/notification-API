@@ -22,7 +22,7 @@ type recovery = {
       spo2: number,
       ta: number,
       t: number,
-    },
+    }[],
     levelofConsciousness: {
       motorActivity: number,
       respiration: number,
@@ -41,6 +41,7 @@ scheduleId,
 postAnestheticRecovery:{  
   checkInTime,
   checkOutTime,
+  vitalSignal,
   levelofConsciousness:{
     motorActivity,
     respiration,
@@ -59,7 +60,7 @@ postAnestheticRecovery:{
   const router = useRouter();
   const startDate = checkInTime?checkInTime.toISOString().slice(0, 16):"";
   const endDate = checkOutTime?checkOutTime?.toISOString().slice(0, 16):"";
-  console.log(startDate);
+
   useEffect(()=>{
     if(state.message)
       if(state.status)
@@ -101,7 +102,7 @@ postAnestheticRecovery:{
         </form>
       </Accordium>
       
-      <VitalSignalInBlock {...{scheduleId}} {...{action}}/>
+      <VitalSignalInBlock {...{vitalSignal}} {...{scheduleId}} {...{action}}/>
 
       <Accordium title="Nível de conciência">
         <form {...{action}}>

@@ -207,7 +207,6 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
     const implantsAndProsthesesUsed = formData.get("implantsAndProsthesesUsed") as string;
     const intraoperativeComplications = formData.get("intraoperativeComplications") as string;
     const fluidVolumeAndBloodLoss = formData.get("fluidVolumeAndBloodLoss") as string;
-    const medicationAdministered = formData.get("medicationAdministered") as string;
     const otherProcedure = formData.get("otherProcedure") as string;
     const checkInTime = formData.get("checkInTime") as string;
     const checkOutTime = formData.get("checkOutTime") as string;
@@ -281,14 +280,14 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
    const postAnestheticRecovery = {
       checkInTime: checkInTime || anesthetic?.checkInTime as Date,
       checkOutTime:checkOutTime || anesthetic?.checkOutTime as Date,
-      vitalSignal: {
-        date: vitalSignsData || anesthetic?.vitalSignal?.date as Date,
-        fr: fr || anesthetic?.vitalSignal?.fr as number, 
-        pulse: pulse || anesthetic?.vitalSignal?.pulse as number, 
-        spo2: spo2 || anesthetic?.vitalSignal?.spo2 as number, 
-        ta: ta || anesthetic?.vitalSignal?.ta as number, 
-        t: t || anesthetic?.vitalSignal?.t as number, 
-      },
+      vitalSignal:(vitalSignsData && fr && pulse && spo2 && ta && t)?[...anesthetic?.vitalSignal || [],{
+        date: vitalSignsData || undefined, 
+        fr: Number(fr),
+        pulse: Number(pulse), 
+        spo2: Number(spo2), 
+        ta: Number(ta), 
+        t: Number(t),
+      }]:anesthetic?.vitalSignal, 
       levelofConsciousness: {
         motorActivity: motorActivity || anesthetic?.levelofConsciousness?.motorActivity as number,
         respiration: respiration || anesthetic?.levelofConsciousness?.respiration as number,
@@ -297,7 +296,7 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
         saturation: saturation || anesthetic?.levelofConsciousness?.saturation as number,
         result: result || anesthetic?.levelofConsciousness?.result as string,
       },
-      medicationAdministered: medicationAdministered || anesthetic?.medicationAdministered as string,
+      medicationAdministered: medication || anesthetic?.medicationAdministered as string,
       postAnestheticEvents: postAnestheticoccurrences|| anesthetic?.postAnestheticEvents as string,
     }
 
@@ -337,6 +336,25 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
 
 async function getOperatingRoom(scheduleId: string){
   const operatingRoom = await operatingRoomModel.findOne({ scheduleId, served: false });
+  const vitalSignal:{
+    date: Date, 
+    fr: number,
+    pulse: number, 
+    spo2: number, 
+    ta: number, 
+    t: number,
+  }[] = [];
+
+  operatingRoom?.postAnestheticRecovery?.vitalSignal.forEach((props) => {
+    vitalSignal.push({
+      date: props.date as Date, 
+      fr: props.fr as number,
+      pulse: props.pulse as number, 
+      spo2: props.spo2 as number, 
+      ta: props?.ta as number, 
+      t: props.t as number,
+    });    
+  });
 
    return {
     id: operatingRoom?._id.toString() as string,
@@ -382,14 +400,7 @@ async function getOperatingRoom(scheduleId: string){
     postAnestheticRecovery: {
       checkInTime: operatingRoom?.postAnestheticRecovery?.checkInTime as Date,
       checkOutTime: operatingRoom?.postAnestheticRecovery?.checkOutTime as Date,
-      vitalSignal: {
-        date: operatingRoom?.postAnestheticRecovery?.vitalSignal?.date as Date,
-        fr: operatingRoom?.postAnestheticRecovery?.vitalSignal?.fr as number,
-        pulse: operatingRoom?.postAnestheticRecovery?.vitalSignal?.pulse as number,
-        spo2: operatingRoom?.postAnestheticRecovery?.vitalSignal?.spo2 as number,
-        ta: operatingRoom?.postAnestheticRecovery?.vitalSignal?.ta as number,
-        t: operatingRoom?.postAnestheticRecovery?.vitalSignal?.t as number,
-      },
+      vitalSignal,
       levelofConsciousness: {
         motorActivity: operatingRoom?.postAnestheticRecovery?.levelofConsciousness?.motorActivity as number,
         respiration: operatingRoom?.postAnestheticRecovery?.levelofConsciousness?.respiration as number,
