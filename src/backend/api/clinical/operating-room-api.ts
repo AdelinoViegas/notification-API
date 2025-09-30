@@ -225,6 +225,11 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
     const postAnestheticoccurrences = formData.get("postAnestheticoccurrences") as string;
     const sum = motorActivity + respiration + circulation + consciousness + saturation;
     const result = sum >= 9?"Estável":sum >= 7?"Manter em observação":"Instável";
+    const surgicalInformation = formData.get("surgicalInformation") as string;
+    const diet = formData.get("diet") as string;
+    const analgesia = formData.get("analgesia") as string;
+    const mobilization = formData.get("mobilization") as string;
+    const antibiotics = formData.get("antibiotics") as string;
 
     const hasPatientOperatingRoom = await operatingRoomModel.findOne({ scheduleId });
     const patient = hasPatientOperatingRoom?.patientIdentification;
@@ -233,6 +238,7 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
     //const security = hasPatientOperatingRoom?.checkSecurity;
     const procedure = hasPatientOperatingRoom?.intraoperativeProcedure;
     const anesthetic = hasPatientOperatingRoom?.postAnestheticRecovery;
+    const discharge = hasPatientOperatingRoom?.patientDischarge;
 
     const patientIdentification = {
       preoperativeDiagnosis: diagnostic || patient?.preoperativeDiagnosis,
@@ -301,6 +307,16 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
       postAnestheticEvents: postAnestheticoccurrences|| anesthetic?.postAnestheticEvents as string,
     }
 
+    const patientDischarge = {
+      surgicalInformation: surgicalInformation || discharge?.surgicalInformation as string,
+      postOperativeIndications: {
+        diet: diet || discharge?.postOperativeIndications?.diet as string,
+        analgesia: analgesia || discharge?.postOperativeIndications?.analgesia as string,
+        mobilization: mobilization || discharge?.postOperativeIndications?.mobilization as string,
+        antibiotics: antibiotics || discharge?.postOperativeIndications?.antibiotics as string,
+      }
+    }
+
     if(!hasPatientOperatingRoom)     
       await operatingRoomModel.create({ 
         scheduleId, 
@@ -308,7 +324,8 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
         preoperativeEvaluation,
         sugeryPlanning,
         intraoperativeProcedure,
-        postAnestheticRecovery
+        postAnestheticRecovery,
+        patientDischarge
       });
     else
       await operatingRoomModel.updateOne({ 
@@ -318,7 +335,8 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
         preoperativeEvaluation,
         sugeryPlanning,
         intraoperativeProcedure,
-        postAnestheticRecovery, 
+        postAnestheticRecovery,
+        patientDischarge, 
       });
 
     return {
@@ -337,6 +355,7 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
 
 async function getOperatingRoom(scheduleId: string){
   const operatingRoom = await operatingRoomModel.findOne({ scheduleId, served: false });
+  const schedule = await scheduleSugeryModel.findById({_id: scheduleId}).select({requestingService: 1});
   const vitalSignal:{
     date: Date, 
     fr: number,
@@ -359,6 +378,7 @@ async function getOperatingRoom(scheduleId: string){
 
    return {
     id: operatingRoom?._id.toString() as string,
+    requestingService: surgerySchedulingArea.find( props => props._id === schedule?.requestingService)?.label as string,
     patientIdentification: {
       preoperativeDiagnosis: operatingRoom?.patientIdentification?.preoperativeDiagnosis as string,
       informedConsent: operatingRoom?.patientIdentification?.informedConsent as string,
@@ -412,6 +432,15 @@ async function getOperatingRoom(scheduleId: string){
       },
       medicationAdministered: operatingRoom?.postAnestheticRecovery?.medicationAdministered as string,
       postAnestheticEvents: operatingRoom?.postAnestheticRecovery?.postAnestheticEvents as string,
+    },
+    patientDischarge: {
+      surgicalInformation: operatingRoom?.patientDischarge?.surgicalInformation as string,
+      postOperativeIndications: {
+        diet: operatingRoom?.patientDischarge?.postOperativeIndications?.diet as string,
+        analgesia: operatingRoom?.patientDischarge?.postOperativeIndications?.analgesia as string,
+        mobilization: operatingRoom?.patientDischarge?.postOperativeIndications?.mobilization as string,
+        antibiotics: operatingRoom?.patientDischarge?.postOperativeIndications?.antibiotics as string,
+      }
     }
   }
 }

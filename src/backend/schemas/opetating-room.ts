@@ -82,6 +82,15 @@ const operatingRoomSchema = new Schema({
     otherProcedure: String,
   },
   postAnestheticRecovery,
+  patientDischarge: {
+    surgicalInformation: String,
+    postOperativeIndications: {
+      diet: String,
+      analgesia: String,
+      mobilization: String,
+      antibiotics: String,
+    }
+  },
   served: {
     type: Boolean,
     default: false,
