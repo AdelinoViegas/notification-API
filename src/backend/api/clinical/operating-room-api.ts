@@ -201,8 +201,13 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
     const materialsAndEquipment = formData.get("materialsAndEquipment") as string;
     const implantableDevices = formData.get("implantableDevices") as string;
     const startTime = formData.get("startTime") as string;
-    const endTime = formData.get("endTime") as string;
+    const endTime = formData.get("endTime") as string;    
     const typeOfAnesthesia = formData.get("typeOfAnesthesia") as string;
+    const patientIdentity = formData.get("patientIdentity") as string;
+    const surgerySite = formData.get("surgerySite") as string;
+    const validConsent = formData.get("validConsent") as string;
+    const anestheticRisk = formData.get("anestheticRisk") as string;
+    const bloodAndEmergencySupplies = formData.get("bloodAndEmergencySupplies") as string;        
     const surgicalTechnique = formData.get("surgicalTechnique") as string;
     const implantsAndProsthesesUsed = formData.get("implantsAndProsthesesUsed") as string;
     const intraoperativeComplications = formData.get("intraoperativeComplications") as string;
@@ -235,7 +240,7 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
     const patient = hasPatientOperatingRoom?.patientIdentification;
     const evaluation = hasPatientOperatingRoom?.preoperativeEvaluation;
     const planning = hasPatientOperatingRoom?.sugeryPlanning;
-    //const security = hasPatientOperatingRoom?.checkSecurity;
+    const security = hasPatientOperatingRoom?.checkSecurity;
     const procedure = hasPatientOperatingRoom?.intraoperativeProcedure;
     const anesthetic = hasPatientOperatingRoom?.postAnestheticRecovery;
     const discharge = hasPatientOperatingRoom?.patientDischarge;
@@ -263,14 +268,14 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
       materialsAndEquipment: materialsAndEquipment || planning?.materialsAndEquipment as string,
       implantableDevices: implantableDevices || planning?.implantableDevices as string,
     }
-
-    /*const checkSecurity = {
-      patientIdentity: security?.patientIdentity as boolean,
-      surgerySite: security?.surgerySite as string,
-      validConsent: security?.validConsent as boolean,
-      anestheticRisk: security?.anestheticRisk as boolean,
-      bloodAndEmergencySupplies: security?.bloodAndEmergencySupplies as boolean,
-    }*/
+    
+    const checkSecurity = {
+      patientIdentity: patientIdentity || security?.patientIdentity as boolean,
+      surgerySite: surgerySite || security?.surgerySite as string,
+      validConsent: validConsent || security?.validConsent as boolean,
+      anestheticRisk: anestheticRisk || security?.anestheticRisk as boolean,
+      bloodAndEmergencySupplies: bloodAndEmergencySupplies || security?.bloodAndEmergencySupplies as boolean,
+    }
 
     const intraoperativeProcedure = {
       startTime: startTime ||  procedure?.startTime as Date,
@@ -323,6 +328,7 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
         patientIdentification,
         preoperativeEvaluation,
         sugeryPlanning,
+        checkSecurity,
         intraoperativeProcedure,
         postAnestheticRecovery,
         patientDischarge
@@ -334,6 +340,7 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
         patientIdentification,
         preoperativeEvaluation,
         sugeryPlanning,
+        checkSecurity,
         intraoperativeProcedure,
         postAnestheticRecovery,
         patientDischarge, 

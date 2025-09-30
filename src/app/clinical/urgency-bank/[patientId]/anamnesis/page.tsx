@@ -42,7 +42,7 @@ export default async function Page({ params }: { params: Promise<{ patientId: st
 		family,
 		others,
 	];
-	
+
   return(
 		<main className="relative">
 			<div className="flex gap-x-3">

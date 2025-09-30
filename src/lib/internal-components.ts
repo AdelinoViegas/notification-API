@@ -1,4 +1,3 @@
-import { signOperatingRoom } from "@/backend/api/clinical/operating-room-api";
 import { signUrgencyBank } from "@/backend/api/clinical/urgency-bank-api";
 import { InternalComponent } from "@/components/global-component";
 
@@ -581,8 +580,6 @@ function familyInternalComponent(defaultValue: string){
 function checklistInOperatingRoom(data: CheckSecurity){
   return {
 		title: "Checklist de Segurança Cirúrgica",
-    apiFn: signOperatingRoom,
-		initialState: { message: "", status: false },
 		childrens: [  
 			{
         className: "py-2",
@@ -597,7 +594,7 @@ function checklistInOperatingRoom(data: CheckSecurity){
 									label: "Sim",
 									name: "patientIdentity",
 									defaultChecked: data.patientIdentity,
-									defaultValue: "true"
+									defaultValue: `${true}`
 								}
 							},
 							{ 
@@ -605,14 +602,14 @@ function checklistInOperatingRoom(data: CheckSecurity){
 								props: {
 									label: "Não",
 									name: "patientIdentity",
-									defaultChecked: /*!(data.patientIdentity === null || data.patientIdentity=== undefined) && !*/data.patientIdentity,
-									defaultValue: "false"
+									defaultChecked: !(data.patientIdentity === null || data.patientIdentity=== undefined) && !data.patientIdentity,
+									defaultValue: `${false}`
 								}
 							},
 						]
 					},
 				],elements : [],
-			}/*,
+			},
 			{ 
         className: "py-2",
         elements : [
@@ -622,7 +619,7 @@ function checklistInOperatingRoom(data: CheckSecurity){
               label: "Local e lado da cirurgia confirmados",
               rows: 3,
               placeholder: "Descreva o local e o lado que será feito a cirurgia",
-              name: "diseasesInFamily",
+              name: "surgerySite",
               defaultValue: data.surgerySite
             }
           }
@@ -641,7 +638,7 @@ function checklistInOperatingRoom(data: CheckSecurity){
 									label: "Sim",
 									name: "validConsent",
 									defaultChecked: data.validConsent,
-									defaultValue: true
+									defaultValue: `${true}`
 
 								}
 							},
@@ -651,7 +648,7 @@ function checklistInOperatingRoom(data: CheckSecurity){
 									label: "Não",
 									name: "validConsent",
 									defaultChecked: !(data.validConsent === null || data.validConsent === undefined) && !data.validConsent,
-									defaultValue: false
+									defaultValue: `${false}`
 								}
 							},
 						]
@@ -671,7 +668,7 @@ function checklistInOperatingRoom(data: CheckSecurity){
 									label: "Sim",
 									name: "anestheticRisk",
 									defaultChecked: data.anestheticRisk,
-									defaultValue: true
+									defaultValue: `${true}`
 								}
 							},
 							{ 
@@ -680,7 +677,7 @@ function checklistInOperatingRoom(data: CheckSecurity){
 									label: "Não",
 									name: "anestheticRisk",
 									defaultChecked: !(data.anestheticRisk === null || data.anestheticRisk === undefined) && !data.anestheticRisk,
-									defaultValue: false
+									defaultValue: `${false}`
 								}
 							},
 						]
@@ -700,7 +697,7 @@ function checklistInOperatingRoom(data: CheckSecurity){
 									label: "Sim",
 									name: "bloodAndEmergencySupplies",
                   defaultChecked: data.bloodAndEmergencySupplies,
-									defaultValue: true
+									defaultValue: `${true}`
 								}
 							},
 							{ 
@@ -709,13 +706,13 @@ function checklistInOperatingRoom(data: CheckSecurity){
 									label: "Não",
 									name: "bloodAndEmergencySupplies",
                   defaultChecked: !(data.bloodAndEmergencySupplies === null || data.bloodAndEmergencySupplies === undefined) && !data.bloodAndEmergencySupplies,
-									defaultValue: false
+									defaultValue: `${false}`
 								}
 							},
 						]
 					}
 				],elements: []
-			},*/
+			},
 		]
 	}
 }

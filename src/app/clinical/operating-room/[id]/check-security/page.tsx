@@ -1,5 +1,5 @@
-import { CheckSecurity } from "@/components/operating-room/check-security";
 import { InternalComponent } from "@/components/global-component";
+import { CheckSecurity } from "@/components/operating-room/check-security";
 import { checklistInOperatingRoom } from "@/lib/internal-components";
 import { getOperatingRoom, getPatient } from "@/backend/api/clinical/operating-room-api";
 
@@ -10,13 +10,14 @@ export default async function Page({ params }:{
 }){
 	const { id } = await params;
   const personal = await getPatient({id});
-  const patientId = personal._id as string;
-  const { checkSecurity } = await getOperatingRoom(patientId);
+  const scheduleId = personal.scheduleId as string;
+  const { checkSecurity } = await getOperatingRoom(scheduleId);
+  console.log(checkSecurity);
   const checkList:InternalComponent[] = [ checklistInOperatingRoom(checkSecurity) ];
 
   return(
     <div className="py-4">
-      {checkList.map((item, i)=> <CheckSecurity itemId="25" {...item} key={i} />)}
+      {checkList.map((item, i)=> <CheckSecurity {...{scheduleId}} {...item} key={i} />)}
     </div>
   )
 }

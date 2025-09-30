@@ -1,44 +1,41 @@
   "use client";
 
-//import { useActionState, useEffect } from "react";
+import { useActionState, useEffect } from "react";
 import { InternalComponent, RenderUIElement } from "@/components/global-component";
 import Button from "@/components/ui/button";
-//import { useRouter } from "next/navigation";
-//import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import { signOperatingRoom } from "@/backend/api/clinical/operating-room-api";
 
   
   export function CheckSecurity({
-   /*patientId,*/
+    scheduleId,
     className,
     childrens,
-  }: InternalComponent /*& {
-    patientId: string, 
-  }*/){
-    //const [ state, action ] = useActionState(apiFn,initialState);
-    //const router = useRouter();
+  }: InternalComponent & {
+    scheduleId: string, 
+  }){
+    const [ state, action ] = useActionState(signOperatingRoom, { message:"", status: false});
+    const router = useRouter(); 
     
-    /*useEffect(()=>{
-      if(state?.message){
+    useEffect(()=>{
+      if(state.message)
         if(state.status)
           toast.success(state.message, {
-            onClose: router.refresh,
-            autoClose: 1500
+            autoClose: 1500,
+            onClose: ()=> router.refresh(),
           });
-        else 
-          if(state?.isWarn)
-            toast.warn(state.message);
-          else
-            toast.error(state.message);
-      }
-    }, [state, router]);*/
+        else
+          toast.error(state.message);
+    }, [state, router]);
   
     return(
-        <form /*{...{action}}*/>
-          {/*<input
+        <form {...{action}}>
+          <input
             className="hidden"
-            name="patientId"
-            defaultValue={itemId}
-          />*/}
+            name="scheduleId"
+            defaultValue={scheduleId}
+          />
   
           <div className={className}>
             {childrens.map((item, i)=>(
