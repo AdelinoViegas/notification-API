@@ -121,6 +121,7 @@ postAnestheticRecovery:{
                 {_id:"2", label:"Capaz de mover 4 membros"},
               ]}
               name="motorActivity"
+              required
               defaultValue={motorActivity}
             />
 
@@ -132,6 +133,7 @@ postAnestheticRecovery:{
                 {_id:"2", label:"Respira profundamente e tosse"},
               ]}
               name="respiration"
+              required
               defaultValue={respiration}
             />
 
@@ -143,6 +145,7 @@ postAnestheticRecovery:{
                 {_id:"2", label:"P/A dentro de +/-20% do valor pré-anestésico"},
               ]}
               name="circulation"
+              required
               defaultValue={circulation}
             />
 
@@ -154,6 +157,7 @@ postAnestheticRecovery:{
                 {_id:"2", label:"Acordado e orientado"},
               ]}
               name="consciousness"
+              required
               defaultValue={consciousness}
             />
 
@@ -165,13 +169,14 @@ postAnestheticRecovery:{
                 {_id:"2", label:"SpO2 > 92% em ar ambiente"},
               ]}
               name="saturation"
+              required
               defaultValue={saturation}
             />
 
             <InputField
               textLabel="Resultado"
-              name="result"
               placeholder="descreva o resultado"
+              disabled
               defaultValue={result}
             />
           </div>

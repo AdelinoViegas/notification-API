@@ -216,14 +216,15 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
     const spo2 = formData.get("spo2") as string;
     const ta = formData.get("ta") as string;
     const t = formData.get("t") as string;
-    const motorActivity = formData.get("motorActivity") as string;
-    const respiration = formData.get("respiration") as string;
-    const circulation = formData.get("circulation") as string;
-    const consciousness = formData.get("consciousness") as string;
-    const saturation = formData.get("saturation") as string;
-    const result = formData.get("result") as string;
+    const motorActivity = Number(formData.get("motorActivity"));
+    const respiration = Number(formData.get("respiration"));
+    const circulation = Number(formData.get("circulation"));
+    const consciousness = Number(formData.get("consciousness"));
+    const saturation = Number(formData.get("saturation"));
     const medication = formData.get("medication") as string;
     const postAnestheticoccurrences = formData.get("postAnestheticoccurrences") as string;
+    const sum = motorActivity + respiration + circulation + consciousness + saturation;
+    const result = sum >= 9?"Estável":sum >= 7?"Manter em observação":"Instável";
 
     const hasPatientOperatingRoom = await operatingRoomModel.findOne({ scheduleId });
     const patient = hasPatientOperatingRoom?.patientIdentification;
@@ -277,7 +278,7 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
       otherProcedure: otherProcedure || procedure?.otherProcedure as string,
     }
 
-   const postAnestheticRecovery = {
+    const postAnestheticRecovery = {
       checkInTime: checkInTime || anesthetic?.checkInTime as Date,
       checkOutTime:checkOutTime || anesthetic?.checkOutTime as Date,
       vitalSignal:(vitalSignsData && fr && pulse && spo2 && ta && t)?[...anesthetic?.vitalSignal || [],{
