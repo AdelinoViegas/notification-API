@@ -17,10 +17,8 @@ import { rescheduleSugery } from "@/backend/api/clinical/operating-room-api";
 
 export default function RescheduleSugery({
   scheduleId,
-  isArchived,
 }:{
   scheduleId: string;
-  isArchived? :boolean;
 }){
   const [ state, action ] = useActionState(rescheduleSugery, { message: "", status: false });
   const [ modalState, setModalState ] = useState(false);
@@ -29,7 +27,7 @@ export default function RescheduleSugery({
   const openModal = ()=> setModalState(true);
   const [ messageState, setMessageState ] = useState(false);
   const router = useRouter();
-
+  
   useEffect(()=>{
     const dataSugeries:SelectionOption[] = [];
 
@@ -56,23 +54,19 @@ export default function RescheduleSugery({
 
         if(state.status){
           closeModal();
-          if(isArchived)
-            router.replace('/clinical/appointment/archiveds')
-          else
             router.refresh();  
         }
       }, state.status?2000:7000);
     }
-  }, [state, router, isArchived]);
+  }, [state, router]);
 
   return(
     <div>
       <Button
         className="flex gap-x-2"
-        cancel={isArchived?true:false} 
         onClick={openModal}>
         <GrSchedulePlay className="size-5"/>
-        {isArchived?'Desarquivar':'Reagendar'}
+        Reagendar
       </Button>
 
       <Modal 
@@ -85,13 +79,7 @@ export default function RescheduleSugery({
             name="scheduleId" 
             defaultValue={scheduleId} 
           />
-
-          <input 
-            type="hidden" 
-            name="isArchived" 
-            defaultValue={String(isArchived)} 
-          />
-
+          
           <Selection
             label="Tipo de Cirurgia"
             defaultOptionLabel="Todas"

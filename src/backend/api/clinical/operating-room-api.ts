@@ -144,18 +144,18 @@ async function archivingSugery(prev: unknown, formData: FormData){
 
 async function rescheduleSugery(prev: unknown, formData: FormData){
   try{
-    //const isArchived = formData.get("isArchived") as string;
+    const isArchived = formData.get("isArchived") as string;
     const scheduleId = formData.get("scheduleId") as string;
     const sugeryType = formData.get("sugeryType") as string;
     const sugeryDate = formData.get("sugeryDate") as string;
     const sugeryTime = formData.get("sugeryTime") as string;
-         
+
     await scheduleSugeryModel.updateOne({ 
       _id: scheduleId 
     },{
       sugeryType,
       sugeryDate,
-      /*canceled:isArchived?false:true,*/
+      canceled:isArchived?false:true,
       sugeryTime,
      });
 

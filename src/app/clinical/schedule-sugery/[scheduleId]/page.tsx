@@ -7,12 +7,11 @@ import ArchivingSugery from "@/components/archiving-sugery";
 import TitleAndSubtitle from "@/components/title-subtitle";
 //import PDFButton from "@/components/pdf-button";
 import ValidateSugery from "@/components/validate-sugery";
-//import RescheduleSugery from "@/components/reschedule-sugery";
+import RescheduleSugery from "@/components/reschedule-sugery";
 import Button from "@/components/ui/button";
+import SignDateSugery from "@/components/sign-date-sugery";
 import SendScheduleSugery from "@/components/send-schedule-sugery";
 import { getScheduleSugery } from "@/backend/api/clinical/scheduling-api";
-import SignDateSugery from "@/components/sign-date-sugery";
-import RescheduleSugery from "@/components/reschedule-sugery";
 
 export default async function Page({
   params
