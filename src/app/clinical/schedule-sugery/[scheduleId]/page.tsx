@@ -12,6 +12,7 @@ import Button from "@/components/ui/button";
 import SendScheduleSugery from "@/components/send-schedule-sugery";
 import { getScheduleSugery } from "@/backend/api/clinical/scheduling-api";
 import SignDateSugery from "@/components/sign-date-sugery";
+import RescheduleSugery from "@/components/reschedule-sugery";
 
 export default async function Page({
   params
@@ -120,15 +121,9 @@ export default async function Page({
                 consultationPrice: schedule.consult.price,
               }}
             />*/}
-            <Button>Visualizar</Button>
-            <Button>Reagendar</Button>                       
+            <Button>Visualizar</Button>                 
 
-            {/*<RescheduleSugery
-              scheduleId={scheduleId}
-              doctorId={schedule.doctorId}
-              date={date[0] as unknown as Date}
-              hour={date[1]}
-            />*/}
+            <RescheduleSugery scheduleId={scheduleId}/>
 
             <SignDateSugery {...{scheduleId}} />
               

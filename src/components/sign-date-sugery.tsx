@@ -66,7 +66,7 @@ export default function SignDateSugery({ scheduleId }:{ scheduleId: string;}){
           <InputField
             textLabel="Hora da Consulta"
             type="time" 
-            name="sugeryHour"
+            name="sugeryTime"
             required
           />
 

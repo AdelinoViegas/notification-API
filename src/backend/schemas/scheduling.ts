@@ -256,7 +256,7 @@ const scheduleSugerySchema = new Schema({
   doctorId: Schema.Types.ObjectId,
   sugeryType: Schema.Types.ObjectId,
   sugeryDate: Date,
-  sugeryHour: String,
+  sugeryTime: String,
   description: String,
   requestingService: String,
   infirmary: String,

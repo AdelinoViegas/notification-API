@@ -66,7 +66,7 @@ async function sendPatientToOperatingRoom(prev: unknown, formData: FormData){
     const service = await examModel.findById({_id: sugery?.sugeryType}).select({price: 1});
     const scheduleInOperatingRoom = await operatingRoomModel.find({ served: false });
     
-    if(!sugery?.sugeryDate && !sugery?.sugeryHour)
+    if(!sugery?.sugeryDate && !sugery?.sugeryTime)
       throw new Error("Defina antes a Data e Hora da cirurgia", { cause: "not_configured"});
 
     if(scheduleInOperatingRoom.length){
@@ -142,10 +142,23 @@ async function archivingSugery(prev: unknown, formData: FormData){
   }
 }
 
-/*async function rescheduleSugery(prev: unknown, formData: FormData){
+async function rescheduleSugery(prev: unknown, formData: FormData){
   try{
+    //const isArchived = formData.get("isArchived") as string;
     const scheduleId = formData.get("scheduleId") as string;
-    
+    const sugeryType = formData.get("sugeryType") as string;
+    const sugeryDate = formData.get("sugeryDate") as string;
+    const sugeryTime = formData.get("sugeryTime") as string;
+         
+    await scheduleSugeryModel.updateOne({ 
+      _id: scheduleId 
+    },{
+      sugeryType,
+      sugeryDate,
+      /*canceled:isArchived?false:true,*/
+      sugeryTime,
+     });
+
     return {
       message: "Cirurgia reagendada com sucesso!",
       status: true,
@@ -158,7 +171,7 @@ async function archivingSugery(prev: unknown, formData: FormData){
       status: false,
     };
   }
-}*/
+}
 
 async function getPatient({ id }: { id: string}){
   try{
@@ -452,12 +465,62 @@ async function getOperatingRoom(scheduleId: string){
   }
 }
 
+/*async function uploadExternalExamFile(prev: unknown, formData: FormData){
+  try{
+    const file = formData.get("externalFile") as File;
+    const officeId = formData.get("officeId");
+    const patientId = formData.get("patientId");
+    const storageId = formData.get("storageId");
+
+    const formdata = new FormData();
+    formdata.append("userFile", file);
+    const data = await upload(formdata, await getUserId());
+
+    if(storageId){
+      const consult = await officeModel.findById({ _id: officeId });
+      await externalResultsModel.updateOne({ _id: consult?.externalId }, { storageId: data.id });
+    }else{
+      const externalResult = await externalResultsModel.create({
+        patientId,
+        officeId,
+        storageId: data.id,
+        userId: await getUserId()
+      });
+        
+      await officeModel.updateOne({ _id: officeId }, { externalId: externalResult._id });
+    }
+
+    return {
+      message: data.message,
+      status: true,
+    }
+  }catch(e){
+    const err = e as CustonAxiosError;
+    console.log(err);
+    
+    if(err.cause.code === "ECONNREFUSED"){
+      console.error("[-] A api do serviço de arquivo não está rodando!");
+      console.error("[!] ajuda: https://github.com/mr0xff/master-clinical");
+    }
+
+    return {
+      message: err.cause 
+        ? err.cause.code === "ECONNREFUSED" 
+          ? "Serviço de arquivos indisponível!"
+          : "Operação impossivel"
+        : "Arquivo invalido!",
+      status: false,
+    }
+  }
+}*/
+
 export {
   getPatients,
   getPatient,
   getOperatingRoom,
   sendPatientToOperatingRoom,
   archivingSugery,
-  //rescheduleSugery,
+  //uploadExternalExamFile,
   signOperatingRoom,
+  rescheduleSugery,
 }

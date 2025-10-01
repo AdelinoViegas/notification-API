@@ -1050,9 +1050,9 @@ async function signDateSugery(prev: unknown, formData: FormData){
   try{
     const scheduleId = formData.get("scheduleId") as string;
     const sugeryDate = formData.get("sugeryDate") as string;
-    const sugeryHour = formData.get("sugeryHour") as string;
+    const sugeryTime = formData.get("sugeryTime") as string;
 
-    await scheduleSugeryModel.updateOne({ _id: scheduleId }, { sugeryDate, sugeryHour});
+    await scheduleSugeryModel.updateOne({ _id: scheduleId }, { sugeryDate, sugeryTime});
     
     return {
       message: "Data e Hora cadastrado com sucesso!",
@@ -1121,6 +1121,7 @@ async function getScheduleSugery(scheduleId: string){
   const doctor = await getUser(schedule?.doctorId?.toString() as string);
 
   return {
+    patientId: patient?._id.toString() as string,
     patient: patient?.fullname as string,
     age: calculateAge(patient?.birthDate as Date),
     gender: patient?.gender as string,
@@ -1131,7 +1132,7 @@ async function getScheduleSugery(scheduleId: string){
       price: sugeryType?.price as number,
     },
     date: schedule?.sugeryDate as Date,
-    hour: schedule?.sugeryHour as string, 
+    hour: schedule?.sugeryTime as string, 
     payment: {
       code: schedule?.payment?.invoice?.code as string,
       proof: schedule?.payment?.invoice?.proof as string,
