@@ -1,12 +1,11 @@
 import Header from "@/components/header";
 import Card from "@/components/ui/card";
-import { getScheduleSugery } from "@/backend/api/clinical/scheduling-api";
 import SubTitle from "@/components/ui/subtitle";
 import TitleAndSubtitle from "@/components/title-subtitle";
 import { angolaCurrency } from "@/lib/table-formater";
 import { getDateInSlashFormat } from "@/lib/date-formater";
 import ArchivingSugery from "@/components/archiving-sugery";
-//import RescheduleAppointment from "@/components/reschedule-appointment";
+import { getScheduleSugery } from "@/backend/api/clinical/scheduling-api";
 
 export default async function Page({
   params

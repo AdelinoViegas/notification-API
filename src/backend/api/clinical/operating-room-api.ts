@@ -2,16 +2,19 @@
 
 import {priorityInOperatingRoom } from "@/lib/filters";
 import { getUserId } from "@/lib/web-token";
-import { surgerySchedulingArea } from "./translator";
+import { surgerySchedulingArea } from "@/backend/api/clinical/translator";
+import { calculateAge } from "@/lib/calculate-age";
 import { 
   examModel, 
   patientModel,
   scheduleSugeryModel,
   operatingRoomModel,
   processStateModel,
+  operatingRoomResultModel,
 } from "@/backend/model";
 import { getUser } from "@/backend/api/clinical/api";
-import { calculateAge } from "@/lib/calculate-age";
+import { CustonAxiosError } from "@/backend/api/types";
+import { upload } from "@/backend/api/storage";
 
 async function getPatients({
   name,
@@ -375,6 +378,8 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
 
 async function getOperatingRoom(scheduleId: string){
   const operatingRoom = await operatingRoomModel.findOne({ scheduleId, served: false });
+  const laboratoryResult = await operatingRoomResultModel.findOne({ _id: operatingRoom?.preoperativeEvaluation?.laboratoryTests?.externalId });
+  const imagingResult = await operatingRoomResultModel.findOne({ _id: operatingRoom?.preoperativeEvaluation?.imagingTests?.externalId });
   const schedule = await scheduleSugeryModel.findById({_id: scheduleId}).select({requestingService: 1});
   const vitalSignal:{
     date: Date, 
@@ -407,8 +412,14 @@ async function getOperatingRoom(scheduleId: string){
     preoperativeEvaluation: {
       medicalAndsurgicalHistory: operatingRoom?.preoperativeEvaluation?.medicalAndsurgicalHistory as string,
       allergies: operatingRoom?.preoperativeEvaluation?.allergies as string,
-      laboratoryTests: operatingRoom?.preoperativeEvaluation?.laboratoryTests as string,
-      imagingTests: operatingRoom?.preoperativeEvaluation?.imagingTests as string,
+      laboratoryTests: {
+        laboratoryStorageId: laboratoryResult?.storageId as string,
+        description: operatingRoom?.preoperativeEvaluation?.laboratoryTests?.description as string,
+      },
+      imagingTests: {
+        imagingStorageId: imagingResult?.storageId as string,
+        description: operatingRoom?.preoperativeEvaluation?.laboratoryTests?.description as string,
+      },
       currentClinicalStatus: operatingRoom?.preoperativeEvaluation?.currentClinicalStatus as string,
       surgicalRisk: operatingRoom?.preoperativeEvaluation?.surgicalRisk as string,
       fastingConfirmed: operatingRoom?.preoperativeEvaluation?.fastingConfirmed as string,
@@ -465,29 +476,61 @@ async function getOperatingRoom(scheduleId: string){
   }
 }
 
-/*async function uploadExternalExamFile(prev: unknown, formData: FormData){
+async function uploadExternalExamFile(prev: unknown, formData: FormData){
   try{
     const file = formData.get("externalFile") as File;
-    const officeId = formData.get("officeId");
-    const patientId = formData.get("patientId");
-    const storageId = formData.get("storageId");
-
+    const operatingRoomId = formData.get("operatingRoomId") as string;
+    const patientId = formData.get("patientId") as string;
+    const storageId = formData.get("storageId") as string;  
+    const typeOfExam = formData.get("typeOfExam") as string;
+    const description = formData.get("description") as string;
     const formdata = new FormData();
+    
     formdata.append("userFile", file);
     const data = await upload(formdata, await getUserId());
+    const operatingRoom = await operatingRoomModel.findById({ _id: operatingRoomId });
 
+    const dataInOperatingRoom = {
+      medicalAndsurgicalHistory: operatingRoom?.preoperativeEvaluation?.medicalAndsurgicalHistory,
+      allergies: operatingRoom?.preoperativeEvaluation?.allergies,
+      currentClinicalStatus: operatingRoom?.preoperativeEvaluation?.currentClinicalStatus,
+      surgicalRisk: operatingRoom?.preoperativeEvaluation?.surgicalRisk,
+      fastingConfirmed: operatingRoom?.preoperativeEvaluation?.fastingConfirmed,
+      previousMedication: operatingRoom?.preoperativeEvaluation?.previousMedication,
+    }
+    
+    const isLaboratory = typeOfExam === "laboratory"?true:false;
+    const externalId = isLaboratory
+    ? operatingRoom?.preoperativeEvaluation?.laboratoryTests?.externalId
+    : operatingRoom?.preoperativeEvaluation?.imagingTests?.externalId;
+  
     if(storageId){
-      const consult = await officeModel.findById({ _id: officeId });
-      await externalResultsModel.updateOne({ _id: consult?.externalId }, { storageId: data.id });
+      await operatingRoomResultModel.updateOne({
+        _id: externalId
+      }, { storageId: data.id });
+
+      await operatingRoomModel.updateOne({ 
+        _id: operatingRoomId 
+      }, { preoperativeEvaluation: {
+          ...dataInOperatingRoom,
+          imagingTests: !isLaboratory?{ externalId, description }:operatingRoom?.preoperativeEvaluation?.imagingTests, 
+          laboratoryTests: isLaboratory?{ externalId, description }:operatingRoom?.preoperativeEvaluation?.laboratoryTests, 
+      }});
     }else{
-      const externalResult = await externalResultsModel.create({
+      const externalResult = await operatingRoomResultModel.create({
         patientId,
-        officeId,
+        operatingRoomId,
         storageId: data.id,
         userId: await getUserId()
       });
-        
-      await officeModel.updateOne({ _id: officeId }, { externalId: externalResult._id });
+
+      await operatingRoomModel.updateOne({ 
+        _id: operatingRoomId 
+      }, { preoperativeEvaluation: {
+          ...dataInOperatingRoom,
+          imagingTests: !isLaboratory?{ externalId: externalResult._id, description }:operatingRoom?.preoperativeEvaluation?.imagingTests, 
+          laboratoryTests: isLaboratory?{ externalId: externalResult._id, description }:operatingRoom?.preoperativeEvaluation?.laboratoryTests, 
+      }});
     }
 
     return {
@@ -512,7 +555,7 @@ async function getOperatingRoom(scheduleId: string){
       status: false,
     }
   }
-}*/
+}
 
 export {
   getPatients,
@@ -520,7 +563,7 @@ export {
   getOperatingRoom,
   sendPatientToOperatingRoom,
   archivingSugery,
-  //uploadExternalExamFile,
+  uploadExternalExamFile,
   signOperatingRoom,
   rescheduleSugery,
 }

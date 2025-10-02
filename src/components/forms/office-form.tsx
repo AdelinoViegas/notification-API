@@ -276,6 +276,7 @@ export function UploadExternalExam({
       <InputField
         textLabel="Arquivo (PDF/IMAGEM/VIDEO)"
         type="file"
+        required
         name="externalFile"
         accept={".pdf, video/*, image/*"}
         onChange={({ target }) =>{

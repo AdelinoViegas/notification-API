@@ -56,7 +56,7 @@ import {
   nursingSchema, 
   sectionSchema 
 } from "@/backend/schemas/hospitalization";
-import { operatingRoomSchema } from "@/backend/schemas/opetating-room";
+import { operatingRoomResultSchema, operatingRoomSchema } from "@/backend/schemas/opetating-room";
 
 const clinical = createConnection(process.env.MONGO_URL as string, {
   dbName: process.env.CLINICAL_DB_NAME
@@ -106,6 +106,7 @@ const surgeryModel = clinical.model("Surgery", surgerySchema);
 
 //operating room
 const operatingRoomModel = clinical.model("patietOperatingRoom", operatingRoomSchema);
+const operatingRoomResultModel = clinical.model("operatingRoomExternal", operatingRoomResultSchema);
 
 //internamento
 const bedNursingModel = clinical.model("bedNursing", bedNursingSchema);
@@ -154,6 +155,7 @@ export {
   internalExamResultModel,
   scheduleSugeryModel,
   operatingRoomModel,
+  operatingRoomResultModel,
 };
 
 export {

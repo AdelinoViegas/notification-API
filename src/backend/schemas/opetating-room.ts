@@ -34,8 +34,14 @@ const operatingRoomSchema = new Schema({
   preoperativeEvaluation: {
     medicalAndsurgicalHistory: String,
     allergies: String,
-    laboratoryTests: String,
-    imagingTests: String,
+    laboratoryTests: {
+      externalId: Schema.Types.ObjectId,
+      description: String,
+    },
+    imagingTests: {
+      externalId: Schema.Types.ObjectId,
+      description: String,
+    },
     currentClinicalStatus: String,
     surgicalRisk: String,
     fastingConfirmed: String,
@@ -104,6 +110,18 @@ const operatingRoomSchema = new Schema({
   timestamps: true,
 });
 
+const operatingRoomResultSchema = new Schema({
+  patientId: Schema.Types.ObjectId,
+  operatingRoomId: Schema.Types.ObjectId,
+  storageId: String,
+  userId: Schema.Types.ObjectId,
+}, {
+  collection: "operating_room_external_results",
+  timestamps: true,
+});
+
+
 export {
-  operatingRoomSchema
+  operatingRoomSchema,
+  operatingRoomResultSchema,
 }
