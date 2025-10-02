@@ -74,7 +74,7 @@ postAnestheticRecovery:{
 
   return(
     <div className="flex flex-col gap-y-4 py-8">         
-      <Accordium title="Horários de entrada e saída">
+      <Accordium title="Horários de entrada">
         <form {...{action}}>
           <input 
             className="hidden"
@@ -82,21 +82,13 @@ postAnestheticRecovery:{
             defaultValue={scheduleId}
           />
 
-          <div className="grid grid-cols-2 gap-x-4">
-            <InputField
-              textLabel="Hora de entrada"
-              type="datetime-local"
-              name="checkInTime"
-              defaultValue={startDate}
-            />
-
-            <InputField
-              textLabel="Hora de saída"
-              type="datetime-local"
-              name="checkOutTime"
-              defaultValue={endDate}
-            />
-          </div>
+          <InputField
+            className="w-96"
+            textLabel="Hora de entrada"
+            type="datetime-local"
+            name="checkInTime"
+            defaultValue={startDate}
+          />
 
           <Button>Salvar</Button>
         </form>
