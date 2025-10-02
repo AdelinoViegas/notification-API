@@ -1,10 +1,11 @@
 import Header from "@/components/header";
 import Card from "@/components/ui/card";
-import { getScheduleSugery } from "@/backend/api/clinical/scheduling-api";
 import SubTitle from "@/components/ui/subtitle";
 import TitleAndSubtitle from "@/components/title-subtitle";
 import { angolaCurrency } from "@/lib/table-formater";
-//import RescheduleAppointment from "@/components/reschedule-appointment";
+import { getDateInSlashFormat } from "@/lib/date-formater";
+import ArchivingSugery from "@/components/archiving-sugery";
+import { getScheduleSugery } from "@/backend/api/clinical/scheduling-api";
 
 export default async function Page({
   params
@@ -24,7 +25,7 @@ export default async function Page({
 
       <div className="overflow-auto h-[80vh] scroll overflow-auto">
         <Card>
-          <div className="grid grid-cols-2">
+          <div className="grid grid-cols-2 py-2">
             <div>
               <SubTitle className="inline-flex mt-3">Informações da Cirurgia</SubTitle>
               
@@ -47,20 +48,19 @@ export default async function Page({
                 label="Preço da Cirurgia"
                 value={angolaCurrency(schedule.sugery.price)} 
               />
-
               <TitleAndSubtitle
                 label="Responsável"
-                value={'schedule.responsable'} 
+                value={schedule.doctor} 
               />
 
               <TitleAndSubtitle
                 label="Data da Cirurgia"
-                value={schedule.date.pt} 
+                value={schedule.date?getDateInSlashFormat(schedule.date):"Indefinido"} 
               />
 
               <TitleAndSubtitle
                 label="Hora da Cirurgia"
-                value={schedule.hour} 
+                value={schedule.hour || "Indefinido"} 
               />
 
               <TitleAndSubtitle
@@ -77,13 +77,10 @@ export default async function Page({
                 value={schedule.archiving.reason} 
               />
               
-              {/*<RescheduleAppointment 
+              <ArchivingSugery 
                 scheduleId={scheduleId}
-                doctorId={schedule.doctorId}
-                date={schedule.date.en}
-                hour={schedule.hour}
                 isArchived
-              />*/}
+              />
             </div>
           </div>
         </Card>

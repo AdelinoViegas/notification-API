@@ -7,6 +7,8 @@ import Search from "@/components/ui/search";
 import Refresh from "@/components/refresh";
 import TooltipInOperatingRoom from "@/components/operating-room-tooltip";
 import { getPatients } from "@/backend/api/clinical/operating-room-api";
+import { PiArchiveDuotone } from "react-icons/pi";
+import Button from "@/components/ui/button";
 
 export const dynamic = "force-dynamic";
 
@@ -17,21 +19,18 @@ export default async function Page({
     name: string;
     priority?: string;
   }>
-}){ 
+}){
   const { name, priority } = await searchParams;
   const patients = await getPatients({ name, priority});
   const patientRows = formater(patients, {
     order: [
       "requestingService",
-      "date",
       "patient",
       "sugeryType",
-      "infirmary",
-      "bed",
       "doctor",
     ]
   }) ;
-  const dataPriority = priorityInOperatingRoom(patients);
+  const dataPriority = priorityInOperatingRoom(await getPatients({ name })).summary;
  
   return(
     <main className="space-y-3">
@@ -39,6 +38,11 @@ export default async function Page({
       <div className="mt-6">
         <Header title="Bloco Operatório"/>
       </div>
+      
+      <Button className="flex gap-x-2 bg-slate-700">
+        <PiArchiveDuotone/>
+        Pacientes Atendidos
+      </Button>
 
       <div className="flex lg:flex-row justify-between items-center m-0">
         <Alert 
@@ -48,7 +52,7 @@ export default async function Page({
       </div>
       
       <div className="flex justify-between items-center">
-        <TooltipInOperatingRoom data={dataPriority.areasToSchedule} />
+        <TooltipInOperatingRoom data={dataPriority} />
 
         <Search
           className="flex items-center gap-x-3"
@@ -60,15 +64,11 @@ export default async function Page({
 
       <Table
         baseRowLink="/clinical/operating-room"
-        rowLength={7}
-        priorityCol
+        rowLength={4}
         columns={[
-          "Serv. Solicitante",
-          "Data e Hora", 
+          "Serv. Solicitante", 
           "Nome do Utente", 
           "Tipo de cirurgia",
-          "Efermaria",
-          "Cama",
           "Nome do Médico",
         ]}
         rows={patientRows} 

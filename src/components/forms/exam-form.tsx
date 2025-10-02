@@ -111,7 +111,7 @@ export default function ExamForm({
             className="grow"
             defaultValue={currentExam?.specialtyId}
           />
-          <SpecialtyModal />
+          <SpecialtyModal shortWord />
         </div>
         <InputField
           textLabel="Preço" 

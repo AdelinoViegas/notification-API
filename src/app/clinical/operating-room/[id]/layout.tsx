@@ -1,10 +1,9 @@
+import { redirect } from "next/navigation";
 import Header from "@/components/header";
-import clsx from "clsx";
 import TabNav from "@/components/tabnav";
 import Card from "@/components/ui/card";
-import { getPatient } from "@/backend/api/clinical/operating-room-api";
 import { MonitorAccess, UnlockProcessAccess } from "@/components/lock-unlock-monitor-process";
-import { redirect } from "next/navigation";
+import { getPatient } from "@/backend/api/clinical/operating-room-api";
 
 export default async function Layout({ 
   children,
@@ -16,31 +15,24 @@ export default async function Layout({
   const { id } = await params;
   const data = await getPatient({id}); 
 
- if(data?.message || !data){
+  if(data?.message || !data)
     redirect("/clinical/operating-room");
-  }
     
   return(
     <div>
       <MonitorAccess
-        patientId={id}
-        place="urgency"
+        patientId={data._id as string}
+        place="block"
         basePathname="/clinical/operating-room" 
       />
 
       <UnlockProcessAccess
-        patientId={id}
-        place="urgency"
+        patientId={data._id as string}
+        place="block"
         basePathname="/clinical/operating-room" 
       />
 
-      <div className={clsx("my-4 text-center pt-3 text-white rounded-lg",
-        {"bg-red-500 animate-pulse": data.priority === "red"},
-        {"bg-blue-500": data.priority === "blue"},
-        {"bg-green-500": data.priority=== "green"},
-        {"bg-yellow-500": data.priority=== "yellow"},
-        {"bg-orange-600": data.priority=== "orange"}
-       )}>
+      <div className="my-4 text-center pt-3 text-white bg-blue-400 rounded-lg">
 			 	<Header 
           center 
           title={data.fullname as string}

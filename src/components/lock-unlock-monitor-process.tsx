@@ -8,7 +8,7 @@ import { HiArrowUturnLeft as ArrowUturnLeftIcon } from 'react-icons/hi2';
 import { closePatientProcess, openPatientProcess } from '@/backend/api/clinical/process-control';
 import { toast } from 'react-toastify';
 
-type Places = "laboratory" | "screening" | "imaging" | "urgency" | "hospitalization"; 
+type Places = "laboratory" | "screening" | "imaging" | "urgency" | "hospitalization" | "block"; 
 
 export function UnlockProcessAccess({
   patientId,

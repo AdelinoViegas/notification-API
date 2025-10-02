@@ -26,11 +26,8 @@ export default async function Page({
   const patientRows = formater(scheduleData, {
     order: [
       "requestingService",
-      "date",
       "patient",
       "sugeryType",
-      "infirmary",
-      "bed",
       "doctor",
       "status",
     ]
@@ -88,19 +85,14 @@ export default async function Page({
         />
       </div>
 
-
-
       <Table
         status
         rowLength={8}
         baseRowLink="/clinical/schedule-sugery/"
         columns={[
           "Serv. Solicitante",
-          "Data e Hora", 
           "Nome do Utente", 
           "Tipo de cirurgia",
-          "Efermaria",
-          "Cama",
           "Nome do Médico",
           "Estado"
         ]} 

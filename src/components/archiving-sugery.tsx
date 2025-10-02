@@ -12,6 +12,7 @@ import Modal from "@/components/modal";
 import InputDetails from "@/components/ui/input-details";
 import { archivingSugery } from "@/backend/api/clinical/operating-room-api";
 import { toast } from "react-toastify";
+import clsx from "clsx";
 
 export default function ArchivingSugery({ 
   scheduleId,
@@ -39,13 +40,15 @@ export default function ArchivingSugery({
           toast.error(state.message);
 
     }
-  }, [state, isArchived, router]);
+  }, [state, router, isArchived]);
   
   return(
     <div>
       <Button 
         onClick={()=>setModalState(true)} 
-        className="gap-2 items-center bg-slate-700">
+        className={clsx("gap-x-2 items-center",isArchived?"":"bg-slate-700")}
+        cancel={isArchived?true:false} 
+        >
         <LuArchiveRestore className="size-5" />
         {isArchived?"Desarquivar":"Arquivar"}
       </Button>

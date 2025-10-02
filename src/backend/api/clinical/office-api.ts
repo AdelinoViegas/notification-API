@@ -145,7 +145,7 @@ async function getPatients({
         _id: appointment.scheduleId,
         doctorId: await getUserId(),
       });
-
+      
       if(!scheduledAppointment)
         continue;
 

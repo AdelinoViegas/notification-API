@@ -31,31 +31,31 @@ function orderByPriority(dataElements: GETpatient[]){
 }
 
 function priorityInOperatingRoom(dataElements: { requestingService: string }[]){
-  const reference = [ "red", "orange", "yellow", "green",];
+  const reference = ["urgency-bank", "hospitalization", "office", "patient",];
   const orderElements = [];
-  const areasToSchedule = [];
+  const summary = [];
 
   for(const area of reference){
     let count = 0;
     for(const element of dataElements){
-      if(surgerySchedulingArea.find((prop)=>prop.label === element.requestingService)?.color === area){
+      if(surgerySchedulingArea.find((prop)=>prop.label === element.requestingService)?._id === area){
         orderElements.push(element);
         count++;
       }
     }
 
-    areasToSchedule.push({
-      label: surgerySchedulingArea.find((item)=>item.color === area)?.label,
+    summary.push({
+      label: surgerySchedulingArea.find((item)=>item._id === area)?.label,
       quantity: count,
       id: area
     });
   }
 
-  areasToSchedule.push({ label: "Todos", quantity: dataElements.length, id: "white" });
+  summary.push({ label: "Todos", quantity: dataElements.length, id: "all" });
 
   return {
     orderElements,
-    areasToSchedule,
+    summary,
   };
 }
 

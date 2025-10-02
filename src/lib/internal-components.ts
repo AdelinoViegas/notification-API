@@ -31,6 +31,14 @@ type LifeStyle = {
 	},
 }
 
+type CheckSecurity = {
+  patientIdentity: boolean,
+  surgerySite: string,
+  validConsent: boolean,
+  anestheticRisk: boolean,
+  bloodAndEmergencySupplies: boolean,
+}
+
 function symptomsInternalComponent(defaultValue?: string){
   return {
 		title: "Queixa Principal",
@@ -569,10 +577,9 @@ function familyInternalComponent(defaultValue: string){
 	}
 }
 
-function checklistInOperatingRoom(){
+function checklistInOperatingRoom(data: CheckSecurity){
   return {
 		title: "Checklist de Segurança Cirúrgica",
-		initialState: { message: "", status: false },
 		childrens: [  
 			{
         className: "py-2",
@@ -585,15 +592,18 @@ function checklistInOperatingRoom(){
 								type: "radio",
 								props: {
 									label: "Sim",
-									name: "diabetes",
-
+									name: "patientIdentity",
+									defaultChecked: data.patientIdentity,
+									defaultValue: `${true}`
 								}
 							},
 							{ 
 								type: "radio",
 								props: {
 									label: "Não",
-									name: "diabetes",
+									name: "patientIdentity",
+									defaultChecked: !(data.patientIdentity === null || data.patientIdentity=== undefined) && !data.patientIdentity,
+									defaultValue: `${false}`
 								}
 							},
 						]
@@ -609,8 +619,8 @@ function checklistInOperatingRoom(){
               label: "Local e lado da cirurgia confirmados",
               rows: 3,
               placeholder: "Descreva o local e o lado que será feito a cirurgia",
-              name: "diseasesInFamily",
-              defaultValue: ""
+              name: "surgerySite",
+              defaultValue: data.surgerySite
             }
           }
         ]
@@ -626,14 +636,19 @@ function checklistInOperatingRoom(){
 								type: "radio",
 								props: {
 									label: "Sim",
-									name: "respiratoryDiseases",
+									name: "validConsent",
+									defaultChecked: data.validConsent,
+									defaultValue: `${true}`
+
 								}
 							},
 							{ 
 								type: "radio",
 								props: {
 									label: "Não",
-									name: "respiratoryDiseases",					
+									name: "validConsent",
+									defaultChecked: !(data.validConsent === null || data.validConsent === undefined) && !data.validConsent,
+									defaultValue: `${false}`
 								}
 							},
 						]
@@ -651,14 +666,18 @@ function checklistInOperatingRoom(){
 								type: "radio",
 								props: {
 									label: "Sim",
-									name: "tuberculosis",
+									name: "anestheticRisk",
+									defaultChecked: data.anestheticRisk,
+									defaultValue: `${true}`
 								}
 							},
 							{ 
 								type: "radio",
 								props: {
 									label: "Não",
-									name: "tuberculosis",
+									name: "anestheticRisk",
+									defaultChecked: !(data.anestheticRisk === null || data.anestheticRisk === undefined) && !data.anestheticRisk,
+									defaultValue: `${false}`
 								}
 							},
 						]
@@ -676,14 +695,18 @@ function checklistInOperatingRoom(){
 								type: "radio",
 								props: {
 									label: "Sim",
-									name: "malaria",
+									name: "bloodAndEmergencySupplies",
+                  defaultChecked: data.bloodAndEmergencySupplies,
+									defaultValue: `${true}`
 								}
 							},
 							{ 
 								type: "radio",
 								props: {
 									label: "Não",
-									name: "malaria",
+									name: "bloodAndEmergencySupplies",
+                  defaultChecked: !(data.bloodAndEmergencySupplies === null || data.bloodAndEmergencySupplies === undefined) && !data.bloodAndEmergencySupplies,
+									defaultValue: `${false}`
 								}
 							},
 						]

@@ -20,8 +20,9 @@ export default function TooltipInOperatingRoom({data}: TooltipProps){
   const router = useRouter();
   
   const handleFilterButton = useCallback((priority: string)=>{
-    if(priority === "white")
+    if(priority === "all")
       return router.push(pathname);
+
     const searchParams = new URLSearchParams();
     searchParams.set("priority", priority);
     router.push(`${pathname}?${searchParams.toString()}`);
@@ -35,7 +36,7 @@ export default function TooltipInOperatingRoom({data}: TooltipProps){
         <li key={index}>
           <button 
             onClick={()=>handleFilterButton(item.id)} 
-            className={clsx("text-sm self-center text-center select-none hover:cursor-pointer rounded-xl px-3 py-1.5 font-medium", item.id !== "white"?`active:bg-${item.id}-700 bg-${item.id}-500 text-white`:"text-black bg-white hover:bg-gray-100")}>
+            className={clsx("text-sm self-center text-center select-none hover:cursor-pointer rounded-xl px-3 py-1.5 font-medium", item.id !== "all"?`active:bg-blue-500 bg-blue-400 text-white`:"text-black bg-gray-100 hover:bg-gray-200")}>
             {item.label}
             {" "}
             ({item.quantity})

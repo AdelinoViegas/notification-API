@@ -50,17 +50,17 @@ async function getPatients({
     const user = await clinicalUserModel.findOne({ userId }).select({ serviceId: 1});
     const patients = await triedModel.find({ serviceId: user?.serviceId, served: false });
     const patientList = [];
-    
+
     for(const patient of patients){
       const urgency = await patientModel.findById({ _id: patient.patientId });
-
+ 
       const isProcess = await processStateModel.findOne({
          patientId: patient.patientId,
          location: "urgency",
          isInUse: true
       });
 
-      if(isProcess)
+      if(isProcess && isProcess.userId?.toString() !== await getUserId())
         continue;
 
       if(!urgency) 

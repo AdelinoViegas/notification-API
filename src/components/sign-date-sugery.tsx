@@ -5,45 +5,21 @@ import {
   useEffect, 
   useActionState 
 } from "react";
-import { GrSchedulePlay } from "react-icons/gr";
 import { useRouter } from "next/navigation";
+import { BiPlus } from "react-icons/bi";
 import Modal from "@/components/modal";
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
 import Alert from "@/components/ui/alert";
-import Selection, { SelectionOption } from "@/components/ui/selection";
-import { getExams } from "@/backend/api/clinical/scheduling-api";
-import { rescheduleSugery } from "@/backend/api/clinical/operating-room-api";
+import { signDateSugery } from "@/backend/api/clinical/scheduling-api";
 
-export default function RescheduleSugery({
-  scheduleId,
-}:{
-  scheduleId: string;
-}){
-  const [ state, action ] = useActionState(rescheduleSugery, { message: "", status: false });
+export default function SignDateSugery({ scheduleId }:{ scheduleId: string;}){
+  const [ state, action ] = useActionState(signDateSugery, { message: "", status: false });
   const [ modalState, setModalState ] = useState(false);
-  const [sugeriesType, setSugeriesType] = useState<SelectionOption[]>([]); 
   const closeModal = ()=> setModalState(false);
   const openModal = ()=> setModalState(true);
   const [ messageState, setMessageState ] = useState(false);
   const router = useRouter();
-  
-  useEffect(()=>{
-    const dataSugeries:SelectionOption[] = [];
-
-    getExams().then(
-      data => {
-        const sugeries = data.filter( props => props.category.toLowerCase().includes("cirurgia"))
-        sugeries.forEach( props => {
-          dataSugeries.push({
-            _id: props._id,
-            label: props.label,
-          })
-        })
-
-        setSugeriesType(dataSugeries);
-    })
-  }, []);
 
   useEffect(()=>{
     if(state.message){
@@ -54,7 +30,7 @@ export default function RescheduleSugery({
 
         if(state.status){
           closeModal();
-            router.refresh();  
+          router.refresh();  
         }
       }, state.status?2000:7000);
     }
@@ -63,14 +39,14 @@ export default function RescheduleSugery({
   return(
     <div>
       <Button
-        className="flex gap-x-2"
+        className="gap-x-1 bg-slate-700"
         onClick={openModal}>
-        <GrSchedulePlay className="size-5"/>
-        Reagendar
+        <BiPlus className="w-5" />
+        Definir data da cirurgia 
       </Button>
 
       <Modal 
-        title="Reagendar"
+        title="Definir data e hora da cirurgia"
         open={modalState}
         onClose={closeModal}>
         <form {...{action}}>
@@ -79,25 +55,17 @@ export default function RescheduleSugery({
             name="scheduleId" 
             defaultValue={scheduleId} 
           />
-          
-          <Selection
-            label="Tipo de Cirurgia"
-            defaultOptionLabel="Todas"
-            options={sugeriesType}
-            name="sugeryType"
-            className="w-full"
-          />
 
           <InputField
-            textLabel="Data da cirurgia"
-            type="date"
+            textLabel="Hora da Consulta"
+            type="Date" 
             name="sugeryDate"
             required
           />
 
           <InputField
-            textLabel="Hora da cirurgia"
-            type="time"
+            textLabel="Hora da Consulta"
+            type="time" 
             name="sugeryTime"
             required
           />

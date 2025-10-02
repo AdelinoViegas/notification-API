@@ -3,28 +3,23 @@
 import { 
   useEffect, 
   useState, 
-  useRef, 
-  useCallback,
+  useRef,
   useActionState,
-  ChangeEvent
 } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import InputField from "@/components/ui/input-field";
+import { getUserId } from "@/lib/web-token";
+import { toast } from "react-toastify";
 import Button from "@/components/ui/button";
 import Selection from "@/components/ui/selection";
 import { SelectionOption } from "@/components/ui/selection";
 import InputDetails from "@/components/ui/input-details";
-import Alert from "@/components/ui/alert";
-import { getDateInDashFormat } from "@/lib/date-formater";
-import { Types } from "mongoose";
-import { getDoctors } from "@/backend/api/clinical/api";
-import type { DoctorCalendarReference, DoctorDayAndTime } from "@/backend/api/clinical/types";
 import { 
-  findDoctorCalendar,
   getExams,
   scheduleSugery
 } from "@/backend/api/clinical/scheduling-api";
-import { toast } from "react-toastify";
+import { getDoctors } from "@/backend/api/clinical/api";
+import InputField from "../ui/input-field";
+
 
 export type DoctorRole = {
   _id: string;
@@ -41,24 +36,21 @@ export default function ScheduleSugery(
   }){
   const [ state, action ] = useActionState(scheduleSugery, { message: "", status: false });
   const [ doctors, setDoctors] = useState<SelectionOption[]>([]);
-  const [ closeAlert, setCloseAlert ] = useState(true);
-  const [ doctorDays, setDoctorDays ] = useState<SelectionOption[]>([]);
   const [sugeriesType, setSugeriesType] = useState<SelectionOption[]>([]);
-  const [sugeryType, setSugeryType] = useState("");
-  const [ doctorTime, setDoctorTime ] = useState<DoctorDayAndTime>();
-  const doctorsRef = useRef<Array<DoctorRole>>([]);
-  const doctorDayRef = useRef<DoctorCalendarReference[]>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
   const path = usePathname();
 
   useEffect(()=>{
-    const loadData = async ()=>{  
+    const loadData = async ()=>{
+      const userId = await getUserId();
       const doctors = await getDoctors() as SelectionOption[];
-      doctorsRef.current = doctors as unknown as DoctorRole[];
-
-      setDoctors(doctors);
+      const user = doctors.filter( props => props._id === userId);
+      
+      if(user)
+        setDoctors(user);
     }
+
     loadData();
 
     const dataSugeries:SelectionOption[] = [];
@@ -68,85 +60,13 @@ export default function ScheduleSugery(
         const sugeries = data.filter( props => props.category.toLowerCase().includes("cirurgia"))
         sugeries.forEach( props => {
           dataSugeries.push({
-            _id: props.specialtyId,
+            _id: props._id,
             label: props.label,
           })
         })
 
         setSugeriesType(dataSugeries);
     })
-  }, []);
-  
-
-  const filterDoctors = useCallback(async (e: ChangeEvent<HTMLSelectElement>)=>{
-    const specialtyId = e.target.value;
-    const data = await getExams(specialtyId);
-    const sugeryType = data.find( props => props.name.trim() === e.target.options[e.target.selectedIndex].text.trim())?._id as string;
-    setSugeryType(sugeryType);
-
-    if(!specialtyId){
-      setDoctors(doctorsRef.current as unknown as SelectionOption[]);
-      return;
-    }
-
-    const newDoctorsList = doctorsRef.current.filter(doctor => doctor?.roleId === specialtyId) as unknown as SelectionOption[];
-    setDoctors(newDoctorsList);
-  }, []);
-
-  const handleSelectDoctor = useCallback(async(e: ChangeEvent<HTMLSelectElement>)=>{
-    const doctorId = e.target.value;
-
-    if(doctorId){
-      const doctorCalendars = await findDoctorCalendar({doctorId});
-      const formatedCalendars = []; 
-
-      if(doctorCalendars.length){
-        for(const calendar of doctorCalendars){
-          formatedCalendars.push({
-            _id: new Types.ObjectId().toString(),
-            label: getDateInDashFormat(calendar.day),
-            calendar,
-          });
-        }
-
-        setDoctorDays(formatedCalendars);
-        doctorDayRef.current = formatedCalendars;
-      }else{
-        setCloseAlert(false);
-        setDoctorDays([]);
-        setDoctorTime(undefined);
-      }
-    }else{
-      setCloseAlert(false);
-      setDoctorDays([]);
-      setDoctorTime(undefined);
-    }
-  }, []);
-
-  const handleDoctorDay = useCallback(async(e: ChangeEvent<HTMLSelectElement>)=>{
-    const dateId = e.target.value;
-    const doctorCalendar = doctorDayRef.current?.find(props => props._id === dateId);
-
-    if(doctorCalendar){
-      const { calendar: { 
-        initialTime, 
-        finalTime,
-        day,
-        availableDoctorSpace
-      }} = doctorCalendar;
-      
-      setDoctorTime({ 
-        startAt: initialTime, 
-        endAt: finalTime,
-        day,
-        availableDoctorSpace
-      });
-      
-      setCloseAlert(true);
-    }else{
-      setCloseAlert(false);
-      setDoctorTime(undefined);
-    }
   }, []);
 
   useEffect(()=>{
@@ -157,20 +77,18 @@ export default function ScheduleSugery(
           onClose: ()=>{
             if(ispatient)
               router.replace("/clinical/patient/");
-            
+
             formRef.current?.reset();
-            setCloseAlert(false);
           }
         });
       else 
         toast.error(state.message);
   }, [state, router]);
 
-
   return(
     <main className="w-full">
       <form {...{action}} ref={formRef}>
-        <div className="grid xl:grid-cols-5 gap-3">
+        <div className="2xl:flex 2xl:gap-x-2">
           <input 
             type="hidden" 
             name="patientId" 
@@ -179,82 +97,30 @@ export default function ScheduleSugery(
 
           <input
             type="hidden"
-            name="sugeryType"
-            defaultValue={sugeryType}
-          />
-
-          <input
-            type="hidden"
-            name="date"
-            defaultValue={doctorTime?.day.toISOString()}
-          />
-
-          <input
-            type="hidden"
             name="requestingService"
             defaultValue={path.split("/")[2]}
-          />          
+          />
+
+          <input
+            type="hidden"
+            name="doctorId"
+            defaultValue={doctors[0]?._id}          />           
 
           <Selection
             label="Tipo de Cirurgia"
             defaultOptionLabel="Todas"
             options={sugeriesType}
-            className="lg:col-span-2"
-            onChange={filterDoctors}
-          />
-
-          <Selection
-            label="Médico"
-            name="doctorId"
-            className="lg:col-span-2"
-            options={doctors}
-            onChange={handleSelectDoctor}
-            required
-          />
-
-          <Selection
-            label="Data da Cirurgia"
-            options={doctorDays}
-            onChange={handleDoctorDay}
-            required
+            name="sugeryType"
+            className="w-full"
           />
 
           <InputField
-            textLabel="Hora da Cirurgia"
-            className="lg:col-span-2"
-            type="time" 
-            name="time"
-            min={doctorTime?.startAt}
-            max={doctorTime?.endAt}
-            required
+            textLabel="Médico"
+            className="w-full"
+            placeholder="processar..."
+            defaultValue={doctors[0]?.label}
+            disabled
           />
-
-          <InputField
-            textLabel="Efermaria"
-            className="lg:col-span-2"
-            placeholder="insira a efermaria"
-            name="infirmary"
-            required
-          />
-
-          <InputField
-            textLabel="Cama"
-            placeholder="número da cama" 
-            name="bed"
-            required
-          />
-        </div>
-
-        <div className="flex flex-col lg:flex-row items-end justify-between gap-3">
-          <div className="min-w-96">
-            { closeAlert && !!doctorTime?.startAt && 
-              <Alert
-                type="warn"
-                message={`Horário disponivel das ${doctorTime?.startAt} 
-                até ${doctorTime?.endAt} e com ${doctorTime.availableDoctorSpace.spaces} vagas`} 
-              />
-            }
-          </div>
         </div>
 
         <InputDetails

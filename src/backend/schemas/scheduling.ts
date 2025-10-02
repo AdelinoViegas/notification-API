@@ -255,8 +255,8 @@ const scheduleSugerySchema = new Schema({
   patientId: Schema.Types.ObjectId,
   doctorId: Schema.Types.ObjectId,
   sugeryType: Schema.Types.ObjectId,
-  doctorDay: Date,
-  doctorTime: String,
+  sugeryDate: Date,
+  sugeryTime: String,
   description: String,
   requestingService: String,
   infirmary: String,
@@ -297,23 +297,6 @@ const scheduleSugerySchema = new Schema({
 });
 
 
-const operatingRoomSchema = new Schema<ConsultResult>({
-  scheduleId: Schema.Types.ObjectId,
-  served: {
-    type: Boolean,
-    default: false,
-  },
-  archiving: {
-    reason: String,
-    userId: Schema.Types.ObjectId,
-  },
-  userId: Schema.Types.ObjectId,
-
-}, {
-  timestamps: true,
-  collection: "schedule_in_operating_room",
-});
-
 export{
   examSchema,
   examGroupSchema,
@@ -327,5 +310,4 @@ export{
   scheduleAppointmentSchema,
   officeSchema,
   scheduleSugerySchema,
-  operatingRoomSchema,
 }

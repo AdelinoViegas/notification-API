@@ -1,4 +1,5 @@
 import { angolaCurrency } from "@/lib/table-formater";
+import { getDateInSlashFormat } from "@/lib/date-formater";
 import Header from "@/components/header";
 import Card from "@/components/ui/card";
 import SubTitle from "@/components/ui/subtitle";
@@ -8,6 +9,7 @@ import TitleAndSubtitle from "@/components/title-subtitle";
 import ValidateSugery from "@/components/validate-sugery";
 import RescheduleSugery from "@/components/reschedule-sugery";
 import Button from "@/components/ui/button";
+import SignDateSugery from "@/components/sign-date-sugery";
 import SendScheduleSugery from "@/components/send-schedule-sugery";
 import { getScheduleSugery } from "@/backend/api/clinical/scheduling-api";
 
@@ -55,17 +57,17 @@ export default async function Page({
 
               <TitleAndSubtitle
                 label="Responsável"
-                value={'schedule.responsable'} 
+                value={schedule.doctor} 
               />
 
               <TitleAndSubtitle
                 label="Data da Cirurgia"
-                value={schedule.date.pt} 
+                value={schedule.date?getDateInSlashFormat(schedule.date):"Indefinido"} 
               />
 
               <TitleAndSubtitle
                 label="Hora da Cirurgia"
-                value={schedule.hour} 
+                value={schedule.hour || "Indefinido"} 
               />
 
               <TitleAndSubtitle
@@ -118,14 +120,11 @@ export default async function Page({
                 consultationPrice: schedule.consult.price,
               }}
             />*/}
-            <Button>Visualizar</Button>                    
+            <Button>Visualizar</Button>                 
 
-            <RescheduleSugery
-              scheduleId={scheduleId}
-              doctorId={schedule.doctorId}
-              date={schedule.date.en}
-              hour={schedule.hour}
-            />
+            <RescheduleSugery scheduleId={scheduleId}/>
+
+            <SignDateSugery {...{scheduleId}} />
               
             <ValidateSugery 
               disabled={!schedule.sugery.price || schedule.payment.status === "Confirmado"}

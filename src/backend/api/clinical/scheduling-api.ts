@@ -148,7 +148,6 @@ async function getExams(specialtyId?: string){
       groupId: data.groupId?.toString() as string,
       group: group?.name as string,
       price: data.price.toString(), // por causa das tabelas
-      specialtyId: data.specialtyId?.toString() as string // para agendar as cirurgias
     });
   }
 
@@ -1014,8 +1013,6 @@ async function scheduleSugery(prev: unknown, formData: FormData){
     const patientId = formData.get("patientId") as string;
     const doctorId = formData.get("doctorId") as string;
     const sugeryType = formData.get("sugeryType") as string;
-    const doctorDay = new Date(formData.get("date") as string);
-    const doctorTime = formData.get("time");
     const requestingService = formData.get("requestingService") as string;
     const description = formData.get("description") as string;
     const infirmary = formData.get("infirmary") as string;
@@ -1028,8 +1025,6 @@ async function scheduleSugery(prev: unknown, formData: FormData){
       patientId,
       doctorId,
       sugeryType,
-      doctorDay,
-      doctorTime,
       description,
       requestingService,
       infirmary,
@@ -1044,11 +1039,31 @@ async function scheduleSugery(prev: unknown, formData: FormData){
     }
   }catch(e: unknown){
     const err = e as Error;
+    return {
+      message: err.cause?err.message:"Desculpe, não foi possível realizar o agendamento!",
+      status: false,
+    };
+  }
+}
+
+async function signDateSugery(prev: unknown, formData: FormData){
+  try{
+    const scheduleId = formData.get("scheduleId") as string;
+    const sugeryDate = formData.get("sugeryDate") as string;
+    const sugeryTime = formData.get("sugeryTime") as string;
+
+    await scheduleSugeryModel.updateOne({ _id: scheduleId }, { sugeryDate, sugeryTime});
+    
+    return {
+      message: "Data e Hora cadastrado com sucesso!",
+      status: true,
+    }
+  }catch(e: unknown){
+    const err = e as Error;
 
     return {
-      message: err.cause ? err.message : "Desculpe, não foi possível realizar o agendamento!",
+      message: err.cause?err.message:"Falha ao cadastrar!",
       status: false,
-      detail: err.message
     };
   }
 }
@@ -1078,13 +1093,13 @@ async function getScheduleSugeries({
 
     formatedList.push({
       id: items.id.toString() as string,
-      patient: patient?.fullname as string,
       requestingService: surgerySchedulingArea.find( props => props._id === items.requestingService)?.label as string,
-      doctor: doctor.fullname as string,
-      infirmary: items.infirmary as string,
-      bed: items.bed as string,
+      patient: patient?.fullname as string,
+      //infirmary: items.infirmary as string,
+      //bed: items.bed as string,
       sugeryType: sugeryType?.name.toString() as string,
-      date: `${getDateInSlashFormat(items.doctorDay as Date)} ${items.doctorTime}` as string,
+      //date: `${getDateInSlashFormat(items.doctorDay as Date)} ${items.doctorTime}` as string,
+      doctor: doctor.fullname as string,
       status: items.payment?.status === "confirmed"?"Confirmado":"Pendente" as string,
     })
   }
@@ -1106,6 +1121,7 @@ async function getScheduleSugery(scheduleId: string){
   const doctor = await getUser(schedule?.doctorId?.toString() as string);
 
   return {
+    patientId: patient?._id.toString() as string,
     patient: patient?.fullname as string,
     age: calculateAge(patient?.birthDate as Date),
     gender: patient?.gender as string,
@@ -1115,11 +1131,8 @@ async function getScheduleSugery(scheduleId: string){
       type: sugeryType?.name as string,
       price: sugeryType?.price as number,
     },
-    date: {
-      pt: getDateInSlashFormat(schedule?.doctorDay as Date),
-      en: schedule?.doctorDay as Date,
-    },
-    hour: schedule?.doctorTime as string,
+    date: schedule?.sugeryDate as Date,
+    hour: schedule?.sugeryTime as string, 
     payment: {
       code: schedule?.payment?.invoice?.code as string,
       proof: schedule?.payment?.invoice?.proof as string,
@@ -1279,6 +1292,7 @@ async function getExamResultDetail(id: string){
 export {
   signExam,
   signExamResult,
+  signDateSugery,
   getExams,
   getExam,
   getExamResults,
