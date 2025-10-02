@@ -14,7 +14,6 @@ import { signOperatingRoom } from "@/backend/api/clinical/operating-room-api";
 type recovery = {
   postAnestheticRecovery:{
     checkInTime: Date,
-    checkOutTime: Date,
     vitalSignal: {
       date: Date,
       fr: number,
@@ -40,7 +39,6 @@ export default function PostAnestheticRecovery({
 scheduleId,
 postAnestheticRecovery:{  
   checkInTime,
-  checkOutTime,
   vitalSignal,
   levelofConsciousness:{
     motorActivity,
@@ -59,7 +57,6 @@ postAnestheticRecovery:{
   const [state, action] = useActionState(signOperatingRoom, { message:"", status: false });
   const router = useRouter();
   const startDate = checkInTime?checkInTime.toISOString().slice(0, 16):"";
-  const endDate = checkOutTime?checkOutTime?.toISOString().slice(0, 16):"";
 
   useEffect(()=>{
     if(state.message)

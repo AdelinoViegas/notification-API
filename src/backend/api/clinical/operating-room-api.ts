@@ -231,7 +231,6 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
     const fluidVolumeAndBloodLoss = formData.get("fluidVolumeAndBloodLoss") as string;
     const otherProcedure = formData.get("otherProcedure") as string;
     const checkInTime = formData.get("checkInTime") as string;
-    const checkOutTime = formData.get("checkOutTime") as string;
     const vitalSignsData = formData.get("date") as string;
     const fr = formData.get("fr") as string;
     const pulse = formData.get("pulse") as string;
@@ -308,7 +307,6 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
 
     const postAnestheticRecovery = {
       checkInTime: checkInTime || anesthetic?.checkInTime as Date,
-      checkOutTime:checkOutTime || anesthetic?.checkOutTime as Date,
       vitalSignal:(vitalSignsData && fr && pulse && spo2 && ta && t)?[...anesthetic?.vitalSignal || [],{
         date: vitalSignsData || undefined, 
         fr: Number(fr),
@@ -452,7 +450,6 @@ async function getOperatingRoom(scheduleId: string){
     },
     postAnestheticRecovery: {
       checkInTime: operatingRoom?.postAnestheticRecovery?.checkInTime as Date,
-      checkOutTime: operatingRoom?.postAnestheticRecovery?.checkOutTime as Date,
       vitalSignal,
       levelofConsciousness: {
         motorActivity: operatingRoom?.postAnestheticRecovery?.levelofConsciousness?.motorActivity as number,
