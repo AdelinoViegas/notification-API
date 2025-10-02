@@ -90,6 +90,7 @@ export default function PreoperativeEvaluation({
               <UploadExamBlock 
                 typeOfExam="laboratory"
                 storageId={preoperativeEvaluation.laboratoryTests.laboratoryStorageId}
+                description={preoperativeEvaluation.laboratoryTests.description}
                 {...{patientId}}
                 {...{operatingRoomId}}
                 />
@@ -99,6 +100,7 @@ export default function PreoperativeEvaluation({
               <UploadExamBlock
                 typeOfExam="imaging"
                 storageId={preoperativeEvaluation.imagingTests.imagingStorageId}
+                description={preoperativeEvaluation.imagingTests.description}
                 {...{patientId}}
                 {...{operatingRoomId}}
               />

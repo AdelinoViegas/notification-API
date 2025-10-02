@@ -227,6 +227,7 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
     const surgicalTechnique = formData.get("surgicalTechnique") as string;
     const implantsAndProsthesesUsed = formData.get("implantsAndProsthesesUsed") as string;
     const intraoperativeComplications = formData.get("intraoperativeComplications") as string;
+    const medicationAdministered = formData.get("medicationAdministered") as string;
     const fluidVolumeAndBloodLoss = formData.get("fluidVolumeAndBloodLoss") as string;
     const otherProcedure = formData.get("otherProcedure") as string;
     const checkInTime = formData.get("checkInTime") as string;
@@ -301,7 +302,7 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
       implantsAndProsthesesUsed: implantsAndProsthesesUsed || procedure?.implantsAndProsthesesUsed as string,
       intraoperativeComplications: intraoperativeComplications || procedure?.intraoperativeComplications as string,
       fluidVolumeAndBloodLoss: fluidVolumeAndBloodLoss || procedure?.fluidVolumeAndBloodLoss as string,
-      medicationAdministered: medication || procedure?.medicationAdministered as string,
+      medicationAdministered: medicationAdministered || procedure?.medicationAdministered as string,
       otherProcedure: otherProcedure || procedure?.otherProcedure as string,
     }
 
@@ -317,11 +318,11 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
         t: Number(t),
       }]:anesthetic?.vitalSignal, 
       levelofConsciousness: {
-        motorActivity: motorActivity || anesthetic?.levelofConsciousness?.motorActivity as number,
-        respiration: respiration || anesthetic?.levelofConsciousness?.respiration as number,
-        circulation: circulation || anesthetic?.levelofConsciousness?.circulation as number,
-        consciousness: consciousness || anesthetic?.levelofConsciousness?.consciousness as number,
-        saturation: saturation || anesthetic?.levelofConsciousness?.saturation as number,
+        motorActivity: motorActivity ?? anesthetic?.levelofConsciousness?.motorActivity as number,
+        respiration: respiration ?? anesthetic?.levelofConsciousness?.respiration as number,
+        circulation: circulation ?? anesthetic?.levelofConsciousness?.circulation as number,
+        consciousness: consciousness ?? anesthetic?.levelofConsciousness?.consciousness as number,
+        saturation: saturation ?? anesthetic?.levelofConsciousness?.saturation as number,
         result: result || anesthetic?.levelofConsciousness?.result as string,
       },
       medicationAdministered: medication || anesthetic?.medicationAdministered as string,
@@ -418,7 +419,7 @@ async function getOperatingRoom(scheduleId: string){
       },
       imagingTests: {
         imagingStorageId: imagingResult?.storageId as string,
-        description: operatingRoom?.preoperativeEvaluation?.laboratoryTests?.description as string,
+        description: operatingRoom?.preoperativeEvaluation?.imagingTests?.description as string,
       },
       currentClinicalStatus: operatingRoom?.preoperativeEvaluation?.currentClinicalStatus as string,
       surgicalRisk: operatingRoom?.preoperativeEvaluation?.surgicalRisk as string,

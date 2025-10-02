@@ -15,11 +15,13 @@ export function UploadExamBlock({
   typeOfExam, 
   operatingRoomId,
   patientId,
+  description,
 }: {
   storageId: string; 
   typeOfExam: string;
   operatingRoomId: string;
   patientId: string;
+  description: string;
 }){
   const [ state, action ] = useActionState(uploadExternalExamFile, { message: "", status: false });
   const router = useRouter();
@@ -87,7 +89,7 @@ export function UploadExamBlock({
           rows={3}
           name="description"
           placeholder="Descreva os sintomas de alergia"
-          defaultValue={"teste"}
+          defaultValue={description}
       />
 
       <Button>Salvar</Button>
