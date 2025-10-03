@@ -8,13 +8,16 @@ import InputDetails from "@/components/ui/input-details";
 import Accordium from "@/components/ui/accordium";
 import { useRouter } from "next/navigation";
 import { signOperatingRoom } from "@/backend/api/clinical/operating-room-api";
+import FinishOperatingRoom from "../finish-operating-room";
 
 export default function PatientDischarge({ 
   requestingService,
   result,
   patientDischarge, 
-  scheduleId 
+  scheduleId,
+  operatingRoomId, 
 }: {
+  operatingRoomId: string, 
   requestingService: string,
   result: string,
   scheduleId: string,
@@ -50,7 +53,7 @@ export default function PatientDischarge({
         defaultValue={scheduleId}
       />
 
-      <Button type="button">Concluir</Button>
+      <FinishOperatingRoom {...{operatingRoomId}} />
 
       <div className="flex flex-col gap-y-4 py-8">         
         <Accordium title="Estado do paciente e unidade de Destino">

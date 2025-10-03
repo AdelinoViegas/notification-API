@@ -555,6 +555,42 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
   }
 }
 
+async function finishOperatingRoom(prev: unknown, formData: FormData){
+  try{
+    const operatingRoomId = formData.get("operatingRoomId");
+    const operatingRoom = await operatingRoomModel.findById({ _id: operatingRoomId });
+    
+    if(!operatingRoom)
+      throw new Error("Falha no registro!", { cause: "log_not_found"});
+
+    if(!operatingRoom?.patientIdentification)
+      throw new Error("Preencha os dados da identificação do paciente!", { cause: "not_fill"});
+
+    if(!operatingRoom?.sugeryPlanning)
+      throw new Error("Preencha os dados do planeamento da cirurgia", { cause: "not_fill"});
+
+    if(!operatingRoom?.sugeryPlanning)
+      throw new Error("Preencha os dados da checklist de segurânça de cirurgia", { cause: "not_fill"});
+    
+    if(!operatingRoom?.intraoperativeProcedure)
+      throw new Error("Preencha os dados do procedimento intraoperatório!", { cause: "not_fill"});
+
+    await operatingRoomModel.updateOne({ _id: operatingRoomId }, { served: true }); 
+
+    return {
+      message: ' concluída com sucesso!',
+      status: true,
+    }
+  }catch(err: unknown){
+    const error = err as Error;
+
+    return {
+      message: error.cause?error.message:error.message,
+      status: false,
+    }
+  }
+}
+
 export {
   getPatients,
   getPatient,
@@ -564,4 +600,5 @@ export {
   uploadExternalExamFile,
   signOperatingRoom,
   rescheduleSugery,
+  finishOperatingRoom,
 }
