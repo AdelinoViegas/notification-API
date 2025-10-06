@@ -728,7 +728,7 @@ async function getPatientsInScreening({
   
       formated.push({
         id: patientData._id.toString(),
-        createdAt: patientData.createdAt,
+        createdAt: patient.createdAt,
         fullname: patientData.fullname,
         registerNumber: patientData?.registerNumber as number,
         group: groupLabel?groupLabel.toUpperCase():"Indefinido",
