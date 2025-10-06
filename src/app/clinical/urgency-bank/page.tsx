@@ -1,6 +1,5 @@
 import { orderByPriority } from "@/lib/filters";
 import { formater } from "@/lib/table-formater";
-import Header from "@/components/header";
 import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
 import Tooltip from "@/components/urgency-bank-tooltip";
@@ -8,6 +7,7 @@ import Search from "@/components/ui/search";
 import Refresh from "@/components/refresh";
 import { getPatients } from "@/backend/api/clinical/urgency-bank-api";
 import { getDateInSlashFormat } from "@/lib/date-formater";
+import Pagination from "@/components/pagination";
 
 export const dynamic = "force-dynamic";
 
@@ -25,7 +25,7 @@ export default async function Page({
     name: name, 
     priority: priority
   });
-  const patientRows = formater(patientData, {
+  const patientRows = formater(patientData.patients, {
     order: [
       "priorityType",
       "createdAt",
@@ -40,14 +40,11 @@ export default async function Page({
     }
   });
 
-  const summary = orderByPriority(await getPatients({ name })).summary;
+  const summary = orderByPriority((await getPatients({ name })).patients).summary;
 
   return(
     <main className="space-y-3">
       <Refresh />
-      <div className="mt-6">
-        <Header title="Banco de Urgência"/>
-      </div>
 
       <div className="flex lg:flex-row justify-between items-center m-0">
         <Alert 
@@ -79,6 +76,11 @@ export default async function Page({
           "Grupo Utente",
           "Tipo de Acesso"
         ]} 
+      />
+
+      <Pagination
+        availablePages={patientData.availablePages}
+        totalItems={patientData.totalItems} 
       />
     </main>
   );

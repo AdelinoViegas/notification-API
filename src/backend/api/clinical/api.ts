@@ -728,7 +728,7 @@ async function getPatientsInScreening({
   
       formated.push({
         id: patientData._id.toString(),
-        createdAt: patientData.createdAt,
+        createdAt: patient.createdAt,
         fullname: patientData.fullname,
         registerNumber: patientData?.registerNumber as number,
         group: groupLabel?groupLabel.toUpperCase():"Indefinido",
@@ -743,14 +743,13 @@ async function getPatientsInScreening({
       currentPage: page,
     }
 
-  }catch(err: unknown){
+  }catch {
     
     return {
       patients: [],
       totalItems: 0,
       availablePages: 0,
-      currentPage: page,
-      detail: err
+      currentPage: page
     }
   }
 }

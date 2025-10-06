@@ -210,7 +210,7 @@ export async function getBeds(nursingId?: string){
 
       formatedBeds.push({
         id: bed._id.toString(),
-        createdAt: new Date(),
+        createdAt: bed.createdAt,
         internalService: internalService?.name as string,
         section: section?.name as string,
         nursing: nursing?.name as string,

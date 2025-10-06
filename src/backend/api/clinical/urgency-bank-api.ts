@@ -83,20 +83,30 @@ async function getPatients({
         fullname: urgency.fullname,
         registerNumber: urgency?.registerNumber as number,
         accessType: accessTypeLabel.toUpperCase(),
-        createdAt: urgency.createdAt,
+        createdAt: patient.createdAt,
         group: groupLabel.toUpperCase(),
         priorityType: priorityToComponent.find((props)=>props._id === screening?.priority)?.label,
       });
     }
 
-    return name?orderByPriority(patientList.filter((item)=>item.fullname.match(new RegExp(`^${name}`, 'i')))).orderElements:
+    const _patients = name?orderByPriority(patientList.filter((item)=>item.fullname.match(new RegExp(`^${name}`, 'i')))).orderElements:
     priority?orderByPriority(patientList.filter((item)=>item.priorityType === priorityTranslator.find((props)=>props._id === priority)?.label)).orderElements:
     orderByPriority(patientList).orderElements;
 
-  }catch(e: unknown){
-    const err = e as Error;
-    console.log(err.message);
-    return [];
+    return {
+      patients: _patients,
+      totalItems: _patients.length,
+      availablePages: Math.ceil(_patients.length /10),
+      currentPage: 1,
+    }
+  }catch(e){
+    console.log(e);
+    return {
+      patients: [],
+      totalItems: 0,
+      availablePages: 1,
+      currentPage: 1,
+    };
   }
 }
 
