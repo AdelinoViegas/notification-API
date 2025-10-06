@@ -83,7 +83,7 @@ async function getPatients({
         fullname: urgency.fullname,
         registerNumber: urgency?.registerNumber as number,
         accessType: accessTypeLabel.toUpperCase(),
-        createdAt: urgency.createdAt,
+        createdAt: patient.createdAt,
         group: groupLabel.toUpperCase(),
         priorityType: priorityToComponent.find((props)=>props._id === screening?.priority)?.label,
       });
