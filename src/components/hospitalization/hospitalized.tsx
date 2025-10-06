@@ -5,6 +5,7 @@ import Pagination from "@/components/pagination";
 import Refresh from "@/components/refresh";
 import { getPatients } from "@/backend/api/clinical/hospitalization-api";
 import Filter from "./filter";
+import { getDataAndHoursFormat } from "@/lib/date-formater";
 
 export default async function Hospitalized({ page }: {
   pfn?: string;
@@ -22,6 +23,7 @@ export default async function Hospitalized({ page }: {
   const rows = formater(patients.patients, {
     filterKey: [
       "id",
+      "createdAt",
       "fullname",
       "nursing",
       "bed",
@@ -29,12 +31,17 @@ export default async function Hospitalized({ page }: {
       "user"
     ],
     order: [
+      "createdAt",
       "fullname",
       "nursing",
       "bed",
       "processNumber",
       "user"
-    ]
+    ],
+    transform: {
+      targetKey: "createdAt",
+      fn: e => getDataAndHoursFormat(new Date(e))
+    }
   });
   
   return (
@@ -59,6 +66,7 @@ export default async function Hospitalized({ page }: {
       <Table
         baseRowLink="/clinical/hospitalization/hosted"
         columns={[
+          "Data Registro",
           "Nome Completo", 
           "Enfermaria/Quarto", 
           "Nº da Cama",
