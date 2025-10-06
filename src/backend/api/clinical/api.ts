@@ -743,14 +743,13 @@ async function getPatientsInScreening({
       currentPage: page,
     }
 
-  }catch(err: unknown){
+  }catch {
     
     return {
       patients: [],
       totalItems: 0,
       availablePages: 0,
-      currentPage: page,
-      detail: err
+      currentPage: page
     }
   }
 }
