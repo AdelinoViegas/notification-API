@@ -1,11 +1,11 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
+import { FormEvent, useActionState, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import Accordium from "@/components/ui/accordium";
 import InputDetails from "@/components/ui/input-details";
-import Button from "@/components/ui/button";
+import ButtonEdit from "@/components/ui/button-edit";
 import { UploadExamBlock } from "@/components/forms/upload-exam-block";
 import { signOperatingRoom } from "@/backend/api/clinical/operating-room-api";
 
@@ -36,6 +36,15 @@ export default function PreoperativeEvaluation({
   }
 }){
   const [state, action] = useActionState(signOperatingRoom, { message:"", status: false });
+  const [ edit, setEdit ] = useState<Record<string, boolean>>({
+    medical: true,
+    allergies: true,
+    evaluation: true,
+    risk: true,
+    fasting: true,
+    medication: true,
+  }); 
+
   const router = useRouter();
 
   useEffect(()=>{
@@ -49,9 +58,19 @@ export default function PreoperativeEvaluation({
         toast.error(state.message);
   }, [state, router]);
 
+
+  const hangleButton = (event: FormEvent) => {
+    const submitter = (event.nativeEvent as SubmitEvent).submitter as HTMLButtonElement;
+    const location = submitter.dataset.location as string;
+    console.log(location);
+    if(submitter?.name === "update"){
+      setEdit( prev => ({...prev, [location]: !prev[location]}))
+    }
+  }
+
   return(
     <div>
-      <form {...{action}}>
+      <form {...{action}} onSubmit={hangleButton}>
         <input 
           className="hidden"
           name="scheduleId"
@@ -64,23 +83,35 @@ export default function PreoperativeEvaluation({
               textLabel="Descreva"
               rows={3}
               name="medicalAndsurgicalHistory"
+              disabled={!!preoperativeEvaluation.medicalAndsurgicalHistory && edit.medical}
               placeholder="Descreva os Históricos médicos e cirúrgicos"
               defaultValue={preoperativeEvaluation.medicalAndsurgicalHistory}
             />
 
-            <Button>Salvar</Button>
+           <ButtonEdit 
+            state={edit}
+            setState={setEdit}
+            value={preoperativeEvaluation.medicalAndsurgicalHistory}
+            location="medical"
+            />
           </Accordium>
 
           <Accordium title="Alergias">
             <InputDetails
               textLabel="Descreva"
               rows={3}
+              disabled={!!preoperativeEvaluation.allergies && edit.allergies}
               name="allergies"
               placeholder="Descreva os sintomas de alergia"
               defaultValue={preoperativeEvaluation.allergies}
             />
 
-              <Button>Salvar</Button>
+            <ButtonEdit 
+              state={edit}
+              setState={setEdit}
+              value={preoperativeEvaluation.allergies}
+              location="allergies"
+            />
           </Accordium>
           </div>
       </form>
@@ -107,59 +138,84 @@ export default function PreoperativeEvaluation({
           </Accordium>
       </div>
       
-      <form {...{action}}>
+      <form {...{action}} onSubmit={hangleButton}>
         <input 
           className="hidden"
           name="scheduleId"
           defaultValue={scheduleId}
         />
+
         <div className="flex flex-col gap-y-4 pb-8">
           <Accordium title="Estado clínico actual">
             <InputDetails
               textLabel="Descreva"
               rows={3}
+              disabled={!!preoperativeEvaluation.currentClinicalStatus && edit.evaluation}
               name="currentClinicalStatus"
               placeholder="Descreva os estado clínico"
               defaultValue={preoperativeEvaluation.currentClinicalStatus}
             />
 
-            <Button>Salvar</Button>
+            <ButtonEdit 
+              state={edit}
+              setState={setEdit}
+              value={preoperativeEvaluation.currentClinicalStatus}
+              location="evaluation"
+            />
           </Accordium>
 
           <Accordium title="Riscos cirúrgico">
             <InputDetails
               textLabel="Descreva"
               rows={3}
+              disabled={!!preoperativeEvaluation.surgicalRisk && edit.risk}
               name="surgicalRisk"
               placeholder="Descreva os riscos cirúrgicos"
               defaultValue={preoperativeEvaluation.surgicalRisk}
             />
 
-            <Button>Salvar</Button>
+            <ButtonEdit 
+              state={edit}
+              setState={setEdit}
+              value={preoperativeEvaluation.surgicalRisk}
+              location="risk"
+            />
           </Accordium>
 
           <Accordium title="Jejum confirmado">
             <InputDetails
               textLabel="Descreva"
               rows={3}
+              disabled={!!preoperativeEvaluation.fastingConfirmed && edit.fasting}
               name="fastingConfirmed"
               placeholder="Descreva os riscos cirúrgicos"
               defaultValue={preoperativeEvaluation.fastingConfirmed}
             />
 
-            <Button>Salvar</Button>
+            <ButtonEdit 
+              state={edit}
+              setState={setEdit}
+              value={preoperativeEvaluation.fastingConfirmed}
+              location="fasting"
+            />
           </Accordium>
 
           <Accordium title="Medicação prévia">
             <InputDetails
               textLabel="Descreva"
               rows={3}
+              disabled={!!preoperativeEvaluation.previousMedication && edit.medication}
               name="previousMedication"
               placeholder="Descreva as medicações prévias"
               defaultValue={preoperativeEvaluation.previousMedication}
             />
 
-            <Button>Salvar</Button>
+            <ButtonEdit 
+              state={edit}
+              setState={setEdit}
+              value={preoperativeEvaluation.previousMedication}
+              location="medication"
+            />
           </Accordium>
         </div>
       </form>

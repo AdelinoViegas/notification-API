@@ -1,15 +1,15 @@
 "use client";
 
-import { useActionState, useEffect, useRef } from "react";
+import { useActionState, useState, useEffect, FormEvent } from "react";
+import { toast } from "react-toastify";
+import { MdOutlineSaveAlt } from "react-icons/md";
+import { useRouter } from "next/navigation";
+import ButtonEdit from "@/components/ui/button-edit";
 import InputDetails from "@/components/ui/input-details";
 import Accordium from "@/components/ui/accordium";
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
 import { signOperatingRoom } from "@/backend/api/clinical/operating-room-api";
-import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
-//import { PiArchiveDuotone } from "react-icons/pi";
-//import { getScheduleSugery } from "@/backend/api/clinical/scheduling-api";
 
 export default function PatientIdentification({ 
   patientIdentification, 
@@ -23,8 +23,11 @@ export default function PatientIdentification({
   }
 }){
   const [state, action] = useActionState(signOperatingRoom, { message:"", status: false });
+  const [edit, setEdit] = useState<Record<string, boolean>>({
+    diagnosis: true,
+
+  });
   const router = useRouter();
-  const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(()=>{
     if(state.message)
@@ -36,9 +39,18 @@ export default function PatientIdentification({
       else
         toast.error(state.message);
   }, [state, router]);
+ 
+  const hangleButton = (event: FormEvent) => {
+    const submitter = (event.nativeEvent as SubmitEvent).submitter as HTMLButtonElement;
+    const location = submitter.dataset.location as string;
+    
+    if(submitter?.name === "update"){
+      setEdit( prev => ({...prev, [location]: !prev[location]}))
+    }
+  }
 
 	return (
-    <form {...{action}} ref={formRef}>
+    <form {...{action}} onSubmit={hangleButton}>
       <input
         className="hidden"
         name="scheduleId"
@@ -50,18 +62,25 @@ export default function PatientIdentification({
             <InputDetails
               textLabel="Descreva"
               rows={3}
+              disabled={!!patientIdentification.preoperativeDiagnosis && edit.diagnosis}
               name="preoperative-diagnosis"
               placeholder="Descreva o diagnóstico pré-operatório"  
               defaultValue={patientIdentification.preoperativeDiagnosis} 
             />
 
-            <Button>Salvar</Button>
+           <ButtonEdit
+              state={edit}
+              setState={setEdit}
+              value={patientIdentification.preoperativeDiagnosis}
+              location="diagnosis"
+           />
         </Accordium>
 
         <Accordium title="Consentimento informado">
             <InputDetails
               textLabel="Descreva"
               rows={3}
+              disabled={!edit}
               name="Informed-consent"
               placeholder="Descreva o consentimento informado" 
               defaultValue={patientIdentification.informedConsent} 
@@ -75,7 +94,10 @@ export default function PatientIdentification({
               defaultValue={patientIdentification.responsible} 
             />
 
-            <Button>Salvar</Button>
+            <Button>
+              <MdOutlineSaveAlt className="w-5" />
+              Salvar
+            </Button>
         </Accordium>
       </div>
     </form>

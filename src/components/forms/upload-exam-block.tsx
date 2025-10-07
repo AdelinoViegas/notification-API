@@ -2,13 +2,14 @@
 
 import { useActionState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { MdOutlineSaveAlt } from "react-icons/md";
 import InputField from "@/components/ui/input-field";
 import SubTitle from "@/components/ui/subtitle";
 import Button from "@/components/ui/button";
 import InputDetails from "@/components/ui/input-details";
 import { toast } from "react-toastify";
 import { uploadExternalExamFile } from "@/backend/api/clinical/operating-room-api";
-import ViewUserFile from "../view-user-file-client";
+import ViewUserFile from "@/components/view-user-file-client";
 
 export function UploadExamBlock({
   storageId,
@@ -92,7 +93,10 @@ export function UploadExamBlock({
           defaultValue={description}
       />
 
-      <Button>Salvar</Button>
+      <Button>
+        <MdOutlineSaveAlt className="w-5" />
+        Salvar
+      </Button>
     </form>
   )
 }
