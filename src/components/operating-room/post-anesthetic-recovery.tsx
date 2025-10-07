@@ -14,7 +14,6 @@ import { signOperatingRoom } from "@/backend/api/clinical/operating-room-api";
 type recovery = {
   postAnestheticRecovery:{
     checkInTime: Date,
-    checkOutTime: Date,
     vitalSignal: {
       date: Date,
       fr: number,
@@ -40,7 +39,6 @@ export default function PostAnestheticRecovery({
 scheduleId,
 postAnestheticRecovery:{  
   checkInTime,
-  checkOutTime,
   vitalSignal,
   levelofConsciousness:{
     motorActivity,
@@ -59,7 +57,6 @@ postAnestheticRecovery:{
   const [state, action] = useActionState(signOperatingRoom, { message:"", status: false });
   const router = useRouter();
   const startDate = checkInTime?checkInTime.toISOString().slice(0, 16):"";
-  const endDate = checkOutTime?checkOutTime?.toISOString().slice(0, 16):"";
 
   useEffect(()=>{
     if(state.message)
@@ -74,7 +71,7 @@ postAnestheticRecovery:{
 
   return(
     <div className="flex flex-col gap-y-4 py-8">         
-      <Accordium title="Horários de entrada e saída">
+      <Accordium title="Horários de entrada">
         <form {...{action}}>
           <input 
             className="hidden"
@@ -82,21 +79,13 @@ postAnestheticRecovery:{
             defaultValue={scheduleId}
           />
 
-          <div className="grid grid-cols-2 gap-x-4">
-            <InputField
-              textLabel="Hora de entrada"
-              type="datetime-local"
-              name="checkInTime"
-              defaultValue={startDate}
-            />
-
-            <InputField
-              textLabel="Hora de saída"
-              type="datetime-local"
-              name="checkOutTime"
-              defaultValue={endDate}
-            />
-          </div>
+          <InputField
+            className="w-96"
+            textLabel="Hora de entrada"
+            type="datetime-local"
+            name="checkInTime"
+            defaultValue={startDate}
+          />
 
           <Button>Salvar</Button>
         </form>
