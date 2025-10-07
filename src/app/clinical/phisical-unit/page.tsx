@@ -2,7 +2,6 @@ import Link from "next/link";
 import { BiPlus as PlusIcon } from "react-icons/bi";
 import { IoPerson } from "react-icons/io5";
 import { FaHospital, FaUserMd } from "react-icons/fa";
-import Header from "@/components/header";
 import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
@@ -49,11 +48,6 @@ export default async function Page({
 
   return (
     <main className="space-y-3">
-
-      <div className="mt-6">
-        <Header title="Unidades Físicas"/>
-      </div>
-
       <div className="flex gap-x-2">
         <Link href="/clinical/phisical-unit/sign">
           <Button className="flex gap-x-2">
