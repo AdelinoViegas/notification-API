@@ -37,10 +37,10 @@ export default function FinishOperatingRoom({ operatingRoomId }: { operatingRoom
   return(
     <div>
       <Button
-        className='bg-orange-500 flex items-center gap-3'
+        className='bg-orange-500 flex items-center gap-x-1'
         onClick={()=>setModalState(true)} 
         type="button">
-          <TiInputChecked className="size-5" />
+          <TiInputChecked />
           Concluir
       </Button>
 

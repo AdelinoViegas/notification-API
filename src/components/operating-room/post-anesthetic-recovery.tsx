@@ -1,13 +1,15 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
+import { FormEvent, useActionState, useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { MdOutlineSaveAlt } from "react-icons/md";
 import { useRouter } from "next/navigation";
 import Accordium from "@/components/ui/accordium";
 import Button from "@/components/ui/button";
 import InputDetails from "@/components/ui/input-details";
 import InputField from "@/components/ui/input-field";
 import Selection from "@/components/ui/selection";
+import ButtonEdit from "@/components/ui/button-edit";
 import VitalSignalInBlock from "@/components/vital-signals-block";
 import { signOperatingRoom } from "@/backend/api/clinical/operating-room-api";
 
@@ -55,6 +57,11 @@ postAnestheticRecovery:{
   scheduleId: string,
 }){
   const [state, action] = useActionState(signOperatingRoom, { message:"", status: false });
+  const [edit, setEdit] = useState<Record<string, boolean>>({
+    dateTime: true,
+    medication: true,
+    events: true,
+  });
   const router = useRouter();
   const startDate = checkInTime?checkInTime.toISOString().slice(0, 16):"";
 
@@ -69,10 +76,19 @@ postAnestheticRecovery:{
         toast.error(state.message);
   }, [state, router]);
 
+  const submitUpdate = (event: FormEvent) => {
+    const submitter = (event.nativeEvent as SubmitEvent).submitter as HTMLButtonElement;
+    const location = submitter.dataset.location as string;
+    
+    if(submitter?.name === "update"){
+      setEdit( prev => ({...prev, [location]: !prev[location]}))
+    }
+  }
+
   return(
     <div className="flex flex-col gap-y-4 py-8">         
       <Accordium title="Horários de entrada">
-        <form {...{action}}>
+        <form {...{action}} onSubmit={submitUpdate}>
           <input 
             className="hidden"
             name="scheduleId"
@@ -83,11 +99,17 @@ postAnestheticRecovery:{
             className="w-96"
             textLabel="Hora de entrada"
             type="datetime-local"
+            disabled={!!startDate && edit.dateTime}
             name="checkInTime"
             defaultValue={startDate}
           />
 
-          <Button>Salvar</Button>
+          <ButtonEdit
+            state={edit}
+            setState={setEdit}
+            value={startDate}
+            location="dateTime"
+          />
         </form>
       </Accordium>
       
@@ -170,12 +192,15 @@ postAnestheticRecovery:{
             />
           </div>
 
-          <Button>Salvar</Button>
+          <Button>
+            <MdOutlineSaveAlt className="w-5" />
+            Salvar
+          </Button>
         </form>
       </Accordium>
       
       <Accordium title="Medicação administrada">
-        <form {...{action}}>
+        <form {...{action}} onSubmit={submitUpdate}>
           <input 
             className="hidden"
             name="scheduleId"
@@ -186,16 +211,22 @@ postAnestheticRecovery:{
             textLabel="Medicação administrada"
             name="medication"
             rows={3}
+            disabled={!!medicationAdministered && edit.medication}
             placeholder="descreva"
             defaultValue={medicationAdministered}
           />
 
-          <Button>Salvar</Button>
+          <ButtonEdit
+            state={edit}
+            setState={setEdit}
+            value={medicationAdministered}
+            location="medication"
+          />
         </form>
       </Accordium>
 
       <Accordium title="Ocorrências pós-anestésicas imediatas">
-        <form {...{action}}>
+        <form {...{action}} onSubmit={submitUpdate}>
           <input 
             className="hidden"
             name="scheduleId"
@@ -206,11 +237,17 @@ postAnestheticRecovery:{
             textLabel="Ocorrências pós-anestésicas imediatas"
             name="postAnestheticoccurrences"
             rows={3}
+            disabled={!!postAnestheticEvents && edit.events}
             placeholder="descreva"
             defaultValue={postAnestheticEvents}
           />
 
-          <Button>Salvar</Button>
+          <ButtonEdit
+            state={edit}
+            setState={setEdit}
+            value={postAnestheticEvents}
+            location="events"
+          />
         </form>
       </Accordium>
     </div>

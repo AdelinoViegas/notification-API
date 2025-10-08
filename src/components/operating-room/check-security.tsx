@@ -1,12 +1,12 @@
   "use client";
 
 import { useActionState, useEffect } from "react";
-import { InternalComponent, RenderUIElement } from "@/components/global-component";
-import Button from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { MdOutlineSaveAlt } from "react-icons/md";
+import { InternalComponent, RenderUIElement } from "@/components/global-component";
+import Button from "@/components/ui/button";
 import { signOperatingRoom } from "@/backend/api/clinical/operating-room-api";
-
   
   export function CheckSecurity({
     scheduleId,
@@ -54,7 +54,10 @@ import { signOperatingRoom } from "@/backend/api/clinical/operating-room-api";
             ))}
           </div>
   
-          <Button>Salvar</Button>
+          <Button>
+            <MdOutlineSaveAlt className="w-5" />
+            Salvar
+          </Button>
         </form>
     );
   }

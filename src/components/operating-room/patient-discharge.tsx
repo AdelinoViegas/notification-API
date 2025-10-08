@@ -1,14 +1,16 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
+import { FormEvent, useActionState, useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { MdOutlineSaveAlt } from "react-icons/md";
+import { useRouter } from "next/navigation";
 import Button from "@/components/ui/button";
 import InputField from "@/components/ui/input-field";
+import ButtonEdit from "@/components/ui/button-edit";
 import InputDetails from "@/components/ui/input-details";
 import Accordium from "@/components/ui/accordium";
-import { useRouter } from "next/navigation";
+import FinishOperatingRoom from "@/components/finish-operating-room";
 import { signOperatingRoom } from "@/backend/api/clinical/operating-room-api";
-import FinishOperatingRoom from "../finish-operating-room";
 
 export default function PatientDischarge({ 
   requestingService,
@@ -32,6 +34,9 @@ export default function PatientDischarge({
   }
 }){
   const [state, action] = useActionState(signOperatingRoom, { message:"", status: false });
+  const [edit, setEdit] = useState<Record<string, boolean>>({
+    info: true,
+  });
   const router = useRouter();
 
   useEffect(()=>{
@@ -45,8 +50,17 @@ export default function PatientDischarge({
         toast.error(state.message);
   }, [state, router]);
 
+  const submitUpdate = (event: FormEvent) => {
+    const submitter = (event.nativeEvent as SubmitEvent).submitter as HTMLButtonElement;
+    const location = submitter.dataset.location as string;
+    
+    if(submitter?.name === "update"){
+      setEdit( prev => ({...prev, [location]: !prev[location]}))
+    }
+  }
+
   return(
-    <form {...{action}}>
+    <form {...{action}} onSubmit={submitUpdate}>
       <input 
         className="hidden"
         name="scheduleId"
@@ -76,12 +90,18 @@ export default function PatientDischarge({
           <InputDetails
             textLabel="Informação de cirúgica"
             rows={3}
+            disabled={!!patientDischarge.surgicalInformation && edit.info}
             name="surgicalInformation"
             placeholder="descreva"
             defaultValue={patientDischarge.surgicalInformation}
           />
 
-          <Button>Salvar</Button>
+          <ButtonEdit
+            state={edit}
+            setState={setEdit}
+            value={patientDischarge.surgicalInformation}
+            location="info"
+          />
         </Accordium>
 
         <Accordium title="Indicações pós-operatórias imediatas">
@@ -117,7 +137,10 @@ export default function PatientDischarge({
             defaultValue={patientDischarge.postOperativeIndications.antibiotics}
           />
 
-          <Button>Salvar</Button>
+          <Button>
+            <MdOutlineSaveAlt className="w-5" />
+            Salvar
+          </Button>
         </Accordium>
       </div>
     </form>

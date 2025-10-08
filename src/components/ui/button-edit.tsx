@@ -17,10 +17,10 @@ export default function ButtonEdit({
   value: string,
 }){
   const [data, setData] = useState(false); 
-  console.log(data);
-useEffect(() => {
-  setData(state[location]);
-}, [state, location]);
+
+  useEffect(() => {
+    setData(state[location]);
+  }, [state, location]);
 
   return (
     <div className="flex gap-x-2">

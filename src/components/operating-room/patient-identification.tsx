@@ -40,7 +40,7 @@ export default function PatientIdentification({
         toast.error(state.message);
   }, [state, router]);
  
-  const hangleButton = (event: FormEvent) => {
+  const submitUpdate = (event: FormEvent) => {
     const submitter = (event.nativeEvent as SubmitEvent).submitter as HTMLButtonElement;
     const location = submitter.dataset.location as string;
     
@@ -50,7 +50,7 @@ export default function PatientIdentification({
   }
 
 	return (
-    <form {...{action}} onSubmit={hangleButton}>
+    <form {...{action}} onSubmit={submitUpdate}>
       <input
         className="hidden"
         name="scheduleId"

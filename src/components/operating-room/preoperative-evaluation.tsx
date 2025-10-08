@@ -59,7 +59,7 @@ export default function PreoperativeEvaluation({
   }, [state, router]);
 
 
-  const hangleButton = (event: FormEvent) => {
+  const submitUpdate = (event: FormEvent) => {
     const submitter = (event.nativeEvent as SubmitEvent).submitter as HTMLButtonElement;
     const location = submitter.dataset.location as string;
     console.log(location);
@@ -70,7 +70,7 @@ export default function PreoperativeEvaluation({
 
   return(
     <div>
-      <form {...{action}} onSubmit={hangleButton}>
+      <form {...{action}} onSubmit={submitUpdate}>
         <input 
           className="hidden"
           name="scheduleId"
@@ -138,7 +138,7 @@ export default function PreoperativeEvaluation({
           </Accordium>
       </div>
       
-      <form {...{action}} onSubmit={hangleButton}>
+      <form {...{action}} onSubmit={submitUpdate}>
         <input 
           className="hidden"
           name="scheduleId"

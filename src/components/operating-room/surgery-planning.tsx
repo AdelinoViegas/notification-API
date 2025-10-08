@@ -1,11 +1,13 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
+import { FormEvent, useActionState, useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { MdOutlineSaveAlt } from "react-icons/md";
 import { useRouter } from "next/navigation";
 import InputDetails from "@/components/ui/input-details";
 import Accordium from "@/components/ui/accordium";
 import Button from "@/components/ui/button";
+import ButtonEdit from "@/components/ui/button-edit";
 import { signOperatingRoom } from "@/backend/api/clinical/operating-room-api";
 
 export default function SugeryPlanning({ 
@@ -21,6 +23,11 @@ export default function SugeryPlanning({
   }
 }){
   const [state, action] = useActionState(signOperatingRoom, { message:"", status: false });
+  const [edit, setEdit] = useState<Record<string, boolean>>({
+    equipment: true,
+    devices: true,
+
+  });
   const router = useRouter();
 
   useEffect(()=>{
@@ -34,8 +41,17 @@ export default function SugeryPlanning({
         toast.error(state.message);
   }, [state, router]);
 
+  const submitUpdate = (event: FormEvent) => {
+    const submitter = (event.nativeEvent as SubmitEvent).submitter as HTMLButtonElement;
+    const location = submitter.dataset.location as string;
+    
+    if(submitter?.name === "update"){
+      setEdit( prev => ({...prev, [location]: !prev[location]}))
+    }
+  }
+
   return(
-    <form {...{action}}>
+    <form {...{action}} onSubmit={submitUpdate}>
       <div className="flex flex-col gap-y-3">
         <input 
           className="hidden"
@@ -60,7 +76,10 @@ export default function SugeryPlanning({
             defaultValue={sugeryPlanning.designatedRoom}
           />
 
-          <Button>Salvar</Button>
+          <Button>
+            <MdOutlineSaveAlt className="w-5" />
+            Salvar
+          </Button>
         </Accordium>
         
         <Accordium title="Materiais e equipamentos necessários">
@@ -68,11 +87,17 @@ export default function SugeryPlanning({
             textLabel="Materiais e equipamentos necessários"
             placeholder="Descreva"
             rows={3}
+            disabled={!!sugeryPlanning.materialsAndEquipment && edit.equipment}
             name="materialsAndEquipment"
             defaultValue={sugeryPlanning.materialsAndEquipment}
           />
 
-          <Button>Salvar</Button>
+          <ButtonEdit
+            state={edit}
+            setState={setEdit}
+            value={sugeryPlanning.materialsAndEquipment}
+            location="equipment"
+          />
         </Accordium>
 
         <Accordium title="Dispositivos implantáveis">
@@ -80,11 +105,17 @@ export default function SugeryPlanning({
             textLabel="Dispositivos implantáveis"
             placeholder="Descreva"
             rows={3}
+            disabled={!!sugeryPlanning.implantableDevices && edit.equipment}
             name="implantableDevices"
             defaultValue={sugeryPlanning.implantableDevices}
           />
 
-          <Button>Salvar</Button>
+          <ButtonEdit
+            state={edit}
+            setState={setEdit}
+            value={sugeryPlanning.implantableDevices}
+            location="devices"
+          />
         </Accordium>
       </div>
     </form>

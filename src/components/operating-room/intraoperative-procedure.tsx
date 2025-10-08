@@ -1,11 +1,12 @@
 "use client";
 
 import { useActionState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { MdOutlineSaveAlt } from "react-icons/md";
+import { toast } from "react-toastify";
 import Button from "@/components/ui/button";
 import InputDetails from "@/components/ui/input-details";
 import InputField from "@/components/ui/input-field";
-import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
 import { signOperatingRoom } from "@/backend/api/clinical/operating-room-api";
 
 export default function IntraoperativeProcedure({ 
@@ -122,7 +123,10 @@ export default function IntraoperativeProcedure({
           />  
         </div>
 
-        <Button>Salvar</Button>
+        <Button>
+          <MdOutlineSaveAlt className="w-5" />
+          Salvar
+        </Button>
       </form>
   )
 }
