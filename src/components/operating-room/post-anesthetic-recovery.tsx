@@ -2,10 +2,8 @@
 
 import { FormEvent, useActionState, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { MdOutlineSaveAlt } from "react-icons/md";
 import { useRouter } from "next/navigation";
 import Accordium from "@/components/ui/accordium";
-import Button from "@/components/ui/button";
 import InputDetails from "@/components/ui/input-details";
 import InputField from "@/components/ui/input-field";
 import Selection from "@/components/ui/selection";
@@ -61,6 +59,11 @@ postAnestheticRecovery:{
     dateTime: true,
     medication: true,
     events: true,
+    activity: true,
+    respiration: true,
+    circulation: true,
+    consciousness: true,
+    saturation: true,
   });
   const router = useRouter();
   const startDate = checkInTime?checkInTime.toISOString().slice(0, 16):"";
@@ -78,11 +81,10 @@ postAnestheticRecovery:{
 
   const submitUpdate = (event: FormEvent) => {
     const submitter = (event.nativeEvent as SubmitEvent).submitter as HTMLButtonElement;
-    const location = submitter.dataset.location as string;
-    
-    if(submitter?.name === "update"){
-      setEdit( prev => ({...prev, [location]: !prev[location]}))
-    }
+
+    if(submitter?.name === "update")
+      for(const value of JSON.parse(submitter.dataset.location as string) as string[])
+        setEdit( prev => ({...prev, [value]: !prev[value]}));
   }
 
   return(
@@ -107,8 +109,8 @@ postAnestheticRecovery:{
           <ButtonEdit
             state={edit}
             setState={setEdit}
-            value={startDate}
-            location="dateTime"
+            value={[startDate].filter(Boolean)}
+            location={["dateTime"].filter(Boolean)}
           />
         </form>
       </Accordium>
@@ -116,7 +118,7 @@ postAnestheticRecovery:{
       <VitalSignalInBlock {...{vitalSignal}} {...{scheduleId}} {...{action}}/>
 
       <Accordium title="Nível de conciência">
-        <form {...{action}}>
+        <form {...{action}} onSubmit={submitUpdate}>
           <input 
             className="hidden"
             name="scheduleId"
@@ -124,43 +126,73 @@ postAnestheticRecovery:{
           />
 
           <div className="grid grid-cols-2 gap-x-4">
-            <Selection
-              label="Actividade Motora"
-              options={[
+            {!edit.activity?
+              <Selection
+                label="Actividade Motora"
+                options={[
+                  {_id:"0", label:"Incapaz de se mover"},
+                  {_id:"1", label:"Capaz de mover 2 membros"},
+                  {_id:"2", label:"Capaz de mover 4 membros"},
+                ]}
+                name="motorActivity"
+              />  
+            :
+              <InputField
+              textLabel="Actividade Motora"
+              disabled
+              defaultValue={[
                 {_id:"0", label:"Incapaz de se mover"},
                 {_id:"1", label:"Capaz de mover 2 membros"},
                 {_id:"2", label:"Capaz de mover 4 membros"},
-              ]}
-              name="motorActivity"
-              required
-              defaultValue={motorActivity}
-            />
+              ].find( value => Number(value._id) === motorActivity)?.label}
+              />
+            }
 
-            <Selection
-              label="Respiração"
-              options={[
+            {!edit.respiration?
+              <Selection
+                label="Respiração"
+                options={[
+                  {_id:"0", label:"Apneia"},
+                  {_id:"1", label:"Dispneia ou respira superficial"},
+                  {_id:"2", label:"Respira profundamente e tosse"},
+                ]}
+                name="respiration"
+              />
+            :
+             <InputField
+              textLabel="Respiração"
+              disabled
+              defaultValue={[
                 {_id:"0", label:"Apneia"},
                 {_id:"1", label:"Dispneia ou respira superficial"},
                 {_id:"2", label:"Respira profundamente e tosse"},
-              ]}
-              name="respiration"
-              required
-              defaultValue={respiration}
-            />
+              ].find( value => Number(value._id) ===respiration)?.label}
+             />
+            }
 
-            <Selection
-              label="Circulação"
-              options={[
+            {!edit.circulation?
+              <Selection
+                label="Circulação"
+                options={[
+                  {_id:"0", label:"P/A alterada em >= 50% do valor pré-anestésico"},
+                  {_id:"1", label:"P/A dentro de +/-20% do valor pré-anestésico"},
+                  {_id:"2", label:"P/A dentro de +/-20% do valor pré-anestésico"},
+                ]}
+                name="circulation"
+              />
+            :
+             <InputField
+              textLabel="Circulação"
+              disabled
+              defaultValue={[
                 {_id:"0", label:"P/A alterada em >= 50% do valor pré-anestésico"},
                 {_id:"1", label:"P/A dentro de +/-20% do valor pré-anestésico"},
                 {_id:"2", label:"P/A dentro de +/-20% do valor pré-anestésico"},
-              ]}
-              name="circulation"
-              required
-              defaultValue={circulation}
-            />
+              ].find( value => Number(value._id) === circulation)?.label}
+             />
+            }
 
-            <Selection
+            {!edit.consciousness?<Selection
               label="Consciência"
               options={[
                 {_id:"0", label:"Não desperta"},
@@ -168,11 +200,20 @@ postAnestheticRecovery:{
                 {_id:"2", label:"Acordado e orientado"},
               ]}
               name="consciousness"
-              required
-              defaultValue={consciousness}
             />
+            :
+             <InputField
+              textLabel="Consciência"
+              disabled
+              defaultValue={[
+                {_id:"0", label:"P/A alterada em >= 50% do valor pré-anestésico"},
+                {_id:"1", label:"P/A dentro de +/-20% do valor pré-anestésico"},
+                {_id:"2", label:"P/A dentro de +/-20% do valor pré-anestésico"},
+              ].find( value => Number(value._id) === consciousness)?.label}
+             />
+            }
 
-            <Selection
+            {!edit.saturation?<Selection
               label="Saturação O2"
               options={[
                 {_id:"0", label:"SpO2 < 90% com O2"},
@@ -180,9 +221,18 @@ postAnestheticRecovery:{
                 {_id:"2", label:"SpO2 > 92% em ar ambiente"},
               ]}
               name="saturation"
-              required
-              defaultValue={saturation}
             />
+            :
+             <InputField
+              textLabel="Saturação O2"
+              disabled
+              defaultValue={[
+                {_id:"0", label:"SpO2 < 90% com O2"},
+                {_id:"1", label:"SpO2 > 90% com O2"},
+                {_id:"2", label:"SpO2 > 92% em ar ambiente"},
+              ].find( value => Number(value._id) === saturation)?.label}
+             />
+            }
 
             <InputField
               textLabel="Resultado"
@@ -192,10 +242,24 @@ postAnestheticRecovery:{
             />
           </div>
 
-          <Button>
-            <MdOutlineSaveAlt className="w-5" />
-            Salvar
-          </Button>
+          <ButtonEdit
+            state={edit}
+            setState={setEdit}
+            value={[
+              String(motorActivity), 
+              String(respiration), 
+              String(circulation),
+              String(consciousness),
+              String(saturation)
+            ].filter(Boolean)}
+            location={[
+              "activity",
+              "respiration",
+              "circulation",
+              "consciousness",
+              "saturation"
+            ].filter(Boolean)}
+          />
         </form>
       </Accordium>
       
@@ -219,8 +283,8 @@ postAnestheticRecovery:{
           <ButtonEdit
             state={edit}
             setState={setEdit}
-            value={medicationAdministered}
-            location="medication"
+            value={[medicationAdministered].filter(Boolean)}
+            location={["medication"].filter(Boolean)}
           />
         </form>
       </Accordium>
@@ -245,8 +309,8 @@ postAnestheticRecovery:{
           <ButtonEdit
             state={edit}
             setState={setEdit}
-            value={postAnestheticEvents}
-            location="events"
+            value={[postAnestheticEvents].filter(Boolean)}
+            location={["events"].filter(Boolean)}
           />
         </form>
       </Accordium>

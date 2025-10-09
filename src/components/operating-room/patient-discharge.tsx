@@ -99,8 +99,8 @@ export default function PatientDischarge({
           <ButtonEdit
             state={edit}
             setState={setEdit}
-            value={patientDischarge.surgicalInformation}
-            location="info"
+            value={[patientDischarge.surgicalInformation]}
+            location={["info"]}
           />
         </Accordium>
 

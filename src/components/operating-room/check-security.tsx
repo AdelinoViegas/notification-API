@@ -1,11 +1,9 @@
   "use client";
 
-import { useActionState, useEffect } from "react";
+import { /*FormEvent,*/ useActionState, useEffect/*, useState */} from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { MdOutlineSaveAlt } from "react-icons/md";
 import { InternalComponent, RenderUIElement } from "@/components/global-component";
-import Button from "@/components/ui/button";
 import { signOperatingRoom } from "@/backend/api/clinical/operating-room-api";
   
   export function CheckSecurity({
@@ -16,6 +14,16 @@ import { signOperatingRoom } from "@/backend/api/clinical/operating-room-api";
     scheduleId: string, 
   }){
     const [ state, action ] = useActionState(signOperatingRoom, { message:"", status: false});
+    /*const [ edit, setEdit ] = useState<Record<string, boolean>>({
+      medical: true,
+      allergies: true,
+      evaluation: true,
+      risk: true,
+      fasting: true,
+      medication: true,
+      description: true,
+      result: true,
+    }); */
     const router = useRouter(); 
     
     useEffect(()=>{
@@ -28,9 +36,17 @@ import { signOperatingRoom } from "@/backend/api/clinical/operating-room-api";
         else
           toast.error(state.message);
     }, [state, router]);
+
+    /*const submitUpdate = (event: FormEvent) => {
+      const submitter = (event.nativeEvent as SubmitEvent).submitter as HTMLButtonElement;
+  
+      if(submitter?.name === "update")
+        for(const value of JSON.parse(submitter.dataset.location as string) as string[])
+          setEdit( prev => ({...prev, [value]: !prev[value]}));
+    }*/
   
     return(
-        <form {...{action}}>
+        <form {...{action}} >
           <input
             className="hidden"
             name="scheduleId"
@@ -54,10 +70,12 @@ import { signOperatingRoom } from "@/backend/api/clinical/operating-room-api";
             ))}
           </div>
   
-          <Button>
-            <MdOutlineSaveAlt className="w-5" />
-            Salvar
-          </Button>
+          {/*<ButtonEdit 
+            state={edit}
+            setState={setEdit}
+            value={[preoperativeEvaluation.currentClinicalStatus].filter(Boolean)}
+            location={["evaluation"].filter(Boolean)}
+          />*/}
         </form>
     );
   }

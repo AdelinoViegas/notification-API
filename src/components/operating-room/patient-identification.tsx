@@ -2,13 +2,11 @@
 
 import { useActionState, useState, useEffect, FormEvent } from "react";
 import { toast } from "react-toastify";
-import { MdOutlineSaveAlt } from "react-icons/md";
 import { useRouter } from "next/navigation";
 import ButtonEdit from "@/components/ui/button-edit";
 import InputDetails from "@/components/ui/input-details";
 import Accordium from "@/components/ui/accordium";
 import InputField from "@/components/ui/input-field";
-import Button from "@/components/ui/button";
 import { signOperatingRoom } from "@/backend/api/clinical/operating-room-api";
 
 export default function PatientIdentification({ 
@@ -25,7 +23,8 @@ export default function PatientIdentification({
   const [state, action] = useActionState(signOperatingRoom, { message:"", status: false });
   const [edit, setEdit] = useState<Record<string, boolean>>({
     diagnosis: true,
-
+    consent: true, 
+    responsible: true,
   });
   const router = useRouter();
 
@@ -42,11 +41,10 @@ export default function PatientIdentification({
  
   const submitUpdate = (event: FormEvent) => {
     const submitter = (event.nativeEvent as SubmitEvent).submitter as HTMLButtonElement;
-    const location = submitter.dataset.location as string;
-    
-    if(submitter?.name === "update"){
-      setEdit( prev => ({...prev, [location]: !prev[location]}))
-    }
+
+    if(submitter?.name === "update")
+      for(const value of JSON.parse(submitter.dataset.location as string) as string[])
+        setEdit( prev => ({...prev, [value]: !prev[value]}));
   }
 
 	return (
@@ -71,8 +69,8 @@ export default function PatientIdentification({
            <ButtonEdit
               state={edit}
               setState={setEdit}
-              value={patientIdentification.preoperativeDiagnosis}
-              location="diagnosis"
+              value={[patientIdentification.preoperativeDiagnosis].filter(Boolean)}
+              location={["diagnosis"].filter(Boolean)}
            />
         </Accordium>
 
@@ -80,7 +78,7 @@ export default function PatientIdentification({
             <InputDetails
               textLabel="Descreva"
               rows={3}
-              disabled={!edit}
+              disabled={!!patientIdentification.informedConsent && edit.responsible}
               name="Informed-consent"
               placeholder="Descreva o consentimento informado" 
               defaultValue={patientIdentification.informedConsent} 
@@ -90,14 +88,20 @@ export default function PatientIdentification({
               className="w-96"
               textLabel="Nome do responsável"
               name="responsible"
+              disabled={!!patientIdentification.responsible && edit.responsible}
               placeholder="Digite o responsável do paciente"
               defaultValue={patientIdentification.responsible} 
             />
 
-            <Button>
-              <MdOutlineSaveAlt className="w-5" />
-              Salvar
-            </Button>
+           <ButtonEdit
+              state={edit}
+              setState={setEdit}
+              value={[
+                patientIdentification.informedConsent, 
+                patientIdentification.responsible
+              ].filter(Boolean)}
+              location={["consent", "responsible"].filter(Boolean)}
+           />
         </Accordium>
       </div>
     </form>

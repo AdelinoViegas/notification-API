@@ -2,11 +2,9 @@
 
 import { FormEvent, useActionState, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { MdOutlineSaveAlt } from "react-icons/md";
 import { useRouter } from "next/navigation";
 import InputDetails from "@/components/ui/input-details";
 import Accordium from "@/components/ui/accordium";
-import Button from "@/components/ui/button";
 import ButtonEdit from "@/components/ui/button-edit";
 import { signOperatingRoom } from "@/backend/api/clinical/operating-room-api";
 
@@ -26,7 +24,8 @@ export default function SugeryPlanning({
   const [edit, setEdit] = useState<Record<string, boolean>>({
     equipment: true,
     devices: true,
-
+    room: true, 
+    team: true,
   });
   const router = useRouter();
 
@@ -43,11 +42,10 @@ export default function SugeryPlanning({
 
   const submitUpdate = (event: FormEvent) => {
     const submitter = (event.nativeEvent as SubmitEvent).submitter as HTMLButtonElement;
-    const location = submitter.dataset.location as string;
-    
-    if(submitter?.name === "update"){
-      setEdit( prev => ({...prev, [location]: !prev[location]}))
-    }
+
+    if(submitter?.name === "update")
+      for(const value of JSON.parse(submitter.dataset.location as string) as string[])
+        setEdit( prev => ({...prev, [value]: !prev[value]}));
   }
 
   return(
@@ -64,6 +62,7 @@ export default function SugeryPlanning({
             textLabel="Equipa cirúrgica"
             placeholder="Descreva a equipa"
             rows={3}
+            disabled={!!sugeryPlanning.surgicalTeam && edit.team}
             name="surgicalTeam"
             defaultValue={sugeryPlanning.surgicalTeam}
           />
@@ -72,14 +71,20 @@ export default function SugeryPlanning({
             textLabel="Sala designada"
             placeholder="Descreva a sala"
             rows={3}
+            disabled={!!sugeryPlanning.designatedRoom && edit.room}
             name="designatedRoom"
             defaultValue={sugeryPlanning.designatedRoom}
           />
 
-          <Button>
-            <MdOutlineSaveAlt className="w-5" />
-            Salvar
-          </Button>
+          <ButtonEdit
+            state={edit}
+            setState={setEdit}
+            value={[
+              sugeryPlanning.surgicalTeam,
+              sugeryPlanning.designatedRoom
+            ].filter(Boolean)}
+            location={["room", "team"].filter(Boolean)}
+          />
         </Accordium>
         
         <Accordium title="Materiais e equipamentos necessários">
@@ -95,8 +100,8 @@ export default function SugeryPlanning({
           <ButtonEdit
             state={edit}
             setState={setEdit}
-            value={sugeryPlanning.materialsAndEquipment}
-            location="equipment"
+            value={[sugeryPlanning.materialsAndEquipment].filter(Boolean)}
+            location={["equipment"].filter(Boolean)}
           />
         </Accordium>
 
@@ -113,8 +118,8 @@ export default function SugeryPlanning({
           <ButtonEdit
             state={edit}
             setState={setEdit}
-            value={sugeryPlanning.implantableDevices}
-            location="devices"
+            value={[sugeryPlanning.implantableDevices].filter(Boolean)}
+            location={["devices"].filter(Boolean)}
           />
         </Accordium>
       </div>

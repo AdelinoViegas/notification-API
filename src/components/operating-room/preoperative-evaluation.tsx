@@ -43,6 +43,8 @@ export default function PreoperativeEvaluation({
     risk: true,
     fasting: true,
     medication: true,
+    description: true,
+    result: true,
   }); 
 
   const router = useRouter();
@@ -58,16 +60,14 @@ export default function PreoperativeEvaluation({
         toast.error(state.message);
   }, [state, router]);
 
-
   const submitUpdate = (event: FormEvent) => {
     const submitter = (event.nativeEvent as SubmitEvent).submitter as HTMLButtonElement;
-    const location = submitter.dataset.location as string;
-    console.log(location);
-    if(submitter?.name === "update"){
-      setEdit( prev => ({...prev, [location]: !prev[location]}))
-    }
-  }
 
+    if(submitter?.name === "update")
+      for(const value of JSON.parse(submitter.dataset.location as string) as string[])
+        setEdit( prev => ({...prev, [value]: !prev[value]}));
+  }
+   
   return(
     <div>
       <form {...{action}} onSubmit={submitUpdate}>
@@ -91,8 +91,8 @@ export default function PreoperativeEvaluation({
            <ButtonEdit 
             state={edit}
             setState={setEdit}
-            value={preoperativeEvaluation.medicalAndsurgicalHistory}
-            location="medical"
+            value={[preoperativeEvaluation.medicalAndsurgicalHistory].filter(Boolean)}
+            location={["medical"].filter(Boolean)}
             />
           </Accordium>
 
@@ -109,8 +109,8 @@ export default function PreoperativeEvaluation({
             <ButtonEdit 
               state={edit}
               setState={setEdit}
-              value={preoperativeEvaluation.allergies}
-              location="allergies"
+              value={[preoperativeEvaluation.allergies].filter(Boolean)}
+              location={["allergies"].filter(Boolean)}
             />
           </Accordium>
           </div>
@@ -118,7 +118,9 @@ export default function PreoperativeEvaluation({
       
       <div className="flex flex-col gap-y-4 py-4">
           <Accordium title="Exames laboratoriais">
-              <UploadExamBlock 
+              <UploadExamBlock
+                value={edit}
+                setValue={setEdit} 
                 typeOfExam="laboratory"
                 storageId={preoperativeEvaluation.laboratoryTests.laboratoryStorageId}
                 description={preoperativeEvaluation.laboratoryTests.description}
@@ -129,6 +131,8 @@ export default function PreoperativeEvaluation({
 
           <Accordium title="Exames imagiológicos">
               <UploadExamBlock
+                value={edit}
+                setValue={setEdit} 
                 typeOfExam="imaging"
                 storageId={preoperativeEvaluation.imagingTests.imagingStorageId}
                 description={preoperativeEvaluation.imagingTests.description}
@@ -159,8 +163,8 @@ export default function PreoperativeEvaluation({
             <ButtonEdit 
               state={edit}
               setState={setEdit}
-              value={preoperativeEvaluation.currentClinicalStatus}
-              location="evaluation"
+              value={[preoperativeEvaluation.currentClinicalStatus].filter(Boolean)}
+              location={["evaluation"].filter(Boolean)}
             />
           </Accordium>
 
@@ -177,8 +181,8 @@ export default function PreoperativeEvaluation({
             <ButtonEdit 
               state={edit}
               setState={setEdit}
-              value={preoperativeEvaluation.surgicalRisk}
-              location="risk"
+              value={[preoperativeEvaluation.surgicalRisk].filter(Boolean)}
+              location={["risk"].filter(Boolean)}
             />
           </Accordium>
 
@@ -195,8 +199,8 @@ export default function PreoperativeEvaluation({
             <ButtonEdit 
               state={edit}
               setState={setEdit}
-              value={preoperativeEvaluation.fastingConfirmed}
-              location="fasting"
+              value={[preoperativeEvaluation.fastingConfirmed].filter(Boolean)}
+              location={["fasting"].filter(Boolean)}
             />
           </Accordium>
 
@@ -213,8 +217,8 @@ export default function PreoperativeEvaluation({
             <ButtonEdit 
               state={edit}
               setState={setEdit}
-              value={preoperativeEvaluation.previousMedication}
-              location="medication"
+              value={[preoperativeEvaluation.previousMedication].filter(Boolean)}
+              location={["medication"].filter(Boolean)}
             />
           </Accordium>
         </div>

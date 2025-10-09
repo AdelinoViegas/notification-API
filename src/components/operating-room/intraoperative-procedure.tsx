@@ -1,13 +1,12 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
+import { FormEvent, useActionState, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { MdOutlineSaveAlt } from "react-icons/md";
 import { toast } from "react-toastify";
-import Button from "@/components/ui/button";
 import InputDetails from "@/components/ui/input-details";
 import InputField from "@/components/ui/input-field";
 import { signOperatingRoom } from "@/backend/api/clinical/operating-room-api";
+import ButtonEdit from "../ui/button-edit";
 
 export default function IntraoperativeProcedure({ 
   intraoperativeProcedure, 
@@ -27,6 +26,17 @@ export default function IntraoperativeProcedure({
     }
 }){
   const [state, action] = useActionState(signOperatingRoom, { message:"", status: false });
+  const [edit, setEdit] = useState<Record<string, boolean>>({
+    startDate: true,
+    endDate: true,
+    anesthesia: true,
+    technique: true,
+    implants: true,
+    intraoperative: true,
+    fluid: true,
+    medication: true,
+    other: true,
+  });
   const router = useRouter();
   const startTime = intraoperativeProcedure.startTime?intraoperativeProcedure.startTime?.toISOString().slice(0, 16):"";
   const endTime = intraoperativeProcedure.endTime?intraoperativeProcedure.endTime?.toISOString().slice(0, 16):"";
@@ -42,8 +52,16 @@ export default function IntraoperativeProcedure({
         toast.error(state.message);
   }, [state, router]);
 
+  const submitUpdate = (event: FormEvent) => {
+    const submitter = (event.nativeEvent as SubmitEvent).submitter as HTMLButtonElement;
+
+    if(submitter?.name === "update")
+      for(const value of JSON.parse(submitter.dataset.location as string) as string[])
+        setEdit( prev => ({...prev, [value]: !prev[value]}));
+  }
+
   return(
-      <form {...{action}}>
+      <form {...{action}} onSubmit={submitUpdate}>
         <input 
           className="hidden"
           name="scheduleId"
@@ -56,6 +74,7 @@ export default function IntraoperativeProcedure({
               textLabel="Horário de início"
               type="datetime-local"
               name="startTime"
+              disabled={!!startTime && edit.startDate}
               defaultValue={startTime}
             />
 
@@ -63,6 +82,7 @@ export default function IntraoperativeProcedure({
               textLabel="Horário de Fim"
               type="datetime-local"
               name="endTime"
+              disabled={!!endTime && edit.endDate}
               defaultValue={endTime}
             />
           </div>
@@ -70,6 +90,7 @@ export default function IntraoperativeProcedure({
           <InputField
             textLabel="Tipo de anestesia utilizada:"
             name="typeOfAnesthesia"
+            disabled={!!intraoperativeProcedure.typeOfAnesthesia && edit.anesthesia}
             placeholder="digite o tipo de anestesia"
             defaultValue={intraoperativeProcedure.typeOfAnesthesia}
           />
@@ -77,6 +98,7 @@ export default function IntraoperativeProcedure({
           <InputDetails
             textLabel="Técnica cirúrgica aplicada"
             rows={3}
+            disabled={!!intraoperativeProcedure.surgicalTechnique && edit.technique}
             name="surgicalTechnique"
             placeholder="descreva a técnica utilizada"
             defaultValue={intraoperativeProcedure.surgicalTechnique}
@@ -85,6 +107,7 @@ export default function IntraoperativeProcedure({
           <InputDetails
             textLabel="Implantes/protéses utilizados"
             rows={3}
+            disabled={!!intraoperativeProcedure.implantsAndProsthesesUsed && edit.implants}
             name="implantsAndProsthesesUsed"
             placeholder="Implantes e protéses"
             defaultValue={intraoperativeProcedure.implantsAndProsthesesUsed}
@@ -93,6 +116,7 @@ export default function IntraoperativeProcedure({
           <InputDetails
             textLabel="Ocorrências ou complicações intraoperatórias"
             rows={3}
+            disabled={!!intraoperativeProcedure.intraoperativeComplications && edit.intraoperative}
             name="intraoperativeComplications"
             placeholder="descreva as complicações intraoperatórias"
             defaultValue={intraoperativeProcedure.intraoperativeComplications}
@@ -101,6 +125,7 @@ export default function IntraoperativeProcedure({
           <InputDetails
             textLabel=" Volume de fluidos administrados / perdas sanguíneas"
             rows={3}
+            disabled={!!intraoperativeProcedure.fluidVolumeAndBloodLoss && edit.fluid}
             name="fluidVolumeAndBloodLoss"
             placeholder="descreva"
             defaultValue={intraoperativeProcedure.fluidVolumeAndBloodLoss}
@@ -109,6 +134,7 @@ export default function IntraoperativeProcedure({
           <InputDetails
             textLabel="Medicação administrada durante e antes do fecho"
             rows={3}
+            disabled={!!intraoperativeProcedure.medicationAdministered && edit.medication}
             name="medicationAdministered"
             placeholder="medicação administrada"
             defaultValue={intraoperativeProcedure.medicationAdministered}
@@ -117,16 +143,39 @@ export default function IntraoperativeProcedure({
           <InputDetails
             textLabel="Outro procedimento"
             rows={3}
+            disabled={!!intraoperativeProcedure.otherProcedure && edit.other}
             name="otherProcedure"
             placeholder="Descreva"
             defaultValue={intraoperativeProcedure.otherProcedure}
           />  
         </div>
 
-        <Button>
-          <MdOutlineSaveAlt className="w-5" />
-          Salvar
-        </Button>
+        <ButtonEdit
+          state={edit}
+          setState={setEdit}
+          value={[
+            startTime, 
+            endTime,
+            intraoperativeProcedure.typeOfAnesthesia,
+            intraoperativeProcedure.surgicalTechnique,
+            intraoperativeProcedure.implantsAndProsthesesUsed,
+            intraoperativeProcedure.intraoperativeComplications,
+            intraoperativeProcedure.fluidVolumeAndBloodLoss,
+            intraoperativeProcedure.medicationAdministered,
+            intraoperativeProcedure.otherProcedure,
+          ].filter(Boolean)}
+          location={[
+            "startDate",
+            "endDate",
+            "anesthesia",
+            "technique",
+            "implants",
+            "intraoperative",
+            "fluid",
+            "medication",
+            "other",
+          ].filter(Boolean)}
+        />
       </form>
   )
 }
