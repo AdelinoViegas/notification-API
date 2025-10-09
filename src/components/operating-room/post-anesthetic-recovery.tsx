@@ -2,6 +2,7 @@
 
 import { FormEvent, useActionState, useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { getDataToDateTimeLocal } from "@/lib/date-formater";
 import { useRouter } from "next/navigation";
 import Accordium from "@/components/ui/accordium";
 import InputDetails from "@/components/ui/input-details";
@@ -66,7 +67,7 @@ postAnestheticRecovery:{
     saturation: true,
   });
   const router = useRouter();
-  const startDate = checkInTime?checkInTime.toISOString().slice(0, 16):"";
+  const startDate = checkInTime?getDataToDateTimeLocal(checkInTime):"";
 
   useEffect(()=>{
     if(state.message)

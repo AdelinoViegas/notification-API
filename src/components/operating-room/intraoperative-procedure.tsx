@@ -3,10 +3,11 @@
 import { FormEvent, useActionState, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { getDataToDateTimeLocal } from "@/lib/date-formater";
 import InputDetails from "@/components/ui/input-details";
 import InputField from "@/components/ui/input-field";
+import ButtonEdit from "@/components/ui/button-edit";
 import { signOperatingRoom } from "@/backend/api/clinical/operating-room-api";
-import ButtonEdit from "../ui/button-edit";
 
 export default function IntraoperativeProcedure({ 
   intraoperativeProcedure, 
@@ -38,8 +39,8 @@ export default function IntraoperativeProcedure({
     other: true,
   });
   const router = useRouter();
-  const startTime = intraoperativeProcedure.startTime?intraoperativeProcedure.startTime?.toISOString().slice(0, 16):"";
-  const endTime = intraoperativeProcedure.endTime?intraoperativeProcedure.endTime?.toISOString().slice(0, 16):"";
+  const startTime = intraoperativeProcedure.startTime?getDataToDateTimeLocal(intraoperativeProcedure.startTime as Date):"";
+  const endTime = intraoperativeProcedure.endTime?getDataToDateTimeLocal(intraoperativeProcedure.endTime as Date):"";
 
   useEffect(()=>{
     if(state.message)
