@@ -482,8 +482,11 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
     const storageId = formData.get("storageId") as string;  
     const typeOfExam = formData.get("typeOfExam") as string;
     const description = formData.get("description") as string;
-    const formdata = new FormData();
+ 
+    if(!file)
+      throw new Error("", { cause: "empty_file" });
     
+    const formdata = new FormData();
     formdata.append("userFile", file);
     const data = await upload(formdata, await getUserId());
     const operatingRoom = await operatingRoomModel.findById({ _id: operatingRoomId });
@@ -548,7 +551,7 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
       message: err.cause 
         ? err.cause.code === "ECONNREFUSED" 
           ? "Serviço de arquivos indisponível!"
-          : "Operação impossivel"
+          : "Escolha antes um arquivo para actualizar"
         : "Arquivo invalido!",
       status: false,
     }

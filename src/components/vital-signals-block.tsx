@@ -7,6 +7,7 @@ import Modal from "@/components/modal";
 import Button from "@/components/ui/button";
 import Table from "@/components/table";
 import InputField from "@/components/ui/input-field";
+import { BiPlus } from "react-icons/bi";
 
 type vitalSignalProps = {
     date: Date,
@@ -45,7 +46,13 @@ export default function VitalSignalInBlock({
 
   return(
     <Accordium className="bg-primary/15 hover:bg-primary/20" title="Sinal vital à admissão">
-      <Button type="button" onClick={()=>setModalState(true)}>Novo</Button>
+      <Button 
+        type="button" 
+        onClick={()=>setModalState(true)}
+      >
+        <BiPlus />
+        Novo
+      </Button>
  
       <Table
         columns={[

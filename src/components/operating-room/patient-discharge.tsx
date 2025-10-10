@@ -1,14 +1,14 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
+import { FormEvent, useActionState, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import Button from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 import InputField from "@/components/ui/input-field";
+import ButtonEdit from "@/components/ui/button-edit";
 import InputDetails from "@/components/ui/input-details";
 import Accordium from "@/components/ui/accordium";
-import { useRouter } from "next/navigation";
+import FinishOperatingRoom from "@/components/finish-operating-room";
 import { signOperatingRoom } from "@/backend/api/clinical/operating-room-api";
-import FinishOperatingRoom from "../finish-operating-room";
 
 export default function PatientDischarge({ 
   requestingService,
@@ -32,6 +32,13 @@ export default function PatientDischarge({
   }
 }){
   const [state, action] = useActionState(signOperatingRoom, { message:"", status: false });
+  const [edit, setEdit] = useState<Record<string, boolean>>({
+    info: true,
+    diet: true,
+    analgesia: true,
+    mobilization: true,
+    antibiotics: true,
+  });
   const router = useRouter();
 
   useEffect(()=>{
@@ -45,8 +52,16 @@ export default function PatientDischarge({
         toast.error(state.message);
   }, [state, router]);
 
+  const submitUpdate = (event: FormEvent) => {
+    const submitter = (event.nativeEvent as SubmitEvent).submitter as HTMLButtonElement;
+
+    if(submitter?.name === "update")
+      for(const value of JSON.parse(submitter.dataset.location as string) as string[])
+        setEdit( prev => ({...prev, [value]: !prev[value]}));
+  }
+
   return(
-    <form {...{action}}>
+    <form {...{action}} onSubmit={submitUpdate}>
       <input 
         className="hidden"
         name="scheduleId"
@@ -76,18 +91,25 @@ export default function PatientDischarge({
           <InputDetails
             textLabel="Informação de cirúgica"
             rows={3}
+            disabled={!!patientDischarge.surgicalInformation && edit.info}
             name="surgicalInformation"
             placeholder="descreva"
             defaultValue={patientDischarge.surgicalInformation}
           />
 
-          <Button>Salvar</Button>
+          <ButtonEdit
+            state={edit}
+            setState={setEdit}
+            value={[patientDischarge.surgicalInformation].filter(Boolean)}
+            location={["info"].filter(Boolean)}
+          />
         </Accordium>
 
         <Accordium title="Indicações pós-operatórias imediatas">
           <InputDetails
             textLabel="Dieta"
             rows={3}
+            disabled={!!patientDischarge.postOperativeIndications.diet && edit.diet}
             name="diet"
             placeholder="descreva a dieta"
             defaultValue={patientDischarge.postOperativeIndications.diet}
@@ -96,6 +118,7 @@ export default function PatientDischarge({
           <InputDetails
             textLabel="Analgesia"
             rows={3}
+            disabled={!!patientDischarge.postOperativeIndications.analgesia && edit.analgesia}
             name="analgesia"
             placeholder="descreva a analgesia"
             defaultValue={patientDischarge.postOperativeIndications.analgesia}
@@ -104,6 +127,7 @@ export default function PatientDischarge({
           <InputDetails
             textLabel="Mobilização"
             rows={3}
+            disabled={!!patientDischarge.postOperativeIndications.mobilization && edit.mobilization}
             name="mobilization"
             placeholder="descreva a mobilização"
             defaultValue={patientDischarge.postOperativeIndications.mobilization}
@@ -112,12 +136,28 @@ export default function PatientDischarge({
           <InputDetails
             textLabel="Antibióticos"
             rows={3}
+            disabled={!!patientDischarge.postOperativeIndications.antibiotics && edit.antibiotics}
             name="antibiotics"
             placeholder="descreva a antibiótico"
             defaultValue={patientDischarge.postOperativeIndications.antibiotics}
           />
 
-          <Button>Salvar</Button>
+          <ButtonEdit
+            state={edit}
+            setState={setEdit}
+            value={[
+              patientDischarge.postOperativeIndications.diet,
+              patientDischarge.postOperativeIndications.analgesia,
+              patientDischarge.postOperativeIndications.mobilization,
+              patientDischarge.postOperativeIndications.antibiotics
+            ].filter(Boolean)}
+            location={[
+              "diet",
+              "analgesia",
+              "mobilization",
+              "antibiotics"
+            ].filter(Boolean)}
+          />
         </Accordium>
       </div>
     </form>

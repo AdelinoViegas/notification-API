@@ -15,7 +15,7 @@ export default async function Page({ params }:{
   const checkList:InternalComponent[] = [ checklistInOperatingRoom(checkSecurity, responsible) ];
   return(
     <div className="py-4">
-      {checkList.map((item, i)=> <CheckSecurity {...{scheduleId}} {...item} key={i} />)}
+      {checkList.map((item, i)=> <CheckSecurity validatedSignature={!!responsible} {...{checkSecurity}} {...{scheduleId}} {...item} key={i} />)}
     </div>
   )
 }
