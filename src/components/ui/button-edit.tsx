@@ -13,10 +13,10 @@ export default function ButtonEdit({
   location,
 }:{
   location: string[],
-  value: string[],
+  value: (string | boolean)[],
   state: Record<string, boolean>,
   setState: Dispatch<SetStateAction<Record<string, boolean>>>,
-}){
+}){console.log(value);
   const [data, setData] = useState(true); 
 
   useEffect(() => {

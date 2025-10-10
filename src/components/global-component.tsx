@@ -51,6 +51,7 @@ type UIComponent = {
     name: string;
     placeholder?: string;
     defaultValue?: string | number;
+    disabled?: boolean;
     rows?: number;
     options?: SelectionOption[];
     defaultChecked?: boolean;

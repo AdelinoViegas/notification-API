@@ -2,9 +2,7 @@
 
 import { FormEvent, useActionState, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { MdOutlineSaveAlt } from "react-icons/md";
 import { useRouter } from "next/navigation";
-import Button from "@/components/ui/button";
 import InputField from "@/components/ui/input-field";
 import ButtonEdit from "@/components/ui/button-edit";
 import InputDetails from "@/components/ui/input-details";
@@ -36,6 +34,10 @@ export default function PatientDischarge({
   const [state, action] = useActionState(signOperatingRoom, { message:"", status: false });
   const [edit, setEdit] = useState<Record<string, boolean>>({
     info: true,
+    diet: true,
+    analgesia: true,
+    mobilization: true,
+    antibiotics: true,
   });
   const router = useRouter();
 
@@ -52,11 +54,10 @@ export default function PatientDischarge({
 
   const submitUpdate = (event: FormEvent) => {
     const submitter = (event.nativeEvent as SubmitEvent).submitter as HTMLButtonElement;
-    const location = submitter.dataset.location as string;
-    
-    if(submitter?.name === "update"){
-      setEdit( prev => ({...prev, [location]: !prev[location]}))
-    }
+
+    if(submitter?.name === "update")
+      for(const value of JSON.parse(submitter.dataset.location as string) as string[])
+        setEdit( prev => ({...prev, [value]: !prev[value]}));
   }
 
   return(
@@ -99,8 +100,8 @@ export default function PatientDischarge({
           <ButtonEdit
             state={edit}
             setState={setEdit}
-            value={[patientDischarge.surgicalInformation]}
-            location={["info"]}
+            value={[patientDischarge.surgicalInformation].filter(Boolean)}
+            location={["info"].filter(Boolean)}
           />
         </Accordium>
 
@@ -108,6 +109,7 @@ export default function PatientDischarge({
           <InputDetails
             textLabel="Dieta"
             rows={3}
+            disabled={!!patientDischarge.postOperativeIndications.diet && edit.diet}
             name="diet"
             placeholder="descreva a dieta"
             defaultValue={patientDischarge.postOperativeIndications.diet}
@@ -116,6 +118,7 @@ export default function PatientDischarge({
           <InputDetails
             textLabel="Analgesia"
             rows={3}
+            disabled={!!patientDischarge.postOperativeIndications.analgesia && edit.analgesia}
             name="analgesia"
             placeholder="descreva a analgesia"
             defaultValue={patientDischarge.postOperativeIndications.analgesia}
@@ -124,6 +127,7 @@ export default function PatientDischarge({
           <InputDetails
             textLabel="Mobilização"
             rows={3}
+            disabled={!!patientDischarge.postOperativeIndications.mobilization && edit.mobilization}
             name="mobilization"
             placeholder="descreva a mobilização"
             defaultValue={patientDischarge.postOperativeIndications.mobilization}
@@ -132,15 +136,28 @@ export default function PatientDischarge({
           <InputDetails
             textLabel="Antibióticos"
             rows={3}
+            disabled={!!patientDischarge.postOperativeIndications.antibiotics && edit.antibiotics}
             name="antibiotics"
             placeholder="descreva a antibiótico"
             defaultValue={patientDischarge.postOperativeIndications.antibiotics}
           />
 
-          <Button>
-            <MdOutlineSaveAlt className="w-5" />
-            Salvar
-          </Button>
+          <ButtonEdit
+            state={edit}
+            setState={setEdit}
+            value={[
+              patientDischarge.postOperativeIndications.diet,
+              patientDischarge.postOperativeIndications.analgesia,
+              patientDischarge.postOperativeIndications.mobilization,
+              patientDischarge.postOperativeIndications.antibiotics
+            ].filter(Boolean)}
+            location={[
+              "diet",
+              "analgesia",
+              "mobilization",
+              "antibiotics"
+            ].filter(Boolean)}
+          />
         </Accordium>
       </div>
     </form>

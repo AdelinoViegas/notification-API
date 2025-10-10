@@ -638,7 +638,6 @@ function checklistInOperatingRoom(data: CheckSecurity, responsible:string){
 									label: "Sim",
 									name: "validConsent",
 									defaultChecked: data.validConsent,
-                  disabled: !responsible,
                   title: !responsible?"Sem consentimento assinado!":"",
 									defaultValue: `${true}`
 
@@ -649,7 +648,6 @@ function checklistInOperatingRoom(data: CheckSecurity, responsible:string){
 								props: {
 									label: "Não",
 									name: "validConsent",
-                  disabled: !responsible,
                   title: !responsible?"Sem consentimento assinado!":"",
 									defaultChecked: !(data.validConsent === null || data.validConsent === undefined) && !data.validConsent,
 									defaultValue: `${false}`
