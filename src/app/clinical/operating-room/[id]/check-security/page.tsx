@@ -13,6 +13,7 @@ export default async function Page({ params }:{
   const scheduleId = personal.scheduleId as string;
   const { checkSecurity, patientIdentification:{ responsible } } = await getOperatingRoom(scheduleId);
   const checkList:InternalComponent[] = [ checklistInOperatingRoom(checkSecurity, responsible) ];
+
   return(
     <div className="py-4">
       {checkList.map((item, i)=> <CheckSecurity validatedSignature={!!responsible} {...{checkSecurity}} {...{scheduleId}} {...item} key={i} />)}

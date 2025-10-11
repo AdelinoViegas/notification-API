@@ -29,7 +29,7 @@ export function CheckSecurity({
     anestheticRisk: boolean,
     bloodAndEmergencySupplies: boolean,
   }
-}){//console.log(validatedSignature);
+}){console.log("data: "+anestheticRisk);
   const [ state, action ] = useActionState(signOperatingRoom, { message:"", status: false});
   const [ edit, setEdit ] = useState<Record<string, boolean>>({
     identity: true,
@@ -80,12 +80,12 @@ export function CheckSecurity({
 
       data[0].props = {
         ...data[0].props,
-        disabled : data[0].props.name === "validConsent"?validatedSignature?!!edit[indice[i]]:true:!!edit[indice[i]]
+        disabled : data[0].props.name === "validConsent"?validatedSignature?(values[i] === null?false:!!edit[indice[i]]):true:(values[i] === null?false:!!edit[indice[i]])
       }
 
       data[1].props = {
         ...data[1].props,
-        disabled : data[0].props.name === "validConsent"?validatedSignature?!!edit[indice[i]]:true:!!edit[indice[i]]
+        disabled : data[0].props.name === "validConsent"?validatedSignature?(values[i] === null?false:!!edit[indice[i]]):true:(values[i] === null?false:!!edit[indice[i]])
 
       }
     } 
