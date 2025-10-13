@@ -13,6 +13,9 @@
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",
+    "@pdfme/common": "^5.4.6",
+    "@pdfme/generator": "^5.4.6",
+    "@pdfme/schemas": "^5.4.6",
     "axios": "^1.11.0",
     "clsx": "^2.1.1",
     "debounce": "^2.2.0",

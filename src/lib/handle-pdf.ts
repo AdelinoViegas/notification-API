@@ -11,385 +11,418 @@ import type {
   Employee,
 } from "@/backend/api/clinical/types";
 // import { getDateInSlashFormat } from "./date-formater";
+import { patientPlug, browserPdf } from "./pdf-templates";
+import { generate } from "@pdfme/generator";
+import { image, rectangle, text, barcodes  } from "@pdfme/schemas";
 
 const doc = new jsPDF();
 
-function patientRecord({
+// function  patientRecord({
+//   personal,
+//   demography,
+//   responsibles,
+//   group
+// }: PatientRecord){ 
+//   const margin = { x: 10, y: 10 };
+//   const patientGroup = JSON.parse(group) as Group; 
+//   const assured = patientGroup?.group as Assured;
+//   const employee = patientGroup?.group as Employee;
+//   //const enterprise = patientGroup?.group as Enterprise; 
+
+//   doc.setFontSize(10);
+//   doc.addImage('/logo.png', 'PNG', margin.x, margin.y, 19, 24);
+  
+//   margin.x *= 20;
+
+//   doc.text([
+//     "Rua Manuel GG Diogo Nº 225",
+//     "Maianga-Luanda",
+//     "+244 222 222 222"
+//   ], margin.x, margin.y+8, { align: 'right' });
+  
+//   margin.x = 71;
+//   margin.y *= 4.4;
+
+//   doc.setFontSize(10);
+//   doc.setFont("Helvetica", "bold");
+//   doc.text('FICHA DE CADASTRO DE PACIENTE', margin.x, margin.y);
+  
+//   margin.x = 10;
+//   margin.y *= 1.3;
+
+//   doc.setFillColor("#ececec");
+//   doc.rect(margin.x, margin.y-4, 190, 6, 'F');
+//   doc.text('1.Dados pessoais', margin.x, margin.y);
+
+//   margin.x = 10 * 16; 
+  
+//   doc.setFillColor('#000');
+//   doc.rect(margin.x, margin.y - 12, 40, 45);
+//   doc.setFillColor('#fff');
+//   doc.rect(margin.x+.5, margin.y+.5 - 12, 40-1, 45-1, 'F');
+  
+//   margin.x = 10;
+//   margin.y += 10;
+//   doc.text("COD: ", margin.x, margin.y);
+//   doc.setFont("Helvetica", "normal");
+//   doc.text("3994394934", margin.x+11, margin.y);
+  
+//   margin.y += 8;
+
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("Nome Completo: ", margin.x, margin.y);
+//   doc.setFont("Helvetica", "normal");
+//   doc.text(personal?.fullname || '', margin.x*3.97, margin.y);
+
+//   margin.y += 6;
+
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("Data de Nascimento: ", margin.x, margin.y);
+//   doc.setFont("Helvetica", "normal");
+//   doc.text(String(personal?.birthDate?.toLocaleDateString('pt') || ''), margin.x*4.62, margin.y);
+
+//   margin.x *= 7.22;
+
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("B.I/Certidão/P.Porte:", margin.x, margin.y);
+//   doc.setFont("Helvetica", "normal");
+//   doc.text(personal?.documentation || '', margin.x*1.49, margin.y);
+  
+//   margin.y += 6;
+//   margin.x = 10;
+
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("Estado Civil: ", margin.x, margin.y);
+//   doc.setFont("Helvetica", "normal");
+//   doc.text(String(personal?.civilState || ''), margin.x*3.28, margin.y);
+
+//   margin.x *= 6.20;
+
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("Idade:", margin.x, margin.y);
+//   doc.setFont("Helvetica", "normal");
+//   doc.text(String(personal?.age || ''), margin.x*1.18, margin.y);
+  
+//   margin.x *= 1.38;
+  
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("Sexo: ", margin.x, margin.y);
+//   doc.setFont("Helvetica", "normal");
+//   doc.text(personal.gender?String(personal?.gender).toUpperCase()[0]:'', margin.x*1.12, margin.y);
+  
+//   margin.x *= 1.22;
+  
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("Telefone: ", margin.x, margin.y);
+//   doc.setFont("Helvetica", "normal");
+//   doc.text(String(personal?.tel || ''), margin.x*1.16, margin.y);
+  
+//   margin.y += 14;
+//   margin.x = 10;
+  
+//   doc.setFont("Helvetica", "bold");
+//   doc.setFillColor("#ececec");
+//   doc.rect(margin.x, margin.y-4, 190, 6, 'F');
+//   doc.text('2.Dados Demográficos', margin.x, margin.y);
+ 
+//   margin.y += 10;
+
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("Nacionalidade:", margin.x, margin.y);
+//   doc.setFont("Helvetica", "normal");
+//   doc.text(String(demography?.nationality || ''), margin.x*3.65, margin.y);
+  
+//   margin.x *= 7.70;
+  
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("Naturalidade: ", margin.x, margin.y);
+//   doc.setFont("Helvetica", "normal");
+//   doc.text(String(demography?.naturality || ''), margin.x*1.31, margin.y);
+
+//   margin.x *= 1.95;
+
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("Província: ", margin.x, margin.y);
+//   doc.setFont("Helvetica", "normal");
+//   doc.text(String(demography?.province || ''), margin.x*1.124, margin.y);
+
+//   margin.y += 6;
+//   margin.x = 10;
+
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("Morada Actual:", margin.x, margin.y);
+//   doc.setFont("Helvetica", "normal");
+//   doc.text(demography.actualLocation || '', margin.x*3.72, margin.y);
+  
+//   margin.x *= 10.11;
+
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("Rua:", margin.x, margin.y);
+//   doc.setFont("Helvetica", "normal");
+//   doc.text(String(demography?.street || ''), margin.x*1.087, margin.y);
+  
+//   margin.x *= 1.49;
+  
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("Casa Nª: ", margin.x, margin.y);
+//   doc.setFont("Helvetica", "normal");
+//   doc.text(String(demography?.homeNumber || ''), margin.x*1.104, margin.y);
+
+//   margin.y += 14;
+//   margin.x = 10;
+  
+//   doc.setFont("Helvetica", "bold");
+//   doc.setFillColor("#ececec");
+//   doc.rect(margin.x, margin.y-4, 190, 6, 'F');
+//   doc.text('3.Responsáveis', margin.x, margin.y);
+ 
+//   margin.y += 10;
+//   margin.x = 10;
+
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("Nome Completo:", margin.x, margin.y);
+//   doc.setFont("Helvetica", "normal");
+//   doc.text(responsibles[0].name, margin.x*4, margin.y);
+  
+//   margin.x *= 10.2;
+  
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("Parentesco: ", margin.x, margin.y);
+//   doc.setFont("Helvetica", "normal");
+//   doc.text(responsibles[0].kinship, margin.x*1.21, margin.y);
+
+//   margin.x *= 1.482;
+
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("Telefone: ", margin.x, margin.y);
+//   doc.setFont("Helvetica", "normal");
+//   doc.text(responsibles[0].tel, margin.x*1.114, margin.y);
+
+//   margin.y += 6;
+//   margin.x = 10;
+
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("Nome Completo:", margin.x, margin.y);
+//   doc.setFont("Helvetica", "normal");
+//   doc.text(responsibles[1]?.name || '', margin.x*4, margin.y);
+  
+//   margin.x *= 10.2;
+  
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("Parentesco: ", margin.x, margin.y);
+//   doc.setFont("Helvetica", "normal");
+//   doc.text(responsibles[1]?.kinship || '', margin.x*1.21, margin.y);
+
+//   margin.x *= 1.484;
+
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("Telefone: ", margin.x, margin.y);
+//   doc.setFont("Helvetica", "normal");
+//   doc.text(responsibles[1]?.tel || '', margin.x*1.115, margin.y);
+
+//   margin.y += 14;
+//   margin.x = 10;
+  
+//   doc.setFont("Helvetica", "bold");
+//   doc.setFillColor("#ececec");
+//   doc.rect(margin.x, margin.y-4, 190, 6, 'F');
+//   doc.text('4.Grupo de Utente', margin.x, margin.y);
+
+//   margin.y += 10;
+//   margin.x = 10;
+
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("a ) Particular:", margin.x, margin.y);
+//   doc.setFont("Helvetica", "normal");
+//   doc.text(patientGroup?.type === "personal" ? "Particular" :"", margin.x*3.4, margin.y);
+
+//   margin.y += 10;
+//   margin.x = 10;
+
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("b ) Empresa", margin.x, margin.y);
+
+//   margin.y += 6;
+//   margin.x = 10;
+
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("Nome da Empresa:", margin.x, margin.y);
+//   doc.setFont("Helvetica", "normal");
+//   doc.text("'enterprise?.name' ?? ", margin.x*4.368, margin.y);
+  
+//   margin.x *= 7.6;
+  
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("Nª de Passe: ", margin.x, margin.y);
+//   doc.setFont("Helvetica", "normal");
+//   doc.text("'enterprise?.passNumber' ?? ", margin.x*1.295, margin.y);
+
+//   margin.x *= 1.54;
+
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("Função: ", margin.x, margin.y);
+//   doc.setFont("Helvetica", "normal");
+//   doc.text("'enterprise?.role ??' ", margin.x*1.128, margin.y);
+
+//   margin.y += 10;
+//   margin.x = 10;
+
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("c ) Funcionário", margin.x, margin.y);
+
+//   margin.y += 6;
+//   margin.x = 10;
+
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("Nª de Passe:", margin.x, margin.y);
+//   doc.setFont("Helvetica", "normal");
+//   doc.text(employee?.passNumber ?? "", margin.x*3.25, margin.y);
+  
+//   margin.x *= 5.3;
+  
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("Função: ", margin.x, margin.y);
+//   doc.setFont("Helvetica", "normal");
+//   doc.text(employee?.role ?? "", margin.x*1.28, margin.y);
+
+//   margin.x *= 2.22;
+
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("Área de Serviço: ", margin.x, margin.y);
+//   doc.setFont("Helvetica", "normal");
+//   doc.text(employee?.workArea ?? "", margin.x*1.25, margin.y);
+
+//   margin.y += 10;
+//   margin.x = 10;
+
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("d ) Asseguradora", margin.x, margin.y);
+
+//   margin.y += 6;
+//   margin.x = 10;
+
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("Nome da Asseguradora:", margin.x, margin.y);
+//   doc.setFont("Helvetica", "normal");
+//   doc.text(assured.name ?? "", margin.x*5.22, margin.y);
+  
+//   margin.x *= 8.58;
+  
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("Nª da Apólice: ", margin.x, margin.y);
+//   doc.setFont("Helvetica", "normal");
+//   doc.text(assured?.apolice?.toString() ?? "", margin.x*1.296, margin.y);
+
+//   margin.x *= 1.51;
+
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("Nª de Telefone: ", margin.x, margin.y);
+//   doc.setFont("Helvetica", "normal");
+//   doc.text(assured.tel ?? "", margin.x*1.21, margin.y);
+ 
+//   margin.y += 6;
+//   margin.x = 10;
+
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("Detalhes: ", margin.x, margin.y);
+//   doc.setFont("Helvetica", "normal");
+//   doc.text("Uma asseguradora de renome a nível nacional e tendo várias estações em varias parte de Angola, estamos trabalhando para continuar sempre a ser a número do país", margin.x*2.83, margin.y, {maxWidth: 180});
+
+//   margin.y += 20;
+//   margin.x = 10;
+  
+//   doc.setFont("Helvetica", "bold");
+//   doc.setFillColor("#ececec");
+//   doc.rect(margin.x, margin.y-4, 190, 6, 'F');
+//   doc.text('5.Tipo de Acesso', margin.x, margin.y);
+
+//   margin.y += 10;
+//   margin.x = 10;
+
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("a ) Directo:", margin.x, margin.y);
+//   doc.setFont("Helvetica", "normal");
+//   doc.text("Directo", margin.x*2.97, margin.y);
+
+//   margin.y += 10;
+//   margin.x = 10;
+
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("b ) Transferido/a", margin.x, margin.y);
+
+//   margin.y += 6;
+//   margin.x = 10;
+
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("Unidade Externa:", margin.x, margin.y);
+//   doc.setFont("Helvetica", "normal");
+//   doc.text("Hospital Américo Boa Vida", margin.x*4.04, margin.y);
+
+//   margin.x *= 10.7;
+
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("Bairro:", margin.x, margin.y);
+//   doc.setFont("Helvetica", "normal");
+//   doc.text("Patriota", margin.x*1.12, margin.y);
+  
+//   margin.x *= 1.42;
+  
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("Município: ", margin.x, margin.y);
+//   doc.setFont("Helvetica", "normal");
+//   doc.text("Luanda", margin.x*1.125, margin.y);
+  
+//   margin.y += 7;
+//   margin.x = 10;
+
+//   doc.setFont("Helvetica", "bold");
+//   doc.text("Província: ", margin.x, margin.y);
+//   doc.setFont("Helvetica", "normal");
+//   doc.text("Talatona", margin.x*2.82, margin.y);
+ 
+//   margin.y += 10;
+//   margin.x = 10;
+
+//   doc.setFontSize(8);
+//   doc.text(doc.splitTextToSize('Processado por Master, Sistema Integrado de Gestão - ERP. Reservados todos os Direitos do produtor.',100), margin.x, margin.y);
+
+//   margin.x += 159;
+
+//   doc.text(doc.splitTextToSize('master.socompser.co.ao',100), margin.x, margin.y);
+
+//   doc.output('dataurlnewwindow', { 
+//     filename: 'ficha_de_cadastro.pdf', 
+//   });
+// }
+
+function  patientRecord({
   personal,
   demography,
   responsibles,
   group
 }: PatientRecord){ 
-  const margin = { x: 10, y: 10 };
-  const patientGroup = JSON.parse(group) as Group; 
-  const assured = patientGroup?.group as Assured;
-  const employee = patientGroup?.group as Employee;
-  //const enterprise = patientGroup?.group as Enterprise; 
+  try{
 
-  doc.setFontSize(10);
-  doc.addImage('/logo.png', 'PNG', margin.x, margin.y, 19, 24);
-  
-  margin.x *= 20;
+    generate({
+      template: patientPlug,
+      inputs: [
+        {
+          registerNumber: "10000000",
+          fullname: "Miguel de Nome Longo e Comprido"
+        }
+      ],
+      plugins: {
+        rectangle,
+        text,
+        image,
+        qrcode: barcodes.qrcode
+      }
+    })
+    .then(e => browserPdf(e))
 
-  doc.text([
-    "Rua Manuel GG Diogo Nº 225",
-    "Maianga-Luanda",
-    "+244 222 222 222"
-  ], margin.x, margin.y+8, { align: 'right' });
-  
-  margin.x = 71;
-  margin.y *= 4.4;
+  }catch {
 
-  doc.setFontSize(10);
-  doc.setFont("Helvetica", "bold");
-  doc.text('FICHA DE CADASTRO DE PACIENTE', margin.x, margin.y);
-  
-  margin.x = 10;
-  margin.y *= 1.3;
-
-  doc.setFillColor("#ececec");
-  doc.rect(margin.x, margin.y-4, 190, 6, 'F');
-  doc.text('1.Dados pessoais', margin.x, margin.y);
-
-  margin.x = 10 * 16; 
-  
-  doc.setFillColor('#000');
-  doc.rect(margin.x, margin.y - 12, 40, 45);
-  doc.setFillColor('#fff');
-  doc.rect(margin.x+.5, margin.y+.5 - 12, 40-1, 45-1, 'F');
-  
-  margin.x = 10;
-  margin.y += 10;
-  doc.text("COD: ", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text("3994394934", margin.x+11, margin.y);
-  
-  margin.y += 8;
-
-  doc.setFont("Helvetica", "bold");
-  doc.text("Nome Completo: ", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text(personal?.fullname || '', margin.x*3.97, margin.y);
-
-  margin.y += 6;
-
-  doc.setFont("Helvetica", "bold");
-  doc.text("Data de Nascimento: ", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text(String(personal?.birthDate?.toLocaleDateString('pt') || ''), margin.x*4.62, margin.y);
-
-  margin.x *= 7.22;
-
-  doc.setFont("Helvetica", "bold");
-  doc.text("B.I/Certidão/P.Porte:", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text(personal?.documentation || '', margin.x*1.49, margin.y);
-  
-  margin.y += 6;
-  margin.x = 10;
-
-  doc.setFont("Helvetica", "bold");
-  doc.text("Estado Civil: ", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text(String(personal?.civilState || ''), margin.x*3.28, margin.y);
-
-  margin.x *= 6.20;
-
-  doc.setFont("Helvetica", "bold");
-  doc.text("Idade:", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text(String(personal?.age || ''), margin.x*1.18, margin.y);
-  
-  margin.x *= 1.38;
-  
-  doc.setFont("Helvetica", "bold");
-  doc.text("Sexo: ", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text(personal.gender?String(personal?.gender).toUpperCase()[0]:'', margin.x*1.12, margin.y);
-  
-  margin.x *= 1.22;
-  
-  doc.setFont("Helvetica", "bold");
-  doc.text("Telefone: ", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text(String(personal?.tel || ''), margin.x*1.16, margin.y);
-  
-  margin.y += 14;
-  margin.x = 10;
-  
-  doc.setFont("Helvetica", "bold");
-  doc.setFillColor("#ececec");
-  doc.rect(margin.x, margin.y-4, 190, 6, 'F');
-  doc.text('2.Dados Demográficos', margin.x, margin.y);
- 
-  margin.y += 10;
-
-  doc.setFont("Helvetica", "bold");
-  doc.text("Nacionalidade:", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text(String(demography?.nationality || ''), margin.x*3.65, margin.y);
-  
-  margin.x *= 7.70;
-  
-  doc.setFont("Helvetica", "bold");
-  doc.text("Naturalidade: ", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text(String(demography?.naturality || ''), margin.x*1.31, margin.y);
-
-  margin.x *= 1.95;
-
-  doc.setFont("Helvetica", "bold");
-  doc.text("Província: ", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text(String(demography?.province || ''), margin.x*1.124, margin.y);
-
-  margin.y += 6;
-  margin.x = 10;
-
-  doc.setFont("Helvetica", "bold");
-  doc.text("Morada Actual:", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text(demography.actualLocation || '', margin.x*3.72, margin.y);
-  
-  margin.x *= 10.11;
-
-  doc.setFont("Helvetica", "bold");
-  doc.text("Rua:", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text(String(demography?.street || ''), margin.x*1.087, margin.y);
-  
-  margin.x *= 1.49;
-  
-  doc.setFont("Helvetica", "bold");
-  doc.text("Casa Nª: ", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text(String(demography?.homeNumber || ''), margin.x*1.104, margin.y);
-
-  margin.y += 14;
-  margin.x = 10;
-  
-  doc.setFont("Helvetica", "bold");
-  doc.setFillColor("#ececec");
-  doc.rect(margin.x, margin.y-4, 190, 6, 'F');
-  doc.text('3.Responsáveis', margin.x, margin.y);
- 
-  margin.y += 10;
-  margin.x = 10;
-
-  doc.setFont("Helvetica", "bold");
-  doc.text("Nome Completo:", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text(responsibles[0].name, margin.x*4, margin.y);
-  
-  margin.x *= 10.2;
-  
-  doc.setFont("Helvetica", "bold");
-  doc.text("Parentesco: ", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text(responsibles[0].kinship, margin.x*1.21, margin.y);
-
-  margin.x *= 1.482;
-
-  doc.setFont("Helvetica", "bold");
-  doc.text("Telefone: ", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text(responsibles[0].tel, margin.x*1.114, margin.y);
-
-  margin.y += 6;
-  margin.x = 10;
-
-  doc.setFont("Helvetica", "bold");
-  doc.text("Nome Completo:", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text(responsibles[1]?.name || '', margin.x*4, margin.y);
-  
-  margin.x *= 10.2;
-  
-  doc.setFont("Helvetica", "bold");
-  doc.text("Parentesco: ", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text(responsibles[1]?.kinship || '', margin.x*1.21, margin.y);
-
-  margin.x *= 1.484;
-
-  doc.setFont("Helvetica", "bold");
-  doc.text("Telefone: ", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text(responsibles[1]?.tel || '', margin.x*1.115, margin.y);
-
-  margin.y += 14;
-  margin.x = 10;
-  
-  doc.setFont("Helvetica", "bold");
-  doc.setFillColor("#ececec");
-  doc.rect(margin.x, margin.y-4, 190, 6, 'F');
-  doc.text('4.Grupo de Utente', margin.x, margin.y);
-
-  margin.y += 10;
-  margin.x = 10;
-
-  doc.setFont("Helvetica", "bold");
-  doc.text("a ) Particular:", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text(patientGroup?.type === "personal" ? "Particular" :"", margin.x*3.4, margin.y);
-
-  margin.y += 10;
-  margin.x = 10;
-
-  doc.setFont("Helvetica", "bold");
-  doc.text("b ) Empresa", margin.x, margin.y);
-
-  margin.y += 6;
-  margin.x = 10;
-
-  doc.setFont("Helvetica", "bold");
-  doc.text("Nome da Empresa:", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text("'enterprise?.name' ?? ", margin.x*4.368, margin.y);
-  
-  margin.x *= 7.6;
-  
-  doc.setFont("Helvetica", "bold");
-  doc.text("Nª de Passe: ", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text("'enterprise?.passNumber' ?? ", margin.x*1.295, margin.y);
-
-  margin.x *= 1.54;
-
-  doc.setFont("Helvetica", "bold");
-  doc.text("Função: ", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text("'enterprise?.role ??' ", margin.x*1.128, margin.y);
-
-  margin.y += 10;
-  margin.x = 10;
-
-  doc.setFont("Helvetica", "bold");
-  doc.text("c ) Funcionário", margin.x, margin.y);
-
-  margin.y += 6;
-  margin.x = 10;
-
-  doc.setFont("Helvetica", "bold");
-  doc.text("Nª de Passe:", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text(employee?.passNumber ?? "", margin.x*3.25, margin.y);
-  
-  margin.x *= 5.3;
-  
-  doc.setFont("Helvetica", "bold");
-  doc.text("Função: ", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text(employee?.role ?? "", margin.x*1.28, margin.y);
-
-  margin.x *= 2.22;
-
-  doc.setFont("Helvetica", "bold");
-  doc.text("Área de Serviço: ", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text(employee?.workArea ?? "", margin.x*1.25, margin.y);
-
-  margin.y += 10;
-  margin.x = 10;
-
-  doc.setFont("Helvetica", "bold");
-  doc.text("d ) Asseguradora", margin.x, margin.y);
-
-  margin.y += 6;
-  margin.x = 10;
-
-  doc.setFont("Helvetica", "bold");
-  doc.text("Nome da Asseguradora:", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text(assured.name ?? "", margin.x*5.22, margin.y);
-  
-  margin.x *= 8.58;
-  
-  doc.setFont("Helvetica", "bold");
-  doc.text("Nª da Apólice: ", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text(assured?.apolice?.toString() ?? "", margin.x*1.296, margin.y);
-
-  margin.x *= 1.51;
-
-  doc.setFont("Helvetica", "bold");
-  doc.text("Nª de Telefone: ", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text(assured.tel ?? "", margin.x*1.21, margin.y);
- 
-  margin.y += 6;
-  margin.x = 10;
-
-  doc.setFont("Helvetica", "bold");
-  doc.text("Detalhes: ", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text("Uma asseguradora de renome a nível nacional e tendo várias estações em varias parte de Angola, estamos trabalhando para continuar sempre a ser a número do país", margin.x*2.83, margin.y, {maxWidth: 180});
-
-  margin.y += 20;
-  margin.x = 10;
-  
-  doc.setFont("Helvetica", "bold");
-  doc.setFillColor("#ececec");
-  doc.rect(margin.x, margin.y-4, 190, 6, 'F');
-  doc.text('5.Tipo de Acesso', margin.x, margin.y);
-
-  margin.y += 10;
-  margin.x = 10;
-
-  doc.setFont("Helvetica", "bold");
-  doc.text("a ) Directo:", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text("Directo", margin.x*2.97, margin.y);
-
-  margin.y += 10;
-  margin.x = 10;
-
-  doc.setFont("Helvetica", "bold");
-  doc.text("b ) Transferido/a", margin.x, margin.y);
-
-  margin.y += 6;
-  margin.x = 10;
-
-  doc.setFont("Helvetica", "bold");
-  doc.text("Unidade Externa:", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text("Hospital Américo Boa Vida", margin.x*4.04, margin.y);
-
-  margin.x *= 10.7;
-
-  doc.setFont("Helvetica", "bold");
-  doc.text("Bairro:", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text("Patriota", margin.x*1.12, margin.y);
-  
-  margin.x *= 1.42;
-  
-  doc.setFont("Helvetica", "bold");
-  doc.text("Município: ", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text("Luanda", margin.x*1.125, margin.y);
-  
-  margin.y += 7;
-  margin.x = 10;
-
-  doc.setFont("Helvetica", "bold");
-  doc.text("Província: ", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text("Talatona", margin.x*2.82, margin.y);
- 
-  margin.y += 10;
-  margin.x = 10;
-
-  doc.setFontSize(8);
-  doc.text(doc.splitTextToSize('Processado por Master, Sistema Integrado de Gestão - ERP. Reservados todos os Direitos do produtor.',100), margin.x, margin.y);
-
-  margin.x += 159;
-
-  doc.text(doc.splitTextToSize('master.socompser.co.ao',100), margin.x, margin.y);
-
-  doc.output('dataurlnewwindow', { 
-    filename: 'ficha_de_cadastro.pdf', 
-  });
+  }
 }
 
 function screeningRecord({
