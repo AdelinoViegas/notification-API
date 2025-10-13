@@ -231,7 +231,6 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
     const fluidVolumeAndBloodLoss = formData.get("fluidVolumeAndBloodLoss") as string;
     const otherProcedure = formData.get("otherProcedure") as string;
     const checkInTime = formData.get("checkInTime") as string;
-    const checkOutTime = formData.get("checkOutTime") as string;
     const vitalSignsData = formData.get("date") as string;
     const fr = formData.get("fr") as string;
     const pulse = formData.get("pulse") as string;
@@ -308,7 +307,6 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
 
     const postAnestheticRecovery = {
       checkInTime: checkInTime || anesthetic?.checkInTime as Date,
-      checkOutTime:checkOutTime || anesthetic?.checkOutTime as Date,
       vitalSignal:(vitalSignsData && fr && pulse && spo2 && ta && t)?[...anesthetic?.vitalSignal || [],{
         date: vitalSignsData || undefined, 
         fr: Number(fr),
@@ -452,7 +450,6 @@ async function getOperatingRoom(scheduleId: string){
     },
     postAnestheticRecovery: {
       checkInTime: operatingRoom?.postAnestheticRecovery?.checkInTime as Date,
-      checkOutTime: operatingRoom?.postAnestheticRecovery?.checkOutTime as Date,
       vitalSignal,
       levelofConsciousness: {
         motorActivity: operatingRoom?.postAnestheticRecovery?.levelofConsciousness?.motorActivity as number,
@@ -485,8 +482,11 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
     const storageId = formData.get("storageId") as string;  
     const typeOfExam = formData.get("typeOfExam") as string;
     const description = formData.get("description") as string;
-    const formdata = new FormData();
+ 
+    if(!file)
+      throw new Error("", { cause: "empty_file" });
     
+    const formdata = new FormData();
     formdata.append("userFile", file);
     const data = await upload(formdata, await getUserId());
     const operatingRoom = await operatingRoomModel.findById({ _id: operatingRoomId });
@@ -551,8 +551,44 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
       message: err.cause 
         ? err.cause.code === "ECONNREFUSED" 
           ? "Serviço de arquivos indisponível!"
-          : "Operação impossivel"
+          : "Escolha antes um arquivo para actualizar"
         : "Arquivo invalido!",
+      status: false,
+    }
+  }
+}
+
+async function finishOperatingRoom(prev: unknown, formData: FormData){
+  try{
+    const operatingRoomId = formData.get("operatingRoomId");
+    const operatingRoom = await operatingRoomModel.findById({ _id: operatingRoomId });
+    
+    if(!operatingRoom)
+      throw new Error("Falha no registro!", { cause: "log_not_found"});
+
+    if(!operatingRoom?.patientIdentification)
+      throw new Error("Preencha os dados da identificação do paciente!", { cause: "not_fill"});
+
+    if(!operatingRoom?.sugeryPlanning)
+      throw new Error("Preencha os dados do planeamento da cirurgia", { cause: "not_fill"});
+
+    if(!operatingRoom?.sugeryPlanning)
+      throw new Error("Preencha os dados da checklist de segurânça de cirurgia", { cause: "not_fill"});
+    
+    if(!operatingRoom?.intraoperativeProcedure)
+      throw new Error("Preencha os dados do procedimento intraoperatório!", { cause: "not_fill"});
+
+    await operatingRoomModel.updateOne({ _id: operatingRoomId }, { served: true }); 
+
+    return {
+      message: ' concluída com sucesso!',
+      status: true,
+    }
+  }catch(err: unknown){
+    const error = err as Error;
+
+    return {
+      message: error.cause?error.message:error.message,
       status: false,
     }
   }
@@ -567,4 +603,5 @@ export {
   uploadExternalExamFile,
   signOperatingRoom,
   rescheduleSugery,
+  finishOperatingRoom,
 }

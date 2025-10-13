@@ -11,13 +11,12 @@ export default async function Page({ params }:{
 	const { id } = await params;
   const personal = await getPatient({id});
   const scheduleId = personal.scheduleId as string;
-  const { checkSecurity } = await getOperatingRoom(scheduleId);
-  console.log(checkSecurity);
-  const checkList:InternalComponent[] = [ checklistInOperatingRoom(checkSecurity) ];
+  const { checkSecurity, patientIdentification:{ responsible } } = await getOperatingRoom(scheduleId);
+  const checkList:InternalComponent[] = [ checklistInOperatingRoom(checkSecurity, responsible) ];
 
   return(
     <div className="py-4">
-      {checkList.map((item, i)=> <CheckSecurity {...{scheduleId}} {...item} key={i} />)}
+      {checkList.map((item, i)=> <CheckSecurity validatedSignature={!!responsible} {...{checkSecurity}} {...{scheduleId}} {...item} key={i} />)}
     </div>
   )
 }

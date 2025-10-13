@@ -45,8 +45,6 @@ export default async function Page({
   }); 
   return (
     <main className="space-y-3">
-      
-      
       <div className="lg:flex justify-between items-center">
         <Alert 
           type="info" 

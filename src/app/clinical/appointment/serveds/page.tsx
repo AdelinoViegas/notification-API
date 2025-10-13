@@ -32,8 +32,6 @@ export default async function Page({
 
   return (
     <main className="space-y-3">
-      
-      
       <div className="mt-6">
         <Header title="Consultas Atendidas"/>
       </div>

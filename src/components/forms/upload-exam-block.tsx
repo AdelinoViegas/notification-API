@@ -1,22 +1,26 @@
 "use client";
 
-import { useActionState, useEffect, useRef } from "react";
+import { Dispatch, FormEvent, SetStateAction, useActionState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import InputField from "@/components/ui/input-field";
 import SubTitle from "@/components/ui/subtitle";
-import Button from "@/components/ui/button";
+import ButtonEdit from "@/components/ui/button-edit";
 import InputDetails from "@/components/ui/input-details";
 import { toast } from "react-toastify";
+import ViewUserFile from "@/components/view-user-file-client";
 import { uploadExternalExamFile } from "@/backend/api/clinical/operating-room-api";
-import ViewUserFile from "../view-user-file-client";
 
 export function UploadExamBlock({
+  value,
+  setValue,
   storageId,
   typeOfExam, 
   operatingRoomId,
   patientId,
   description,
 }: {
+  value: Record<string, boolean>,
+  setValue: Dispatch<SetStateAction<Record<string, boolean>>>,
   storageId: string; 
   typeOfExam: string;
   operatingRoomId: string;
@@ -36,8 +40,16 @@ export function UploadExamBlock({
         toast.warn(state.message)
   }, [state])
 
+  const submitUpdate = (event: FormEvent) => {
+    const submitter = (event.nativeEvent as SubmitEvent).submitter as HTMLButtonElement;
+
+    if(submitter?.name === "update")
+      for(const value of JSON.parse(submitter.dataset.location as string) as string[])
+        setValue( prev => ({...prev, [value]: !prev[value]}))
+  }
+
   return(
-    <form {...{action}}>
+    <form {...{action}} onSubmit={submitUpdate}>
       <input 
         className="hidden"
         name="storageId"
@@ -68,6 +80,7 @@ export function UploadExamBlock({
         textLabel="Arquivo (PDF/IMAGEM/VIDEO)"
         type="file"
         required
+        disabled={!!storageId && value.result}
         name="externalFile"
         accept={".pdf, video/*, image/*"}
         onChange={({ target }) =>{
@@ -87,12 +100,18 @@ export function UploadExamBlock({
       <InputDetails
           textLabel="Descreva"
           rows={3}
+          disabled={!!description && value.description}
           name="description"
           placeholder="Descreva os sintomas de alergia"
           defaultValue={description}
       />
 
-      <Button>Salvar</Button>
+      <ButtonEdit 
+        state={value}
+        setState={setValue}
+        value={[description, storageId].filter(Boolean)}
+        location={["description", "result"].filter(Boolean)}
+      />
     </form>
   )
 }

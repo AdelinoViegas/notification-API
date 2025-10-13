@@ -27,9 +27,15 @@ function getDataToInputLocalTime(date: Date | string){
   return date.match(/[\d]{4}-[\d]{2}-[\d]{2}T[\d]{2}:[\d]{2}/ig)?.toString()
 }
 
+function getDataToDateTimeLocal(date: Date | string){
+  const dateTime = new Date(date);
+  return new Date(dateTime.getTime() - dateTime.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+}
+
 export {
   getDateInSlashFormat,
   getDateInDashFormat,
   getDataAndHoursFormat,
-  getDataToInputLocalTime
+  getDataToInputLocalTime,
+  getDataToDateTimeLocal
 }
