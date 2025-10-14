@@ -75,6 +75,7 @@ export default function PatientDischarge({
           <div className="grid grid-cols-2 gap-x-4">
             <InputField
               textLabel="Estado do paciente"
+              placeholder="sem estado"
               disabled
               defaultValue={result}
             />

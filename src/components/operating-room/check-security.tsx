@@ -4,8 +4,8 @@ import { FormEvent, useActionState, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { InternalComponent, RenderUIElement } from "@/components/global-component";
+import ButtonEdit from "@/components/ui/button-edit";
 import { signOperatingRoom } from "@/backend/api/clinical/operating-room-api";
-import ButtonEdit from "../ui/button-edit";
   
 export function CheckSecurity({
   scheduleId,
@@ -29,7 +29,7 @@ export function CheckSecurity({
     anestheticRisk: boolean,
     bloodAndEmergencySupplies: boolean,
   }
-}){console.log("data: "+anestheticRisk);
+}){
   const [ state, action ] = useActionState(signOperatingRoom, { message:"", status: false});
   const [ edit, setEdit ] = useState<Record<string, boolean>>({
     identity: true,

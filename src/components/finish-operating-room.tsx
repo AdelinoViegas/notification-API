@@ -56,6 +56,7 @@ export default function FinishOperatingRoom({ operatingRoomId }: { operatingRoom
           />
 
           <p>Tem certeza que deseja concluir o processo no bloco operatório?</p>
+          
           <div className="flex gap-3 justify-end">
             <Button 
               type="button" 
