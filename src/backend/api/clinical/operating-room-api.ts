@@ -251,7 +251,7 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
     const analgesia = formData.get("analgesia") as string;
     const mobilization = formData.get("mobilization") as string;
     const antibiotics = formData.get("antibiotics") as string;
-
+ 
     const hasPatientOperatingRoom = await operatingRoomModel.findOne({ scheduleId });
     const patient = hasPatientOperatingRoom?.patientIdentification;
     const evaluation = hasPatientOperatingRoom?.preoperativeEvaluation;
@@ -594,15 +594,20 @@ async function finishOperatingRoom(prev: unknown, formData: FormData){
                           procedure?.implantsAndProsthesesUsed && procedure?.intraoperativeComplications &&
                           procedure?.medicationAdministered && procedure?.surgicalTechnique;                    
     
-    const recoveryData = recovery?.checkInTime && recovery?.levelofConsciousness?.result &&
-                         recovery?.levelofConsciousness?.saturation && recovery?.levelofConsciousness?.motorActivity &&
-                         recovery?.levelofConsciousness?.respiration && recovery?.levelofConsciousness?.circulation && 
-                         recovery?.levelofConsciousness?.consciousness && recovery?.medicationAdministered && 
-                         recovery?.postAnestheticEvents && recovery?.vitalSignal?.length;
+    const recoveryData = recovery?.checkInTime && recovery?.vitalSignal?.length && 
+                         recovery?.levelofConsciousness?.result  !== null &&
+                         recovery?.levelofConsciousness?.saturation !== null && 
+                         recovery?.levelofConsciousness?.motorActivity !== null &&
+                         recovery?.levelofConsciousness?.respiration !== null && 
+                         recovery?.levelofConsciousness?.circulation !== null && 
+                         recovery?.levelofConsciousness?.consciousness !== null && 
+                         recovery?.medicationAdministered && recovery?.postAnestheticEvents;
     
-    const dischargeData = discharge?.postOperativeIndications && discharge?.surgicalInformation;
-    console.log(recoveryData);
-    console.log(recovery?.levelofConsciousness);
+    const dischargeData = discharge?.postOperativeIndications?.analgesia && discharge?.surgicalInformation &&
+                          discharge?.postOperativeIndications?.antibiotics &&
+                          discharge?.postOperativeIndications?.diet && 
+                          discharge?.postOperativeIndications?.mobilization;
+
     if(!identificationData)
       throw new Error("Preencha os dados da identificação do paciente!", { cause: "not_fill"});
 
@@ -623,10 +628,24 @@ async function finishOperatingRoom(prev: unknown, formData: FormData){
 
     if(!dischargeData)
       throw new Error("Preencha os dados da alta do paciente", { cause: "not_fill"});
-
-   
-    console.log(new Date());
-    //await operatingRoomModel.updateOne({ _id: operatingRoomId }, { served: true }); 
+     
+    const postAnestheticRecovery =  {
+      checkInTime: recovery?.checkInTime,
+      checkOutTime: new Date(new Date().getTime() + (1 * 60 * 60 * 1000)).toISOString().slice(0,16),
+      vitalSignal: recovery?.vitalSignal,
+      levelofConsciousness: {
+        motorActivity: recovery?.levelofConsciousness?.motorActivity,
+        respiration: recovery?.levelofConsciousness?.respiration,
+        circulation: recovery?.levelofConsciousness?.circulation,
+        consciousness: recovery.levelofConsciousness?.consciousness,
+        saturation: recovery?.levelofConsciousness?.saturation,
+        result: recovery?.levelofConsciousness?.result,
+      },
+      medicationAdministered: operatingRoom?.postAnestheticRecovery?.medicationAdministered,
+      postAnestheticEvents: operatingRoom?.postAnestheticRecovery?.postAnestheticEvents,
+    }
+     
+    await operatingRoomModel.updateOne({ _id: operatingRoomId }, { postAnestheticRecovery ,served: true});
 
     return {
       message: 'Processo concluído com sucesso!',
