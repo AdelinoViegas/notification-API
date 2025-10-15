@@ -32,11 +32,11 @@ export default function PatientIdentification({
     if(state.message)
       if(state.status)
         toast.success(state.message, {
-          autoClose: 1500,
+          autoClose: 3500,
           onClose: ()=> router.refresh(),
         });
       else
-        toast.error(state.message);
+        toast.error(state.message, {autoClose: 3500});
   }, [state, router]);
  
   const submitUpdate = (event: FormEvent) => {
