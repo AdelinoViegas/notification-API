@@ -5,17 +5,16 @@ import {
   useEffect, 
   useActionState
 } from "react";
-
+import { toast } from "react-toastify";
+import { useRouter, usePathname } from "next/navigation";
 import InputDetails from "@/components/ui/input-details";
 import Button from "@/components/ui/button";
+import Modal from "@/components/modal";
 import Selection, { SelectionOption } from "@/components/ui/selection";
 import InputField from "@/components/ui/input-field";
 import { priorityToComponent } from "@/backend/api/clinical/translator";
 import { insertScreening, getScreening, finishScreening } from "@/backend/api/clinical/api";
-import { toast } from "react-toastify";
-import Modal from "@/components/modal";
 import { getUrgencyServices } from "@/backend/api/clinical/urgency-bank-api";
-import { useRouter, usePathname } from "next/navigation";
 
 const initialState = { 
   message: "",
@@ -61,14 +60,14 @@ function DoneScreening({
     if(state.message){
       if(state.status)
         toast.success(state.message, { 
+          autoClose: 3500,
           onOpen: ()=>{
             closeModal();
             router.replace('/clinical/screening');
-          },
-          autoClose: 1500
+          }
         });
       else
-        toast.error(state.message);
+        toast.error(state.message, {autoClose: 3500});
     }
   }, [state, router]);
 
@@ -137,11 +136,11 @@ export default function ScreeningUI({
     if(state.message){
       if(state.status)
         toast.success(state.message, {
-          autoClose: 1500,
+          autoClose: 3500,
           onOpen: router.refresh
         });
       else
-        toast.error(state.message);
+        toast.error(state.message, {autoClose: 3500});
     }
 
     getScreening({ 

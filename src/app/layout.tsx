@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import './globals.css';
-import 'react-toastify/dist/ReactToastify.css';
-import { Bounce, ToastContainer } from "react-toastify";
-// import localFont from 'next/font/local';
 import { Inter } from "next/font/google";
+import './globals.css';
+import ToastProvider from "@/components/toastProvider";
+import 'react-toastify/dist/ReactToastify.css';
 
 // const local = localFont({ 
 //   src: [
@@ -35,18 +34,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="pt-ao">
       <body className={font.className}>
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={true}
-          newestOnTop={false}
-          closeOnClick={true}
-          rtl={false}
-          draggable
-          pauseOnHover
-          theme="light"
-          transition={Bounce}
-        />
+        <ToastProvider />
         {children}
       </body>
     </html>
