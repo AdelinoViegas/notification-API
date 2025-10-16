@@ -13,7 +13,7 @@ import type {
 // import { getDateInSlashFormat } from "./date-formater";
 import { patientPlug, browserPdf } from "./pdf-templates";
 import { generate } from "@pdfme/generator";
-import { image, rectangle, text, barcodes  } from "@pdfme/schemas";
+import { image, rectangle, text, barcodes, line  } from "@pdfme/schemas";
 
 const doc = new jsPDF();
 
@@ -408,14 +408,23 @@ function  patientRecord({
       inputs: [
         {
           registerNumber: "10000000",
-          fullname: "Miguel de Nome Longo e Comprido"
+          fullname: personal.fullname,
+          doc: personal.documentation,
+          birthDate: personal.birthDate?.toISOString().split("T")[0],
+          civilState: personal.civilState,
+          age: personal.age?.toString(),
+          patientTel: personal.tel,
+          rFullname1: responsibles[0].name,
+          rCivilState1: responsibles[0].kinship,
+          rTel1: responsibles[0].tel
         }
       ],
       plugins: {
         rectangle,
         text,
         image,
-        qrcode: barcodes.qrcode
+        qrcode: barcodes.qrcode,
+        line
       }
     })
     .then(e => browserPdf(e))
