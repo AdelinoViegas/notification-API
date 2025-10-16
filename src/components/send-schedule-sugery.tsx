@@ -5,14 +5,12 @@ import {
   useEffect,
   useActionState, 
 } from "react";
+import { toast } from "react-toastify";
+import { VscSend } from "react-icons/vsc";
 import { useRouter } from "next/navigation";
 import Modal from "@/components/modal";
 import Button from "@/components/ui/button";
-import Alert from "@/components/ui/alert";
 import { sendPatientToOperatingRoom } from "@/backend/api/clinical/operating-room-api";
-
-import { VscSend } from "react-icons/vsc";
-import { toast } from "react-toastify";
 
 export default function SendScheduleSugery({
   scheduleId,
@@ -24,7 +22,6 @@ export default function SendScheduleSugery({
   const [ modalState, setModalState ] = useState(false);
   const closeModal = ()=> setModalState(false);
   const openModal = ()=> setModalState(true);
-  const [ messageState, setMessageState ] = useState(false);
   const router = useRouter();
 
   useEffect(()=>{
@@ -72,16 +69,6 @@ export default function SendScheduleSugery({
             <Button>Sim</Button>
           </div>
         </form>
-
-        {
-          state.message && messageState &&
-          <div className="mt-3">
-            <Alert
-              type={state.status?'success':'error'}
-              message={state.message}
-            />
-          </div>
-        }
       </Modal>
     </div>
   )
