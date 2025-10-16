@@ -4,15 +4,8 @@ import type {
   AppointmentRecord, 
   PatientRecord, 
   ScreeningRecord, 
-  Group, 
   ScheduleExamsRecord
 } from "@/components/pdf-button";
-import type { 
-  Assured,
-  Employee,
-  Enterprise,
-} from "@/backend/api/clinical/types";
-// import { getDateInSlashFormat } from "./date-formater";
 import { patientPlug, browserPdf } from "./pdf-templates";
 import { generate } from "@pdfme/generator";
 import { image, rectangle, text, barcodes, line  } from "@pdfme/schemas";
@@ -20,7 +13,7 @@ import { AngolaProvices } from "@/backend/api/clinical/translator";
 
 const doc = new jsPDF();
 
-const GroupSchema = z.object({
+const _GroupSchema = z.object({
   type: z.union([
     z.literal("personal"), 
     z.literal("enterprise"), 
@@ -30,25 +23,23 @@ const GroupSchema = z.object({
   group: z.object()
 });
 
-type GroupT = z.infer<typeof GroupSchema>;
+type GroupT = z.infer<typeof _GroupSchema>;
 
 function  patientRecord({
   personal,
   demography,
   responsibles,
   group,
-  groupType
+  acess
 }: PatientRecord){ 
   try{
     const _group = JSON.parse(group) as GroupT;
-    const { } = _group.group;
-    console.log(_group);
 
     generate({
       template: patientPlug,
       inputs: [
         {
-          registerNumber: "10000000",
+          registerNumber: personal.registerNumber,
           fullname: personal.fullname,
           doc: personal.documentation,
           birthDate: personal.birthDate?.toISOString().split("T")[0],
@@ -79,6 +70,11 @@ function  patientRecord({
           employeeNumber: _group.type === "employee" ? _group.group?.passNumber : "N/D",
           employeeRole: _group.type === "employee" ? _group.group.role : "N/D",
           employeeService: _group.type === "employee" ? _group.group.workArea : "N/D",
+          directAccess: acess?.type === "direct" ? "Directo" : "N/D",
+          fromHospital: acess?.type === "transferred" ? acess.hospital : "N/D",
+          hospitalStreet: acess?.type === "transferred" ? acess.street : "N/D",
+          hospitalMunicipality: acess?.type === "transferred" ? acess.municipality : "N/D",
+          hospitalProvince: acess?.type === "transferred" ? acess.province : "N/D",
         }
       ],
       plugins: {
