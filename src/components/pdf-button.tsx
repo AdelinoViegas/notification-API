@@ -15,7 +15,7 @@ import {
 import { FaFilePdf } from "react-icons/fa";
 
 export type Group = {
-  type: string;
+  type:  "assured" | "employee" | "enterprise" | "personal";
   group?: Assured | Employee | Enterprise
 }
 
@@ -24,7 +24,7 @@ export type PatientRecord = {
   demography: Demography;
   responsibles: Responsable[];
   groupType?: {
-    type: string,
+    type: "assured" | "employee" | "enterprise",
     group: Assured | Employee | Enterprise | undefined
   };
   acess?: accessProps;
