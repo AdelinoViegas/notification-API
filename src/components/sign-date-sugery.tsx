@@ -7,6 +7,7 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 import { BiPlus } from "react-icons/bi";
+import { toast } from "react-toastify";
 import Modal from "@/components/modal";
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
@@ -18,22 +19,20 @@ export default function SignDateSugery({ scheduleId }:{ scheduleId: string;}){
   const [ modalState, setModalState ] = useState(false);
   const closeModal = ()=> setModalState(false);
   const openModal = ()=> setModalState(true);
-  const [ messageState, setMessageState ] = useState(false);
   const router = useRouter();
 
   useEffect(()=>{
-    if(state.message){
-      setMessageState(true);
-
-      setTimeout(()=>{
-        setMessageState(false);
-
-        if(state.status){
-          closeModal();
-          router.refresh();  
-        }
-      }, state.status?2000:7000);
-    }
+    if(state.message)
+      if(state.status)
+        toast.success(state.message, {
+          autoClose: 3500,
+          onClose: () => { 
+            closeModal()
+            router.refresh()
+          }          
+        });
+      else
+        toast.error(state.message, {autoClose: 3500});
   }, [state, router]);
 
   return(
@@ -80,16 +79,6 @@ export default function SignDateSugery({ scheduleId }:{ scheduleId: string;}){
             <Button>Salvar</Button>
           </div>
         </form>
-
-        {
-          state.message && messageState &&
-          <div className="mt-3">
-            <Alert
-              type={state.status?'success':'error'}
-              message={state.message}
-            />
-          </div>
-        }
       </Modal>
     </div>
   )

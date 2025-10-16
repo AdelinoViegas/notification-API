@@ -6,11 +6,11 @@ import {
   useActionState, 
 } from "react";
 import { MdAttachMoney } from "react-icons/md";
+import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import Modal from "@/components/modal";
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
-import Alert from "@/components/ui/alert";
 import { updatePaymentDataToSugery } from "@/backend/api/clinical/scheduling-api";
 
 export default function ValidateSugery({
@@ -30,21 +30,20 @@ export default function ValidateSugery({
   const [ modalState, setModalState ] = useState(false);
   const closeModal = ()=> setModalState(false);
   const openModal = ()=> setModalState(true);
-  const [ messageState, setMessageState ] = useState(false);
   const router = useRouter();
 
   useEffect(()=>{
-    if(state?.message){
-      setMessageState(true);
-
-      setTimeout(()=>{
-        if(state.status){
-          closeModal();
-          router.replace('/clinical/schedule-sugery');
-        }
-        setMessageState(false);
-      }, 2000);
-    }
+    if(state.message)
+      if(state.status)
+        toast.success(state.message, {
+          autoClose: 3500,
+          onClose: () => { 
+            closeModal();
+            router.replace('/clinical/schedule-sugery');
+          }          
+        });
+      else
+        toast.error(state.message, {autoClose: 3500});
   }, [state, router]);
 
   return(
@@ -99,16 +98,6 @@ export default function ValidateSugery({
             <Button>Salvar</Button>
           </div>
         </form>
-
-        {
-          state?.message && messageState &&
-          <div className="mt-3">
-            <Alert
-              type={state.status?'success':'error'}
-              message={state.message}
-            />
-          </div>
-        }
       </Modal>
     </div>
   )

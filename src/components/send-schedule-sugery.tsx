@@ -12,6 +12,7 @@ import Alert from "@/components/ui/alert";
 import { sendPatientToOperatingRoom } from "@/backend/api/clinical/operating-room-api";
 
 import { VscSend } from "react-icons/vsc";
+import { toast } from "react-toastify";
 
 export default function SendScheduleSugery({
   scheduleId,
@@ -27,18 +28,17 @@ export default function SendScheduleSugery({
   const router = useRouter();
 
   useEffect(()=>{
-    if(state.message){
-      setMessageState(true);
-
-      setTimeout(()=>{
-        if(state.status){
-          setMessageState(false);
-          closeModal();
-          router.replace('/clinical/schedule-sugery');
-        }
-        setMessageState(false);
-      }, 2000);
-    }
+    if(state.message)
+      if(state.status)
+        toast.success(state.message, {
+          autoClose: 3500,
+          onClose: () => { 
+            closeModal();
+            router.replace('/clinical/schedule-sugery');
+          }          
+        });
+      else
+        toast.error(state.message, {autoClose: 3500});
   }, [state, router]);
 
   return(
