@@ -10,31 +10,30 @@ import { useRouter } from "next/navigation";
 import Modal from "@/components/modal";
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
-import Alert from "@/components/ui/alert";
 import { BiPlus as PlusIcon } from "react-icons/bi";
 import { signExternalUnit } from "@/backend/api/clinical/urgency-bank-api";
+import { toast } from "react-toastify";
 
 export default function ExternalUnitForm(){
   const [ state, action ] = useActionState(signExternalUnit, { message: "", status: false });
   const [ modalState, setModalState ] = useState(false);
   const closeModal = ()=> setModalState(false);
   const openModal = ()=> setModalState(true);
-  const [ messageState, setMessageState ] = useState(false);
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(()=>{
-    if(state.message){
-      setMessageState(true);
-
-      setTimeout(()=>{
-        if(state.status){
-          router.refresh();
-          formRef.current?.reset();
-        }
-        setMessageState(false);
-      }, 2000);
-    }
+    if(state.message)
+      if(state.status)
+        toast.success(state.message, {
+          autoClose: 3500,
+          onClose: ()=> {
+            router.refresh()
+            formRef.current?.reset()
+          },
+        });
+      else
+        toast.error(state.message, {autoClose: 3500});
   }, [state, router]);
 
   return(
@@ -86,15 +85,6 @@ export default function ExternalUnitForm(){
             <Button>Salvar</Button>
           </div>
         </form>
-        
-        { messageState &&
-          <div className="mt-3">
-            <Alert
-              message={state.message}
-              type={state.status?"success":"error"} 
-            /> 
-          </div>
-        }
       </Modal>
     </div>
   )
