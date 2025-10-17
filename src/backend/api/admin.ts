@@ -11,11 +11,11 @@ import type {
 } from "@/backend/api/types";
 
 const instance = axios.create({ 
-  baseURL: process.env.ADMIN_SRV_URL
+  baseURL: process.env.API_ADMIN_URL
 });
 
 const clientInstance = axios.create({ 
-  baseURL: process.env.ADMIN_SRV_URL
+  baseURL: process.env.API_ADMIN_URL
 });
 
 export async function getUsers(): Promise<User[]>{

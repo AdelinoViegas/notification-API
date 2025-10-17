@@ -6,7 +6,7 @@ export async function middleware() {
   if(await RESTproxy())
     return NextResponse.next();
 
-  return NextResponse.redirect(new URL('/', process.env.LOGIN_URL));
+  return NextResponse.redirect(new URL('/', process.env.WEB_ADMIN_URL));
 }
  
 export const config: NextConfig = {

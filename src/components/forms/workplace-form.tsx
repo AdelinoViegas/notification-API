@@ -39,7 +39,7 @@ export default function WorkplaceFrom({ units }:{ units: SelectionOption[] }){
 
         <div className="flex justify-between items-end">
           <LogoutButton
-            baseUrl={process.env.LOGIN_URL as string}
+            baseUrl={process.env.WEB_ADMIN_URL as string}
             className="bg-red-500 text-white flex gap-x-2 items-center px-3 py-2 rounded-lg hover:bg-red-400" 
           />
 

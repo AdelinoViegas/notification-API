@@ -4,7 +4,7 @@ import { createConnection, Schema } from "mongoose";
 
 
 const con = createConnection(process.env.MONGO_URL, {
-  dbName: process.env.CLINICAL_DB_NAME
+  dbName: process.env.MONGO_DB_NAME
 });
 
 const unitSchema = new Schema({
