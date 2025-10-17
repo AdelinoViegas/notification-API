@@ -59,6 +59,9 @@ type groupProps = {
 type accessProps = {
   type: string;
   hospital?: string;
+  street?: string;
+  municipality?: string;
+  province?: string;
 };
 
 type AccessType = {
@@ -86,6 +89,7 @@ type Patient = {
   tel?: string;
   documentation: string;
   lang?: string;
+  registerNumber?: string;
 };
 
 type patientProps = {

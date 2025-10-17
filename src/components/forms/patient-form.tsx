@@ -26,7 +26,7 @@ export default async function PatientForm({patientId}:{patientId: string}){
 		responsibles
   } = patient;
 	const firstAndSecond = responsibles?.responsibles as Responsable[];
-
+  const hospital = externalUnits.find(e => e._id.toString() === accessType.externalUnitId?.toString());
   const dataTopdf: PatientRecord = {
     personal: {
       fullname: personal.fullname,
@@ -37,6 +37,7 @@ export default async function PatientForm({patientId}:{patientId: string}){
       tel: personal.tel,
       documentation: personal.documentation,
       lang: personal.lang,
+      registerNumber: personal.registerNumber.toString()
     },
     demography: {
       nationality: demography.nationality,
@@ -60,7 +61,10 @@ export default async function PatientForm({patientId}:{patientId: string}){
     ],
     acess: {
       type: accessType.type,
-      hospital: 'hospital',
+      hospital: hospital?.name,
+      municipality: hospital?.municipality,
+      province: hospital?.province,
+      street: hospital?.street
     },
     group: JSON.stringify(group)
   }
