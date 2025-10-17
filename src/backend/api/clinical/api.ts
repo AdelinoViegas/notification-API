@@ -987,27 +987,6 @@ async function updateSpecialty(prev: unknown, formData:FormData){
   }
 }
 
-async function signInstitution(prev: unknown, formData:FormData){
-  try{
-    const name = formData.get("name");
-    const address = formData.get("address");
-    const contact = formData.get("contact");
-    const file = formData.get("logo");
-    
-    console.log(name, address, contact, file);
-
-    return {
-      message: "Instituição cadastrada com sucesso!",
-      status: true,
-    }
-  }catch(err: unknown){
-    const error = err as Error;
-    return {
-      message: error.message,
-      status: false,
-    }
-  }
-}
 
 export {
   getUsers,
@@ -1032,5 +1011,4 @@ export {
   getScreening,
   insertScreening,
   addUser,
-  signInstitution
 };
