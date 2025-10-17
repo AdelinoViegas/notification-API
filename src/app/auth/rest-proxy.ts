@@ -4,7 +4,7 @@ import axios from "axios";
 import { cookies } from "next/headers";
 
 const instance = axios.create({ 
-  baseURL: process.env.ADMIN_SRV_URL
+  baseURL: process.env.API_ADMIN_URL
 });
 
 async function userState(token: string){
