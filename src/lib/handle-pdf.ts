@@ -8,7 +8,7 @@ import type {
 } from "@/components/pdf-button";
 import { patientPlug, browserPdf } from "./pdf-templates";
 import { generate } from "@pdfme/generator";
-import { image, rectangle, text, barcodes, line  } from "@pdfme/schemas";
+import { image, rectangle, text, barcodes, line } from "@pdfme/schemas";
 import { AngolaProvices } from "@/backend/api/clinical/translator";
 
 const doc = new jsPDF();
@@ -34,7 +34,6 @@ function  patientRecord({
 }: PatientRecord){ 
   try{
     const _group = JSON.parse(group) as GroupT;
-
     generate({
       template: patientPlug,
       inputs: [
