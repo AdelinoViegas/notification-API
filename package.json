@@ -16,7 +16,7 @@
     "@pdfme/common": "^5.4.6",
     "@pdfme/generator": "^5.4.6",
     "@pdfme/schemas": "^5.4.6",
-    "axios": "^1.11.0",
+    "axios": "^1.12.0",
     "clsx": "^2.1.1",
     "debounce": "^2.2.0",
     "jose": "^5.9.6",
