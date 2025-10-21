@@ -2,7 +2,6 @@
 
 import { getFile } from "@/backend/api/storage";
 import UserViewerButton from "@/components/user-viewer-button";
-import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
