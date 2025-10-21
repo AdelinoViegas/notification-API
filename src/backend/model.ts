@@ -59,7 +59,9 @@ import {
 import { operatingRoomResultSchema, operatingRoomSchema } from "@/backend/schemas/opetating-room";
 
 const clinical = createConnection(process.env.MONGO_URL as string, {
-  dbName: process.env.CLINICAL_DB_NAME
+  dbName: process.env.MONGO_DB_NAME,
+  family: 4,
+  appName: "master-clinical"
 });
 
 const userModel = clinical.model('User', userSchema);
