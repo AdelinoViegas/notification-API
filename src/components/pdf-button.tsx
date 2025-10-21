@@ -1,6 +1,6 @@
 "use client";
 
-import Button from "./ui/button";
+import Button from "@/components/ui/button";
 import { appointmentRecord, patientRecord, scheduleExamsRecord, screeningRecord } from "@/lib/handle-pdf";
 import { 
   Patient as Personal,

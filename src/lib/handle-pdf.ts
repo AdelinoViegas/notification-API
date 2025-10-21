@@ -10,6 +10,7 @@ import { patientPlug, browserPdf } from "./pdf-templates";
 import { generate } from "@pdfme/generator";
 import { image, rectangle, text, barcodes, line } from "@pdfme/schemas";
 import { AngolaProvices } from "@/backend/api/clinical/translator";
+import type { Template } from "@pdfme/common";
 
 const doc = new jsPDF();
 
@@ -25,17 +26,41 @@ const _GroupSchema = z.object({
 
 type GroupT = z.infer<typeof _GroupSchema>;
 
+
 function  patientRecord({
   personal,
   demography,
   responsibles,
   group,
   acess
-}: PatientRecord){ 
+}: PatientRecord){
+  
+  const fonts = {
+    "Roboto-Bold": { data: "/fonts/roboto/Roboto_Condensed-Black.ttf" },
+    "Roboto": { data: "/fonts/roboto/Roboto_Condensed-Bold.ttf", fallback: true },
+    "Roboto-ExtraBold": { data: "/fonts/roboto/Roboto_Condensed-ExtraBold.ttf" },
+
+  };
+
+  /*const fonts: Font = {
+  "Roboto": {
+    data: "https://github.com/google/fonts/raw/main/apache/roboto/Roboto-Regular.ttf",
+    fallback: true
+  },
+  "Roboto-Bold": {
+    data: "https://github.com/google/fonts/raw/main/apache/roboto/Roboto-Bold.ttf"
+  }
+ }*/
+
+  const templateWithFonts: Template = {
+    ...patientPlug,
+    fonts
+  };
+
   try{
     const _group = JSON.parse(group) as GroupT;
     generate({
-      template: patientPlug,
+      template: templateWithFonts,
       inputs: [
         {
           registerNumber: personal.registerNumber,
@@ -82,12 +107,12 @@ function  patientRecord({
         image,
         qrcode: barcodes.qrcode,
         line
-      }
+      },
     })
     .then(e => browserPdf(e))
 
-  }catch {
-
+  }catch(err) {
+    console.log(err);
   }
 }
 
