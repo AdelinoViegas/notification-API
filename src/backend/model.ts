@@ -17,6 +17,7 @@ import {
   officeSchema,
   scheduleSugerySchema,
   serviceRequestsSchema,
+  serviceSchema,
 } from "@/backend/schemas/scheduling";
 import { 
   responsibleSchema,
@@ -80,6 +81,7 @@ const triedModel = clinical.model("Tried", triedSchema);
 
 //agendamentos (schedulings)
 const examModel = clinical.model("ExamService", examSchema);
+const serviceModel = clinical.model("Service", serviceSchema);
 const examGroupModel = clinical.model("ExamGroup", examGroupSchema);
 const examCategoryModel = clinical.model('ExamCategory', examCategorySchema);
 const examClassificationModel = clinical.model('ExamClassification', examClassificationSchema);
@@ -170,5 +172,6 @@ export {
   hospitalizationModel,
   inHospitalizeModel,
   internalMovimentModel,
-  serviceRequestsModel
+  serviceRequestsModel,
+  serviceModel
 };

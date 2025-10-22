@@ -10,7 +10,7 @@ const examSchema = new Schema({
   },
   examCode: {
     type: Number,
-    default: ()=>randomInt(111111111, 999999999),
+    default: () => randomInt(111111111, 999999999),
     unique: true,
   },
   categoryId: Schema.Types.ObjectId,
@@ -25,6 +25,29 @@ const examSchema = new Schema({
   timestamps: true,
   collection: "exam_service",
 });
+
+const serviceSchema = new Schema({
+  name: String,
+  code: {
+    type: Number,
+    default: () => randomInt(111111, 999999)
+  },
+  categoryId: Schema.Types.ObjectId,
+  classificationId: Schema.Types.ObjectId,
+  groupId: Schema.Types.ObjectId,
+  specialtyId: Schema.Types.ObjectId,
+  kind: {
+    type: String,
+    enum: [ "surgery" , "consultation", "exam" ],
+    required: true
+  },
+  price: {
+    type: Number,
+    default: 0,
+  },
+});
+
+serviceSchema.index({ name: 1, code: 1, kind: 1 }, { unique: true });
 
 const examGroupSchema = new Schema({
   name: {
@@ -326,5 +349,6 @@ export{
   scheduleAppointmentSchema,
   officeSchema,
   scheduleSugerySchema,
-  serviceRequestsSchema
+  serviceRequestsSchema,
+  serviceSchema
 }
