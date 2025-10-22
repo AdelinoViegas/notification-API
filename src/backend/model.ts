@@ -4,7 +4,6 @@ import {
   currentLocationSchema
 } from "@/backend/schemas/user";
 import { 
-  examSchema, 
   examGroupSchema,
   scheduleExamSchema,
   examResultSchema,
@@ -80,7 +79,7 @@ const patientSyncModel = clinical.model("PatientSyncs", patientSyncSchema);
 const triedModel = clinical.model("Tried", triedSchema);
 
 //agendamentos (schedulings)
-const examModel = clinical.model("ExamService", examSchema);
+
 const serviceModel = clinical.model("Service", serviceSchema);
 const examGroupModel = clinical.model("ExamGroup", examGroupSchema);
 const examCategoryModel = clinical.model('ExamCategory', examCategorySchema);
@@ -135,7 +134,6 @@ export {
   screeningModel,
   triedModel,
   processStateModel,
-  examModel,
   examGroupModel,
   unitModel,
   scheduleExamModel,

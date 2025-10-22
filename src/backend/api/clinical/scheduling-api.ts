@@ -9,8 +9,7 @@ import { redirect } from "next/navigation";
 import { surgerySchedulingArea } from "@/backend/api/clinical/translator";
 import { getExamResult as getExamResutlFromUnit } from "@/backend/api/clinical/internal-services-api";
 
-import { 
-  examModel, 
+import {  
   examGroupModel,
   scheduleExamModel,
   patientModel,
@@ -421,7 +420,7 @@ async function getSchedulePatientExam(scheduleId: string){
       throw new Error("Erro, id do exame inválido!");
 
     for(const exam of schedule?.exams){
-      const examService = await examModel.findById({_id: exam._id}).select({ price: 1, name: 1 });
+      const examService = await serviceModel.findById({_id: exam._id}).select({ price: 1, name: 1 });
       totalPrice += examService?.price as number;
 
       exams.push({
@@ -595,7 +594,7 @@ async function scheduleAppointment(prev: unknown, formData: FormData){
     const scrPatient = await screeningModel.findOne({ patientId, served: false });
      
     const result = await getNumberDoctorAppointment({ doctorId, day: doctorDay });  
-    const consult = await examModel.findById({ _id: consultId });
+    const consult = await serviceModel.findById({ _id: consultId });
 
     if(!consult)
       throw new Error('Selecione uma consulta!', { cause: 'consultation_empty'});
@@ -655,7 +654,7 @@ async function getScheduleAppointment(scheduleId:string){
   const patient = await patientModel.findById({_id:schedule?.patientId}).select({fullname:1, gender:1});
   const doctor = await getUser(schedule?.doctorId?.toString() as string);
   const user = await getUser(schedule?.userId?.toString() as string);
-  const consult = await examModel.findById({ _id: schedule?.consultId });
+  const consult = await serviceModel.findById({ _id: schedule?.consultId });
 
   return {
     patient: patient?.fullname as string,
@@ -994,7 +993,7 @@ async function getPatientScheduledServices({ patientId }: { patientId: string })
         continue;
       const results = await getExamResutlFromUnit({ serviceResultId: service._id.toString()});
       for(const result of results){
-        const exam = await examModel.findById({ _id: result._id });
+        const exam = await serviceModel.findById({ _id: result._id });
         resultsList.push({
           name: exam?.name as string,
           ...result
@@ -1088,7 +1087,7 @@ async function getScheduleSugeries({
   for(const items of schedule){
     const patient = await patientModel.findById({_id: items.patientId}).select({fullname: 1});
     const doctor = await getUser(items?.doctorId?.toString() as string);
-    const sugeryType = await examModel.findById({_id: items.sugeryType}).select({name: 1});
+    const sugeryType = await serviceModel.findById({_id: items.sugeryType}).select({name: 1});
 
     formatedList.push({
       id: items.id.toString() as string,
@@ -1096,7 +1095,7 @@ async function getScheduleSugeries({
       patient: patient?.fullname as string,
       //infirmary: items.infirmary as string,
       //bed: items.bed as string,
-      sugeryType: sugeryType?.name.toString() as string,
+      sugeryType: sugeryType?.name?.toString() as string,
       //date: `${getDateInSlashFormat(items.doctorDay as Date)} ${items.doctorTime}` as string,
       doctor: doctor.fullname as string,
       status: items.payment?.status === "confirmed"?"Confirmado":"Pendente" as string,
@@ -1115,7 +1114,7 @@ async function getScheduleSugeries({
 
 async function getScheduleSugery(scheduleId: string){
   const schedule = await scheduleSugeryModel.findById({_id: scheduleId});
-  const sugeryType = await examModel.findById({_id: schedule?.sugeryType}).select({ name: 1, price: 1});
+  const sugeryType = await serviceModel.findById({_id: schedule?.sugeryType}).select({ name: 1, price: 1});
   const patient = await patientModel.findById({_id: schedule?.patientId}).select({fullname:1, gender:1});
   const doctor = await getUser(schedule?.doctorId?.toString() as string);
 
@@ -1157,7 +1156,7 @@ async function updatePaymentDataToSugery(prev: unknown, formData: FormData){
       throw new Error('Informe o preço!', { cause: "user_price_empty"}); 
 
     const scheduleSugery = await scheduleSugeryModel.findById({ _id: sugeryId });
-    const sugery = await examModel.findById({ _id: scheduleSugery?.sugeryType });
+    const sugery = await serviceModel.findById({ _id: scheduleSugery?.sugeryType });
 
     if(sugery?.price){
       const paiedPorcent = Math.trunc((value * 100)/sugery.price);
@@ -1271,7 +1270,7 @@ async function getExamResultDetail(id: string){
           examId: examId 
         });
 
-        const exam = await examModel.findById({ _id: examId });
+        const exam = await serviceModel.findById({ _id: examId });
 
         resultDetails.push({
           name: exam?.name as string,

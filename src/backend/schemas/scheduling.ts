@@ -2,32 +2,11 @@ import { randomInt } from "crypto";
 import { Schema } from "mongoose";
 import { ConsultResult } from "./types";
 
-const examSchema = new Schema({
+const serviceSchema = new Schema({
   name: {
     type: String,
-    unique: true,
-    required: true,
+    required: true
   },
-  examCode: {
-    type: Number,
-    default: () => randomInt(111111111, 999999999),
-    unique: true,
-  },
-  categoryId: Schema.Types.ObjectId,
-  classificationId: Schema.Types.ObjectId,
-  groupId: Schema.Types.ObjectId,
-  specialtyId: Schema.Types.ObjectId,
-  price: {
-    type: Number,
-    default: 0,
-  },
-}, {
-  timestamps: true,
-  collection: "exam_service",
-});
-
-const serviceSchema = new Schema({
-  name: String,
   code: {
     type: Number,
     default: () => randomInt(111111, 999999)
@@ -337,7 +316,6 @@ const serviceRequestsSchema = new Schema({
 })
 
 export{
-  examSchema,
   examGroupSchema,
   scheduleExamSchema,
   examResultSchema,

@@ -1,7 +1,7 @@
 "use server";
 
 import { 
-  examModel, 
+  serviceModel, 
   patientModel,
   scheduleAppointmentModel,
   demographyModel,
@@ -32,7 +32,7 @@ async function updatePaymentData(prev: unknown, formData: FormData){
       throw new Error('Informe o preço!', { cause: "user_price_empty"}); 
 
     const appointment = await scheduleAppointmentModel.findById({ _id: appointmentId });
-    const consult = await examModel.findById({ _id: appointment?.consultId });
+    const consult = await serviceModel.findById({ _id: appointment?.consultId });
 
     if(consult?.price){
       const paiedPorcent = Math.trunc((value * 100)/consult.price);
@@ -70,7 +70,7 @@ async function sendPatientToOffice(prev: unknown, formData: FormData){
   try{
     const scheduleId = formData.get('scheduleId');
     const appointment = await scheduleAppointmentModel.findById({_id: scheduleId });
-    const service = await examModel.findById({_id: appointment?.consultId}).select({price: 1});
+    const service = await serviceModel.findById({_id: appointment?.consultId}).select({price: 1});
     const scheduleInOffice = await officeModel.find({ served: false });
     
     if(scheduleInOffice.length){
@@ -468,7 +468,7 @@ async function getRequests(){
       formated.push({
         patientName: (await patientModel.findById({ _id: req.patientId }))?.fullname as string,
         from: req.from,
-        kind: (await examModel.findById({ _id: req.kind }))?._id.toString() as string,
+        kind: (await serviceModel.findById({ _id: req.kind }))?._id.toString() as string,
         pending: req.pending
       });
     }
