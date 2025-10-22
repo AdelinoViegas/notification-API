@@ -39,6 +39,7 @@ export type ScreeningRecord = {
 };
 
 export type AppointmentRecord = {
+  registerNumber: number,
   patientName: string,
   age: number,
   gender: string,

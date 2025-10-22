@@ -107,7 +107,8 @@ export default async function Page({
             <PDFButton
               label="Visualizar"
               type="appointmentRecord"
-              args={{    
+              args={{
+                registerNumber: schedule.registerNumber,    
                 patientName: schedule.patient,
                 age: schedule.age,
                 gender: schedule.gender,

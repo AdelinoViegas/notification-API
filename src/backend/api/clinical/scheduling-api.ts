@@ -657,6 +657,7 @@ async function getScheduleAppointment(scheduleId:string){
   const consult = await serviceModel.findById({ _id: schedule?.consultId });
 
   return {
+    registerNumber: patient?.registerNumber as number,
     patient: patient?.fullname as string,
     age: calculateAge(patient?.birthDate as Date),
     gender: patient?.gender as string,

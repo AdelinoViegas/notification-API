@@ -98,9 +98,7 @@ function  patientRecord({
     })
     .then(e => browserPdf(e))
 
-  }catch(err) {
-    console.log(err);
-  }
+  }catch {}
 }
 
 function screeningRecord({
@@ -361,7 +359,46 @@ function screeningRecord({
   doc.output('dataurlnewwindow', { filename: 'ficha_de_triagem.pdf' });
 }
 
+
 function appointmentRecord({
+  registerNumber,
+  patientName,
+  age, 
+  gender,
+  date,
+  hour,
+  consultationType,
+  consultationPrice,
+}: AppointmentRecord){
+  try{
+    generate({
+      template: patientPlug,
+      inputs: [
+        {
+          registerNumber,
+          patientName,
+          age,
+          gender,
+          date,
+          hour,
+          consultationType,
+          consultationPrice
+        }
+      ],
+      plugins: {
+        rectangle,
+        text,
+        image,
+        qrcode: barcodes.qrcode,
+        line
+      },
+    })
+    .then(e => browserPdf(e))
+
+  }catch {}
+}
+
+/*function appointmentRecord({
   patientName,
   age, 
   gender,
@@ -506,7 +543,7 @@ function appointmentRecord({
 
   doc.output('dataurlnewwindow', { filename: 'agendamento-consultas.pdf' });
 }
-
+*/
 function scheduleExamsRecord({
   patientName,
   age, 
