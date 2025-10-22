@@ -433,6 +433,45 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
   }
 }
 
+async function registerConsultationRequest(prev: unknown, formData: FormData){
+  try{
+    const patientId = formData.get("patientId");
+    const kindOfConsultation = formData.get("kind");
+    
+    console.log(patientId, kindOfConsultation);
+
+    return {
+      message: "Solicitação feita com sucesso!",
+      status: true
+    }
+  }catch {
+    return {
+      message: "Solicitação feita com sucesso!",
+      status: true
+    }
+  }
+}
+
+async function signRegisterConsultation(prev: unknown, formData: FormData){
+  try{
+    const patientId = formData.get("patientId");
+    const kindOfConsultation = formData.get("kind");
+    
+    console.log(patientId, kindOfConsultation);
+
+    return {
+      message: "Solicitação feita com sucesso!",
+      status: true
+    }
+  }catch {
+    return {
+      message: "Solicitação feita com sucesso!",
+      status: true
+    }
+  }
+}
+
+
 export {
   sendPatientToOffice,
   getPatient,
