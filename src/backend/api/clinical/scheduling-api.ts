@@ -163,6 +163,41 @@ async function updateExamService(prev: unknown, formData: FormData){
   }
 } 
 
+export async function updateService(prev: unknown, formData: FormData){
+  try{
+    const name = formData.get("name");
+    const id = formData.get("id");
+    const categoryId = formData.get("categoryId");
+    const classificationId = formData.get("classificationId");
+    const groupId = formData.get("groupId");
+    const specialtyId = formData.get("specialtyId");
+    const kind = formData.get("kindOfService");
+    const price = formData.get("price");
+
+    await serviceModel.updateOne({ _id: id }, {
+      name,
+      groupId,
+      categoryId,
+      classificationId,
+      kind,
+      price: price || 0,
+      specialtyId: specialtyId || undefined
+    });
+
+    return {
+      message: "Serviço actualizado com sucesso!",
+      status: true,
+    }
+  }catch(e){
+    console.error(e);
+
+    return {
+      message: "Não foi possivel atualizar!",
+      status: false,
+    };
+  }
+} 
+
 async function getExams(specialtyId?: string){
   const exams = await (specialtyId?examModel.find({ specialtyId }):examModel.find());
   const formatedList = [];

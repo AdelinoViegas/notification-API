@@ -9,7 +9,7 @@ import { useRouter, useParams } from "next/navigation";
 import InputField from "@/components/ui/input-field";
 import Selection, { SelectionOption } from "@/components/ui/selection";
 import Button from "@/components/ui/button";
-import { updateExamService } from "@/backend/api/clinical/scheduling-api";
+import { updateService } from "@/backend/api/clinical/scheduling-api";
 import SpecialtyModal from "@/components/specialty-modal";
 import { toast } from "react-toastify";
 
@@ -39,13 +39,12 @@ export default function UpdateService({
   classifications,
   specialties
 }: ServiceProps){
-  const [ state, action ] = useActionState(updateExamService, { message: "", status: false });
+  const [ state, action ] = useActionState(updateService, { message: "", status: false });
   const currentService = JSON.parse(service) as Service;
   const _groups = JSON.parse(groups) as SelectionOption[];
   const _categories = JSON.parse(categories) as SelectionOption[];
   const _classifications = JSON.parse(classifications) as SelectionOption[];
   const _specialties = JSON.parse(specialties) as SelectionOption[];
-  const [ messageState, setMessageState ] = useState(false);
   const router = useRouter();
   const params = useParams();
   const defaultServiceKinds = [
@@ -69,10 +68,11 @@ export default function UpdateService({
   return(
     <div className="bg-white border rounded-xl px-8 py-4">
       <form className="w-96" {...{action}}>
-        <input type="hidden" name="examId" value={params.examId} />
+        <input type="hidden" name="id" value={params.id} />
 
         <InputField
-          textLabel="Nome do Serviço" 
+          textLabel="Nome do Serviço"
+          placeholder="Descreva o nome do serviço" 
           required
           name="name"
           defaultValue={currentService.name}
