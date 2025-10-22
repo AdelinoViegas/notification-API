@@ -296,6 +296,22 @@ const scheduleSugerySchema = new Schema({
   timestamps: true,
 });
 
+const serviceRequestsSchema = new Schema({
+  patientId: Schema.ObjectId,
+  from: { 
+    type: String,
+    enum: [ "consultation", "urgency", "surgery" ],
+    required: true
+  },
+  userId: Schema.ObjectId,
+  kind: Schema.ObjectId,
+  pending: {
+    type: Boolean,
+    default: true
+  }
+}, {
+  timestamps: true
+})
 
 export{
   examSchema,
@@ -310,4 +326,5 @@ export{
   scheduleAppointmentSchema,
   officeSchema,
   scheduleSugerySchema,
+  serviceRequestsSchema
 }

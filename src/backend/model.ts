@@ -16,6 +16,7 @@ import {
   appointmentCancelSchema,
   officeSchema,
   scheduleSugerySchema,
+  serviceRequestsSchema,
 } from "@/backend/schemas/scheduling";
 import { 
   responsibleSchema,
@@ -118,6 +119,7 @@ const internalServiceModel = clinical.model("InternalService", internalServiceSc
 const hospitalizationModel = clinical.model("Hospitalization", hospitalizationSchema);
 const inHospitalizeModel = clinical.model("inHospitalize", inHospitalizeSchema);
 const internalMovimentModel = clinical.model("InternalMoviments", internalMovimentsSchema);
+const serviceRequestsModel = clinical.model("ServiceRequest", serviceRequestsSchema);
 
 export {
   userModel,
@@ -167,5 +169,6 @@ export {
   internalServiceModel,
   hospitalizationModel,
   inHospitalizeModel,
-  internalMovimentModel
+  internalMovimentModel,
+  serviceRequestsModel
 };

@@ -7,6 +7,7 @@ import {
   demographyModel,
   responsibleModel,
   externalResultsModel,
+  serviceRequestsModel,
 } from "@/backend/model";
 import { officeModel } from "@/backend/model";
 import { getUserId } from "@/lib/web-token";
@@ -433,12 +434,18 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
   }
 }
 
-async function registerConsultationRequest(prev: unknown, formData: FormData){
+async function registerRequest(prev: unknown, formData: FormData){
   try{
     const patientId = formData.get("patientId");
-    const kindOfConsultation = formData.get("kind");
+    const kindOfService = formData.get("kind");
+    const from = formData.get("from");
     
-    console.log(patientId, kindOfConsultation);
+    await serviceRequestsModel.create({
+      patientId,
+      from,
+      userId: await getUserId(),
+      kind: kindOfService
+    });
 
     return {
       message: "Solicitação feita com sucesso!",
@@ -452,22 +459,23 @@ async function registerConsultationRequest(prev: unknown, formData: FormData){
   }
 }
 
-async function signRegisterConsultation(prev: unknown, formData: FormData){
+async function getRequests(prev: unknown, formData: FormData){
   try{
-    const patientId = formData.get("patientId");
-    const kindOfConsultation = formData.get("kind");
+    const requests = await serviceRequestsModel.find();
+    const formated = [];
     
-    console.log(patientId, kindOfConsultation);
-
-    return {
-      message: "Solicitação feita com sucesso!",
-      status: true
+    for (const req of requests){
+      formated.push({
+        patientName: (await patientModel.findById({ _id: req.patientId }))?.fullname as string,
+        from: req.from,
+        kind: (await examModel.findById({ _id: req.kind }))?._id.toString() as string,
+        pending: req.pending
+      });
     }
+      
+    return formated;
   }catch {
-    return {
-      message: "Solicitação feita com sucesso!",
-      status: true
-    }
+    return []
   }
 }
 
@@ -481,5 +489,7 @@ export {
   getConsultResult,
   finishConsultation,
   requestReschedule,
-  uploadExternalExamFile
+  uploadExternalExamFile,
+  registerRequest,
+  getRequests
 };
