@@ -26,12 +26,12 @@
               "readOnly": true
           },
                     {
-              "name": "field1",
+              "name": "field22",
               "type": "text",
               "content": "Maianga-Luanda",
               "position": {
                   "x": 108.72,
-                  "y": 24
+                  "y": 26
               },
               "width": 91.28,
               "height": 18.79,
@@ -50,12 +50,12 @@
               "readOnly": true
           },
                     {
-              "name": "field1",
+              "name": "field23",
               "type": "text",
               "content": "244 222 222 222",
               "position": {
                   "x": 108.72,
-                  "y": 28
+                  "y": 32
               },
               "width": 91.28,
               "height": 18.79,
