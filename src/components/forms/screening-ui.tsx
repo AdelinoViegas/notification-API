@@ -137,8 +137,10 @@ export default function ScreeningUI({
     if(state.message){
       if(state.status)
         toast.success(state.message, {
-          onOpen: router.refresh,
-          onClose: () => setEditable(false)
+          onOpen: ()=>{
+            router.refresh();
+            setEditable(false);
+          }
         });
       else
         toast.error(state.message);

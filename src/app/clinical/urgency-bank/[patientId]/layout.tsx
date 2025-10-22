@@ -5,6 +5,8 @@ import TabNav from "@/components/tabnav";
 import Card from "@/components/ui/card";
 import { MonitorAccess, UnlockProcessAccess } from "@/components/lock-unlock-monitor-process";
 import { getPatient } from "@/backend/api/clinical/urgency-bank-api";
+import RequestConsult from "@/components/request-consult";
+import QuickFabShurtcut from "@/components/quick-fab-shurtcut";
 
 export default async function Layout({ 
   children,
@@ -34,7 +36,9 @@ export default async function Layout({
         basePathname="/clinical/urgency-bank" 
       />
 
-      <div className={clsx("my-4 text-center pt-3 text-white rounded-lg",
+      <RequestConsult />
+
+      <div className={clsx("my-4 text-center pt-3 text-white",
         {"bg-red-500 animate-pulse": patient.screening.priority === "red"},
         {"bg-blue-500": patient.screening.priority === "blue"},
         {"bg-green-500": patient.screening?.priority === "green"},
@@ -68,6 +72,8 @@ export default async function Layout({
           ]}
         />
       </div>
+
+      <QuickFabShurtcut />
     </div>
   )
 }
