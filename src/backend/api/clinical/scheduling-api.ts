@@ -26,12 +26,14 @@ import {
   screeningModel,
   scheduleSugeryModel,
   internalExamResultModel,
+  serviceModel,
 } from "@/backend/model";
 import { getUser } from "@/backend/api/clinical/api";
 import { getSyncedHistories, syncPatientRegister } from "./process-control";
 
 import { PatientHistory } from "./types";
 import { calculateAge } from "@/lib/calculate-age";
+import { omitUndefined } from "mongoose";
 
 export type CCGTypes = "category" | "classification" | "group";
 
@@ -92,6 +94,45 @@ async function signExam(prev: unknown, formData: FormData){
   }
 } 
 
+export async function signService(prev: unknown, formData: FormData){
+  try{
+    const name = formData.get("name") as string;
+    const categoryId = formData.get("categoryId") as string;
+    const classificationId = formData.get("classificationId") as string;
+    const groupId = formData.get("groupId") as string;
+    const specialtyId = formData.get("specialtyId") as string;
+    const kind = formData.get("kindOfService");
+    const price = formData.get("price");
+
+
+    if(kind === "consultation" && !specialtyId)
+      throw new Error("Informe a especialidade da consulta!", { cause: "user" });
+
+    await serviceModel.create({
+      name,
+      groupId,
+      categoryId,
+      classificationId,
+      price: price || 0,
+      specialtyId: specialtyId || undefined,
+      kind
+    });
+
+    return {
+      message: "Serviço registrado com sucesso!",
+      status: true,
+    }
+  }catch(e){
+    console.error(e);
+    const err = e as Error;
+
+    return {
+      message: err.cause ? err.message : "Não foi possivel registrar",
+      status: false,
+    }
+  }
+} 
+
 async function updateExamService(prev: unknown, formData: FormData){
   try{
     const examId = formData.get("examId") as string;
@@ -148,6 +189,47 @@ async function getExams(specialtyId?: string){
       groupId: data.groupId?.toString() as string,
       group: group?.name as string,
       price: data.price.toString(), // por causa das tabelas
+    });
+  }
+
+  return formatedList;
+}
+
+export async function getServices({ 
+  specialtyId, 
+  kind 
+}:{ 
+  specialtyId?: string; 
+  kind?: "exam" | "consultation" | "surgery"
+}){
+  const services = await (specialtyId
+    ? serviceModel.find({ specialtyId, kind })
+    : serviceModel.find()
+  );
+
+  const formatedList = [];
+
+  for(const service of services){
+    const [ group, category, classification ] = await Promise.all([
+      examGroupModel.findById({ _id: service.groupId }).select({ name: 1 }),
+      examCategoryModel.findById({ _id: service.categoryId }).select({ name: 1 }),
+      examClassificationModel.findById({ _id: service.classificationId }).select({ name: 1 })
+    ]);
+
+    formatedList.push({
+      _id: service._id.toString(),
+      id: service._id.toString(),
+      name: service.name,
+      label: service.name,
+      code: service.code.toString(), // por causa das tabelas
+      categoryId: service.categoryId?.toString() as string,
+      category: category?.name as string,
+      classificationId: service.classificationId?.toString() as string,
+      classification: classification?.name as string,
+      groupId: service.groupId?.toString() as string,
+      group: group?.name as string,
+      price: service?.price?.toString(), // por causa das tabelas
+      kind: service.kind
     });
   }
 
