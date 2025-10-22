@@ -651,7 +651,7 @@ async function scheduleAppointment(prev: unknown, formData: FormData){
 
 async function getScheduleAppointment(scheduleId:string){
   const schedule = await scheduleAppointmentModel.findById({_id:scheduleId});
-  const patient = await patientModel.findById({_id:schedule?.patientId}).select({fullname:1, gender:1});
+  const patient = await patientModel.findById({_id:schedule?.patientId});
   const doctor = await getUser(schedule?.doctorId?.toString() as string);
   const user = await getUser(schedule?.userId?.toString() as string);
   const consult = await serviceModel.findById({ _id: schedule?.consultId });

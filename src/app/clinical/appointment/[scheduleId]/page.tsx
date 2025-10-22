@@ -109,7 +109,7 @@ export default async function Page({
               type="appointmentRecord"
               args={{
                 registerNumber: schedule.registerNumber,    
-                patientName: schedule.patient,
+                fullname: schedule.patient,
                 age: schedule.age,
                 gender: schedule.gender,
                 date: schedule.date.pt,

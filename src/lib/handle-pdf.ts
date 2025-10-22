@@ -6,7 +6,7 @@ import type {
   ScreeningRecord, 
   ScheduleExamsRecord
 } from "@/components/pdf-button";
-import { patientPlug, browserPdf } from "./pdf-templates";
+import { patientPlug, appointmentPlug, browserPdf } from "./pdf-templates";
 import { generate } from "@pdfme/generator";
 import { image, rectangle, text, barcodes, line } from "@pdfme/schemas";
 import { AngolaProvices } from "@/backend/api/clinical/translator";
@@ -32,7 +32,6 @@ function  patientRecord({
   group,
   acess
 }: PatientRecord){
-
   /*const fonts = {
     "Roboto-Bold": { data: "/fonts/roboto/Roboto-Bold.ttf" },
     "Roboto": { data: "/fonts/roboto/Roboto-Regular.ttf", fallback: true },
@@ -46,6 +45,7 @@ function  patientRecord({
 
   try{
     const _group = JSON.parse(group) as GroupT;
+
     generate({
       template: patientPlug,
       inputs: [
@@ -97,7 +97,6 @@ function  patientRecord({
       },
     })
     .then(e => browserPdf(e))
-
   }catch {}
 }
 
@@ -362,8 +361,8 @@ function screeningRecord({
 
 function appointmentRecord({
   registerNumber,
-  patientName,
-  age, 
+  fullname,
+  age,
   gender,
   date,
   hour,
@@ -372,17 +371,18 @@ function appointmentRecord({
 }: AppointmentRecord){
   try{
     generate({
-      template: patientPlug,
+      template: appointmentPlug,
       inputs: [
         {
-          registerNumber,
-          patientName,
-          age,
-          gender,
+          registerNumber: String(registerNumber),
+          fullname,
+          age: String(age),
+          gender: gender?.at(0)?.toUpperCase(),
           date,
           hour,
-          consultationType,
-          consultationPrice
+          consultationType: `${consultationType}${'.'.repeat(45)}`,
+          consultationPrice: String(`${consultationPrice.toFixed(2).replace('.', ',')} kz`),
+          totalPrice: String(`${consultationPrice.toFixed(2).replace('.', ',')} kz`)
         }
       ],
       plugins: {
@@ -394,7 +394,6 @@ function appointmentRecord({
       },
     })
     .then(e => browserPdf(e))
-
   }catch {}
 }
 

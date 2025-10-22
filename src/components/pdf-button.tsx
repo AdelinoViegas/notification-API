@@ -40,7 +40,7 @@ export type ScreeningRecord = {
 
 export type AppointmentRecord = {
   registerNumber: number,
-  patientName: string,
+  fullname: string,
   age: number,
   gender: string,
   date: string,
@@ -72,7 +72,7 @@ export default function PDFButton({
   label: string;
   args: Arguments;
   type: "patientRecord" | "screeningRecord" | "appointmentRecord" | "scheduleExamsRecord";
-}){ 
+}){
   switch(type){
     case "patientRecord":
       return (
