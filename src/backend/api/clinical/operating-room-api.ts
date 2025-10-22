@@ -5,7 +5,7 @@ import { getUserId } from "@/lib/web-token";
 import { surgerySchedulingArea } from "@/backend/api/clinical/translator";
 import { calculateAge } from "@/lib/calculate-age";
 import { 
-  examModel, 
+  serviceModel, 
   patientModel,
   scheduleSugeryModel,
   operatingRoomModel,
@@ -34,7 +34,7 @@ async function getPatients({
     const schedule = await scheduleSugeryModel.findById({_id: items.scheduleId })
     const patient = await patientModel.findById({_id: schedule?.patientId}).select({fullname: 1});
     const doctor = await getUser(schedule?.doctorId?.toString() as string);
-    const sugeryType = await examModel.findById({_id: schedule?.sugeryType}).select({name: 1});
+    const sugeryType = await serviceModel.findById({_id: schedule?.sugeryType}).select({name: 1});
     
     const isProcess = await processStateModel.findOne({
         patientId: patient?._id,
@@ -51,7 +51,7 @@ async function getPatients({
       patient: patient?.fullname as string,
       //infirmary: schedule?.infirmary as string,
       //bed: schedule?.bed as string,
-      sugeryType: sugeryType?.name.toString() as string,
+      sugeryType: sugeryType?.name?.toString() as string,
       doctor: doctor.fullname as string,
       //date: `${getDateInSlashFormat(schedule?.doctorDay as Date)} ${schedule?.doctorTime}` as string,
     })
@@ -66,7 +66,7 @@ async function sendPatientToOperatingRoom(prev: unknown, formData: FormData){
   try{
     const scheduleId = formData.get('scheduleId');
     const sugery = await scheduleSugeryModel.findById({_id: scheduleId });
-    const service = await examModel.findById({_id: sugery?.sugeryType}).select({price: 1});
+    const service = await serviceModel.findById({_id: sugery?.sugeryType}).select({price: 1});
     const scheduleInOperatingRoom = await operatingRoomModel.find({ served: false });
     
     if(!sugery?.sugeryDate && !sugery?.sugeryTime)

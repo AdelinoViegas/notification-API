@@ -1,12 +1,13 @@
 "use server";
 
 import { 
-  examModel, 
+  serviceModel, 
   patientModel,
   scheduleAppointmentModel,
   demographyModel,
   responsibleModel,
   externalResultsModel,
+  serviceRequestsModel,
 } from "@/backend/model";
 import { officeModel } from "@/backend/model";
 import { getUserId } from "@/lib/web-token";
@@ -31,7 +32,7 @@ async function updatePaymentData(prev: unknown, formData: FormData){
       throw new Error('Informe o preço!', { cause: "user_price_empty"}); 
 
     const appointment = await scheduleAppointmentModel.findById({ _id: appointmentId });
-    const consult = await examModel.findById({ _id: appointment?.consultId });
+    const consult = await serviceModel.findById({ _id: appointment?.consultId });
 
     if(consult?.price){
       const paiedPorcent = Math.trunc((value * 100)/consult.price);
@@ -69,7 +70,7 @@ async function sendPatientToOffice(prev: unknown, formData: FormData){
   try{
     const scheduleId = formData.get('scheduleId');
     const appointment = await scheduleAppointmentModel.findById({_id: scheduleId });
-    const service = await examModel.findById({_id: appointment?.consultId}).select({price: 1});
+    const service = await serviceModel.findById({_id: appointment?.consultId}).select({price: 1});
     const scheduleInOffice = await officeModel.find({ served: false });
     
     if(scheduleInOffice.length){
@@ -417,7 +418,7 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
     const err = e as CustonAxiosError;
     console.log(err);
     
-    if(err.cause.code === "ECONNREFUSED"){
+    if(err.cause?.code === "ECONNREFUSED"){
       console.error("[-] A api do serviço de arquivo não está rodando!");
       console.error("[!] ajuda: https://github.com/mr0xff/master-clinical");
     }
@@ -433,6 +434,52 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
   }
 }
 
+async function registerRequest(prev: unknown, formData: FormData){
+  try{
+    const patientId = formData.get("patientId");
+    const kindOfService = formData.get("kind");
+    const from = formData.get("from");
+    
+    await serviceRequestsModel.create({
+      patientId,
+      from,
+      userId: await getUserId(),
+      kind: kindOfService
+    });
+
+    return {
+      message: "Solicitação feita com sucesso!",
+      status: true
+    }
+  }catch {
+    return {
+      message: "Solicitação feita com sucesso!",
+      status: true
+    }
+  }
+}
+
+async function getRequests(){
+  try{
+    const requests = await serviceRequestsModel.find();
+    const formated = [];
+    
+    for (const req of requests){
+      formated.push({
+        patientName: (await patientModel.findById({ _id: req.patientId }))?.fullname as string,
+        from: req.from,
+        kind: (await serviceModel.findById({ _id: req.kind }))?._id.toString() as string,
+        pending: req.pending
+      });
+    }
+      
+    return formated;
+  }catch {
+    return []
+  }
+}
+
+
 export {
   sendPatientToOffice,
   getPatient,
@@ -442,5 +489,7 @@ export {
   getConsultResult,
   finishConsultation,
   requestReschedule,
-  uploadExternalExamFile
+  uploadExternalExamFile,
+  registerRequest,
+  getRequests
 };

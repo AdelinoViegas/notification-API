@@ -21,7 +21,7 @@ import type { DoctorCalendarReference, DoctorDayAndTime } from "@/backend/api/cl
 import { 
   scheduleAppointment, 
   findDoctorCalendar,
-  getExams
+  getServices
 } from "@/backend/api/clinical/scheduling-api";
 import { toast } from "react-toastify";
 
@@ -57,7 +57,7 @@ export default function ScheduleAppointment(
       return;
     }
     const newDoctorsList = doctorsRef.current.filter(doctor => doctor?.roleId === specialtyId) as unknown as SelectionOption[];
-    const consults = await getExams(specialtyId) as SelectionOption[];
+    const consults = await getServices({specialtyId, kind: "exam" }) as SelectionOption[];
     setConsults(consults);
     setDoctors(newDoctorsList);
   }, []);

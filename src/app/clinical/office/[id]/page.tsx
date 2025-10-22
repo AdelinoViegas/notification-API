@@ -92,9 +92,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                   storageId={consultResult?.storageId}
                 />
 
-                {consultResult?.storageId && 
-                  <ViewUserFile id={consultResult.storageId} />
-                }
+                {consultResult?.storageId && <ViewUserFile id={consultResult.storageId} />}
               </div>
             </div>
           </Accordium> 

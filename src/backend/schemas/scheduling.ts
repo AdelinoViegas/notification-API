@@ -2,29 +2,31 @@ import { randomInt } from "crypto";
 import { Schema } from "mongoose";
 import { ConsultResult } from "./types";
 
-const examSchema = new Schema({
+const serviceSchema = new Schema({
   name: {
     type: String,
-    unique: true,
-    required: true,
+    required: true
   },
-  examCode: {
+  code: {
     type: Number,
-    default: ()=>randomInt(111111111, 999999999),
-    unique: true,
+    default: () => randomInt(111111, 999999)
   },
   categoryId: Schema.Types.ObjectId,
   classificationId: Schema.Types.ObjectId,
   groupId: Schema.Types.ObjectId,
   specialtyId: Schema.Types.ObjectId,
+  kind: {
+    type: String,
+    enum: [ "surgery" , "consultation", "exam" ],
+    required: true
+  },
   price: {
     type: Number,
     default: 0,
   },
-}, {
-  timestamps: true,
-  collection: "exam_service",
 });
+
+serviceSchema.index({ name: 1, code: 1, kind: 1 }, { unique: true });
 
 const examGroupSchema = new Schema({
   name: {
@@ -296,9 +298,24 @@ const scheduleSugerySchema = new Schema({
   timestamps: true,
 });
 
+const serviceRequestsSchema = new Schema({
+  patientId: Schema.ObjectId,
+  from: { 
+    type: String,
+    enum: [ "consultation", "urgency", "surgery" ],
+    required: true
+  },
+  userId: Schema.ObjectId,
+  kind: Schema.ObjectId,
+  pending: {
+    type: Boolean,
+    default: true
+  }
+}, {
+  timestamps: true
+})
 
 export{
-  examSchema,
   examGroupSchema,
   scheduleExamSchema,
   examResultSchema,
@@ -310,4 +327,6 @@ export{
   scheduleAppointmentSchema,
   officeSchema,
   scheduleSugerySchema,
+  serviceRequestsSchema,
+  serviceSchema
 }
