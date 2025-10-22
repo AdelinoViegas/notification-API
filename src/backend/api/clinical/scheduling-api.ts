@@ -32,65 +32,10 @@ import { getUser } from "@/backend/api/clinical/api";
 import { getSyncedHistories, syncPatientRegister } from "./process-control";
 import { PatientHistory } from "./types";
 import { calculateAge } from "@/lib/calculate-age";
+import { omitUndefined } from "mongoose";
 
 export type CCGTypes = "category" | "classification" | "group";
 
-async function signExam(prev: unknown, formData: FormData){
-  try{
-    const name = formData.get("name") as string;
-    const categoryId = formData.get("categoryId") as string;
-    const classificationId = formData.get("classificationId") as string;
-    const groupId = formData.get("groupId") as string;
-    const specialtyId = formData.get("specialtyId") as string;
-    const price = formData.get("price");
-
-    if(!specialtyId){
-      const service = new examModel({
-        name,
-        groupId,
-        categoryId,
-        classificationId,
-        price: Number(price),
-      });
-
-      await service.save();
-
-      return {
-        message: "Serviço registrado com sucesso!",
-        status: true,
-      }
-    }     
-  
-    const service = new examModel({
-      name,
-      groupId,
-      categoryId,
-      classificationId,
-      specialtyId,
-      price: Number(price),
-    });
-
-    await service.save();
-
-    return {
-      message: "Serviço registrado com sucesso!",
-      status: true,
-    }
-  }catch(e: unknown){
-    const err = e as { code: number } & Error;
-
-    if(err.code)
-      return {
-        message: "Este exame já foi cadastrado!",
-        status: false,
-      }
-
-    return {
-      message: "Falha no registro!",
-      status: false,
-    };
-  }
-} 
 
 export async function signService(prev: unknown, formData: FormData){
   try{
@@ -131,38 +76,6 @@ export async function signService(prev: unknown, formData: FormData){
   }
 } 
 
-async function updateExamService(prev: unknown, formData: FormData){
-  try{
-    const examId = formData.get("examId") as string;
-    const name = formData.get("name") as string;
-    const groupId = formData.get("groupId") as string;
-    const categoryId = formData.get("categoryId") as string;
-    const classificationId = formData.get("classificationId") as string;
-    const price = formData.get("price");
-    const specialtyId = formData.get("specialtyId"); // apenas válido para consultas
-
-    await examModel.updateOne({ _id: examId },{
-      name,
-      groupId,
-      categoryId,
-      classificationId,
-      price,
-      specialtyId: specialtyId?specialtyId:undefined
-    });
-
-    return {
-      message: "Exame/Serviço actualizado com sucesso!",
-      status: true,
-    }
-  }catch(err: unknown){
-    return {
-      message: "Falha na actualização!",
-      status: false,
-      detail: JSON.stringify(err)
-    };
-  }
-} 
-
 export async function updateService(prev: unknown, formData: FormData){
   try{
     const name = formData.get("name");
@@ -198,36 +111,6 @@ export async function updateService(prev: unknown, formData: FormData){
   }
 } 
 
-async function getExams(specialtyId?: string){
-  const exams = await (specialtyId?examModel.find({ specialtyId }):examModel.find());
-  const formatedList = [];
-
-  for(const data of exams){
-    const [ group, category, classification ] = await Promise.all([
-      examGroupModel.findById({ _id: data.groupId }).select({ name: 1 }),
-      examCategoryModel.findById({ _id: data.categoryId }).select({ name: 1 }),
-      examClassificationModel.findById({ _id: data.classificationId }).select({ name: 1 })
-    ]);
-
-    formatedList.push({
-      _id: data._id.toString(),
-      id: data._id.toString(),
-      name: data.name,
-      label: data.name,
-      examCode: data.examCode.toString(), // por causa das tabelas
-      categoryId: data.categoryId?.toString() as string,
-      category: category?.name as string,
-      classificationId: data.classificationId?.toString() as string,
-      classification: classification?.name as string,
-      groupId: data.groupId?.toString() as string,
-      group: group?.name as string,
-      price: data.price.toString(), // por causa das tabelas
-    });
-  }
-
-  return formatedList;
-}
-
 export async function getServices({ 
   specialtyId, 
   kind 
@@ -235,11 +118,7 @@ export async function getServices({
   specialtyId?: string; 
   kind?: "exam" | "consultation" | "surgery"
 }){
-  const services = await (specialtyId
-    ? serviceModel.find({ specialtyId, kind })
-    : serviceModel.find()
-  );
-
+  const services = await serviceModel.find(omitUndefined({ specialtyId, kind }));
   const formatedList = [];
 
   for(const service of services){
@@ -286,22 +165,6 @@ export async function getService(id: string){
     }
   }catch {
 
-  }
-}
-
-
-async function getExam(examId: string){
-  const exam = await examModel.findById({_id: examId });
-  
-  return {
-    _id: exam?._id.toString() as string,
-    name: exam?.name as string,
-    groupId: exam?.groupId?.toString() as string,
-    categoryId: exam?.categoryId?.toString() as string,
-    classificationId: exam?.classificationId?.toString() as string,
-    price: exam?.price as number,
-    examCode: exam?.examCode as number,
-    specialtyId: exam?.specialtyId?.toString()
   }
 }
 
@@ -1426,11 +1289,8 @@ async function getExamResultDetail(id: string){
 }
 
 export {
-  signExam,
   signExamResult,
   signDateSugery,
-  getExams,
-  getExam,
   getExamResults,
   getExamResult,
   getExamCancel,
@@ -1440,7 +1300,6 @@ export {
   getScheduleAppointments,
   getSchedulePatientExam,
   reschedulePatientExam,
-  updateExamService,
   archivingScheduleExam,
   archivingScheduleAppointment,
   unArchiving,

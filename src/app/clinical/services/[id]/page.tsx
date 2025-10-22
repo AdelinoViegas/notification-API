@@ -1,5 +1,4 @@
-import Header from "@/components/header";
-import { getExam, getService } from "@/backend/api/clinical/scheduling-api";
+import { getService } from "@/backend/api/clinical/scheduling-api";
 import { getCCGs } from "@/backend/api/clinical/scheduling-api";
 import { getSpecialties } from "@/backend/api/clinical/api";
 import UpdateService from "@/components/forms/update-service";

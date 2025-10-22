@@ -459,7 +459,7 @@ async function registerRequest(prev: unknown, formData: FormData){
   }
 }
 
-async function getRequests(prev: unknown, formData: FormData){
+async function getRequests(){
   try{
     const requests = await serviceRequestsModel.find();
     const formated = [];
