@@ -10,7 +10,7 @@ export default function Error({
 }){
   return(
     <main className="flex h-screen flex-col items-center justify-center">
-      <h2>Desculpe, tivemos um erro!</h2>
+      <h2>Opps, tivemos um erro!</h2>
       <Button onClick={reset}>Tente novamente</Button>
     </main>
   )
