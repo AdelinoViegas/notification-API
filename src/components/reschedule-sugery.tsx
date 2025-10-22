@@ -12,7 +12,7 @@ import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
 import Alert from "@/components/ui/alert";
 import Selection, { SelectionOption } from "@/components/ui/selection";
-import { getExams } from "@/backend/api/clinical/scheduling-api";
+import { getServices } from "@/backend/api/clinical/scheduling-api";
 import { rescheduleSugery } from "@/backend/api/clinical/operating-room-api";
 
 export default function RescheduleSugery({
@@ -31,7 +31,7 @@ export default function RescheduleSugery({
   useEffect(()=>{
     const dataSugeries:SelectionOption[] = [];
 
-    getExams().then(
+    getServices({ kind: "exam" }).then(
       data => {
         const sugeries = data.filter( props => props.category.toLowerCase().includes("cirurgia"))
         sugeries.forEach( props => {

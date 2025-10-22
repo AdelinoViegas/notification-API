@@ -132,7 +132,7 @@ export async function getServices({
       _id: service._id.toString(),
       id: service._id.toString(),
       name: service.name,
-      label: service.name,
+      label: service.name as string,
       code: service.code.toString(), // por causa das tabelas
       categoryId: service.categoryId?.toString() as string,
       category: category?.name as string,

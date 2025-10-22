@@ -14,7 +14,7 @@ import Selection from "@/components/ui/selection";
 import { SelectionOption } from "@/components/ui/selection";
 import InputDetails from "@/components/ui/input-details";
 import { 
-  getExams,
+  getServices,
   scheduleSugery
 } from "@/backend/api/clinical/scheduling-api";
 import { getDoctors } from "@/backend/api/clinical/api";
@@ -55,7 +55,7 @@ export default function ScheduleSugery(
 
     const dataSugeries:SelectionOption[] = [];
 
-    getExams().then(
+    getServices({ kind: "exam" }).then(
       data => {
         const sugeries = data.filter( props => props.category.toLowerCase().includes("cirurgia"))
         sugeries.forEach( props => {

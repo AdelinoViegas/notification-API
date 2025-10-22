@@ -18,7 +18,7 @@ import { BiTrash as TrashIcon } from "react-icons/bi";
 import clsx from "clsx";
 import { toast } from 'react-toastify';
 import { 
-  getExams, 
+  getServices,
   schedulePatientExam,
   getCCGs
 } from "@/backend/api/clinical/scheduling-api";
@@ -44,7 +44,7 @@ export default function RequestExams({
   const router = useRouter();
 
   const handlerCallback = (e: React.ChangeEvent<HTMLSelectElement>)=>{
-    getExams()
+    getServices({ kind: "exam" })
     .then(data => { 
       const examCopies = e.target.value?data.filter(props => props.categoryId === e.target.value):data;
       setExams(examCopies);
@@ -96,7 +96,7 @@ export default function RequestExams({
   useEffect(()=>{
     const loadData = async ()=>{
       const ccgs = await getCCGs('category') as SelectionOption[];
-      const exams = await getExams() as SelectionOption[];
+      const exams = await getServices({ kind: "exam" }) as SelectionOption[];
       setExamCache(exams);
       setExams(exams);
       setCCGS(ccgs);
