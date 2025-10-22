@@ -1,18 +1,12 @@
 import Header from "@/components/header";
-import { getExam } from "@/backend/api/clinical/scheduling-api";
-import ExamForm from "@/components/forms/exam-form";
+import { getExam, getService } from "@/backend/api/clinical/scheduling-api";
 import { getCCGs } from "@/backend/api/clinical/scheduling-api";
 import { getSpecialties } from "@/backend/api/clinical/api";
+import UpdateService from "@/components/forms/update-service";
 
-export default async function Page({
-	params
-}:{
-	params: Promise<{
-		examId: string;
-	}>
-}) {
-  const { examId } = await params;
-  const examData = await getExam(examId);
+export default async function Page({ params }:{ params: Promise<{ id: string }>}){
+  const { id } = await params;
+  const service = await getService(id);
   const group = await getCCGs("group");
   const categories = await getCCGs("category");
   const classifications = await getCCGs("classification");
@@ -20,12 +14,8 @@ export default async function Page({
 
   return (
     <main className="space-y-3">
-      <div className="mt-6">
-        <Header title="Editar Exame/Serviço"/>
-      </div>
-      
-      <ExamForm 
-        exam={JSON.stringify(examData)} 
+      <UpdateService 
+        service={JSON.stringify(service)} 
         groups={JSON.stringify(group)}
         categories={JSON.stringify(categories)}
         classifications={JSON.stringify(classifications)}

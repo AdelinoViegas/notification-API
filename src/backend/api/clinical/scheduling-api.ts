@@ -30,10 +30,8 @@ import {
 } from "@/backend/model";
 import { getUser } from "@/backend/api/clinical/api";
 import { getSyncedHistories, syncPatientRegister } from "./process-control";
-
 import { PatientHistory } from "./types";
 import { calculateAge } from "@/lib/calculate-age";
-import { omitUndefined } from "mongoose";
 
 export type CCGTypes = "category" | "classification" | "group";
 
@@ -235,6 +233,27 @@ export async function getServices({
 
   return formatedList;
 }
+
+export async function getService(id: string){
+  try{
+    const service = await serviceModel.findById({ _id: id });
+  
+    return {
+      _id: service?._id.toString() as string,
+      name: service?.name as string,
+      groupId: service?.groupId?.toString() as string,
+      categoryId: service?.categoryId?.toString() as string,
+      classificationId: service?.classificationId?.toString() as string,
+      price: service?.price as number,
+      examCode: service?.code as number,
+      specialtyId: service?.specialtyId?.toString(),
+      kind: service?.kind as string
+    }
+  }catch {
+
+  }
+}
+
 
 async function getExam(examId: string){
   const exam = await examModel.findById({_id: examId });

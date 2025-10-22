@@ -35,7 +35,7 @@ export const clinicalIcons = [
     Icon: FaRegHospital
   },
   {
-    route: 'exams-services',
+    route: 'services',
     Icon: GrDocumentText
   },
   {
@@ -100,9 +100,9 @@ export const clinicalRoutes = [
     label: 'Gestão da Unidade',
   },
   {
-    href: "/clinical/exams-services",
-    route: 'exams-services',
-    label: 'Exames/Serviços Cadastrados',
+    href: "/clinical/services",
+    route: 'services',
+    label: 'Serviços Registrados',
   },
   {
     href: "/clinical/appointment",

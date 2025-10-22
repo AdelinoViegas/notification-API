@@ -10,37 +10,37 @@ import InputField from "@/components/ui/input-field";
 import Selection, { SelectionOption } from "@/components/ui/selection";
 import Button from "@/components/ui/button";
 import { updateExamService } from "@/backend/api/clinical/scheduling-api";
-import Alert from "@/components/ui/alert";
 import SpecialtyModal from "@/components/specialty-modal";
+import { toast } from "react-toastify";
 
-type Exam = {
+type Service = {
   _id: string;
   name: string;
   categoryId: string;
   groupId: string;
   classificationId: string;
   price: number;
-  examCode: number;
   specialtyId?: string;
+  kind: string;
 };
 
-type ExamFormProps = {
-  exam: string;
+type ServiceProps = {
+  service: string;
   groups: string;
   categories: string;
   classifications: string;
   specialties: string;
 };
 
-export default function ExamForm({
-  exam,
+export default function UpdateService({
+  service,
   groups,
   categories,
   classifications,
   specialties
-}: ExamFormProps){
+}: ServiceProps){
   const [ state, action ] = useActionState(updateExamService, { message: "", status: false });
-  const currentExam = JSON.parse(exam) as Exam;
+  const currentService = JSON.parse(service) as Service;
   const _groups = JSON.parse(groups) as SelectionOption[];
   const _categories = JSON.parse(categories) as SelectionOption[];
   const _classifications = JSON.parse(classifications) as SelectionOption[];
@@ -48,43 +48,66 @@ export default function ExamForm({
   const [ messageState, setMessageState ] = useState(false);
   const router = useRouter();
   const params = useParams();
+  const defaultServiceKinds = [
+    { _id: "exam", label: "Exame" },
+    { _id: "consultation", label: "Consulta" },
+    { _id: "surgery", label: "Cirurgia" },
+  ];
+  const [ specialtyState, setSpecialtyState ] = useState(currentService?.specialtyId ? true:false);
 
   useEffect(()=>{
-    setMessageState(true);
     if(state.message)
-      setTimeout(()=>{
-        setMessageState(false);
+      if(state.status)
+        toast.success(state.message, {
+          onClose: () => router.replace("/clinical/services")
+        });
+      else
+        toast.error(state.message);
 
-        if(state.status)
-          router.replace("/clinical/exams-services");
-      }, state.status?3000:5000);
   }, [state, router]);
-  
+
   return(
     <div className="bg-white border rounded-xl px-8 py-4">
       <form className="w-96" {...{action}}>
         <input type="hidden" name="examId" value={params.examId} />
-        
-        <InputField
-          textLabel="Código"
-          disabled
-          defaultValue={currentExam.examCode}
-        />
 
         <InputField
-          textLabel="Nome do exame/serviço" 
-          placeholder="Descreva o nome"
+          textLabel="Nome do Serviço" 
           required
           name="name"
-          defaultValue={currentExam.name}
+          defaultValue={currentService.name}
         />
+
+        <Selection
+          options={defaultServiceKinds}
+          label="Tipo de Serviço"
+          name="kindOfService"
+          className="grow"
+          onChange={e => setSpecialtyState(e.target.value === "consultation" ? true:false)}
+          defaultValue={currentService?.kind}
+          required
+        />
+
+
+        { specialtyState && <div className="flex gap-3 items-center">
+          <Selection
+            options={_specialties}
+            label="Especialidade"
+            name="specialtyId"
+            className="grow"
+            defaultValue={currentService.specialtyId}
+          />
+          
+          <SpecialtyModal shortWord />
+        </div>}
+
 
         <Selection
           label="Categoria"
           name="categoryId"
           required
           options={_categories}
-          defaultValue={currentExam.categoryId}
+          defaultValue={currentService.categoryId}
         />
 
         <Selection
@@ -92,7 +115,7 @@ export default function ExamForm({
           name="classificationId"
           required
           options={_classifications}
-          defaultValue={currentExam.classificationId}
+          defaultValue={currentService.classificationId}
         />
 
         <Selection
@@ -100,38 +123,18 @@ export default function ExamForm({
           name="groupId"
           required
           options={_groups}
-          defaultValue={currentExam.groupId}
+          defaultValue={currentService.groupId}
         />
 
-        <div className="flex gap-3 items-center">
-          <Selection
-            options={_specialties}
-            label="Especialidade"
-            name="specialtyId"
-            className="grow"
-            defaultValue={currentExam?.specialtyId}
-          />
-          <SpecialtyModal shortWord />
-        </div>
         <InputField
           textLabel="Preço" 
           type="number"
           placeholder="Preço do Exame/Serviço"
           name="price"
-          defaultValue={currentExam.price}
+          defaultValue={currentService.price}
         />
 
         <Button>Actualizar</Button>
-
-        {
-        state?.message && messageState &&
-          <div className="flex mt-3">
-            <Alert
-              type={state?.status?'success':'error'}
-              message={state?.message}
-            />
-          </div>
-        }
       </form>
     </div>
   )

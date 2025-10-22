@@ -22,7 +22,7 @@ import { getSpecialties } from "@/backend/api/clinical/api";
 import SpecialtyModal from "@/components/specialty-modal";
 import { toast } from "react-toastify";
 
-export default function SignExam(){
+export default function RegisterService(){
   const [ state, action ] = useActionState(signService, { message: "", status: false });
   const [ ccgState, ccgAction ] = useActionState(signCCG, { message: "", status: false });
   const [ groupModal, setGroupModal ] = useState(false);
@@ -102,8 +102,6 @@ export default function SignExam(){
         <PlusIcon className="w-5" />
         Cadastrar
       </Button>
-
-
 
       <Modal 
         title="Cadastrar Serviço"

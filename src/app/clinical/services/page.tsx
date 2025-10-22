@@ -1,7 +1,7 @@
 import Table from "@/components/table";
 import { formater } from "@/lib/table-formater";
 import Alert from "@/components/ui/alert";
-import SignExam from "@/components/sign-exam";
+import RegisterService from "@/components/register-service";
 import CCG from "@/components/CCG";
 import Refresh from "@/components/refresh";
 import { getServices } from "@/backend/api/clinical/scheduling-api";
@@ -35,7 +35,7 @@ export default async function Page() {
       <Refresh />
 
       <div className="flex flex-col lg:flex-row gap-x-2 gap-3 pb-4 justify-between">
-        <SignExam />
+        <RegisterService />
 
         <Alert 
           type="info" 
@@ -53,7 +53,7 @@ export default async function Page() {
       </div>
   
       <Table
-        baseRowLink="/clinical/exams-services/"
+        baseRowLink="/clinical/services"
         rowLength={6}
         columns={[
           "Código", 
