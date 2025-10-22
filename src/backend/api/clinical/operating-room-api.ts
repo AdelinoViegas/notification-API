@@ -251,7 +251,7 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
     const analgesia = formData.get("analgesia") as string;
     const mobilization = formData.get("mobilization") as string;
     const antibiotics = formData.get("antibiotics") as string;
-
+ 
     const hasPatientOperatingRoom = await operatingRoomModel.findOne({ scheduleId });
     const patient = hasPatientOperatingRoom?.patientIdentification;
     const evaluation = hasPatientOperatingRoom?.preoperativeEvaluation;
@@ -562,26 +562,93 @@ async function finishOperatingRoom(prev: unknown, formData: FormData){
   try{
     const operatingRoomId = formData.get("operatingRoomId");
     const operatingRoom = await operatingRoomModel.findById({ _id: operatingRoomId });
-    
-    if(!operatingRoom)
-      throw new Error("Falha no registro!", { cause: "log_not_found"});
+    const identification = operatingRoom?.patientIdentification;
+    const evaluation = operatingRoom?.preoperativeEvaluation;
+    const planning = operatingRoom?.sugeryPlanning;
+    const security = operatingRoom?.checkSecurity;
+    const procedure = operatingRoom?.intraoperativeProcedure;
+    const recovery = operatingRoom?.postAnestheticRecovery;
+    const discharge = operatingRoom?.patientDischarge;
+     
+    const identificationData = identification?.preoperativeDiagnosis && 
+                               identification?.informedConsent && 
+                               identification?.responsible;
 
-    if(!operatingRoom?.patientIdentification)
+    const evaluationData = evaluation?.medicalAndsurgicalHistory &&
+                           evaluation?.allergies && evaluation.surgicalRisk &&
+                           evaluation?.currentClinicalStatus && evaluation?.fastingConfirmed &&
+                           evaluation?.previousMedication && evaluation?.laboratoryTests?.description &&
+                           evaluation?.laboratoryTests?.externalId && evaluation?.imagingTests?.description &&
+                           evaluation?.imagingTests?.externalId;
+
+    const planningData = planning?.designatedRoom && planning?.implantableDevices && 
+                         planning?.materialsAndEquipment && planning?.surgicalTeam;
+
+    const securityData = typeof security?.anestheticRisk === "boolean" && 
+                         typeof security?.bloodAndEmergencySupplies === "boolean" &&
+                         typeof security?.patientIdentity === "boolean" && security?.surgerySite && 
+                         typeof security?.validConsent === "boolean";
+
+    const procedureData = procedure?.startTime && procedure.startTime && procedure.otherProcedure &&
+                          procedure?.fluidVolumeAndBloodLoss && procedure?.typeOfAnesthesia &&
+                          procedure?.implantsAndProsthesesUsed && procedure?.intraoperativeComplications &&
+                          procedure?.medicationAdministered && procedure?.surgicalTechnique;                    
+    
+    const recoveryData = recovery?.checkInTime && recovery?.vitalSignal?.length && 
+                         recovery?.levelofConsciousness?.result  !== null &&
+                         recovery?.levelofConsciousness?.saturation !== null && 
+                         recovery?.levelofConsciousness?.motorActivity !== null &&
+                         recovery?.levelofConsciousness?.respiration !== null && 
+                         recovery?.levelofConsciousness?.circulation !== null && 
+                         recovery?.levelofConsciousness?.consciousness !== null && 
+                         recovery?.medicationAdministered && recovery?.postAnestheticEvents;
+    
+    const dischargeData = discharge?.postOperativeIndications?.analgesia && discharge?.surgicalInformation &&
+                          discharge?.postOperativeIndications?.antibiotics &&
+                          discharge?.postOperativeIndications?.diet && 
+                          discharge?.postOperativeIndications?.mobilization;
+
+    if(!identificationData)
       throw new Error("Preencha os dados da identificação do paciente!", { cause: "not_fill"});
 
-    if(!operatingRoom?.sugeryPlanning)
-      throw new Error("Preencha os dados do planeamento da cirurgia", { cause: "not_fill"});
+    if(!evaluationData)
+      throw new Error("Preencha os dados da avaliação pré-operatória", { cause: "not_fill"});
 
-    if(!operatingRoom?.sugeryPlanning)
+    if(!planningData)
+      throw new Error("Preencha os dados do planeamento de cirurgia", { cause: "not_fill"});
+
+    if(!securityData)
       throw new Error("Preencha os dados da checklist de segurânça de cirurgia", { cause: "not_fill"});
     
-    if(!operatingRoom?.intraoperativeProcedure)
+    if(!procedureData)
       throw new Error("Preencha os dados do procedimento intraoperatório!", { cause: "not_fill"});
+    
+    if(!recoveryData)
+      throw new Error("Preencha os dados da recuperação pós-anestésica (RPA)", { cause: "not_fill"});
 
-    await operatingRoomModel.updateOne({ _id: operatingRoomId }, { served: true }); 
+    if(!dischargeData)
+      throw new Error("Preencha os dados da alta do paciente", { cause: "not_fill"});
+     
+    const postAnestheticRecovery =  {
+      checkInTime: recovery?.checkInTime,
+      checkOutTime: new Date(new Date().getTime() + (1 * 60 * 60 * 1000)).toISOString().slice(0,16),
+      vitalSignal: recovery?.vitalSignal,
+      levelofConsciousness: {
+        motorActivity: recovery?.levelofConsciousness?.motorActivity,
+        respiration: recovery?.levelofConsciousness?.respiration,
+        circulation: recovery?.levelofConsciousness?.circulation,
+        consciousness: recovery.levelofConsciousness?.consciousness,
+        saturation: recovery?.levelofConsciousness?.saturation,
+        result: recovery?.levelofConsciousness?.result,
+      },
+      medicationAdministered: operatingRoom?.postAnestheticRecovery?.medicationAdministered,
+      postAnestheticEvents: operatingRoom?.postAnestheticRecovery?.postAnestheticEvents,
+    }
+     
+    await operatingRoomModel.updateOne({ _id: operatingRoomId }, { postAnestheticRecovery ,served: true});
 
     return {
-      message: ' concluída com sucesso!',
+      message: 'Processo concluído com sucesso!',
       status: true,
     }
   }catch(err: unknown){

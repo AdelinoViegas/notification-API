@@ -6,11 +6,11 @@ import {
   useActionState 
 } from "react";
 import { GrSchedulePlay } from "react-icons/gr";
+import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import Modal from "@/components/modal";
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
-import Alert from "@/components/ui/alert";
 import Selection, { SelectionOption } from "@/components/ui/selection";
 import { getServices } from "@/backend/api/clinical/scheduling-api";
 import { rescheduleSugery } from "@/backend/api/clinical/operating-room-api";
@@ -25,7 +25,6 @@ export default function RescheduleSugery({
   const [sugeriesType, setSugeriesType] = useState<SelectionOption[]>([]); 
   const closeModal = ()=> setModalState(false);
   const openModal = ()=> setModalState(true);
-  const [ messageState, setMessageState ] = useState(false);
   const router = useRouter();
   
   useEffect(()=>{
@@ -46,18 +45,17 @@ export default function RescheduleSugery({
   }, []);
 
   useEffect(()=>{
-    if(state.message){
-      setMessageState(true);
-
-      setTimeout(()=>{
-        setMessageState(false);
-
-        if(state.status){
-          closeModal();
-            router.refresh();  
-        }
-      }, state.status?2000:7000);
-    }
+    if(state.message)
+      if(state.status)
+        toast.success(state.message, {
+          autoClose: 3500,
+          onClose: () => { 
+            closeModal()
+            router.refresh()
+          }          
+        });
+      else
+        toast.error(state.message, {autoClose: 3500});
   }, [state, router]);
 
   return(
@@ -112,16 +110,6 @@ export default function RescheduleSugery({
             <Button>Salvar</Button>
           </div>
         </form>
-
-        {
-          state.message && messageState &&
-          <div className="mt-3">
-            <Alert
-              type={state.status?'success':'error'}
-              message={state.message}
-            />
-          </div>
-        }
       </Modal>
     </div>
   )

@@ -138,5 +138,5 @@ export const clinicalRoutes = [
     href: "/clinical/hospitalization",
     route: "hospitalization",
     label: "Internamento"
-  }
+  },
 ];

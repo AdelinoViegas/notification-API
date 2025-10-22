@@ -27,19 +27,17 @@ export default function ArchivingSugery({
   const closeModal = ()=>setModalState(false);
 
   useEffect(()=>{
-    if(state.message){
+    if(state.message)
       if(state.status){
         closeModal();
         toast.success(state.message, {
-            autoClose: 1500,
+            autoClose: 3500,
             onClose: ()=>{
               router.replace(isArchived?'/clinical/schedule-sugery/archiveds':'/clinical/schedule-sugery');
             }
         });
       }else
-          toast.error(state.message);
-
-    }
+        toast.error(state.message, {autoClose: 3500});
   }, [state, router, isArchived]);
   
   return(

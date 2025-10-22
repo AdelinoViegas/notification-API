@@ -6,12 +6,12 @@ import {
   useRef,
   useActionState
 } from "react";
+import { toast } from "react-toastify";
+import { BiPlus as PlusIcon } from "react-icons/bi";
 import { useRouter } from "next/navigation";
 import Modal from "@/components/modal";
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
-import Alert from "@/components/ui/alert";
-import { BiPlus as PlusIcon } from "react-icons/bi";
 import { signSpecialty } from "@/backend/api/clinical/api";
 
 export default function SpecialtyModal({ shortWord }: { shortWord?: boolean; }){
@@ -19,23 +19,21 @@ export default function SpecialtyModal({ shortWord }: { shortWord?: boolean; }){
   const [ modalState, setModalState ] = useState(false);
   const closeModal = ()=> setModalState(false);
   const openModal = ()=> setModalState(true);
-  const [ messageState, setMessageState ] = useState(false);
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(()=>{
-    if(state.message){
-      setMessageState(true);
-
-      setTimeout(()=>{
-        if(state.status){
-          router.refresh();
-          formRef.current?.reset();
-        }
-        
-        setMessageState(false);
-      }, 2000);
-    }
+    if(state.message)
+      if(state.status)
+        toast.success(state.message, {
+          autoClose: 3500,
+          onClose: ()=> {
+            router.refresh()
+            formRef.current?.reset()
+          }
+        });
+      else
+        toast.error(state.message, {autoClose: 3500});
   }, [state, router]);
 
   return(
@@ -66,15 +64,6 @@ export default function SpecialtyModal({ shortWord }: { shortWord?: boolean; }){
             <Button>Salvar</Button>
           </div>
         </form>
-        
-        { messageState &&
-          <div className="mt-3">
-            <Alert
-              message={state.message}
-              type={state.status?"success":"error"} 
-            /> 
-          </div>
-        }
       </Modal>
     </div>
   )

@@ -924,9 +924,13 @@ async function finishScreening(prev: unknown, formData: FormData){
 async function signSpecialty(prev: unknown, formData: FormData){
   try{
     const name = (formData.get('name') as string).toUpperCase();
-    
+    const specialtyData = await specialtyModel.findOne({ name });
+        
     if(!name)
       throw new Error("Preencha o nome!", { cause: "empty" });
+    
+    if(specialtyData)
+      throw new Error("Especialidade já cadastrada!", {cause: "existing_data"});
     
     await specialtyModel.create({ name });
 
@@ -983,6 +987,7 @@ async function updateSpecialty(prev: unknown, formData:FormData){
   }
 }
 
+
 export {
   getUsers,
   getUser,
@@ -1005,5 +1010,5 @@ export {
   signSpecialty,
   getScreening,
   insertScreening,
-  addUser
+  addUser,
 };

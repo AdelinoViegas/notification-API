@@ -24,11 +24,12 @@ export default function FinishOperatingRoom({ operatingRoomId }: { operatingRoom
     if(state.message){
       if(state.status)
         toast.success(
-          state.message, { 
+          state.message,{
+            autoClose: 3500,
             onOpen: ()=> router.replace("/clinical/operating-room") 
         });
       else
-        toast.error(state.message);
+        toast.error(state.message, {autoClose: 3500});
     }
 
     return;
@@ -56,6 +57,7 @@ export default function FinishOperatingRoom({ operatingRoomId }: { operatingRoom
           />
 
           <p>Tem certeza que deseja concluir o processo no bloco operatório?</p>
+          
           <div className="flex gap-3 justify-end">
             <Button 
               type="button" 
