@@ -41,7 +41,7 @@ export type ScreeningRecord = {
 export type AppointmentRecord = {
   registerNumber: number,
   fullname: string,
-  age: number,
+  age: string,
   gender: string,
   date: string,
   hour: string,
@@ -51,7 +51,7 @@ export type AppointmentRecord = {
 
 export type ScheduleExamsRecord = {
   patientName: string,
-  age?: number,
+  age?: string,
   gender?: string,
   date?: string,
   exams?: {

@@ -83,7 +83,7 @@ type GETpatient = {
 type Patient = {
   fullname: string;
   birthDate?: Date;
-  age?: number;
+  age?: string;
   civilState?: string;
   gender?: string;
   tel?: string;

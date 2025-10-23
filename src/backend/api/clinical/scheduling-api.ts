@@ -432,7 +432,7 @@ async function getSchedulePatientExam(scheduleId: string){
 
     return {
       patient: patient?.fullname as string,
-      age: calculateAge(patient?.birthDate as Date),
+      age: calculateAge(patient?.birthDate as Date) as string,
       gender: patient?.gender as string,
       laboratory: unit?.name as string,
       user: user.fullname,
@@ -659,7 +659,7 @@ async function getScheduleAppointment(scheduleId:string){
   return {
     registerNumber: patient?.registerNumber as number,
     patient: patient?.fullname as string,
-    age: calculateAge(patient?.birthDate as Date),
+    age: calculateAge(patient?.birthDate as Date) as string,
     gender: patient?.gender as string,
     doctor: doctor.fullname as string,
     doctorId: doctor._id as string,

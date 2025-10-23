@@ -374,14 +374,14 @@ async function getPatient(patientId: string){
     const responsibles = await responsibleModel.findOne({ patientId });
     const group = await groupModel.findOne({ patientId });
     const accessType = await accessTypeModel.findOne({ patientId });
-
+    
     return {
       personal: {
         _id: personal?._id.toString() as string,
         fullname: personal?.fullname as string,
         registerNumber: personal?.registerNumber as number,
         birthDate: personal?.birthDate as Date,
-        age: calculateAge(personal?.birthDate as Date),
+        age: calculateAge(personal?.birthDate as Date) as string,
         civilState: personal?.civilState as string,
         gender: personal?.gender as string,
         tel: personal?.tel as string,
