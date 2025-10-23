@@ -3,6 +3,7 @@ import Header from "@/components/header";
 import Table from "@/components/table";
 import Search from "@/components/ui/search";
 import { getPatients } from "@/backend/api/clinical/office-api";
+import { getDataAndHoursFormat } from "@/lib/date-formater";
 
 export const dynamic = "force-dynamic";
 
@@ -21,13 +22,25 @@ export default async function Page({
   });
 
   const rows = formater(scheduleOffices.patients, {
-    order: [
-      "DataTime",
-      "patientName",
-      "doctorName",
-      "responsible",
+    filterKey: [
+      "id",
+      "updatedAt",
+      "patient",
+      "doctor",
       "status",
-    ]
+      "user"
+    ],
+    order: [
+      "updatedAt",
+      "patient",
+      "doctor",
+      "user",
+      "status"
+    ],
+    transform: {
+      targetKey: "updatedAt",
+      fn: e => getDataAndHoursFormat(new Date(e))
+    }
   });
 
   return (

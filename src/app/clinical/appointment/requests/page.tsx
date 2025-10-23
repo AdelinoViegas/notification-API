@@ -14,7 +14,7 @@ export default async function Page({
   }>
 }) {
   const { name } = await searchParams;
-  const consultations = await getRequests({ from: "consultation" });
+  const consultations = await getRequests({ from: "consultation", name });
 
   const rows = formater(consultations, {
     filterKey: [

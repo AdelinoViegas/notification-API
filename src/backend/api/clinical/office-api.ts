@@ -153,6 +153,7 @@ async function getPatients({
         doctor: doctor?.fullname,
         status: "#",
         user: user.fullname,
+        updatedAt: scheduledAppointment.updatedAt
       });
     }
 
@@ -448,7 +449,10 @@ async function registerRequest(prev: unknown, formData: FormData){
   }
 }
 
-async function getRequests({ from }: { from: ServiceRequest }){
+async function getRequests({ from }: { 
+  from: ServiceRequest;
+  name: string; 
+}){
   try{
     const requests = await serviceRequestsModel.find({ from });
     const formated = [];
@@ -472,6 +476,33 @@ async function getRequests({ from }: { from: ServiceRequest }){
   }
 }
 
+export async function getRequest(id: string){
+  try{
+    const req = await serviceRequestsModel.findById({ _id: id });
+    
+    if(!req)
+      throw new Error("registro não encontrado!");
+
+    return {
+      id: req._id.toString(),
+      patientName: (await patientModel.findById({ _id: req.patientId }))?.fullname as string,
+      kind: (await serviceModel.findById({ _id: req.kind }))?.name as string,
+      pending: req.pending && "Pendente",
+      requester: (await getUser(req.userId?.toString() as string))?.fullname,
+      createdAt: req.createdAt
+    };
+  }catch (e){
+    console.error(e);
+  }
+}
+
+export async function closeRequest(p: unknown, formData: FormData){
+  try{
+
+  }catch(e){
+    
+  }
+}
 
 export {
   sendPatientToOffice,
