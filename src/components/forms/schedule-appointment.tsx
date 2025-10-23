@@ -30,14 +30,17 @@ export type DoctorRole = {
   roleId: string;
 };
 
-export default function ScheduleAppointment(
-  { 
-    patientId,
-    scheduleType, 
-  }: { 
-    patientId: string;
-    scheduleType?: string; 
-  }){
+type Props = {
+  patientId: string;
+  scheduleType?: string;
+  requestId?: string;
+}
+
+export default function ScheduleAppointment({
+  patientId,
+  scheduleType,
+  requestId
+}: Props){
   const [ state, action ] = useActionState(scheduleAppointment, { message: "", status: false });
   const [ closeAlert, setCloseAlert ] = useState(true);
   const [ doctors, setDoctors ] = useState<SelectionOption[]>([]);
@@ -122,10 +125,12 @@ export default function ScheduleAppointment(
     if(state.message)
       if(state.status)
         toast.success(state.message, {
-          autoClose: 1500,
           onClose: ()=>{
-            if(!!scheduleType)
+            if(scheduleType)
               router.replace("/clinical/screening");
+
+            if(requestId)
+              return router.replace("/clinical/appointment/requests");
 
             formRef.current?.reset();
             setDoctorDays([]);
@@ -161,6 +166,12 @@ export default function ScheduleAppointment(
           type="hidden" 
           name="scheduleType" 
           defaultValue={scheduleType} 
+        />
+
+        <input 
+          type="hidden" 
+          name="requestId" 
+          defaultValue={requestId} 
         />
 
         <div className="grid xl:grid-cols-5 gap-3">

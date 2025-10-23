@@ -454,7 +454,7 @@ async function getRequests({ from }: {
   name: string; 
 }){
   try{
-    const requests = await serviceRequestsModel.find({ from });
+    const requests = await serviceRequestsModel.find({ from, pending: true });
     const formated = [];
     
     for (const req of requests){
@@ -497,11 +497,14 @@ export async function getRequest(id: string){
   }
 }
 
-export async function closeRequest(p: unknown, formData: FormData){
+export async function closeRequest(id: string){
   try{
-
+    await serviceRequestsModel.updateOne({ _id: id }, { pending: false });
+    return true;
   }catch(e){
-    
+    console.error(e);
+
+    return false;
   }
 }
 

@@ -32,6 +32,7 @@ import { getSyncedHistories, syncPatientRegister } from "./process-control";
 import { PatientHistory } from "./types";
 import { calculateAge } from "@/lib/calculate-age";
 import { omitUndefined } from "mongoose";
+import { closeRequest } from "./office-api";
 
 export type CCGTypes = "category" | "classification" | "group";
 
@@ -591,6 +592,7 @@ async function scheduleAppointment(prev: unknown, formData: FormData){
     const doctorTime = formData.get("time");
     const detail = formData.get("detail");
     const isScheduleInScreening = formData.get("scheduleType") as string;
+    const requestId = formData.get("requestId") as string;
     const scrPatient = await screeningModel.findOne({ patientId, served: false });
      
     const result = await getNumberDoctorAppointment({ doctorId, day: doctorDay });  
@@ -633,6 +635,10 @@ async function scheduleAppointment(prev: unknown, formData: FormData){
     }else{
       await patientModel.updateOne({ _id: patientId }, { served: true });
     }  
+
+
+    if(requestId)
+      await closeRequest(requestId);
 
     return {
       message: "Consulta marcada com sucesso!",
