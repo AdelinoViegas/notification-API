@@ -440,7 +440,7 @@ async function registerRequest(prev: unknown, formData: FormData){
     }
   }catch(e){
     console.error(e);
-    
+
     return {
       message: "Não foi possivel!",
       status: false
@@ -448,17 +448,19 @@ async function registerRequest(prev: unknown, formData: FormData){
   }
 }
 
-async function getRequests(){
+async function getRequests({ kind }: { kind: ServiceRequest }){
   try{
-    const requests = await serviceRequestsModel.find();
+    const requests = await serviceRequestsModel.find({ kind });
     const formated = [];
     
     for (const req of requests){
       formated.push({
+        id: req._id.toString(),
         patientName: (await patientModel.findById({ _id: req.patientId }))?.fullname as string,
-        from: req.from,
         kind: (await serviceModel.findById({ _id: req.kind }))?._id.toString() as string,
-        pending: req.pending
+        pending: req.pending,
+        requester: (await getUser(req.userId?.toString() as string))?.fullname,
+        createdAt: req.createdAt
       });
     }
       
