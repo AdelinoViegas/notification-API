@@ -18,6 +18,7 @@ import { upload } from "@/backend/api/storage";
 import { CustonAxiosError } from "@/backend/api/types";
 import { syncPatientRegister } from "./process-control";
 import { calculateAge } from "@/lib/calculate-age";
+import { ServiceRequest, serviceRequestSchema } from "../type-schema";
 
 type ConsultationTypes = "vitalSignals" | "currentStates";
 
@@ -80,22 +81,6 @@ async function sendPatientToOffice(prev: unknown, formData: FormData){
           throw new Error('Este utente já está no consultório do Médico!', { cause: "already" });   
       }
     }
-
-    // if(!service?.price){
-    //   await officeModel.create({
-    //     scheduleId,
-    //     userId: await getUserId(),
-    //   });
-  
-    // }else{
-    //   if(appointment?.payment?.status !== "confirmed")
-    //     throw new Error('A consulta não está validada!', { cause: "not_confirmed" });
-
-    //   await officeModel.create({
-    //     scheduleId,
-    //     userId: await getUserId(),
-    //   });
-    // }
 
     if(!!service?.price && appointment?.payment?.status !== "confirmed")
       throw new Error('A consulta não está validada!', { cause: "not_confirmed" });
@@ -205,7 +190,9 @@ async function getPatient(officeId: string){
       responsible: responsible?.responsibles[0],
       scheduleAppointmentId: inOffice?.scheduleId?.toString() as string
     }
-  }finally{}
+  }catch{
+
+  }
 }
 
 async function signConsutation(prev:unknown, formData:FormData){
@@ -318,11 +305,11 @@ async function finishConsultation(prev: unknown, formData: FormData){
       message: 'Consulta concluída com sucesso!',
       status: true,
     }
-  }catch(err: unknown){
-    const error = err as Error;
+  }catch(e){
+    const err = e as Error;
 
     return {
-      message: error.cause?error.message:error.message,
+      message: err.cause?err.message:"Não foi possivel!",
       status: false,
     }
   }
@@ -344,11 +331,11 @@ async function requestReschedule(prev: unknown, formData: FormData){
       message: 'Solicitação enviada com sucesso!',
       status: true,
     }
-  }catch(err: unknown){
-    const error = err as Error;
+  }catch(e){
+    const err = e as Error;
 
     return {
-      message: error.cause?error.message:error.message,
+      message: err.cause?err.message:"Não foi possivel!",
       status: false,
     }
   }
@@ -438,8 +425,8 @@ async function registerRequest(prev: unknown, formData: FormData){
   try{
     const patientId = formData.get("patientId");
     const kindOfService = formData.get("kind");
-    const from = formData.get("from");
-    
+    const from = serviceRequestSchema.parse(formData.get("from"));
+
     await serviceRequestsModel.create({
       patientId,
       from,
@@ -451,10 +438,12 @@ async function registerRequest(prev: unknown, formData: FormData){
       message: "Solicitação feita com sucesso!",
       status: true
     }
-  }catch {
+  }catch(e){
+    console.error(e);
+    
     return {
-      message: "Solicitação feita com sucesso!",
-      status: true
+      message: "Não foi possivel!",
+      status: false
     }
   }
 }
