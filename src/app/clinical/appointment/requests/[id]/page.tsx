@@ -1,15 +1,6 @@
-import Header from "@/components/header";
-import Card from "@/components/ui/card";
-import { getScheduleAppointment } from "@/backend/api/clinical/scheduling-api";
-import SubTitle from "@/components/ui/subtitle";
-import ArchivingAppointment from "@/components/archiving-appointment";
-import RescheduleAppointment from "@/components/reschedule-appointment";
-import ValidateAppointment from "@/components/validate-appointment";
 import TitleAndSubtitle from "@/components/title-subtitle";
-import { angolaCurrency } from "@/lib/table-formater";
-import SendAppointment from "@/components/send-appointment";
-import PDFButton from "@/components/pdf-button";
 import { getRequest } from "@/backend/api/clinical/office-api";
+import { getDataAndHoursFormat } from "@/lib/date-formater";
 
 export default async function Page({ params }: { params: Promise<{ id: string }>}){ 
   const { id } = await params;
@@ -18,10 +9,28 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   return (
     <div>
       <h2>Informações da Solicitação </h2>
-      <TitleAndSubtitle
-        label="Nome do Utente"
-        value={request?.patientName} 
-      />
+      
+      <div>
+        <TitleAndSubtitle
+          label="Nome do Utente"
+          value={request?.patientName} 
+        />
+
+        <TitleAndSubtitle
+          label="Tipo de Consulta"
+          value={request?.kind} 
+        />
+
+        <TitleAndSubtitle
+          label="Colega que solicitou"
+          value={request?.requester} 
+        />
+
+        <TitleAndSubtitle
+          label="Data do Pedido"
+          value={getDataAndHoursFormat(request?.createdAt as Date)} 
+        />
+      </div>
     </div>
   )
 }

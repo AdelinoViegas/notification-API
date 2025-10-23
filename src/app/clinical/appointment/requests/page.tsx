@@ -56,6 +56,7 @@ export default async function Page({
           "Solicitante"
         ]} 
         rows={rows}
+        baseRowLink="/clinical/appointment/requests"
       />
     </main>
   );
