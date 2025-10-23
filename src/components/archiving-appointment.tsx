@@ -5,13 +5,13 @@ import {
   useState,
   useActionState
 } from "react";
-import { useRouter } from "next/navigation";
-import { archivingScheduleAppointment } from "@/backend/api/clinical/scheduling-api";
-import Button from "@/components/ui/button";
+import { toast } from "react-toastify";
 import { LuArchiveRestore } from "react-icons/lu";
+import { useRouter } from "next/navigation";
+import Button from "@/components/ui/button";
 import Modal from "@/components/modal";
 import InputDetails from "@/components/ui/input-details";
-import Alert from "@/components/ui/alert";
+import { archivingScheduleAppointment } from "@/backend/api/clinical/scheduling-api";
 
 export default function ArchivingAppointment({ 
   scheduleId,
@@ -22,23 +22,21 @@ export default function ArchivingAppointment({
 }){
   const [ state, action ] = useActionState(archivingScheduleAppointment, { message: "", status: false });
   const [ modalState, setModalState ] = useState(false);
-  const [ messageState, setMessageState ] = useState(false);
   const router = useRouter();
   const closeModal = ()=>setModalState(false);
 
   useEffect(()=>{
-    if(state.message){
-      setMessageState(true);
-
-      setTimeout(()=>{
-        if(state.status){
-          closeModal();
-          router.replace(isArchived?'/clinical/appointment/archiveds':'/clinical/appointment');
-        }
-        setMessageState(false);
-      }, 2000);
-    }
-  }, [state, isArchived, router]);
+    if(state.message)
+      if(state.status)
+        toast.success(state.message, {
+          onClose: ()=>{
+            closeModal();
+            router.replace(isArchived?'/clinical/appointment/archiveds':'/clinical/appointment');
+          }
+        });
+      else
+        toast.error(state.message);
+  }, [state, router, isArchived]);
   
   return(
     <div>
@@ -78,16 +76,6 @@ export default function ArchivingAppointment({
             <Button>Salvar</Button>
           </div>
         </form>
-
-        {
-          state.message && messageState &&
-          <div className="mt-3">
-            <Alert
-              type={state.status?'success':'error'}
-              message={state.message}
-            />
-          </div>
-        }
       </Modal>
     </div>
   )

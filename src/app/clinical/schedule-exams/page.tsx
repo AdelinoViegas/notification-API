@@ -74,7 +74,7 @@ export default async function Page({
       </div>
   
       <Table
-        baseRowLink="/clinical/schedule-exams-services"
+        baseRowLink="/clinical/schedule-exams"
         columns={[
           "Data e Hora", 
           "Nome do Utente", 

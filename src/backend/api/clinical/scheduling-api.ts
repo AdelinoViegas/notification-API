@@ -336,7 +336,6 @@ async function schedulePatientExam(prev: unknown, formData: FormData){
       await syncPatientRegister(patientId);
     }
       
-    
     await patientModel.updateOne({ _id: patientId }, { served: true });
     
     return {
@@ -411,7 +410,7 @@ async function getSchedulePatientExams({
 async function getSchedulePatientExam(scheduleId: string){
   try{
     const schedule = await scheduleExamModel.findById({ _id: scheduleId });
-    const patient = await patientModel.findById({ _id: schedule?.patientId }).select({ fullname: 1, gender:1});
+    const patient = await patientModel.findById({ _id: schedule?.patientId });
     const unit = await unitModel.findById({ _id: schedule?.laboratoryId }).select({ name: 1});
     const user = await getUser(schedule?.userId?.toString() as string);
     const exams = [];
@@ -432,13 +431,14 @@ async function getSchedulePatientExam(scheduleId: string){
     }
 
     return {
+      registerNumber: patient?.registerNumber as number,
       patient: patient?.fullname as string,
       age: calculateAge(patient?.birthDate as Date) as string,
       gender: patient?.gender as string,
       laboratory: unit?.name as string,
       user: user.fullname,
       exams,
-      examPrice: totalPrice?totalPrice:"0",
+      examPrice: totalPrice?totalPrice:0,
       detail: schedule?.detail,
       createdAt: getDataAndHoursFormat(schedule?.dateTime as Date),
       _createdAt: schedule?.dateTime,

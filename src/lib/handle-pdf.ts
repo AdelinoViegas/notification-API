@@ -397,6 +397,38 @@ function appointmentRecord({
   }catch {}
 }
 
+function scheduleExamsRecord({
+  registerNumber,
+  fullname,
+  age, 
+  gender,
+  date,
+  examsTotalPrice,
+}: ScheduleExamsRecord){
+    try{
+    generate({
+      template: appointmentPlug,
+      inputs: [
+        {
+          registerNumber: String(registerNumber),
+          fullname,
+          age: String(age),
+          gender: gender?.at(0)?.toUpperCase(),
+          date,
+          totalPrice: String(`${examsTotalPrice.toFixed(2).replace('.', ',')} kz`)
+        }
+      ],
+      plugins: {
+        rectangle,
+        text,
+        image,
+        qrcode: barcodes.qrcode,
+        line
+      },
+    })
+    .then(e => browserPdf(e))
+  }catch {}
+}
 /*function appointmentRecord({
   patientName,
   age, 
@@ -542,7 +574,7 @@ function appointmentRecord({
 
   doc.output('dataurlnewwindow', { filename: 'agendamento-consultas.pdf' });
 }
-*/
+
 function scheduleExamsRecord({
   patientName,
   age, 
@@ -690,7 +722,7 @@ function scheduleExamsRecord({
 
   doc.output('dataurlnewwindow', { filename: 'agendamento-exames.pdf' });
 }
-
+*/
 export {
   patientRecord,
   screeningRecord,

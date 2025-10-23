@@ -50,7 +50,8 @@ export type AppointmentRecord = {
 }
 
 export type ScheduleExamsRecord = {
-  patientName: string,
+  registerNumber: number,
+  fullname: string,
   age?: string,
   gender?: string,
   date?: string,
@@ -59,7 +60,7 @@ export type ScheduleExamsRecord = {
     name: string,
     price: number,
   }[],
-  examsTotalPrice: string | number,
+  examsTotalPrice: number,
 }
 
 export type Arguments = PatientRecord | ScreeningRecord | AppointmentRecord | ScheduleExamsRecord;
