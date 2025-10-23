@@ -448,24 +448,26 @@ async function registerRequest(prev: unknown, formData: FormData){
   }
 }
 
-async function getRequests({ kind }: { kind: ServiceRequest }){
+async function getRequests({ from }: { from: ServiceRequest }){
   try{
-    const requests = await serviceRequestsModel.find({ kind });
+    const requests = await serviceRequestsModel.find({ from });
     const formated = [];
     
     for (const req of requests){
       formated.push({
         id: req._id.toString(),
         patientName: (await patientModel.findById({ _id: req.patientId }))?.fullname as string,
-        kind: (await serviceModel.findById({ _id: req.kind }))?._id.toString() as string,
-        pending: req.pending,
+        kind: (await serviceModel.findById({ _id: req.kind }))?.name as string,
+        pending: req.pending && "Pendente",
         requester: (await getUser(req.userId?.toString() as string))?.fullname,
         createdAt: req.createdAt
       });
     }
       
     return formated;
-  }catch {
+  }catch (e){
+    console.error(e);
+    
     return []
   }
 }

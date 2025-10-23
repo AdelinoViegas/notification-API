@@ -2,6 +2,7 @@ import { formater } from "@/lib/table-formater";
 import Table from "@/components/table";
 import Search from "@/components/ui/search";
 import { getRequests } from "@/backend/api/clinical/office-api";
+import { getDataAndHoursFormat } from "@/lib/date-formater";
 
 export const dynamic = "force-dynamic";
 
@@ -13,10 +14,11 @@ export default async function Page({
   }>
 }) {
   const { name } = await searchParams;
-  const consultations = await getRequests({ kind: "consultation" });
+  const consultations = await getRequests({ from: "consultation" });
 
   const rows = formater(consultations, {
     filterKey: [
+      "id",
       "patientName",
       "kind",
       "pending",
@@ -29,7 +31,11 @@ export default async function Page({
       "patientName",
       "pending",
       "requester"
-    ]
+    ],
+    transform: {
+      targetKey: "createdAt",
+      fn: e => getDataAndHoursFormat(new Date(e))
+    }
   });
 
   return (
@@ -43,11 +49,11 @@ export default async function Page({
 
       <Table
         columns={[
-          "Data e Hora", 
-          "Nome do Utente", 
-          "Nome do Médico",
-          "Responsável",
-          "Estado"
+          "Data", 
+          "Tipo de Consulta", 
+          "Utente",
+          "Estado",
+          "Solicitante"
         ]} 
         rows={rows}
       />
