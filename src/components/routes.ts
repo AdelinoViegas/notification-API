@@ -35,7 +35,7 @@ export const clinicalIcons = [
     Icon: FaRegHospital
   },
   {
-    route: 'exams-services',
+    route: 'services',
     Icon: GrDocumentText
   },
   {
@@ -59,7 +59,7 @@ export const clinicalIcons = [
     Icon: RiCalendarScheduleLine
   },
   {
-    route: 'schedule-sugery',
+    route: 'schedule-surgery',
     Icon: RiCalendarScheduleLine
   },
   {
@@ -100,9 +100,9 @@ export const clinicalRoutes = [
     label: 'Gestão da Unidade',
   },
   {
-    href: "/clinical/exams-services",
-    route: 'exams-services',
-    label: 'Exames/Serviços Cadastrados',
+    href: "/clinical/services",
+    route: 'services',
+    label: 'Serviços Registrados',
   },
   {
     href: "/clinical/appointment",
@@ -130,13 +130,13 @@ export const clinicalRoutes = [
     label: 'Bloco Operatório',
   },
   {
-    href: "/clinical/schedule-sugery",
-    route: 'schedule-sugery',
+    href: "/clinical/schedule-surgery",
+    route: 'schedule-surgery',
     label: 'Agenda de Cirurgia',
   },
   {
     href: "/clinical/hospitalization",
     route: "hospitalization",
     label: "Internamento"
-  }
+  },
 ];

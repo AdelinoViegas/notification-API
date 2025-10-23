@@ -159,7 +159,7 @@ export async function getSyncedHistories(id: string){
 
     throw new Error("paciente sem historico!");
   }catch(e){
-    console.log(e);
+    console.error((e as Error)?.message);
     return null;
   }
 }

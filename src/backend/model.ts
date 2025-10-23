@@ -4,7 +4,6 @@ import {
   currentLocationSchema
 } from "@/backend/schemas/user";
 import { 
-  examSchema, 
   examGroupSchema,
   scheduleExamSchema,
   examResultSchema,
@@ -16,6 +15,8 @@ import {
   appointmentCancelSchema,
   officeSchema,
   scheduleSugerySchema,
+  serviceRequestsSchema,
+  serviceSchema,
 } from "@/backend/schemas/scheduling";
 import { 
   responsibleSchema,
@@ -78,7 +79,8 @@ const patientSyncModel = clinical.model("PatientSyncs", patientSyncSchema);
 const triedModel = clinical.model("Tried", triedSchema);
 
 //agendamentos (schedulings)
-const examModel = clinical.model("ExamService", examSchema);
+
+const serviceModel = clinical.model("Service", serviceSchema);
 const examGroupModel = clinical.model("ExamGroup", examGroupSchema);
 const examCategoryModel = clinical.model('ExamCategory', examCategorySchema);
 const examClassificationModel = clinical.model('ExamClassification', examClassificationSchema);
@@ -118,6 +120,7 @@ const internalServiceModel = clinical.model("InternalService", internalServiceSc
 const hospitalizationModel = clinical.model("Hospitalization", hospitalizationSchema);
 const inHospitalizeModel = clinical.model("inHospitalize", inHospitalizeSchema);
 const internalMovimentModel = clinical.model("InternalMoviments", internalMovimentsSchema);
+const serviceRequestsModel = clinical.model("ServiceRequest", serviceRequestsSchema);
 
 export {
   userModel,
@@ -131,7 +134,6 @@ export {
   screeningModel,
   triedModel,
   processStateModel,
-  examModel,
   examGroupModel,
   unitModel,
   scheduleExamModel,
@@ -167,5 +169,7 @@ export {
   internalServiceModel,
   hospitalizationModel,
   inHospitalizeModel,
-  internalMovimentModel
+  internalMovimentModel,
+  serviceRequestsModel,
+  serviceModel
 };

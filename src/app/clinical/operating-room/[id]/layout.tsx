@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import Header from "@/components/header";
 import TabNav from "@/components/tabnav";
 import Card from "@/components/ui/card";
+import { ToastContainer } from "react-toastify";
 import { MonitorAccess, UnlockProcessAccess } from "@/components/lock-unlock-monitor-process";
 import { getPatient } from "@/backend/api/clinical/operating-room-api";
 
@@ -57,6 +58,7 @@ export default async function Layout({
             { path: "patient-discharge", title: "Alta do Bloco" },
           ]}
         />
+        <ToastContainer/>
       </div>
     </div>
   )

@@ -1,7 +1,7 @@
 "use server";
 
 import { 
-  examModel,
+  serviceModel,
   scheduleExamModel,
   scheduleServiceModel,
   patientModel,
@@ -31,7 +31,7 @@ async function updatePaymentData(prev: unknown, formData: FormData){
    
     if(service)
       for(const examId of service?.exams){
-        const exam = await examModel.findById({_id:examId}).select({ price: 1});
+        const exam = await serviceModel.findById({ _id:examId }).select({ price: 1});
         totalPrice +=  exam?.price as number; 
       }
 
@@ -76,7 +76,7 @@ async function sendPatientToUnit(prev: unknown, formData: FormData){
     
     if(scheduleService)
       for(const examId of scheduleService.exams){
-        const service = await examModel.findById({ _id: examId}).select({ price: 1});
+        const service = await serviceModel.findById({ _id: examId}).select({ price: 1});
         totalPrice += service?.price as number;
       }
 
@@ -184,7 +184,7 @@ async function getScheduledExams(id: string){
     
     if(service?.exams)
       for(const examId of service?.exams){
-        const examService = await examModel.findById({_id: examId }).select({ name: 1 });
+        const examService = await serviceModel.findById({_id: examId }).select({ name: 1 });
         exams.push({
           _id: examService?._id.toString() as string,
           name: examService?.name as string

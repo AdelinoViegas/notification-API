@@ -5,13 +5,12 @@ import {
   useEffect,
   useActionState, 
 } from "react";
+import { toast } from "react-toastify";
+import { VscSend } from "react-icons/vsc";
 import { useRouter } from "next/navigation";
 import Modal from "@/components/modal";
 import Button from "@/components/ui/button";
-import Alert from "@/components/ui/alert";
 import { sendPatientToOperatingRoom } from "@/backend/api/clinical/operating-room-api";
-
-import { VscSend } from "react-icons/vsc";
 
 export default function SendScheduleSugery({
   scheduleId,
@@ -23,22 +22,20 @@ export default function SendScheduleSugery({
   const [ modalState, setModalState ] = useState(false);
   const closeModal = ()=> setModalState(false);
   const openModal = ()=> setModalState(true);
-  const [ messageState, setMessageState ] = useState(false);
   const router = useRouter();
 
   useEffect(()=>{
-    if(state.message){
-      setMessageState(true);
-
-      setTimeout(()=>{
-        if(state.status){
-          setMessageState(false);
-          closeModal();
-          router.replace('/clinical/schedule-sugery');
-        }
-        setMessageState(false);
-      }, 2000);
-    }
+    if(state.message)
+      if(state.status)
+        toast.success(state.message, {
+          autoClose: 3500,
+          onClose: () => { 
+            closeModal();
+            router.replace('/clinical/schedule-sugery');
+          }          
+        });
+      else
+        toast.error(state.message, {autoClose: 3500});
   }, [state, router]);
 
   return(
@@ -72,16 +69,6 @@ export default function SendScheduleSugery({
             <Button>Sim</Button>
           </div>
         </form>
-
-        {
-          state.message && messageState &&
-          <div className="mt-3">
-            <Alert
-              type={state.status?'success':'error'}
-              message={state.message}
-            />
-          </div>
-        }
       </Modal>
     </div>
   )

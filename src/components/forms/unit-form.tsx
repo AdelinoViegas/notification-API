@@ -5,10 +5,10 @@ import {
   useState,
   useActionState
 } from "react";
+import { toast } from "react-toastify";
 import { useRouter, useParams } from "next/navigation";
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
-import Alert from "@/components/ui/alert";
 import Selection from "@/components/ui/selection";
 import { unitTypes } from "@/backend/api/clinical/translator";
 import { signUnit, updateExternalUnit, updateUnit } from "@/backend/api/clinical/urgency-bank-api";
@@ -75,7 +75,6 @@ function InternmentInputs({
 export default function UnitForm({ jsonData }: UnitProps){
   const currentUnitData = jsonData?JSON.parse(jsonData) as Unit:undefined;
   const [ state, action ] = useActionState(jsonData?updateUnit:signUnit, { message: "", status: false });
-  const [ messageState, setMessageState ] = useState(false);
   const [ isInternment, setIsInternment ] = useState(false);
   const router = useRouter();
   const param = useParams();
@@ -91,10 +90,14 @@ export default function UnitForm({ jsonData }: UnitProps){
   }
   
   useEffect(()=>{
-    setMessageState(true)
-    setTimeout(()=>{
-      setMessageState(false);
-    }, 3000);
+    if(state.message)
+      if(state.status)
+        toast.success(state.message, {
+          autoClose: 3500,
+          onClose: ()=> router.refresh(),
+        });
+      else
+        toast.error(state.message, {autoClose: 3500});
   }, [state, router]);
   
   return(
@@ -132,16 +135,6 @@ export default function UnitForm({ jsonData }: UnitProps){
           }
 
           <Button>Salvar</Button>
-
-          {
-            state.message && messageState &&
-            <div className="flex mt-3">
-              <Alert
-                type={state.status?'success':'error'}
-                message={state.message}
-              />
-            </div>
-          }
         </form>
       </div>
     </div>
@@ -151,20 +144,19 @@ export default function UnitForm({ jsonData }: UnitProps){
 export function ExternalUnitForm({ jsonData }: UnitProps){
   const currentUnitData = jsonData?JSON.parse(jsonData) as ExteralUnit:undefined;
   const [ state, action ] = useActionState(updateExternalUnit, { message: "", status: false });
-  const [ messageState, setMessageState ] = useState(false);
   const router = useRouter();
   const param = useParams();
   
   useEffect(()=>{
-    setMessageState(true)
-    setTimeout(()=>{
-      setMessageState(false);
-      
-      if(state.status)
-        router.replace('/clinical/phisical-unit/external');
-    }, 3000);
+  if(state.message)
+    if(state.status)
+      toast.success(state.message, {
+        autoClose: 3500,
+        onOpen: ()=> router.replace('/clinical/phisical-unit/external'),
+      });
+    else
+      toast.error(state.message, {autoClose: 3500});
   }, [state, router]);
-  
   
   return(
     <div className="px-8 py-4 pb-8 mt-3 border rounded-xl bg-white">
@@ -206,16 +198,6 @@ export function ExternalUnitForm({ jsonData }: UnitProps){
           />
 
           <Button>Salvar</Button>
-
-          {
-            state.message && messageState &&
-            <div className="flex mt-3">
-              <Alert
-                type={state.status?'success':'error'}
-                message={state.message}
-              />
-            </div>
-          }
         </form>
       </div>
     </div>

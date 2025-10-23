@@ -51,7 +51,7 @@ export function formater(data: unknown[], options?:FormaterOptions){
           } 
         }, null, 2))); 
 
-      for(const k of options.order){
+      for(const k of options?.order){
         if(!keys.slice(1).includes(k)){
           console.log("chaves validas: ", keys.slice(1));
           throw new Error("[-] a chave "+k+" não existe nos dados");
@@ -69,7 +69,8 @@ export function formater(data: unknown[], options?:FormaterOptions){
     const dataKeys = options?.order ??  keys.slice(1);
 
     if(!keys.includes("id")){
-      throw new Error("[-] a chave 'id' não foi encontrado na estruturada de dados original");
+      console.log("chaves: ", keys);
+      throw new Error("[CRITICO] a chave 'id' não foi encontrado na estruturada de dados original");
     }
     
     for(const i of data as FormaterData[])

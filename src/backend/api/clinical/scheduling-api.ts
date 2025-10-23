@@ -9,8 +9,7 @@ import { redirect } from "next/navigation";
 import { surgerySchedulingArea } from "@/backend/api/clinical/translator";
 import { getExamResult as getExamResutlFromUnit } from "@/backend/api/clinical/internal-services-api";
 
-import { 
-  examModel, 
+import {  
   examGroupModel,
   scheduleExamModel,
   patientModel,
@@ -26,146 +25,146 @@ import {
   screeningModel,
   scheduleSugeryModel,
   internalExamResultModel,
+  serviceModel,
 } from "@/backend/model";
 import { getUser } from "@/backend/api/clinical/api";
 import { getSyncedHistories, syncPatientRegister } from "./process-control";
-
 import { PatientHistory } from "./types";
 import { calculateAge } from "@/lib/calculate-age";
+import { omitUndefined } from "mongoose";
+import { closeRequest } from "./office-api";
 
 export type CCGTypes = "category" | "classification" | "group";
 
-async function signExam(prev: unknown, formData: FormData){
+
+export async function signService(prev: unknown, formData: FormData){
   try{
     const name = formData.get("name") as string;
     const categoryId = formData.get("categoryId") as string;
     const classificationId = formData.get("classificationId") as string;
     const groupId = formData.get("groupId") as string;
     const specialtyId = formData.get("specialtyId") as string;
+    const kind = formData.get("kindOfService");
     const price = formData.get("price");
 
-    if(!specialtyId){
-      const service = new examModel({
-        name,
-        groupId,
-        categoryId,
-        classificationId,
-        price: Number(price),
-      });
 
-      await service.save();
+    if(kind === "consultation" && !specialtyId)
+      throw new Error("Informe a especialidade da consulta!", { cause: "user" });
 
-      return {
-        message: "Serviço registrado com sucesso!",
-        status: true,
-      }
-    }     
-  
-    const service = new examModel({
+    await serviceModel.create({
       name,
       groupId,
       categoryId,
       classificationId,
-      specialtyId,
-      price: Number(price),
+      price: price || 0,
+      specialtyId: specialtyId || undefined,
+      kind
     });
-
-    await service.save();
 
     return {
       message: "Serviço registrado com sucesso!",
       status: true,
     }
-  }catch(e: unknown){
-    const err = e as { code: number } & Error;
-
-    if(err.code)
-      return {
-        message: "Este exame já foi cadastrado!",
-        status: false,
-      }
+  }catch(e){
+    console.error(e);
+    const err = e as Error;
 
     return {
-      message: "Falha no registro!",
+      message: err.cause ? err.message : "Não foi possivel registrar",
       status: false,
-    };
+    }
   }
 } 
 
-async function updateExamService(prev: unknown, formData: FormData){
+export async function updateService(prev: unknown, formData: FormData){
   try{
-    const examId = formData.get("examId") as string;
-    const name = formData.get("name") as string;
-    const groupId = formData.get("groupId") as string;
-    const categoryId = formData.get("categoryId") as string;
-    const classificationId = formData.get("classificationId") as string;
+    const name = formData.get("name");
+    const id = formData.get("id");
+    const categoryId = formData.get("categoryId");
+    const classificationId = formData.get("classificationId");
+    const groupId = formData.get("groupId");
+    const specialtyId = formData.get("specialtyId");
+    const kind = formData.get("kindOfService");
     const price = formData.get("price");
-    const specialtyId = formData.get("specialtyId"); // apenas válido para consultas
 
-    await examModel.updateOne({ _id: examId },{
+    await serviceModel.updateOne({ _id: id }, {
       name,
       groupId,
       categoryId,
       classificationId,
-      price,
-      specialtyId: specialtyId?specialtyId:undefined
+      kind,
+      price: price || 0,
+      specialtyId: specialtyId || undefined
     });
 
     return {
-      message: "Exame/Serviço actualizado com sucesso!",
+      message: "Serviço actualizado com sucesso!",
       status: true,
     }
-  }catch(err: unknown){
+  }catch(e){
+    console.error(e);
+
     return {
-      message: "Falha na actualização!",
+      message: "Não foi possivel atualizar!",
       status: false,
-      detail: JSON.stringify(err)
     };
   }
 } 
 
-async function getExams(specialtyId?: string){
-  const exams = await (specialtyId?examModel.find({ specialtyId }):examModel.find());
+export async function getServices({ 
+  specialtyId, 
+  kind 
+}:{ 
+  specialtyId?: string; 
+  kind?: "exam" | "consultation" | "surgery"
+}){
+  const services = await serviceModel.find(omitUndefined({ specialtyId, kind }));
   const formatedList = [];
 
-  for(const data of exams){
+  for(const service of services){
     const [ group, category, classification ] = await Promise.all([
-      examGroupModel.findById({ _id: data.groupId }).select({ name: 1 }),
-      examCategoryModel.findById({ _id: data.categoryId }).select({ name: 1 }),
-      examClassificationModel.findById({ _id: data.classificationId }).select({ name: 1 })
+      examGroupModel.findById({ _id: service.groupId }).select({ name: 1 }),
+      examCategoryModel.findById({ _id: service.categoryId }).select({ name: 1 }),
+      examClassificationModel.findById({ _id: service.classificationId }).select({ name: 1 })
     ]);
 
     formatedList.push({
-      _id: data._id.toString(),
-      id: data._id.toString(),
-      name: data.name,
-      label: data.name,
-      examCode: data.examCode.toString(), // por causa das tabelas
-      categoryId: data.categoryId?.toString() as string,
+      _id: service._id.toString(),
+      id: service._id.toString(),
+      name: service.name,
+      label: service.name as string,
+      code: service.code.toString(), // por causa das tabelas
+      categoryId: service.categoryId?.toString() as string,
       category: category?.name as string,
-      classificationId: data.classificationId?.toString() as string,
+      classificationId: service.classificationId?.toString() as string,
       classification: classification?.name as string,
-      groupId: data.groupId?.toString() as string,
+      groupId: service.groupId?.toString() as string,
       group: group?.name as string,
-      price: data.price.toString(), // por causa das tabelas
+      price: service?.price?.toString(), // por causa das tabelas
+      kind: service.kind
     });
   }
 
   return formatedList;
 }
 
-async function getExam(examId: string){
-  const exam = await examModel.findById({_id: examId });
+export async function getService(id: string){
+  try{
+    const service = await serviceModel.findById({ _id: id });
   
-  return {
-    _id: exam?._id.toString() as string,
-    name: exam?.name as string,
-    groupId: exam?.groupId?.toString() as string,
-    categoryId: exam?.categoryId?.toString() as string,
-    classificationId: exam?.classificationId?.toString() as string,
-    price: exam?.price as number,
-    examCode: exam?.examCode as number,
-    specialtyId: exam?.specialtyId?.toString()
+    return {
+      _id: service?._id.toString() as string,
+      name: service?.name as string,
+      groupId: service?.groupId?.toString() as string,
+      categoryId: service?.categoryId?.toString() as string,
+      classificationId: service?.classificationId?.toString() as string,
+      price: service?.price as number,
+      examCode: service?.code as number,
+      specialtyId: service?.specialtyId?.toString(),
+      kind: service?.kind as string
+    }
+  }catch {
+
   }
 }
 
@@ -422,7 +421,7 @@ async function getSchedulePatientExam(scheduleId: string){
       throw new Error("Erro, id do exame inválido!");
 
     for(const exam of schedule?.exams){
-      const examService = await examModel.findById({_id: exam._id}).select({ price: 1, name: 1 });
+      const examService = await serviceModel.findById({_id: exam._id}).select({ price: 1, name: 1 });
       totalPrice += examService?.price as number;
 
       exams.push({
@@ -593,10 +592,11 @@ async function scheduleAppointment(prev: unknown, formData: FormData){
     const doctorTime = formData.get("time");
     const detail = formData.get("detail");
     const isScheduleInScreening = formData.get("scheduleType") as string;
+    const requestId = formData.get("requestId") as string;
     const scrPatient = await screeningModel.findOne({ patientId, served: false });
      
     const result = await getNumberDoctorAppointment({ doctorId, day: doctorDay });  
-    const consult = await examModel.findById({ _id: consultId });
+    const consult = await serviceModel.findById({ _id: consultId });
 
     if(!consult)
       throw new Error('Selecione uma consulta!', { cause: 'consultation_empty'});
@@ -636,6 +636,10 @@ async function scheduleAppointment(prev: unknown, formData: FormData){
       await patientModel.updateOne({ _id: patientId }, { served: true });
     }  
 
+
+    if(requestId)
+      await closeRequest(requestId);
+
     return {
       message: "Consulta marcada com sucesso!",
       status: true,
@@ -656,7 +660,7 @@ async function getScheduleAppointment(scheduleId:string){
   const patient = await patientModel.findById({_id:schedule?.patientId}).select({fullname:1, gender:1});
   const doctor = await getUser(schedule?.doctorId?.toString() as string);
   const user = await getUser(schedule?.userId?.toString() as string);
-  const consult = await examModel.findById({ _id: schedule?.consultId });
+  const consult = await serviceModel.findById({ _id: schedule?.consultId });
 
   return {
     patient: patient?.fullname as string,
@@ -995,7 +999,7 @@ async function getPatientScheduledServices({ patientId }: { patientId: string })
         continue;
       const results = await getExamResutlFromUnit({ serviceResultId: service._id.toString()});
       for(const result of results){
-        const exam = await examModel.findById({ _id: result._id });
+        const exam = await serviceModel.findById({ _id: result._id });
         resultsList.push({
           name: exam?.name as string,
           ...result
@@ -1089,7 +1093,7 @@ async function getScheduleSugeries({
   for(const items of schedule){
     const patient = await patientModel.findById({_id: items.patientId}).select({fullname: 1});
     const doctor = await getUser(items?.doctorId?.toString() as string);
-    const sugeryType = await examModel.findById({_id: items.sugeryType}).select({name: 1});
+    const sugeryType = await serviceModel.findById({_id: items.sugeryType}).select({name: 1});
 
     formatedList.push({
       id: items.id.toString() as string,
@@ -1097,7 +1101,7 @@ async function getScheduleSugeries({
       patient: patient?.fullname as string,
       //infirmary: items.infirmary as string,
       //bed: items.bed as string,
-      sugeryType: sugeryType?.name.toString() as string,
+      sugeryType: sugeryType?.name?.toString() as string,
       //date: `${getDateInSlashFormat(items.doctorDay as Date)} ${items.doctorTime}` as string,
       doctor: doctor.fullname as string,
       status: items.payment?.status === "confirmed"?"Confirmado":"Pendente" as string,
@@ -1116,7 +1120,7 @@ async function getScheduleSugeries({
 
 async function getScheduleSugery(scheduleId: string){
   const schedule = await scheduleSugeryModel.findById({_id: scheduleId});
-  const sugeryType = await examModel.findById({_id: schedule?.sugeryType}).select({ name: 1, price: 1});
+  const sugeryType = await serviceModel.findById({_id: schedule?.sugeryType}).select({ name: 1, price: 1});
   const patient = await patientModel.findById({_id: schedule?.patientId}).select({fullname:1, gender:1});
   const doctor = await getUser(schedule?.doctorId?.toString() as string);
 
@@ -1158,7 +1162,7 @@ async function updatePaymentDataToSugery(prev: unknown, formData: FormData){
       throw new Error('Informe o preço!', { cause: "user_price_empty"}); 
 
     const scheduleSugery = await scheduleSugeryModel.findById({ _id: sugeryId });
-    const sugery = await examModel.findById({ _id: scheduleSugery?.sugeryType });
+    const sugery = await serviceModel.findById({ _id: scheduleSugery?.sugeryType });
 
     if(sugery?.price){
       const paiedPorcent = Math.trunc((value * 100)/sugery.price);
@@ -1272,7 +1276,7 @@ async function getExamResultDetail(id: string){
           examId: examId 
         });
 
-        const exam = await examModel.findById({ _id: examId });
+        const exam = await serviceModel.findById({ _id: examId });
 
         resultDetails.push({
           name: exam?.name as string,
@@ -1290,11 +1294,8 @@ async function getExamResultDetail(id: string){
 }
 
 export {
-  signExam,
   signExamResult,
   signDateSugery,
-  getExams,
-  getExam,
   getExamResults,
   getExamResult,
   getExamCancel,
@@ -1304,7 +1305,6 @@ export {
   getScheduleAppointments,
   getSchedulePatientExam,
   reschedulePatientExam,
-  updateExamService,
   archivingScheduleExam,
   archivingScheduleAppointment,
   unArchiving,

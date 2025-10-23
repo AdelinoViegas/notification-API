@@ -48,6 +48,10 @@ export default async function Page({
             Arquivados
           </Button>
         </Link>
+
+        <Link href="/clinical/appointment/requests">
+          <Button className="flex gap-3">Solicitações</Button>
+        </Link>
       </div>
 
       <div className="lg:flex justify-between items-center">

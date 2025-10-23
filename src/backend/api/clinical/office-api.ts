@@ -1,12 +1,13 @@
 "use server";
 
 import { 
-  examModel, 
+  serviceModel, 
   patientModel,
   scheduleAppointmentModel,
   demographyModel,
   responsibleModel,
   externalResultsModel,
+  serviceRequestsModel,
 } from "@/backend/model";
 import { officeModel } from "@/backend/model";
 import { getUserId } from "@/lib/web-token";
@@ -17,6 +18,7 @@ import { upload } from "@/backend/api/storage";
 import { CustonAxiosError } from "@/backend/api/types";
 import { syncPatientRegister } from "./process-control";
 import { calculateAge } from "@/lib/calculate-age";
+import { ServiceRequest, serviceRequestSchema } from "../type-schema";
 
 type ConsultationTypes = "vitalSignals" | "currentStates";
 
@@ -31,7 +33,7 @@ async function updatePaymentData(prev: unknown, formData: FormData){
       throw new Error('Informe o preço!', { cause: "user_price_empty"}); 
 
     const appointment = await scheduleAppointmentModel.findById({ _id: appointmentId });
-    const consult = await examModel.findById({ _id: appointment?.consultId });
+    const consult = await serviceModel.findById({ _id: appointment?.consultId });
 
     if(consult?.price){
       const paiedPorcent = Math.trunc((value * 100)/consult.price);
@@ -69,7 +71,7 @@ async function sendPatientToOffice(prev: unknown, formData: FormData){
   try{
     const scheduleId = formData.get('scheduleId');
     const appointment = await scheduleAppointmentModel.findById({_id: scheduleId });
-    const service = await examModel.findById({_id: appointment?.consultId}).select({price: 1});
+    const service = await serviceModel.findById({_id: appointment?.consultId}).select({price: 1});
     const scheduleInOffice = await officeModel.find({ served: false });
     
     if(scheduleInOffice.length){
@@ -79,22 +81,6 @@ async function sendPatientToOffice(prev: unknown, formData: FormData){
           throw new Error('Este utente já está no consultório do Médico!', { cause: "already" });   
       }
     }
-
-    // if(!service?.price){
-    //   await officeModel.create({
-    //     scheduleId,
-    //     userId: await getUserId(),
-    //   });
-  
-    // }else{
-    //   if(appointment?.payment?.status !== "confirmed")
-    //     throw new Error('A consulta não está validada!', { cause: "not_confirmed" });
-
-    //   await officeModel.create({
-    //     scheduleId,
-    //     userId: await getUserId(),
-    //   });
-    // }
 
     if(!!service?.price && appointment?.payment?.status !== "confirmed")
       throw new Error('A consulta não está validada!', { cause: "not_confirmed" });
@@ -167,6 +153,7 @@ async function getPatients({
         doctor: doctor?.fullname,
         status: "#",
         user: user.fullname,
+        updatedAt: scheduledAppointment.updatedAt
       });
     }
 
@@ -204,7 +191,9 @@ async function getPatient(officeId: string){
       responsible: responsible?.responsibles[0],
       scheduleAppointmentId: inOffice?.scheduleId?.toString() as string
     }
-  }finally{}
+  }catch{
+
+  }
 }
 
 async function signConsutation(prev:unknown, formData:FormData){
@@ -317,11 +306,11 @@ async function finishConsultation(prev: unknown, formData: FormData){
       message: 'Consulta concluída com sucesso!',
       status: true,
     }
-  }catch(err: unknown){
-    const error = err as Error;
+  }catch(e){
+    const err = e as Error;
 
     return {
-      message: error.cause?error.message:error.message,
+      message: err.cause?err.message:"Não foi possivel!",
       status: false,
     }
   }
@@ -343,11 +332,11 @@ async function requestReschedule(prev: unknown, formData: FormData){
       message: 'Solicitação enviada com sucesso!',
       status: true,
     }
-  }catch(err: unknown){
-    const error = err as Error;
+  }catch(e){
+    const err = e as Error;
 
     return {
-      message: error.cause?error.message:error.message,
+      message: err.cause?err.message:"Não foi possivel!",
       status: false,
     }
   }
@@ -433,6 +422,92 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
   }
 }
 
+async function registerRequest(prev: unknown, formData: FormData){
+  try{
+    const patientId = formData.get("patientId");
+    const kindOfService = formData.get("kind");
+    const from = serviceRequestSchema.parse(formData.get("from"));
+
+    await serviceRequestsModel.create({
+      patientId,
+      from,
+      userId: await getUserId(),
+      kind: kindOfService
+    });
+
+    return {
+      message: "Solicitação feita com sucesso!",
+      status: true
+    }
+  }catch(e){
+    console.error(e);
+
+    return {
+      message: "Não foi possivel!",
+      status: false
+    }
+  }
+}
+
+async function getRequests({ from }: { 
+  from: ServiceRequest;
+  name: string; 
+}){
+  try{
+    const requests = await serviceRequestsModel.find({ from, pending: true });
+    const formated = [];
+    
+    for (const req of requests){
+      formated.push({
+        id: req._id.toString(),
+        patientName: (await patientModel.findById({ _id: req.patientId }))?.fullname as string,
+        kind: (await serviceModel.findById({ _id: req.kind }))?.name as string,
+        pending: req.pending && "Pendente",
+        requester: (await getUser(req.userId?.toString() as string))?.fullname,
+        createdAt: req.createdAt
+      });
+    }
+      
+    return formated;
+  }catch (e){
+    console.error(e);
+    
+    return []
+  }
+}
+
+export async function getRequest(id: string){
+  try{
+    const req = await serviceRequestsModel.findById({ _id: id });
+    
+    if(!req)
+      throw new Error("registro não encontrado!");
+
+    return {
+      id: req._id.toString(),
+      patientName: (await patientModel.findById({ _id: req.patientId }))?.fullname as string,
+      patientId: req.patientId?.toString() as string,
+      kind: (await serviceModel.findById({ _id: req.kind }))?.name as string,
+      pending: req.pending && "Pendente",
+      requester: (await getUser(req.userId?.toString() as string))?.fullname,
+      createdAt: req.createdAt
+    };
+  }catch (e){
+    console.error(e);
+  }
+}
+
+export async function closeRequest(id: string){
+  try{
+    await serviceRequestsModel.updateOne({ _id: id }, { pending: false });
+    return true;
+  }catch(e){
+    console.error(e);
+
+    return false;
+  }
+}
+
 export {
   sendPatientToOffice,
   getPatient,
@@ -442,5 +517,7 @@ export {
   getConsultResult,
   finishConsultation,
   requestReschedule,
-  uploadExternalExamFile
+  uploadExternalExamFile,
+  registerRequest,
+  getRequests
 };

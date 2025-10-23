@@ -2,6 +2,7 @@ import TitleAndSubtitle from "@/components/title-subtitle";
 import Accordium from "@/components/ui/accordium";
 import PatientIdentification from "@/components/operating-room/patient-identification";
 import { gender } from "@/backend/api/clinical/translator";
+import RescheduleSugery from "@/components/reschedule-sugery";
 import { getOperatingRoom, getPatient } from "@/backend/api/clinical/operating-room-api";
 
 export default async function Page({ params }:{
@@ -17,7 +18,7 @@ export default async function Page({ params }:{
 	return (
     <div className="flex flex-col gap-y-4 py-2"> 
       <div className="flex gap-x-4 mb-2">
-        {/*<RescheduleSugery scheduleId={scheduleId}/>*/}
+        <RescheduleSugery scheduleId={scheduleId}/>
       </div> 
                 
       <Accordium title="Informações do utente">

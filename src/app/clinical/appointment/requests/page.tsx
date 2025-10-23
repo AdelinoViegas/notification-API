@@ -1,8 +1,7 @@
 import { formater } from "@/lib/table-formater";
-import Header from "@/components/header";
 import Table from "@/components/table";
 import Search from "@/components/ui/search";
-import { getPatients } from "@/backend/api/clinical/office-api";
+import { getRequests } from "@/backend/api/clinical/office-api";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
 
 export const dynamic = "force-dynamic";
@@ -15,40 +14,32 @@ export default async function Page({
   }>
 }) {
   const { name } = await searchParams;
-  const scheduleOffices = await getPatients({ 
-    fullname: name, 
-    served: true,
-    inAppointment: true, 
-  });
+  const consultations = await getRequests({ from: "consultation", name });
 
-  const rows = formater(scheduleOffices.patients, {
+  const rows = formater(consultations, {
     filterKey: [
       "id",
-      "updatedAt",
-      "patient",
-      "doctor",
-      "status",
-      "user"
+      "patientName",
+      "kind",
+      "pending",
+      "requester",
+      "createdAt"
     ],
     order: [
-      "updatedAt",
-      "patient",
-      "doctor",
-      "user",
-      "status"
+      "createdAt",
+      "kind",
+      "patientName",
+      "pending",
+      "requester"
     ],
     transform: {
-      targetKey: "updatedAt",
+      targetKey: "createdAt",
       fn: e => getDataAndHoursFormat(new Date(e))
     }
   });
 
   return (
     <main className="space-y-3">
-      <div className="mt-6">
-        <Header title="Consultas Atendidas"/>
-      </div>
-
       <Search
         className="flex items-center gap-3"
         filterKey="name"
@@ -58,13 +49,14 @@ export default async function Page({
 
       <Table
         columns={[
-          "Data e Hora", 
-          "Nome do Utente", 
-          "Nome do Médico",
-          "Responsável",
-          "Estado"
+          "Data", 
+          "Tipo de Consulta", 
+          "Utente",
+          "Estado",
+          "Solicitante"
         ]} 
         rows={rows}
+        baseRowLink="/clinical/appointment/requests"
       />
     </main>
   );

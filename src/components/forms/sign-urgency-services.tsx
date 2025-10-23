@@ -6,28 +6,24 @@ import { useRouter } from "next/navigation";
 import Modal from "@/components/modal";
 import Button from "@/components/ui/button";
 import InputField from "@/components/ui/input-field";
-import Alert from "@/components/ui/alert";
 import { signUrgencyService } from "@/backend/api/clinical/urgency-bank-api";
+import { toast } from "react-toastify";
 
 export default function SignUrgencyService(){
   const [ state, action ] = useActionState(signUrgencyService, { message: "", status: false });
   const [ modalState, setModalState ] = useState(false);
   const closeModal = ()=> setModalState(false);
-  const [ messageState, setMessageState ] = useState(false);
   const router = useRouter();
 
   useEffect(()=>{
-    if(state.message){
-      setMessageState(true);
-
-      setTimeout(()=>{
-        if(state.status){
-          router.refresh();
-        }
-        
-        setMessageState(false);
-      }, 2000);
-    }
+    if(state.message)
+      if(state.status)
+        toast.success(state.message, {
+          autoClose: 3500,
+          onClose: ()=> router.refresh(),
+        });
+      else
+        toast.error(state.message, {autoClose: 3500});
   }, [state, router]);
   return(
     <div>
@@ -58,15 +54,6 @@ export default function SignUrgencyService(){
             <Button type="submit">Salvar</Button>
           </div>
         </form>
-
-        { messageState &&
-          <div className="mt-3">
-            <Alert
-              message={state.message}
-              type={state.status?"success":"error"} 
-            /> 
-          </div>
-        }
       </Modal>
     </div>
   )
