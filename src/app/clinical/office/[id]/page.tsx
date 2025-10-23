@@ -16,7 +16,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   const { id } = await params; 
   const patient = await getPatient(id);
   const consultResult = await getConsultResult(id);
-  const { detail } = await getScheduleAppointment(patient.scheduleAppointmentId);
+  const { detail } = await getScheduleAppointment(patient?.scheduleAppointmentId as string);
   // const results = await getPatientScheduledServices({ patientId: patient.personal._id });
 
   return(
@@ -83,12 +83,12 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
           <Accordium title="Exames">
             <div className="grid lg:grid-cols-2 lg:space-x-8">
-              <RequestExams patientId={patient.personal._id} />
+              <RequestExams patientId={patient?.personal._id as string} />
               
               <div>
                 <UploadExternalExam 
                   officeId={id}
-                  patientId={patient.personal._id}
+                  patientId={patient?.personal._id as string}
                   storageId={consultResult?.storageId}
                 />
 
@@ -98,7 +98,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
           </Accordium> 
           
           <Accordium title="Cirurgias">
-            <ScheduleSugery patientId={patient.personal._id}/>
+            <ScheduleSugery patientId={patient?.personal._id as string}/>
           </Accordium>     
 
           <div className="flex gap-3">

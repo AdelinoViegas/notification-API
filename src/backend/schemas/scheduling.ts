@@ -313,7 +313,14 @@ const serviceRequestsSchema = new Schema({
   }
 }, {
   timestamps: true
-})
+});
+
+serviceRequestsSchema.index({ 
+  patientId: 1, 
+  from: 1, 
+  userId: 1, 
+  kind: 1 
+}, { unique: true });
 
 export{
   examGroupSchema,
