@@ -10,6 +10,7 @@ import { patientPlug, appointmentPlug, examPlug, browserPdf } from "./pdf-templa
 import { generate } from "@pdfme/generator";
 import { image, rectangle, text, barcodes, line } from "@pdfme/schemas";
 import { AngolaProvices } from "@/backend/api/clinical/translator";
+import formatMoney from "./format-money";
 
 const doc = new jsPDF();
 
@@ -381,8 +382,8 @@ function appointmentRecord({
           date,
           hour,
           consultationType: `${consultationType}${'.'.repeat(45)}`,
-          consultationPrice: String(`${consultationPrice.toFixed(2).replace('.', ',')} kz`),
-          totalPrice: String(`${consultationPrice.toFixed(2).replace('.', ',')} kz`)
+          consultationPrice: formatMoney(consultationPrice),
+          totalPrice: formatMoney(consultationPrice)
         }
       ],
       plugins: {
@@ -406,67 +407,66 @@ function scheduleExamsRecord({
   exams,
   examsTotalPrice,
 }: ScheduleExamsRecord){
-  
-  let posY = 132;
-  const examData: Record<string, string> = {};
-
-  exams?.forEach(({id, name, price}) => {
-    examData[`Exame${id+1}`] = String(`${price.toFixed(2).replace('.', ',')} kz`);
-
-    examPlug.schemas[0].push(
-      {
-        "name": `field2${id}`,
-        "type": "text",
-        "content": `${name}${'.'.repeat(45)}`,
-        "position": {
-            "x": 11,
-            "y": posY
-        },
-        "width": 145,
-        "height": 5,
-        "rotate": 0,
-        "alignment": "left",
-        "verticalAlignment": "top",
-        "fontSize": 11,
-        "lineHeight": 1,
-        "characterSpacing": 0,
-        "fontColor": "#555555",
-        "fontName": "Roboto",
-        "opacity": 1,
-        "strikethrough": false,
-        "underline": false,
-        "required": false,
-        "readOnly": true
-      },
-      {
-        "name": `Exame${id+1}`,
-        "type": "text",
-        "content": "Preço do exame",
-        "position": {
-            "x": 175,
-            "y": posY
-        },
-        "width": 40,
-        "height": 5,
-        "rotate": 0,
-        "alignment": "left",
-        "verticalAlignment": "top",
-        "fontSize": 11,
-        "lineHeight": 1,
-        "characterSpacing": 0,
-        "fontColor": "#000000",
-        "fontName": "Roboto",
-        "opacity": 1,
-        "strikethrough": false,
-        "underline": false,
-        "required": true,
-        "readOnly": false
-      })
-
-      posY = posY+7;
-  });
-
   try{
+    let posY = 132;
+    const examData: Record<string, string> = {};
+
+    exams?.forEach(({id, name, price}) => {
+      examData[`Exame${id+1}`] = formatMoney(price);
+
+      examPlug.schemas[0].push(
+        {
+          "name": `field2${id}`,
+          "type": "text",
+          "content": `${name}${'.'.repeat(45)}`,
+          "position": {
+              "x": 11,
+              "y": posY
+          },
+          "width": 145,
+          "height": 5,
+          "rotate": 0,
+          "alignment": "left",
+          "verticalAlignment": "top",
+          "fontSize": 11,
+          "lineHeight": 1,
+          "characterSpacing": 0,
+          "fontColor": "#555555",
+          "fontName": "Roboto",
+          "opacity": 1,
+          "strikethrough": false,
+          "underline": false,
+          "required": false,
+          "readOnly": true
+        },
+        {
+          "name": `Exame${id+1}`,
+          "type": "text",
+          "content": "Preço do exame",
+          "position": {
+              "x": 175,
+              "y": posY
+          },
+          "width": 40,
+          "height": 5,
+          "rotate": 0,
+          "alignment": "left",
+          "verticalAlignment": "top",
+          "fontSize": 11,
+          "lineHeight": 1,
+          "characterSpacing": 0,
+          "fontColor": "#000000",
+          "fontName": "Roboto",
+          "opacity": 1,
+          "strikethrough": false,
+          "underline": false,
+          "required": true,
+          "readOnly": false
+        })
+
+        posY = posY+7;
+    });
+
     generate({
       template: examPlug,
       inputs: [
@@ -477,7 +477,7 @@ function scheduleExamsRecord({
           gender: gender?.at(0)?.toUpperCase(),
           date,
           ...examData,
-          totalPrice: String(`${examsTotalPrice.toFixed(2).replace('.', ',')} kz`)
+          totalPrice: formatMoney(examsTotalPrice)
         }
       ],
       plugins: {
