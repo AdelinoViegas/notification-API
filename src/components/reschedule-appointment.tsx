@@ -7,6 +7,7 @@ import {
   useCallback,
   useActionState 
 } from "react";
+import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import Modal from "@/components/modal";
 import InputField from "@/components/ui/input-field";
@@ -37,7 +38,6 @@ export default function RescheduleAppointment({
   const [ modalState, setModalState ] = useState(false);
   const closeModal = ()=> setModalState(false);
   const openModal = ()=> setModalState(true);
-  const [ messageState, setMessageState ] = useState(false);
   const router = useRouter();
   const [ doctors, setDoctors ] = useState<SelectionOption[]>([]);
   const [ doctorDays, setDoctorDays ] = useState<SelectionOption[]>([]);
@@ -72,9 +72,6 @@ export default function RescheduleAppointment({
     }
   }, [date]);
 
-  // const loadData = useCallback(
-  // }, [doctorId, handleSelectDoctor]);
-
   const handleDoctorDay = useCallback(async(e: unknown)=>{
     const dateId = (e as { target: { value: string } }).target.value;
     const doctorCalendar = doctorDayRef.current?.find(props => props._id === dateId);
@@ -106,21 +103,19 @@ export default function RescheduleAppointment({
   }, [handleSelectDoctor, doctorId]);
 
   useEffect(()=>{
-    if(state.message){
-      setMessageState(true);
-
-      setTimeout(()=>{
-        setMessageState(false);
-
-        if(state.status){
-          closeModal();
-          if(isArchived)
-            router.replace('/clinical/appointment/archiveds')
-          else
-            router.refresh();  
-        }
-      }, state.status?2000:7000);
-    }
+    if(state.message)
+      if(state.status)
+        toast.success(state.message, {
+          onClose: ()=>{
+            closeModal();
+            if(isArchived)
+              router.replace('/clinical/appointment/archiveds')
+            else
+              router.refresh();  
+          }
+        });
+      else
+        toast.error(state.message);
   }, [state, router, isArchived]);
 
   return(
@@ -197,16 +192,6 @@ export default function RescheduleAppointment({
             <Button>Salvar</Button>
           </div>
         </form>
-
-        {
-          state.message && messageState &&
-          <div className="mt-3">
-            <Alert
-              type={state.status?'success':'error'}
-              message={state.message}
-            />
-          </div>
-        }
       </Modal>
     </div>
   )

@@ -39,8 +39,9 @@ export type ScreeningRecord = {
 };
 
 export type AppointmentRecord = {
-  patientName: string,
-  age: number,
+  registerNumber: number,
+  fullname: string,
+  age: string,
   gender: string,
   date: string,
   hour: string,
@@ -49,16 +50,17 @@ export type AppointmentRecord = {
 }
 
 export type ScheduleExamsRecord = {
-  patientName: string,
-  age?: number,
-  gender?: string,
-  date?: string,
+  registerNumber: number,
+  fullname: string,
+  age: string,
+  gender: string,
+  date: string,
   exams?: {
     id: string,
     name: string,
     price: number,
   }[],
-  examsTotalPrice: string | number,
+  examsTotalPrice: number,
 }
 
 export type Arguments = PatientRecord | ScreeningRecord | AppointmentRecord | ScheduleExamsRecord;
@@ -71,7 +73,7 @@ export default function PDFButton({
   label: string;
   args: Arguments;
   type: "patientRecord" | "screeningRecord" | "appointmentRecord" | "scheduleExamsRecord";
-}){ 
+}){
   switch(type){
     case "patientRecord":
       return (

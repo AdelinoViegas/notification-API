@@ -5,14 +5,13 @@ import {
   useEffect,
   useActionState, 
 } from "react";
+import { MdAttachMoney } from "react-icons/md";
+import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import Modal from "@/components/modal";
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
-import Alert from "@/components/ui/alert";
 import { updatePaymentData } from "@/backend/api/clinical/office-api";
-
-import { MdAttachMoney } from "react-icons/md";
 
 export default function ValidateAppointment({
   scheduleId,
@@ -31,21 +30,19 @@ export default function ValidateAppointment({
   const [ modalState, setModalState ] = useState(false);
   const closeModal = ()=> setModalState(false);
   const openModal = ()=> setModalState(true);
-  const [ messageState, setMessageState ] = useState(false);
   const router = useRouter();
 
   useEffect(()=>{
-    if(state?.message){
-      setMessageState(true);
-
-      setTimeout(()=>{
-        if(state.status){
-          closeModal();
-          router.replace('/clinical/appointment');
-        }
-        setMessageState(false);
-      }, 2000);
-    }
+    if(state.message)
+      if(state.status)
+        toast.success(state.message, {
+          onClose: ()=>{
+            closeModal();
+            router.replace('/clinical/appointment');
+          }
+        });
+      else
+        toast.error(state.message);
   }, [state, router]);
 
   return(
@@ -100,16 +97,6 @@ export default function ValidateAppointment({
             <Button>Salvar</Button>
           </div>
         </form>
-
-        {
-          state?.message && messageState &&
-          <div className="mt-3">
-            <Alert
-              type={state.status?'success':'error'}
-              message={state.message}
-            />
-          </div>
-        }
       </Modal>
     </div>
   )

@@ -146,7 +146,7 @@ function Demography(){
 }
 
 function BirthDate(){
-  const [age, setAge] = useState(0);
+  const [age, setAge] = useState("");
 
   const handleAge = (el: ChangeEvent<HTMLInputElement>) => {
     const calculatedAge = calculateAge(el.target.value);

@@ -79,7 +79,6 @@ export default function RequestExams({
     if(state.message)
       if(state.status)
         toast.success(state.message, {
-          autoClose: 1500,
           onClose: ()=>{
             if(!!scheduleType)
               router.replace("/clinical/screening");

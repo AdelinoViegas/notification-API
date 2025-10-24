@@ -67,7 +67,7 @@ export default async function Page({ params }:{ params: Promise<{ id: string }>
 
               <TitleAndSubtitle
                 label="Preço Total"
-                value={angolaCurrency(Number(schedule?.examPrice))} 
+                value={angolaCurrency(schedule?.examPrice)} 
               />
 
               <TitleAndSubtitle
@@ -110,7 +110,8 @@ export default async function Page({ params }:{ params: Promise<{ id: string }>
               label="Visualizar"
               type="scheduleExamsRecord"
               args={{
-                patientName: schedule.patient,
+                registerNumber: schedule.registerNumber,
+                fullname: schedule.patient,
                 age: schedule.age,
                 gender: schedule.gender,
                 date: schedule.createdAt,
@@ -130,7 +131,7 @@ export default async function Page({ params }:{ params: Promise<{ id: string }>
             />
             
             <ValidateService
-              disabled={!Number(schedule.examPrice) || schedule.payment.status === "Confirmado"}
+              disabled={!schedule.examPrice || schedule.payment.status === "Confirmado"}
               scheduleId={id}
               code={schedule.payment.code}
               proof={schedule.payment.proof}
