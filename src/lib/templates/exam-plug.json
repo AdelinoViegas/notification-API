@@ -76,7 +76,7 @@
           {
               "name": "field4",
               "type": "text",
-              "content": "Guia de Agendamento de Cosulta",
+              "content": "Guia de Agendamento de Exame(s)",
               "position": {
                   "x": 63.6,
                   "y": 39.57
@@ -437,7 +437,7 @@
               "type": "text",
               "content": "dd/mm/yyyy",
               "position": {
-                  "x": 160,
+                  "x": 163,
                   "y": 106
               },
               "width": 32.54,
@@ -457,33 +457,9 @@
               "readOnly": false
           },
           {
-              "name": "hour",
-              "type": "text",
-              "content": "hh:ii",
-              "position": {
-                  "x": 184,
-                  "y": 106
-              },
-              "width": 20,
-              "height": 5,
-              "rotate": 0,
-              "alignment": "left",
-              "verticalAlignment": "top",
-              "fontSize": 11,
-              "lineHeight": 1,
-              "characterSpacing": 0,
-              "fontColor": "#000000",
-              "fontName": "Roboto",
-              "opacity": 1,
-              "strikethrough": false,
-              "underline": false,
-              "required": true,
-              "readOnly": false
-          },
-          {
               "name": "field14",
               "type": "text",
-              "content": "3. Descrição da consulta",
+              "content": "3. Descrição do(s) Exame(s)",
               "position": {
                   "x": 10.50,
                   "y": 124
@@ -506,57 +482,9 @@
               "readOnly": true
           },
           {
-              "name": "consultationType",
-              "type": "text",
-              "content": "Tipo de consulta",
-              "position": {
-                  "x": 11,
-                  "y": 134
-              },
-              "width": 135,
-              "height": 5,
-              "rotate": 0,
-              "alignment": "left",
-              "verticalAlignment": "top",
-              "fontSize": 11,
-              "lineHeight": 1,
-              "characterSpacing": 0,
-              "fontColor": "#555555",
-              "fontName": "Roboto",
-              "opacity": 1,
-              "strikethrough": false,
-              "underline": false,
-              "required": true,
-              "readOnly": false
-          },
-          {
-              "name": "consultationPrice",
-              "type": "text",
-              "content": "Preço da consulta",
-              "position": {
-                  "x": 175,
-                  "y": 134
-              },
-              "width": 40,
-              "height": 5,
-              "rotate": 0,
-              "alignment": "left",
-              "verticalAlignment": "top",
-              "fontSize": 11,
-              "lineHeight": 1,
-              "characterSpacing": 0,
-              "fontColor": "#000000",
-              "fontName": "Roboto",
-              "opacity": 1,
-              "strikethrough": false,
-              "underline": false,
-              "required": true,
-              "readOnly": false
-          },
-          {
               "name": "field15",
               "type": "text",
-              "content": "Total da consulta...............................................",
+              "content": "Total dos Exames...............................................",
               "position": {
                   "x": 11,
                   "y": 210

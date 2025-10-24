@@ -52,9 +52,9 @@ export type AppointmentRecord = {
 export type ScheduleExamsRecord = {
   registerNumber: number,
   fullname: string,
-  age?: string,
-  gender?: string,
-  date?: string,
+  age: string,
+  gender: string,
+  date: string,
   exams?: {
     id: string,
     name: string,
