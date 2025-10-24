@@ -24,6 +24,7 @@ type SurgeryElement = {
 
 export default function QuickFabShurtcut(){
   const [ state, setState ] = useState(false);
+  
   const actions: [ RequestElement, HospitalElement, SurgeryElement ] = [
     { id: "reqConsult", Component: RequestConsult },
     { id: "reqHospital", Component: Hospitalization },
@@ -39,7 +40,7 @@ export default function QuickFabShurtcut(){
           >
             { ev.id === "reqConsult" && <ev.Component /> }
             { ev.id === "reqSurgery" && <ev.Component /> }
-            { ev.id === "reqHospital" && <ev.Component patientId="203040340340340" id="test" /> }
+            { ev.id === "reqHospital" && <ev.Component /> }
           </div>
         ))}
       </div>}

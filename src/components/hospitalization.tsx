@@ -7,20 +7,15 @@ import InputDetails from "@/components/ui/input-details";
 import InputField from "@/components/ui/input-field";
 import { finishHospitalization } from "@/backend/api/clinical/urgency-bank-api";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
-export default function Hospitalization({ 
-  id,
-  patientId 
-}:{ 
-  id: string;
-  patientId: string; 
-}){
+export default function Hospitalization(){
   const [modalstate, setModalState] = useState(false);
   const [ state, action ] = useActionState(finishHospitalization, { message: "", status: false });
   const  openModal = ()=> setModalState(true);
   const closeModal = ()=> setModalState(false);
   const router = useRouter();
+  const params = useParams();
 
   useEffect(()=>{
     if(state.message)
@@ -37,13 +32,7 @@ export default function Hospitalization({
   }, [state]);
   return(
     <div>
-      <Button 
-        onClick={openModal}
-        className="bg-slate-700"
-        disabled={!id}
-      >
-        Internamento
-      </Button>
+      <Button onClick={openModal}>Internamento</Button>
 
       <Modal 
         title="Internamento"
@@ -53,8 +42,7 @@ export default function Hospitalization({
       >
         <form action={action}>
           <div className="my-4">
-            <input type="hidden" name="urgencyId" value={id} />
-            <input type="hidden" name="patientId" value={patientId} />
+            <input type="hidden" name="patientId" value={params.patientId} />
             
             <InputDetails
               textLabel="Descrição"
