@@ -42,7 +42,10 @@ const screeningSchema = new Schema({
       type: Number,
       default: 0,
     },
-    sp02: Number,
+    sp02: {
+      type: Number,
+      default: 0,
+    },
     temperature: {
       type: Number,
       default: 0,

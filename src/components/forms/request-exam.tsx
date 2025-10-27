@@ -8,15 +8,15 @@ import React, {
   useActionState
 } from "react";
 import { useRouter } from "next/navigation";
+import { BiTrash as TrashIcon } from "react-icons/bi";
+import { toast } from 'react-toastify';
+import clsx from "clsx";
 import Button from "@/components/ui/button";
 import Selection from "@/components/ui/selection";
-import { getUnits } from "@/backend/api/clinical/urgency-bank-api";
 import { SelectionOption } from "@/components/ui/selection";
 import InputDetails from "@/components/ui/input-details";
 import SubTitle from "@/components/ui/subtitle";
-import { BiTrash as TrashIcon } from "react-icons/bi";
-import clsx from "clsx";
-import { toast } from 'react-toastify';
+import { getUnits } from "@/backend/api/clinical/urgency-bank-api";
 import { 
   getServices,
   schedulePatientExam,
@@ -42,7 +42,7 @@ export default function RequestExams({
   const [ renderAux, setRenderAux ] = useState(false);
   const [ examCache, setExamCache ] = useState<SelectionOption[]>([]);
   const router = useRouter();
-
+  console.log(exams);
   const handlerCallback = (e: React.ChangeEvent<HTMLSelectElement>)=>{
     getServices({ kind: "exam" })
     .then(data => { 
