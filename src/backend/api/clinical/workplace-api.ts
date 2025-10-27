@@ -2,6 +2,7 @@
 
 import { currentLocationModel } from "@/backend/model";
 import { getUserId } from "@/lib/web-token";
+import { CountIndicator, countIndicatorSchema } from "../type-schema";
 
 async function enterIntoWorkplace(prev: unknown, formData: FormData){
   try{
@@ -55,6 +56,17 @@ async function exitFromWorkplace(){
   }, { 
     isActive: false 
   });
+}
+
+export async function countIndicator(indicator: CountIndicator){
+  try{
+    countIndicatorSchema.parse(indicator);
+
+    console.log(indicator);
+    
+  }catch {
+
+  }
 }
 
 export {
