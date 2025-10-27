@@ -2,19 +2,17 @@
 
 import { 
   useEffect,
-  useState,
   useActionState,
   useRef,
 } from "react";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 import InputField from "@/components/ui/input-field";
 import InputDetails from "@/components/ui/input-details";
 import Button from "@/components/ui/button";
-import Alert from "@/components/ui/alert";
-import { signConsutation, uploadExternalExamFile } from "@/backend/api/clinical/office-api";
-import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
 import SubTitle from "@/components/ui/subtitle";
 import type { ConsultCurrentStates, ConsultVitalSignal } from "@/backend/schemas/types";
+import { signConsutation, uploadExternalExamFile } from "@/backend/api/clinical/office-api";
 
 export function VitalSignalsInOffice({ 
   id, 
@@ -24,20 +22,18 @@ export function VitalSignalsInOffice({
   vitalSignal?: ConsultVitalSignal;
 }){
   const [ state, action ] = useActionState(signConsutation, { message:"", status:false });
-  const [ messageState, setMessageState ] = useState(false);
   const router = useRouter();
 
   useEffect(()=>{
-    if(state?.message){
-      setMessageState(true);
-
-      setTimeout(()=>{
-        if(state?.status){
-          router.refresh();        
-        }
-        setMessageState(false);
-      },state.status?2000:3000);
-    }
+    if(state.message)
+      if(state.status)
+        toast.success(state.message, {
+          onClose: ()=>{
+            router.refresh();  
+          }
+        });
+      else
+        toast.error(state.message);
   }, [state, router]);
 
   return(
@@ -147,16 +143,6 @@ export function VitalSignalsInOffice({
       </div>
 
       <Button>Salvar</Button>
-
-      {
-        state?.message && messageState &&
-        <div className="w-96 flex mt-3">
-          <Alert
-            type={state?.status?'success':'error'}
-            message={state?.message}
-          />
-        </div>
-      }
     </form>
   )
 }
@@ -169,20 +155,18 @@ export function CurrentDataInOffice({
   currentState?: ConsultCurrentStates;
 }){
   const [ state, action ] = useActionState(signConsutation, { message:"", status:false })
-  const [ messageState, setMessageState ] = useState(false);
   const router = useRouter();
 
   useEffect(()=>{
-    if(state?.message){
-      setMessageState(true);
-
-      setTimeout(()=>{
-        if(state?.status){
-          router.refresh();        
-        }
-        setMessageState(false);
-      },state.status?2000:3000);
-    }
+    if(state.message)
+      if(state.status)
+        toast.success(state.message, {
+          onClose: ()=>{
+            router.refresh();  
+          }
+        });
+      else
+        toast.error(state.message);
   }, [state, router]);
 
   return(
@@ -229,16 +213,6 @@ export function CurrentDataInOffice({
       </div>
       
       <Button>Salvar</Button>
-
-      {
-        state?.message && messageState &&
-        <div className="w-96 flex mt-3">
-          <Alert
-            type={state?.status?'success':'error'}
-            message={state?.message}
-          />
-        </div>
-      }
     </form>
   )
 }
@@ -260,7 +234,9 @@ export function UploadExternalExam({
   useEffect(()=>{
     if(state.message)
       if(state.status)
-        toast.success(state.message, { onOpen: router.refresh });
+        toast.success(state.message, {
+          onOpen: router.refresh 
+        });
       else 
         toast.warn(state.message)
   }, [state])

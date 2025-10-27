@@ -65,13 +65,12 @@ export default function SignPatientForm(){
 		if(state.message)
 			if(state.status)
 				toast.success(state.message, {
-					autoClose: 3500,
 					onClose: ()=>{
 						router.replace('/clinical/patient');
 					}
 				});
 			else
-				toast.error(state.message, {autoClose: 3500});
+				toast.error(state.message);
   }, [state, router]);
 
 	return(

@@ -6,10 +6,11 @@ import type {
   ScreeningRecord, 
   ScheduleExamsRecord
 } from "@/components/pdf-button";
-import { patientPlug, browserPdf } from "./pdf-templates";
+import { patientPlug, appointmentPlug, examPlug, browserPdf } from "./pdf-templates";
 import { generate } from "@pdfme/generator";
 import { image, rectangle, text, barcodes, line } from "@pdfme/schemas";
 import { AngolaProvices } from "@/backend/api/clinical/translator";
+import formatMoney from "./format-money";
 
 const doc = new jsPDF();
 
@@ -32,7 +33,6 @@ function  patientRecord({
   group,
   acess
 }: PatientRecord){
-
   /*const fonts = {
     "Roboto-Bold": { data: "/fonts/roboto/Roboto-Bold.ttf" },
     "Roboto": { data: "/fonts/roboto/Roboto-Regular.ttf", fallback: true },
@@ -46,6 +46,7 @@ function  patientRecord({
 
   try{
     const _group = JSON.parse(group) as GroupT;
+
     generate({
       template: patientPlug,
       inputs: [
@@ -97,10 +98,7 @@ function  patientRecord({
       },
     })
     .then(e => browserPdf(e))
-
-  }catch(err) {
-    console.log(err);
-  }
+  }catch {}
 }
 
 function screeningRecord({
@@ -361,7 +359,139 @@ function screeningRecord({
   doc.output('dataurlnewwindow', { filename: 'ficha_de_triagem.pdf' });
 }
 
+
 function appointmentRecord({
+  registerNumber,
+  fullname,
+  age,
+  gender,
+  date,
+  hour,
+  consultationType,
+  consultationPrice,
+}: AppointmentRecord){
+  try{
+    generate({
+      template: appointmentPlug,
+      inputs: [
+        {
+          registerNumber: String(registerNumber),
+          fullname,
+          age: String(age),
+          gender: gender?.at(0)?.toUpperCase(),
+          date,
+          hour,
+          consultationType: `${consultationType}${'.'.repeat(45)}`,
+          consultationPrice: formatMoney(consultationPrice),
+          totalPrice: formatMoney(consultationPrice)
+        }
+      ],
+      plugins: {
+        rectangle,
+        text,
+        image,
+        qrcode: barcodes.qrcode,
+        line
+      },
+    })
+    .then(e => browserPdf(e))
+  }catch {}
+}
+  
+function scheduleExamsRecord({
+  registerNumber,
+  fullname,
+  age, 
+  gender,
+  date,
+  exams,
+  examsTotalPrice,
+}: ScheduleExamsRecord){
+  try{
+    let posY = 132;
+    const examData: Record<string, string> = {};
+
+    exams?.forEach(({id, name, price}) => {
+      examData[`Exame${id+1}`] = formatMoney(price);
+
+      examPlug.schemas[0].push(
+        {
+          "name": `field2${id}`,
+          "type": "text",
+          "content": `${name}${'.'.repeat(45)}`,
+          "position": {
+              "x": 11,
+              "y": posY
+          },
+          "width": 145,
+          "height": 5,
+          "rotate": 0,
+          "alignment": "left",
+          "verticalAlignment": "top",
+          "fontSize": 11,
+          "lineHeight": 1,
+          "characterSpacing": 0,
+          "fontColor": "#555555",
+          "fontName": "Roboto",
+          "opacity": 1,
+          "strikethrough": false,
+          "underline": false,
+          "required": false,
+          "readOnly": true
+        },
+        {
+          "name": `Exame${id+1}`,
+          "type": "text",
+          "content": "Preço do exame",
+          "position": {
+              "x": 175,
+              "y": posY
+          },
+          "width": 40,
+          "height": 5,
+          "rotate": 0,
+          "alignment": "left",
+          "verticalAlignment": "top",
+          "fontSize": 11,
+          "lineHeight": 1,
+          "characterSpacing": 0,
+          "fontColor": "#000000",
+          "fontName": "Roboto",
+          "opacity": 1,
+          "strikethrough": false,
+          "underline": false,
+          "required": true,
+          "readOnly": false
+        })
+
+        posY = posY+7;
+    });
+
+    generate({
+      template: examPlug,
+      inputs: [
+        {
+          registerNumber: String(registerNumber),
+          fullname,
+          age: String(age),
+          gender: gender?.at(0)?.toUpperCase(),
+          date,
+          ...examData,
+          totalPrice: formatMoney(examsTotalPrice)
+        }
+      ],
+      plugins: {
+        rectangle,
+        text,
+        image,
+        qrcode: barcodes.qrcode,
+        line
+      },
+    })
+    .then(e => browserPdf(e))
+  }catch {}
+}
+/*function appointmentRecord({
   patientName,
   age, 
   gender,
@@ -654,7 +784,7 @@ function scheduleExamsRecord({
 
   doc.output('dataurlnewwindow', { filename: 'agendamento-exames.pdf' });
 }
-
+*/
 export {
   patientRecord,
   screeningRecord,

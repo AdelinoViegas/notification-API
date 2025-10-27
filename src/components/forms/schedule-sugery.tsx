@@ -9,6 +9,7 @@ import {
 import { useRouter, usePathname } from "next/navigation";
 import { getUserId } from "@/lib/web-token";
 import { toast } from "react-toastify";
+import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
 import Selection from "@/components/ui/selection";
 import { SelectionOption } from "@/components/ui/selection";
@@ -18,7 +19,6 @@ import {
   scheduleSugery
 } from "@/backend/api/clinical/scheduling-api";
 import { getDoctors } from "@/backend/api/clinical/api";
-import InputField from "../ui/input-field";
 
 
 export type DoctorRole = {
@@ -55,9 +55,9 @@ export default function ScheduleSugery(
 
     const dataSugeries:SelectionOption[] = [];
 
-    getServices({ kind: "exam" }).then(
+    getServices({ kind: "surgery" }).then(
       data => {
-        const sugeries = data.filter( props => props.category.toLowerCase().includes("cirurgia"))
+        const sugeries = data.filter( props => props.kind === "surgery")
         sugeries.forEach( props => {
           dataSugeries.push({
             _id: props._id,
@@ -73,16 +73,15 @@ export default function ScheduleSugery(
     if(state.message)
       if(state.status)
         toast.success(state.message, {
-          autoClose: 3500,
           onClose: ()=>{
             if(ispatient)
-              router.replace("/clinical/patient/");
+              router.replace("/clinical/patient");
 
             formRef.current?.reset();
           }
         });
       else 
-        toast.error(state.message, {autoClose: 3500});
+        toast.error(state.message);
   }, [state, router]);
 
   return(
@@ -104,7 +103,8 @@ export default function ScheduleSugery(
           <input
             type="hidden"
             name="doctorId"
-            defaultValue={doctors[0]?._id}          />           
+            defaultValue={doctors[0]?._id}
+          />           
 
           <Selection
             label="Tipo de Cirurgia"

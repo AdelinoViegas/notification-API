@@ -33,7 +33,7 @@ export default function ArchivingSugery({
         toast.success(state.message, {
             autoClose: 3500,
             onClose: ()=>{
-              router.replace(isArchived?'/clinical/schedule-sugery/archiveds':'/clinical/schedule-sugery');
+              router.replace(isArchived?'/clinical/schedule-surgery/archiveds':'/clinical/schedule-surgery');
             }
         });
       }else

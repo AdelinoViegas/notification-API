@@ -27,7 +27,7 @@ export const clinicalIcons = [
     Icon: PiAmbulance
   },
   {
-    route: 'schedule-exams-services',
+    route: 'schedule-exams',
     Icon: RiCalendarScheduleLine
   },
   {
@@ -90,8 +90,8 @@ export const clinicalRoutes = [
     label: 'Banco de Urgência',
   },
   {
-    href: "/clinical/schedule-exams-services",
-    route: 'schedule-exams-services',
+    href: "/clinical/schedule-exams",
+    route: 'schedule-exams',
     label: 'Exames Agendados',
   },
   {

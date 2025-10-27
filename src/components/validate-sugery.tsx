@@ -39,7 +39,7 @@ export default function ValidateSugery({
           autoClose: 3500,
           onClose: () => { 
             closeModal();
-            router.replace('/clinical/schedule-sugery');
+            router.replace('/clinical/schedule-surgery');
           }          
         });
       else

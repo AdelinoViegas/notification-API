@@ -318,6 +318,12 @@ const surgerySchedulingArea = [
   },
 ];
 
+const defaultServiceKinds = [
+  { _id: "exam", label: "Exame" },
+  { _id: "consultation", label: "Consulta" },
+  { _id: "surgery", label: "Cirurgia" },
+];
+
 export { 
   patientGroup,
   civilState,
@@ -332,5 +338,6 @@ export {
   userCategory,
   unitTypes,
   ccgTypes,
-  surgerySchedulingArea
+  surgerySchedulingArea,
+  defaultServiceKinds
 };
