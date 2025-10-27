@@ -5,6 +5,7 @@ import { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import RequestConsult from "@/components/request-consult";
 import Hospitalization from "@/components/hospitalization";
+import RequestSurgery from "./request-surgery";
 
 type  RequestElement = {
   id: "reqConsult";
@@ -16,12 +17,18 @@ type  HospitalElement = {
   Component: typeof Hospitalization;
 }
 
+type SurgeryElement = {
+  id: "reqSurgery";
+  Component: typeof RequestSurgery;
+}
+
 export default function QuickFabShurtcut(){
   const [ state, setState ] = useState(false);
-
-  const actions: [RequestElement, HospitalElement] = [
+  
+  const actions: [ RequestElement, HospitalElement, SurgeryElement ] = [
     { id: "reqConsult", Component: RequestConsult },
-    { id: "reqHospital", Component: Hospitalization }
+    { id: "reqHospital", Component: Hospitalization },
+    { id: "reqSurgery", Component: RequestSurgery }
   ];
 
   return(
@@ -32,7 +39,8 @@ export default function QuickFabShurtcut(){
             key={index} 
           >
             { ev.id === "reqConsult" && <ev.Component /> }
-            { ev.id === "reqHospital" && <ev.Component patientId="203040340340340" id="test" /> }
+            { ev.id === "reqSurgery" && <ev.Component /> }
+            { ev.id === "reqHospital" && <ev.Component /> }
           </div>
         ))}
       </div>}

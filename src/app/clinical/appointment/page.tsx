@@ -8,6 +8,7 @@ import Button from "@/components/ui/button";
 import Search from "@/components/ui/search";
 import Refresh from "@/components/refresh";
 import { getScheduleAppointments } from "@/backend/api/clinical/scheduling-api";
+import CountIndicator from "@/components/count-indicator";
 
 export const dynamic = "force-dynamic";
 
@@ -49,7 +50,10 @@ export default async function Page({
           </Button>
         </Link>
 
-        <Link href="/clinical/appointment/requests">
+        <Link href="/clinical/appointment/requests" className="inline-flex relative">
+          <div className="absolute -right-4 z-10" title="Indicador de solicitações">
+            <CountIndicator from="req-consultation" />
+          </div>
           <Button className="flex gap-3">Solicitações</Button>
         </Link>
       </div>

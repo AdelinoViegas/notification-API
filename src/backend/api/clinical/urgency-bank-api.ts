@@ -976,12 +976,12 @@ async function getUrgencyService(serviceId: string){
 
 async function finishHospitalization(prev: unknown, formData: FormData){
   try{
-    const urgencyId = formData.get("urgencyId") as string;
     const description = formData.get("description");
     const donedAt = formData.get("donedAt") as string;
     const currentState = formData.get("currentState") as string;
     const patientId = formData.get("patientId") as string;
-
+    
+    const urgencyId = (await getPatientUrgencyBank(patientId))?.id;
     const patient = await getSyncedHistories(patientId);
     const lastPatientId = patient?.secondaries.pop();
     const hospitalizedPatient = await hospitalizationModel.findOne({ patientId: lastPatientId });

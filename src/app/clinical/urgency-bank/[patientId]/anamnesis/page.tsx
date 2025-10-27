@@ -1,5 +1,4 @@
 import Button from "@/components/ui/button";
-import Hospitalization from "@/components/hospitalization";
 import GlobalComponent, { InternalComponent } from "@/components/global-component";
 import { 
 	diagnosticInternalComponent,
@@ -47,7 +46,6 @@ export default async function Page({ params }: { params: Promise<{ patientId: st
 		<main className="relative">
 			<div className="flex gap-x-3">
 				<Button>Visualizar</Button>
-				<Hospitalization id={anamnesis.id} patientId={patientId} />
 			</div>
 
 			<div className="flex flex-col gap-y-3 pt-8">

@@ -1,5 +1,5 @@
 export default function Page(){
   return(
-    <div>historico de Cirurgias</div>
+    <div>historico de consultas</div>
   )
 }
