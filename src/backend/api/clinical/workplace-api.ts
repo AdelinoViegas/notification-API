@@ -1,6 +1,6 @@
 "use server";
 
-import { currentLocationModel } from "@/backend/model";
+import { currentLocationModel, serviceRequestsModel } from "@/backend/model";
 import { getUserId } from "@/lib/web-token";
 import { CountIndicator, countIndicatorSchema } from "../type-schema";
 
@@ -61,11 +61,22 @@ async function exitFromWorkplace(){
 export async function countIndicator(indicator: CountIndicator){
   try{
     countIndicatorSchema.parse(indicator);
-
-    console.log(indicator);
     
-  }catch {
+    switch(indicator){
+      case "req-consultation": {
+        
+        return (await serviceRequestsModel.find({ 
+          pending: true,
+          from: "consultation" 
+        })
+        .countDocuments());
+      }
+    }
 
+    return 0;
+  }catch (e) {
+    console.error(e);
+    return -1;
   }
 }
 

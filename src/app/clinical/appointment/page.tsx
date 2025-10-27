@@ -51,7 +51,7 @@ export default async function Page({
         </Link>
 
         <Link href="/clinical/appointment/requests">
-          <CountIndicator from="req-surgery" />
+          <CountIndicator from="req-consultation" />
           <Button className="flex gap-3">Solicitações</Button>
         </Link>
       </div>
