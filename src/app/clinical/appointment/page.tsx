@@ -50,8 +50,10 @@ export default async function Page({
           </Button>
         </Link>
 
-        <Link href="/clinical/appointment/requests">
-          <CountIndicator from="req-consultation" />
+        <Link href="/clinical/appointment/requests" className="inline-flex relative">
+          <div className="absolute -right-4 z-10" title="Indicador de solicitações">
+            <CountIndicator from="req-consultation" />
+          </div>
           <Button className="flex gap-3">Solicitações</Button>
         </Link>
       </div>
