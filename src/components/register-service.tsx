@@ -7,31 +7,28 @@ import {
   useCallback,
   useActionState 
 } from "react";
+import { toast } from "react-toastify";
+import { BiPlus as PlusIcon } from "react-icons/bi";
 import { useRouter } from "next/navigation";
 import Modal from "@/components/modal";
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
+import SpecialtyModal from "@/components/specialty-modal";
 import Selection, { SelectionOption } from "@/components/ui/selection";
-import { BiPlus as PlusIcon } from "react-icons/bi";
 import { 
   signCCG,
   getCCGs,
   signService,
 } from "@/backend/api/clinical/scheduling-api";
 import { getSpecialties } from "@/backend/api/clinical/api";
-import SpecialtyModal from "@/components/specialty-modal";
-import { toast } from "react-toastify";
+import { defaultServiceKinds } from "@/backend/api/clinical/translator";
 
 export default function RegisterService(){
   const [ state, action ] = useActionState(signService, { message: "", status: false });
   const [ ccgState, ccgAction ] = useActionState(signCCG, { message: "", status: false });
   const [ groupModal, setGroupModal ] = useState(false);
   const toggleGroupModal = ()=>setGroupModal(!groupModal);
-  const defaultServiceKinds = [
-    { _id: "exam", label: "Exame" },
-    { _id: "consultation", label: "Consulta" },
-    { _id: "surgery", label: "Cirurgia" },
-  ];
+
   // modal states
   const [ modalState, setModalState ] = useState(false);
   const closeModal = ()=> setModalState(false);

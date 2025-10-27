@@ -60,14 +60,13 @@ function DoneScreening({
     if(state.message){
       if(state.status)
         toast.success(state.message, { 
-          autoClose: 3500,
           onOpen: ()=>{
             closeModal();
             router.replace('/clinical/screening');
           }
         });
       else
-        toast.error(state.message, {autoClose: 3500});
+        toast.error(state.message);
     }
   }, [state, router]);
 
@@ -143,7 +142,7 @@ export default function ScreeningUI({
           }
         });
       else
-        toast.error(state.message, {autoClose: 3500});
+        toast.error(state.message);
     }
 
     getScreening({ 
@@ -152,7 +151,6 @@ export default function ScreeningUI({
     })
     .then(data => {
       setScreeningData(data as Screening);
-      console.log(data.reason);
     })
   }, [state, patientId, pathname, router]);
 

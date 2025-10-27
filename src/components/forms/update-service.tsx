@@ -5,13 +5,14 @@ import {
   useState,
   useActionState 
 } from "react";
+import { toast } from "react-toastify";
 import { useRouter, useParams } from "next/navigation";
 import InputField from "@/components/ui/input-field";
 import Selection, { SelectionOption } from "@/components/ui/selection";
 import Button from "@/components/ui/button";
-import { updateService } from "@/backend/api/clinical/scheduling-api";
 import SpecialtyModal from "@/components/specialty-modal";
-import { toast } from "react-toastify";
+import { updateService } from "@/backend/api/clinical/scheduling-api";
+import { defaultServiceKinds } from "@/backend/api/clinical/translator";
 
 type Service = {
   _id: string;
@@ -47,11 +48,6 @@ export default function UpdateService({
   const _specialties = JSON.parse(specialties) as SelectionOption[];
   const router = useRouter();
   const params = useParams();
-  const defaultServiceKinds = [
-    { _id: "exam", label: "Exame" },
-    { _id: "consultation", label: "Consulta" },
-    { _id: "surgery", label: "Cirurgia" },
-  ];
   const [ specialtyState, setSpecialtyState ] = useState(currentService?.specialtyId ? true:false);
 
   useEffect(()=>{
@@ -62,7 +58,6 @@ export default function UpdateService({
         });
       else
         toast.error(state.message);
-
   }, [state, router]);
 
   return(

@@ -3,11 +3,11 @@
 import { 
   useState, 
 } from "react";
+import { GrScheduleNew } from "react-icons/gr";
 import Modal from "@/components/modal";
 import Button from "@/components/ui/button";
 import ScheduleAppointment from "@/components/forms/schedule-appointment";
 import RequestExams from "@/components/forms/request-exam";
-import { GrScheduleNew } from "react-icons/gr";
 
 export default function ScheduleInScreening({
   patientId,

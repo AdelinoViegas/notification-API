@@ -10,18 +10,16 @@ import {
   useRouter, 
   useParams,  
 } from 'next/navigation';
+import { toast } from 'react-toastify';
+import { MdOutlineMoreTime } from "react-icons/md";
 import Button from "@/components/ui/button";
 import Modal from '@/components/modal';
 import { requestReschedule } from '@/backend/api/clinical/office-api';
-import Alert from '@/components/ui/alert';
-import { MdOutlineMoreTime } from "react-icons/md";
-
 
 export default function RequestReschedule(){
   const [ state, action ] = useActionState(requestReschedule, { message: "", status: false });
   const formRef = useRef<HTMLFormElement>(null);
   const [ modalState, setModalState ] = useState(false);
-  const [ message, setMessage ] = useState("");
   const router = useRouter();
   const params:{ officeId: string } = useParams();
 
@@ -32,15 +30,15 @@ export default function RequestReschedule(){
 
   useEffect(()=>{
     if(state.message){
-      setMessage(state.message);
-      
-      setTimeout(()=>{
-        setMessage("");
-        if(state.status){
-          closeModal();
-          router.replace("/clinical/office");
-        }
-      }, 2000);
+      if(state.status)
+        toast.success(state.message, { 
+          onOpen: ()=>{  
+            closeModal();
+            router.replace("/clinical/office");
+          }
+        })
+      else
+        toast.error(state.message);
     }
   }, [state, router]);
 
@@ -74,15 +72,6 @@ export default function RequestReschedule(){
                 Sim
             </Button>
           </div>
-          {
-            state?.message && message &&
-            <div className="mt-3">
-              <Alert
-                type={state?.status?'success':'error'}
-                message={state?.message}
-              />
-            </div>
-          }
         </div>
       </Modal>
     </form>

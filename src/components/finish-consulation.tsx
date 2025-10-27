@@ -6,26 +6,27 @@ import {
   useRef, 
   useEffect
 } from 'react';
+import { toast } from 'react-toastify';
+import { TiInputChecked } from 'react-icons/ti';
 import { useRouter } from 'next/navigation';
 import Button from "@/components/ui/button";
 import Modal from '@/components/modal';
-import { TiInputChecked } from 'react-icons/ti';
 import { finishConsultation } from '@/backend/api/clinical/office-api';
-import { toast } from 'react-toastify';
 
 export default function FinishConsultation({ id }: { id: string }){
   const [ state, action ] = useActionState(finishConsultation, { message: "", status: false });
   const formRef = useRef<HTMLFormElement>(null);
   const [ modalState, setModalState ] = useState(false);
   const router = useRouter();
-  
   const closeModal = ()=> setModalState(false);
   const handleConfirm = ()=> formRef.current?.requestSubmit();
 
   useEffect(()=>{
     if(state.message){
       if(state.status)
-        toast.success(state.message, { onOpen: ()=> router.replace("/clinical/office") });
+        toast.success(state.message, { 
+          onOpen: ()=> router.replace("/clinical/office") 
+        })
       else
         toast.error(state.message);
     }
