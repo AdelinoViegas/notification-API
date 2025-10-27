@@ -15,6 +15,7 @@ import InputField from "@/components/ui/input-field";
 import { priorityToComponent } from "@/backend/api/clinical/translator";
 import { insertScreening, getScreening, finishScreening } from "@/backend/api/clinical/api";
 import { getUrgencyServices } from "@/backend/api/clinical/urgency-bank-api";
+import PDFButton, { ScreeningRecord } from "../pdf-button";
 
 const initialState = { 
   message: "",
@@ -119,12 +120,14 @@ export default function ScreeningUI({
   ui,
   patientId,
   priority,
-  scrId
+  scrId,
+  dataToPDF
 }:{
   ui: UIComponent,
   patientId: string;
   priority?: string;
   scrId?: string;
+  dataToPDF: ScreeningRecord;
 }){
   const [ state, action ] = useActionState(insertScreening, initialState);
   const [ editable, setEditable ] = useState(false);
@@ -333,6 +336,11 @@ export default function ScreeningUI({
         }
 
         <div className="flex gap-x-2">
+          <PDFButton
+            label="Ficha-Triagem"
+            type="screeningRecord"
+            args={dataToPDF}
+          />
           <Button 
             type="button" 
             onClick={()=>setEditable(!editable)} 

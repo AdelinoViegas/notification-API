@@ -33,8 +33,9 @@ export type PatientRecord = {
 
 export type ScreeningRecord = {
   reason: string,
-  vitalsSignal: VitalSignalType,
+  vitalSignals: VitalSignalType,
   status: string,
+  priority: string,
   advice: string,
 };
 
@@ -77,25 +78,28 @@ export default function PDFButton({
   switch(type){
     case "patientRecord":
       return (
-        <Button className="flex gap-x-2" onClick={()=>patientRecord(args as PatientRecord)}>
+        <Button type="button" className="flex gap-x-2" onClick={()=>patientRecord(args as PatientRecord)}>
           <FaFilePdf className="size-5"/>
           {label}
         </Button>
       );
     case "screeningRecord": 
       return (
-        <Button onClick={()=>screeningRecord(args as ScreeningRecord)}>{label}</Button>
+        <Button type="button" className="flex gap-x-2"  onClick={()=>screeningRecord(args as ScreeningRecord)}>
+          <FaFilePdf className="size-5"/>
+          {label}
+        </Button>
       );
     case "appointmentRecord": 
       return (
-        <Button className="flex gap-x-2"  onClick={()=>appointmentRecord(args as AppointmentRecord)}>
+        <Button type="button" className="flex gap-x-2"  onClick={()=>appointmentRecord(args as AppointmentRecord)}>
           <FaFilePdf className="size-5"/>
           {label}
         </Button>
       );
     case "scheduleExamsRecord": 
       return (
-        <Button className="flex gap-x-2"  onClick={()=>scheduleExamsRecord(args as ScheduleExamsRecord)}>
+        <Button type="button" className="flex gap-x-2"  onClick={()=>scheduleExamsRecord(args as ScheduleExamsRecord)}>
           <FaFilePdf className="size-5"/>
           {label}
         </Button>

@@ -1,18 +1,15 @@
 import { z } from "zod";
-import jsPDF from "jspdf";
 import type { 
   AppointmentRecord, 
   PatientRecord, 
   ScreeningRecord, 
   ScheduleExamsRecord
 } from "@/components/pdf-button";
-import { patientPlug, appointmentPlug, examPlug, browserPdf } from "./pdf-templates";
+import { patientPlug, appointmentPlug, examPlug, screeningPlug, browserPdf } from "@/lib/pdf-templates";
+import formatMoney from "@/lib/format-money";
 import { generate } from "@pdfme/generator";
 import { image, rectangle, text, barcodes, line } from "@pdfme/schemas";
 import { AngolaProvices } from "@/backend/api/clinical/translator";
-import formatMoney from "./format-money";
-
-const doc = new jsPDF();
 
 const _GroupSchema = z.object({
   type: z.union([
@@ -105,260 +102,42 @@ function screeningRecord({
   reason,
   status,
   advice,
-  vitalsSignal,
+  priority,
+  vitalSignals,
 }: ScreeningRecord){
-  const margin = { x: 10, y: 10 };
-  doc.setFontSize(9);
-  doc.text("SOCOMPSER", margin.x, margin.y+10);
-  margin.x *= 20;
-  doc.text([
-    "Rua Manuel GG Diogo Nº 225",
-    "Maianga-Luanda",
-    "+244 222 222 222"
-  ], margin.x, margin.y+10, { align: 'right' });
-  margin.x = 85;
-  margin.y *= 5;
-  doc.setFontSize(11);
-  doc.text('FICHA DE TRIAGEM', margin.x, margin.y);
-
-  margin.x = 10;
-  margin.y += 14;
-  
-  doc.setFont("Helvetica","bold")
-  doc.text("COD: ", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text("3994394934", margin.x+11, margin.y);
-  
-  margin.x *= 5.3;
-
-  doc.setFont("Helvetica", "bold");
-  doc.text("Nome Completo: ", margin.x, margin.y);
-  doc.setFont("Helvetica", "normal");
-  doc.text("Domingos Gaspar Silva dos Santos", margin.x*1.62, margin.y);
- 
-  margin.x = 10;
-  margin.y *= 1.2;
- 
-  doc.setFont("Helvetica", "bold");
-  doc.setFillColor("#ececec");
-  doc.rect(margin.x, margin.y-4, 190, 6, 'F');
-  doc.text('1.Motivo da Vinda', margin.x, margin.y);
-  
-  margin.x = 10;
-  margin.y += 10;
-
-  doc.setFont("Helvetica", "bold");
-  doc.text('Queixa Principal', margin.x, margin.y);
-
-  margin.y += 5;
-  doc.setFont("Helvetica","normal");
-  doc.text(doc.splitTextToSize(reason,188), margin.x, margin.y);
-
-  margin.x = 10;
-  margin.y += 28;
-
-  doc.setFont("Helvetica", "bold");
-  doc.setFillColor("#ececec");
-  doc.rect(margin.x, margin.y-4, 104, 6, 'F');
-  doc.text('2.Sinais Vitais', margin.x, margin.y);
-  
-  margin.y += 10;
-  
-  doc.setFillColor("#ffffff");
-  doc.rect(margin.x, margin.y-6, 104, 90, 'DF');
-  
-  margin.y += 1;
-  margin.x = 10;
-
-  doc.setFont("Helvetica","normal");
-  doc.text('P.A máxima (mmHG): ',margin.x+4,margin.y);
-  margin.x *= 4.90;
-  doc.text(vitalsSignal.paMax,margin.x+4,margin.y);
-
-  margin.y += 8;
-  margin.x = 10;
-
-  doc.text('P.A mínima (mmHG): ',margin.x+4,margin.y);
-  margin.x *= 4.90;
-  doc.text(vitalsSignal.paMin,margin.x+4,margin.y);
-
-  margin.y += 8;
-  margin.x = 10;
-
-  doc.text('Pulo (BPM): ',margin.x+4,margin.y);
-  margin.x *= 4.90;
-  doc.text(vitalsSignal.jump,margin.x+4,margin.y);
-
-  margin.y += 8;
-  margin.x = 10;
-
-  doc.text('PVC (CH20): ',margin.x+4,margin.y);
-  margin.x *= 4.90;
-  doc.text(vitalsSignal.pvc,margin.x+4,margin.y);
-
-  margin.y += 8;
-  margin.x = 10;
-
-  doc.text('SpO2 (%): ',margin.x+4,margin.y);
-  margin.x *= 4.90;
-  doc.text(vitalsSignal.sp02,margin.x+4,margin.y);
-
-  margin.y += 8;
-  margin.x = 10;
-
-  doc.text('Temperatura (ª): ',margin.x+4,margin.y);
-  margin.x *= 4.90;
-  doc.text(vitalsSignal.temperature,margin.x+4,margin.y);
-
-  margin.y += 8;
-  margin.x = 10;
-
-  doc.text('Respiração (IRPM): ',margin.x+4,margin.y);
-  margin.x *= 4.90;
-  doc.text(vitalsSignal.breathing,margin.x+4,margin.y);
-
-  margin.y += 8;
-  margin.x = 10;
-
-  doc.text('Peso (Kg): ',margin.x+4,margin.y);
-  margin.x *= 4.90;
-  doc.text(vitalsSignal.weight,margin.x+4,margin.y);
-
-  margin.y += 8;
-  margin.x = 10;
-
-  doc.text('Altura (m): ',margin.x+4,margin.y);
-  margin.x *= 4.90;
-  doc.text(vitalsSignal.height,margin.x+4,margin.y);
-
-  margin.y += 8;
-  margin.x = 10;
-
-  doc.text('Glicemia (mg/dl): ',margin.x+4,margin.y);
-  margin.x *= 4.90;
-  doc.text(vitalsSignal.bloodGlucose,margin.x+4,margin.y);
-
-  margin.y += 8;
-  margin.x = 10;
-
-  doc.text('IMC (kg/m²): ',margin.x+4,margin.y);
-  margin.x *= 4.90;
-  doc.text(vitalsSignal.imc,margin.x+4,margin.y);
-
-  margin.x = 10;
-  margin.y -= 91;
-  margin.x *= 12.15;
-
-  doc.setFont("Helvetica", "bold");
-  doc.setFillColor("#ececec");
-  doc.rect(margin.x-2, margin.y-4, 80, 6, 'F');
-  doc.text('3.Grau de Prioridade', margin.x, margin.y);
-
-  margin.y += 10;
-
-  doc.setFillColor("#ffffff");
-  doc.rect(margin.x-2, margin.y-6, 80, 90, 'DF');
-  
-  doc.rect(margin.x-2, margin.y-6, 80, 6, 'DF');
-
-  margin.y += 6;
-
-  doc.setFont("Helvetica","normal");
-  doc.setFontSize(10);
-  doc.rect(margin.x-2, margin.y-6, 30, 6, 'DF');
-  margin.y += 5;
-  doc.text("Prioridade",margin.x+5, margin.y-7);
-  
-  margin.y -= 5;
-  margin.x *= 1.24;
-
-  doc.setFillColor("#ffffff");
-  doc.rect(margin.x-2, margin.y-6, 20, 6, 'DF');
-  margin.y += 5;
-  doc.text("Cor",margin.x+5, margin.y-7);
-
-  margin.y -= 5;
-  margin.x *= 1.13;
-
-  doc.setFillColor("#ffffff");
-  doc.rect(margin.x-2, margin.y-6, 31.2, 6, 'DF');
-  margin.y += 5;
-  doc.text("Tempo de Espera",margin.x, margin.y-7);
- 
-  margin.x = 10;
-  margin.y += 6;
-  margin.x *= 12.15;
-
-  doc.setFillColor("#ffffff");
-  doc.rect(margin.x-2, margin.y-6, 30, 6, 'DF');
-  margin.y += 5;
-  doc.text("Muito Urgente",margin.x, margin.y-7);
-  
-  margin.y -= 5;
-  margin.x *= 1.24;
-  doc.setFillColor("#FFA500");
-  doc.rect(margin.x-2, margin.y-6, 20, 6, 'DF');
-  margin.y += 5;
-  doc.text("",margin.x+5, margin.y-7);
-
-  margin.y -= 5;
-  margin.x *= 1.13;
-  doc.setFillColor("#ffffff");
-  doc.rect(margin.x-2, margin.y-6, 31.2, 6, 'DF');
-  margin.y += 5;
-  doc.text("10 minutos",margin.x, margin.y-7);
- 
-  margin.y += 20;
-  margin.x = 10;
-  margin.x *= 12.20;
-  
-  doc.setFont("Helvetica","bold");
-  doc.text("Descrição ",margin.x, margin.y-7);
-
-  margin.y += 6;
-  margin.x = 10;
-  margin.x *= 10.40;
-
-  doc.setFont("Helvetica","normal");
-  doc.text(doc.splitTextToSize("O Utente entra na sala de espera e pode esperar pelo/n atendimento num tempo não superior a 10 minutos",74),margin.x*1.20, margin.y-7);
- 
-  margin.y += 50;
-  margin.x = 10;
-  
-  doc.setFont("Helvetica", "bold");
-  doc.setFillColor("#ececec");
-  doc.rect(margin.x, margin.y-4, 190, 6, 'F');
-  doc.text('4.Estado Actual do doente', margin.x, margin.y);
-  
-  margin.y += 15;
-  doc.setFont("Helvetica","normal");
-  doc.text(doc.splitTextToSize(status,188),margin.x*1.20, margin.y-7);
- 
-  margin.y += 18;
-  margin.x = 10;
-  
-  doc.setFont("Helvetica", "bold");
-  doc.setFillColor("#ececec");
-  doc.rect(margin.x, margin.y-4, 190, 6, 'F');
-  doc.text('5.Recomendações', margin.x, margin.y);
-  
-  margin.y += 15;
-  doc.setFont("Helvetica","normal");
-  doc.text(doc.splitTextToSize(advice,188),margin.x*1.20, margin.y-7);
-  
-  margin.y += 14;
-  margin.x = 10;
-
-  doc.setFontSize(8);
-  doc.text(doc.splitTextToSize('Processado por Master, Sistema Integrado de Gestão - ERP. Reservados todos os Direitos do produtor.',100), margin.x, margin.y);
-
-  margin.x += 159;
-
-  doc.text(doc.splitTextToSize('master.socompser.co.ao',100), margin.x, margin.y);
-
-  doc.output('dataurlnewwindow', { filename: 'ficha_de_triagem.pdf' });
+  try{
+    generate({
+      template: screeningPlug,
+      inputs: [
+        {
+          reason,
+          status,
+          advice,
+          priority,
+          paMax: vitalSignals.paMax,
+          paMin: vitalSignals.paMin,
+          jump: vitalSignals.jump,
+          pvc: vitalSignals.pvc,
+          imc: vitalSignals.imc,
+          spo2: vitalSignals.sp02,
+          temperature: vitalSignals.temperature,
+          breathing: vitalSignals.breathing,
+          weight: vitalSignals.weight,
+          height: vitalSignals.height,
+          bloodGlucose: vitalSignals.bloodGlucose,
+        }
+      ],
+      plugins: {
+        rectangle,
+        text,
+        image,
+        qrcode: barcodes.qrcode,
+        line
+      },
+    })
+    .then(e => browserPdf(e))
+  }catch {}
 }
-
 
 function appointmentRecord({
   registerNumber,
