@@ -42,7 +42,7 @@ export default function RequestExams({
   const [ renderAux, setRenderAux ] = useState(false);
   const [ examCache, setExamCache ] = useState<SelectionOption[]>([]);
   const router = useRouter();
-  console.log(exams);
+  
   const handlerCallback = (e: React.ChangeEvent<HTMLSelectElement>)=>{
     getServices({ kind: "exam" })
     .then(data => { 

@@ -56,7 +56,7 @@ export default async function Page({
 
       <Table
         status
-        baseRowLink="/clinical/schedule-sugery/archiveds"
+        baseRowLink="/clinical/schedule-surgery/archiveds"
         columns={[
           "Serv. Solicitante",
           "Nome do Utente", 

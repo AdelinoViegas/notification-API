@@ -37,7 +37,7 @@ export default async function Page({
       </div>
 
       <Table
-        baseRowLink="/clinical/exams-services/update"
+        baseRowLink="/clinical/services/update"
         columns={[ "Descrição" ]} 
         rows={rows}
       />

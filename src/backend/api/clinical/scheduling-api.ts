@@ -118,8 +118,8 @@ export async function getServices({
   specialtyId?: string; 
   kind?: "exam" | "consultation" | "surgery"
 }){
-  const services = await serviceModel.find(omitUndefined({ specialtyId, kind }));
-  const formatedList = [];
+    const services = await serviceModel.find(omitUndefined({ specialtyId, kind }));
+    const formatedList = [];
 
   for(const service of services){
     const [ group, category, classification ] = await Promise.all([
@@ -144,7 +144,7 @@ export async function getServices({
       kind: service.kind
     });
   }
-
+  
   return formatedList;
 }
 
@@ -226,7 +226,7 @@ async function updateCCG(formData: FormData){
     await examCategoryModel.updateOne({_id: itemId}, { name });
     await examClassificationModel.updateOne({_id: itemId}, { name });
     await examGroupModel.updateOne({_id: itemId}, { name });
-    redirect("/clinical/exams-services");
+    redirect("/clinical/services");
   }finally{}
 }
 

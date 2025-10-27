@@ -49,7 +49,7 @@ export default async function Page({
           </Button>
         {/*</Link>*/}
 
-        <Link href="/clinical/schedule-sugery/archiveds">
+        <Link href="/clinical/schedule-surgery/archiveds">
           <Button className="flex gap-3 bg-slate-700">
             <PiArchiveDuotone className="size-5" />
             Arquivados
@@ -88,7 +88,7 @@ export default async function Page({
       <Table
         status
         rowLength={8}
-        baseRowLink="/clinical/schedule-sugery/"
+        baseRowLink="/clinical/schedule-surgery"
         columns={[
           "Serv. Solicitante",
           "Nome do Utente", 
