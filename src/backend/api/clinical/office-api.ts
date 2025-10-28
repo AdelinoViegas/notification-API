@@ -16,7 +16,7 @@ import { getDateInSlashFormat } from "@/lib/date-formater";
 import { getUser } from "@/backend/api/clinical/api";
 import { upload } from "@/backend/api/storage";
 import { CustonAxiosError } from "@/backend/api/types";
-import { getPatientIds, getSyncedHistories, syncPatientRegister } from "./process-control";
+import { getPatientIds, syncPatientRegister } from "./process-control";
 import { calculateAge } from "@/lib/calculate-age";
 import { ServiceRequest, serviceRequestSchema } from "../type-schema";
 
