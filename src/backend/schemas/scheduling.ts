@@ -312,14 +312,16 @@ const serviceRequestsSchema = new Schema({
     default: true
   }
 }, {
-  timestamps: true
+  timestamps: true,
+  expires: 8600
 });
 
 serviceRequestsSchema.index({ 
   patientId: 1, 
   from: 1, 
   userId: 1, 
-  kind: 1 
+  kind: 1,
+  pending: 1
 }, { unique: true });
 
 export{

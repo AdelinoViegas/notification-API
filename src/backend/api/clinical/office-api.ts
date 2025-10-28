@@ -125,9 +125,9 @@ async function getPatients({
     const formated = [];
 
     for(const appointment of appointments){
-      const scheduledAppointment = inAppointment?
-      await scheduleAppointmentModel.findOne({ _id: appointment.scheduleId }):
-      await scheduleAppointmentModel.findOne({ 
+      const scheduledAppointment = inAppointment
+      ? await scheduleAppointmentModel.findOne({ _id: appointment.scheduleId })
+      : await scheduleAppointmentModel.findOne({ 
         _id: appointment.scheduleId,
         doctorId: await getUserId(),
       });
@@ -379,11 +379,19 @@ export async function getConsultationHistory(id: string){
     const resolveds = [];
 
     for(const id of patientIds){
-      const results = await externalResultsModel.find({ patientId: id });
-      for (const result of results){
-        const consult = await getConsultResult(result.officeId?.toString() as string);
-        // console.log(consult);
-        resolveds.push(consult);
+      const schedules = await scheduleAppointmentModel.find({ patientId: id });
+      
+      for (const schedule of schedules){
+        const results = await officeModel.find({ scheduleId: schedule._id, served: true });
+        
+        for (const result of results){
+          const consult = await getConsultResult(result._id?.toString() as string);
+          
+          if(!consult)
+            continue;
+
+          resolveds.push(consult);
+        }
       }
     }
    
