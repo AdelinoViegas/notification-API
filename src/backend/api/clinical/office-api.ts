@@ -390,12 +390,14 @@ export async function getConsultationHistory(id: string){
           if(!consult)
             continue;
 
-          resolveds.push(consult);
+          resolveds.push({
+            makedt: schedule.updatedAt,
+            ...consult
+          });
         }
       }
     }
    
-    console.log(resolveds.length);
     return resolveds;
   }catch(e){
     console.error(e);
