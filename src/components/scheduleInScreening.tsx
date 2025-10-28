@@ -3,7 +3,6 @@
 import { 
   useState, 
 } from "react";
-import { GrScheduleNew } from "react-icons/gr";
 import Modal from "@/components/modal";
 import Button from "@/components/ui/button";
 import ScheduleAppointment from "@/components/forms/schedule-appointment";
@@ -28,7 +27,6 @@ export default function ScheduleInScreening({
         className="flex gap-3"
         onClick={openModal}
         >
-        <GrScheduleNew className="size-5"/>
         {label}
       </Button>
       

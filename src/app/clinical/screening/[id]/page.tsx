@@ -34,13 +34,13 @@ export default async function Page({
           <ScheduleInScreening 
             patientId={id} 
             type="appointment" 
-            label="agendar consulta"
+            label="Agendar Consulta"
           />  
 
           <ScheduleInScreening 
             patientId={id} 
             type="exam" 
-            label="agendar exame"
+            label="Agendar Exame"
           />             
         </div> 
 

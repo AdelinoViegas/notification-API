@@ -163,3 +163,18 @@ export async function getSyncedHistories(id: string){
     return null;
   }
 }
+
+export async function getPatientIds(id: string){
+  try{
+    const ids = [];
+    const history = await getSyncedHistories(id);
+    
+    ids.push(history?.id?.toString() as string);
+    history?.secondaries.forEach(e => ids.push(e?.toString() as string));
+    
+    return ids;
+  }catch(e){
+    console.error(e);
+    return [];
+  }
+}

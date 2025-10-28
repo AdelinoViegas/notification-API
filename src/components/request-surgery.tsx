@@ -1,12 +1,12 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import { useParams } from "next/navigation";
 import Modal from "@/components/modal";
-import Button from "@/components/ui/button";
-import Selection from "@/components/ui/selection";
-import { registerRequest } from "@/backend/api/clinical/operating-room-api";
+import Button from "./ui/button";
+import { useActionState, useEffect, useState } from "react";
+import Selection from "./ui/selection";
+import { useParams } from "next/navigation";
+import { registerRequest } from "@/backend/api/clinical/office-api";
+import { toast } from "react-toastify";
 import { getServices } from "@/backend/api/clinical/scheduling-api";
 
 type GetServices = Awaited<ReturnType<typeof getServices>>;
@@ -33,7 +33,7 @@ export default function RequestSurgery(){
       <Button onClick={()=>setModalState(true)}>Solicitar Cirurgia</Button>
 
       <Modal 
-        title="Solicitação da cirurgia" 
+        title="Solicitação de Cirurgia" 
         onClose={()=>setModalState(false)} 
         open={modalState}
       >
