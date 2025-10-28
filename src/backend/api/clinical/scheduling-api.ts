@@ -912,7 +912,7 @@ async function getNumberDoctorAppointment({
     const validAppointments = [];
     
     if(!calendar) 
-      throw new Error();
+      throw new Error("contagem invalida do calendario!");
 
     for(const appointment of appointments)
       if(appointment.doctorDay?.getDate() === day.getDate())
@@ -925,8 +925,8 @@ async function getNumberDoctorAppointment({
       restSpace: calendar?.maxSchedule as number - validAppointments.length,
       hasSpace: calendar?.maxSchedule as number - validAppointments.length === 0?false:true
     };
-  }catch(e: unknown){
-    console.log('erro na contagem dos agendamentos', e);
+  }catch(e){
+    console.error(e);
   }
 }
 
