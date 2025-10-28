@@ -16,7 +16,7 @@ import { getDateInSlashFormat } from "@/lib/date-formater";
 import { getUser } from "@/backend/api/clinical/api";
 import { upload } from "@/backend/api/storage";
 import { CustonAxiosError } from "@/backend/api/types";
-import { syncPatientRegister } from "./process-control";
+import { getSyncedHistories, syncPatientRegister } from "./process-control";
 import { calculateAge } from "@/lib/calculate-age";
 import { ServiceRequest, serviceRequestSchema } from "../type-schema";
 
@@ -370,6 +370,29 @@ async function getConsultResult(id: string){
     }
   } catch {
   
+  }
+}
+
+export async function getConsultationHistory(id: string){
+  try{
+    const patientIds = await getSyncedHistories(id);
+
+    const results = await externalResultsModel.find({ patientId: id });
+    
+    const resolved = [];
+
+    for (const result of results){
+      const consultation = await getConsultResult(result._id.toString() as string);
+
+      resolved.push({
+        ...consultation   
+      });
+    }
+
+    console.log(resolved.length, results.length);
+    console.log(patientIds);
+  }catch(e){
+    console.error(e)
   }
 }
 
