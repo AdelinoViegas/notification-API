@@ -11,10 +11,12 @@ import {
   operatingRoomModel,
   processStateModel,
   operatingRoomResultModel,
+  serviceRequestsModel,
 } from "@/backend/model";
 import { getUser } from "@/backend/api/clinical/api";
 import { CustonAxiosError } from "@/backend/api/types";
 import { upload } from "@/backend/api/storage";
+import { ServiceRequest, serviceRequestSchema } from "../type-schema";
 
 async function getPatients({
   name,
@@ -661,6 +663,92 @@ async function finishOperatingRoom(prev: unknown, formData: FormData){
   }
 }
 
+async function getRequests({ from }: { 
+  from: ServiceRequest;
+  name: string; 
+}){
+  try{
+    const requests = await serviceRequestsModel.find({ from, pending: true });
+    const formated = [];
+    
+    for (const req of requests){
+      formated.push({
+        id: req._id.toString(),
+        patientName: (await patientModel.findById({ _id: req.patientId }))?.fullname as string,
+        kind: (await serviceModel.findById({ _id: req.kind }))?.name as string,
+        pending: req.pending && "Pendente",
+        requester: (await getUser(req.userId?.toString() as string))?.fullname,
+        createdAt: req.createdAt
+      });
+    }
+      
+    return formated;
+  }catch (e){
+    console.error(e);
+    
+    return []
+  }
+}
+
+async function getRequest(id: string){
+  try{
+    const req = await serviceRequestsModel.findById({ _id: id });
+    
+    if(!req)
+      throw new Error("registro não encontrado!");
+
+    return {
+      id: req._id.toString(),
+      patientName: (await patientModel.findById({ _id: req.patientId }))?.fullname as string,
+      patientId: req.patientId?.toString() as string,
+      kind: (await serviceModel.findById({ _id: req.kind }))?.name as string,
+      pending: req.pending && "Pendente",
+      requester: (await getUser(req.userId?.toString() as string))?.fullname,
+      createdAt: req.createdAt
+    };
+  }catch (e){
+    console.error(e);
+  }
+}
+
+async function registerRequest(prev: unknown, formData: FormData){
+  try{
+    const patientId = formData.get("patientId");
+    const kindOfService = formData.get("kind");
+    const from = serviceRequestSchema.parse(formData.get("from"));
+
+    await serviceRequestsModel.create({
+      patientId,
+      from,
+      userId: await getUserId(),
+      kind: kindOfService
+    });
+
+    return {
+      message: "Solicitação feita com sucesso!",
+      status: true
+    }
+  }catch(e){
+    console.error(e);
+
+    return {
+      message: "Não foi possivel!",
+      status: false
+    }
+  }
+}
+
+async function closeRequest(id: string){
+  try{
+    await serviceRequestsModel.updateOne({ _id: id }, { pending: false });
+    return true;
+  }catch(e){
+    console.error(e);
+
+    return false;
+  }
+}
+
 export {
   getPatients,
   getPatient,
@@ -671,4 +759,8 @@ export {
   signOperatingRoom,
   rescheduleSugery,
   finishOperatingRoom,
+  getRequests,
+  getRequest,
+  registerRequest,
+  closeRequest
 }
