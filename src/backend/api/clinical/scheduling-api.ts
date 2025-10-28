@@ -32,10 +32,9 @@ import { getSyncedHistories, syncPatientRegister } from "./process-control";
 import { PatientHistory } from "./types";
 import { calculateAge } from "@/lib/calculate-age";
 import { omitUndefined } from "mongoose";
-import { closeRequest } from "./office-api";
+import { closeRequest } from "./operating-room-api";
 
 export type CCGTypes = "category" | "classification" | "group";
-
 
 export async function signService(prev: unknown, formData: FormData){
   try{
@@ -1022,6 +1021,7 @@ async function scheduleSugery(prev: unknown, formData: FormData){
     const description = formData.get("description") as string;
     const infirmary = formData.get("infirmary") as string;
     const bed = formData.get("bed") as string;
+    const requestId = formData.get("requestId") as string;
     
     if(requestingService === "patient") 
       await patientModel.updateOne({ _id: patientId }, { served: true });
@@ -1037,6 +1037,9 @@ async function scheduleSugery(prev: unknown, formData: FormData){
     });
 
     await sugery.save();
+
+    if(requestId)
+      await closeRequest(requestId);
     
     return {
       message: "Cirurgia agendada com sucesso!",

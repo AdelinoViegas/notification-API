@@ -166,6 +166,7 @@ function BirthDate(){
         textLabel="Idade"
         name="patientAge" 
         type="number"
+        placeholder="0"
         maxLength={3}
         disabled
         value={age}

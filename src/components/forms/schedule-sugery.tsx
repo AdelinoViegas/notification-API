@@ -30,9 +30,11 @@ export default function ScheduleSugery(
   { 
     patientId,
     ispatient,
+    requestId
   }: { 
     patientId: string;
     ispatient?: boolean;
+    requestId?: string;
   }){
   const [ state, action ] = useActionState(scheduleSugery, { message: "", status: false });
   const [ doctors, setDoctors] = useState<SelectionOption[]>([]);
@@ -76,6 +78,9 @@ export default function ScheduleSugery(
           onClose: ()=>{
             if(ispatient)
               router.replace("/clinical/patient");
+            
+            if(requestId)
+              router.replace("/clinical/schedule-surgery/requests");
 
             formRef.current?.reset();
           }
@@ -104,6 +109,12 @@ export default function ScheduleSugery(
             type="hidden"
             name="doctorId"
             defaultValue={doctors[0]?._id}
+          />
+
+          <input 
+            type="hidden" 
+            name="requestId" 
+            defaultValue={requestId} 
           />           
 
           <Selection

@@ -5,7 +5,7 @@ import { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import RequestConsult from "@/components/request-consult";
 import Hospitalization from "@/components/hospitalization";
-import RequestSurgery from "./request-surgery";
+import RequestSurgery from "@/components/request-surgery";
 
 type  RequestElement = {
   id: "reqConsult";
@@ -24,11 +24,11 @@ type SurgeryElement = {
 
 export default function QuickFabShurtcut(){
   const [ state, setState ] = useState(false);
-  
-  const actions: [ RequestElement, HospitalElement, SurgeryElement ] = [
+
+  const actions: [SurgeryElement, RequestElement, HospitalElement, ] = [
+    { id: "reqSurgery", Component: RequestSurgery },
     { id: "reqConsult", Component: RequestConsult },
-    { id: "reqHospital", Component: Hospitalization },
-    { id: "reqSurgery", Component: RequestSurgery }
+    { id: "reqHospital", Component: Hospitalization }
   ];
 
   return(

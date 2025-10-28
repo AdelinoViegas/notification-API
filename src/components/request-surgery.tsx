@@ -15,10 +15,10 @@ export default function RequestSurgery(){
   const [ modalState, setModalState ] = useState(false);
   const [ state, action ] = useActionState(registerRequest, { message: "", status: false });
   const params = useParams<{ patientId: string }>();
-  const [ services, setServices ] = useState<GetServices>([]);
+  const [ surgeries, setSurgeries ] = useState<GetServices>([]);
   
   useEffect(()=>{
-    getServices({ kind: "surgery" }).then(setServices);
+    getServices({ kind: "surgery" }).then(setSurgeries);
 
     if(state.message)
       if(state.status)
@@ -39,13 +39,13 @@ export default function RequestSurgery(){
       >
         <form action={action}>
           <input type="hidden" name="patientId" value={params.patientId} />
-          <input type="hidden" name="from" value="consultation" />
+          <input type="hidden" name="from" value="surgery" />
 
           <Selection
-            label="Tipo de Cirurgia"
+            label="Tipo de Cirugia"
             name="kind"
             required
-            options={services} 
+            options={surgeries} 
           />
           <Button>Enviar</Button>
         </form>
