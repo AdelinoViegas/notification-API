@@ -42,13 +42,19 @@ export default async function Screening({
     status: patientData.state as string,
   }
 
+  const data = (patientData.reason && 
+    patientData.vitalSignals && 
+    patientData.priority && 
+    patientData.state 
+  )?dataToPDF:undefined;  
+
   return (
     <ScreeningUI
       ui={renderComponent} 
       patientId={patientId}
       priority={patientData.priority}
       scrId={scrId}
-      {...{dataToPDF}}
+      dataToPDF={data}
     />
   )
 }

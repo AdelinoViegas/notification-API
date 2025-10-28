@@ -16,6 +16,7 @@ import { priorityToComponent } from "@/backend/api/clinical/translator";
 import { insertScreening, getScreening, finishScreening } from "@/backend/api/clinical/api";
 import { getUrgencyServices } from "@/backend/api/clinical/urgency-bank-api";
 import PDFButton, { ScreeningRecord } from "../pdf-button";
+import { FaFilePdf } from "react-icons/fa6";
 
 const initialState = { 
   message: "",
@@ -127,7 +128,7 @@ export default function ScreeningUI({
   patientId: string;
   priority?: string;
   scrId?: string;
-  dataToPDF: ScreeningRecord;
+  dataToPDF: ScreeningRecord | undefined;
 }){
   const [ state, action ] = useActionState(insertScreening, initialState);
   const [ editable, setEditable ] = useState(false);
@@ -336,11 +337,21 @@ export default function ScreeningUI({
         }
 
         <div className="flex gap-x-2">
-          <PDFButton
-            label="Ficha-Triagem"
-            type="screeningRecord"
-            args={dataToPDF}
-          />
+          {
+            dataToPDF?
+            <PDFButton
+              label="Ficha-Triagem"
+              type="screeningRecord"
+              args={dataToPDF}
+            />
+            :        
+            <Button disabled type="button" className="flex gap-x-2">
+              <FaFilePdf className="size-5"/>
+              Ficha-Triagem
+            </Button>
+          
+          }
+
           <Button 
             type="button" 
             onClick={()=>setEditable(!editable)} 

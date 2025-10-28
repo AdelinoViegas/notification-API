@@ -137,8 +137,11 @@ function screeningRecord({
       time: "240 minnutos"
     }
   ].find( props => props.color === priority);
+  
+ const template = JSON.parse(JSON.stringify(screeningPlug));
 
-  screeningPlug.schemas[0].push(
+
+  template.schemas[0].push(
     {
       "name": "priority",
       "type": "text",
@@ -216,12 +219,12 @@ function screeningRecord({
 
   try{
     generate({
-      template: screeningPlug,
+      template,
       inputs: [
         {
           reason,
           status,
-          advice,
+          advice: advice || "N/D",
           priority: data?.description as string,
           paMax: vitalSignals.paMax,
           paMin: vitalSignals.paMin,
