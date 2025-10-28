@@ -105,6 +105,115 @@ function screeningRecord({
   priority,
   vitalSignals,
 }: ScreeningRecord){
+  const data = [
+    { 
+      description: "Emergência", 
+      color: "red", 
+      hex: "#FF0000",
+      time: "0 minnuto"
+    },
+    { 
+      description: "Muito Urgente", 
+      color: "orange", 
+      hex: "#FFA500",
+      time: "10 minnutos"
+    },
+    { 
+      description: "Urgente", 
+      color: "yellow", 
+      hex: "#FFFF00",
+      time: "60 minnutos"
+    },
+    { 
+      description: "Pouco Urgente", 
+      color: "green", 
+      hex: "#008000",
+      time: "120 minnutos"
+    },
+    { 
+      description: "Não Urgente", 
+      color: "blue", 
+      hex: "#0000FF",
+      time: "240 minnutos"
+    }
+  ].find( props => props.color === priority);
+
+  screeningPlug.schemas[0].push(
+    {
+      "name": "priority",
+      "type": "text",
+      "content": "prioridade",
+      "position": {
+          "x": 122,
+          "y": 120
+      },
+      "width": 45,
+      "height": 5,
+      "rotate": 0,
+      "alignment": "left",
+      "verticalAlignment": "middle",
+      "fontSize": 11,
+      "lineHeight": 1,
+      "characterSpacing": 0,
+      "fontColor": "#555555",
+      "fontName": "Roboto",
+      "opacity": 1,
+      "strikethrough": false,
+      "underline": false,
+      "required": true,
+      "readOnly": false
+    },
+    {
+      "name": "field32",
+      "type": "text",
+      "content": "color",
+      "position": {
+          "x": 152,
+          "y": 119
+      },
+      "width": 16,
+      "height": 7,
+      "rotate": 0,
+      "alignment": "left",
+      "verticalAlignment": "middle",
+      "fontSize": 11,
+      "lineHeight": 1,
+      "characterSpacing": 0,
+      "fontName": "Roboto",
+      "fontColor": `${data?.hex}`,
+      "backgroundColor": `${data?.hex}`,
+      "opacity": 1,
+      "strikethrough": false,
+      "underline": false,
+      "required": false,
+      "readOnly": true
+    },
+    {
+      "name": "field34",
+      "type": "text",
+      "content": `${data?.time}`,
+      "position": {
+          "x": 170,
+          "y": 120
+      },
+      "width": 30,
+      "height": 5,
+      "rotate": 0,
+      "alignment": "left",
+      "verticalAlignment": "middle",
+      "fontSize": 11,
+      "lineHeight": 1,
+      "characterSpacing": 0,
+      "fontName": "Roboto",
+      "fontColor": "#000000",
+      "opacity": 1,
+      "strikethrough": false,
+      "underline": false,
+      "required": false,
+      "readOnly": true
+    }
+  );
+
   try{
     generate({
       template: screeningPlug,
@@ -113,7 +222,7 @@ function screeningRecord({
           reason,
           status,
           advice,
-          priority,
+          priority: data?.description as string,
           paMax: vitalSignals.paMax,
           paMin: vitalSignals.paMin,
           jump: vitalSignals.jump,
