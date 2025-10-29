@@ -740,7 +740,7 @@ async function registerRequest(prev: unknown, formData: FormData){
 
 async function closeRequest(id: string){
   try{
-    await serviceRequestsModel.updateOne({ _id: id }, { pending: false });
+    await serviceRequestsModel.deleteOne({ _id: id });
     return true;
   }catch(e){
     console.error(e);
