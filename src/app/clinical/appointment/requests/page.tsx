@@ -14,7 +14,11 @@ export default async function Page({
   }>
 }) {
   const { name } = await searchParams;
-  const consultations = await getRequests({ from: "consultation", name });
+  const consultations = await getRequests({ 
+    from: "consultation", 
+    name,
+    pending: true 
+  });
 
   const rows = formater(consultations, {
     filterKey: [

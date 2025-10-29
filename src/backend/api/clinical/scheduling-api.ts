@@ -593,7 +593,6 @@ async function scheduleAppointment(prev: unknown, formData: FormData){
     const isScheduleInScreening = formData.get("scheduleType") as string;
     const requestId = formData.get("requestId") as string;
     const scrPatient = await screeningModel.findOne({ patientId, served: false });
-     
     const result = await getNumberDoctorAppointment({ doctorId, day: doctorDay });  
     const consult = await serviceModel.findById({ _id: consultId });
 
@@ -643,13 +642,14 @@ async function scheduleAppointment(prev: unknown, formData: FormData){
       message: "Consulta marcada com sucesso!",
       status: true,
     }
-  }catch(e: unknown){
+  }catch(e){
     const err = e as Error;
 
     return {
-      message: err.cause ? err.message : "Desculpe, não foi possível realizar o agendamento!",
-      status: false,
-      detail: err.message
+      message: err.cause 
+        ? err.message 
+        : "Desculpe, não foi possível realizar o agendamento!",
+      status: false
     };
   }
 }

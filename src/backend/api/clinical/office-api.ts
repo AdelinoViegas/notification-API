@@ -473,20 +473,24 @@ async function registerRequest(prev: unknown, formData: FormData){
     }
   }catch(e){
     console.error(e);
+    const err  = e as MongoError
 
     return {
-      message: "Não foi possivel!",
+      message: err.code === 11000 
+      ? "Esta solicitação ja foi feita!"
+      : "Não foi possivel!",
       status: false
     }
   }
 }
 
-async function getRequests({ from }: { 
+async function getRequests({ from, pending = true }: { 
   from: ServiceRequest;
   name: string; 
+  pending?: boolean;
 }){
   try{
-    const requests = await serviceRequestsModel.find({ from, pending: true });
+    const requests = await serviceRequestsModel.find({ from, pending });
     const formated = [];
     
     for (const req of requests){
