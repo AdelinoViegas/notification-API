@@ -312,8 +312,7 @@ const serviceRequestsSchema = new Schema({
     default: true
   }
 }, {
-  timestamps: true,
-  expires: 8600
+  timestamps: true
 });
 
 serviceRequestsSchema.index({ 
