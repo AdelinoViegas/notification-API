@@ -72,7 +72,9 @@ export default async function Layout({
 
       <QuickFabShurtcut 
         visibleComponent={[
-          "request_consult"
+          "request_consult",
+          "request_surgery",
+          "request_hospital"
         ]} 
       />
     </div>

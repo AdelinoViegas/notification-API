@@ -47,5 +47,5 @@ export default function QuickFabShurtcut({ visibleComponent }: { visibleComponen
         <FaPlus className={clsx("size-8 text-white")}/>
       </button>
     </div>
-  )
+  );
 }
