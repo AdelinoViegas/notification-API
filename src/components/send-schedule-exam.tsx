@@ -13,11 +13,7 @@ import Alert from "@/components/ui/alert";
 import { VscSend } from "react-icons/vsc";
 import { sendPatientToUnit } from "@/backend/api/clinical/internal-services-api";
 
-export default function SendAppointment({
-  scheduleId,
-}:{
-  scheduleId: string;
-}){
+export default function SendAppointment({ scheduleId }:{ scheduleId: string }){
   const [ state, action ] = useActionState(sendPatientToUnit, { message: "", status: false });
   const [ modalState, setModalState ] = useState(false);
   const closeModal = ()=> setModalState(false);
@@ -31,7 +27,7 @@ export default function SendAppointment({
 
       setTimeout(()=>{
         if(state.status){
-          router.replace('/clinical/schedule-exams-services');
+          router.replace('/clinical/schedule-exams');
         }
         setMessageState(false);
       }, 2000);
