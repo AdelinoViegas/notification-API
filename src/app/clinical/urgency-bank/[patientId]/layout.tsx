@@ -70,7 +70,13 @@ export default async function Layout({
         />
       </div>
 
-      <QuickFabShurtcut />
+      <QuickFabShurtcut 
+        visibleComponent={[
+          "request_consult",
+          "request_surgery",
+          "request_hospital"
+        ]} 
+      />
     </div>
   )
 }
