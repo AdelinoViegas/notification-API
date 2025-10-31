@@ -367,7 +367,7 @@ async function updateDoctorCalender(prev: unknown, formData: FormData){
     });
 
     return {
-      message: "Agenda de actualizada com sucesso!",
+      message: "Agenda actualizada com sucesso!",
       status: true,
     }
   }catch(err: unknown){
