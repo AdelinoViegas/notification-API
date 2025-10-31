@@ -84,7 +84,7 @@ export default function Accommodate(){
     getNursings(selectedSection).then(setNursings);
     getBeds(selectedNursing).then(e => setBeds(e.beds));
 
-  }, [state, selectedSection]);
+  }, [state, selectedSection, selectedNursing]);
 
   useEffect(()=>{
     if(serviceState.message)
