@@ -30,9 +30,9 @@ export default function RescheduleSugery({
   useEffect(()=>{
     const dataSugeries:SelectionOption[] = [];
 
-    getServices({ kind: "exam" }).then(
+    getServices({ kind: "surgery" }).then(
       data => {
-        const sugeries = data.filter( props => props.category.toLowerCase().includes("cirurgia"))
+        const sugeries = data.filter( props => props.kind === "surgery")
         sugeries.forEach( props => {
           dataSugeries.push({
             _id: props._id,
