@@ -21,11 +21,11 @@ yarn start
 
 Este módulo depende de dois serviços principais:
 
-- **API do serviço Administrador** (`ADMIN_SRV_URL`)  
+- **API do serviço Administrador** (`API_ADMIN_URL`)  
   Endpoint: `http://localhost:3000/v1`  
   Responsável pela autenticação, controle de acesso e gestão de usuários. [Saber mais](https://github.com/mr0xff/api-master-admin)
 
-- **API do serviço de Arquivos** (`STORAGE_SRV_URL`)  
+- **API do serviço de Arquivos** (`API_STORAGE_URL`)  
   Endpoint: `http://localhost:3003/v1`  
   Responsável pela gestao dos arquivos carregados. [Saber mais](https://github.com/mr0xff/api-master-storage)
 
