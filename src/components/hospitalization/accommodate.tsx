@@ -16,7 +16,8 @@ import {
 
 import { toast } from "react-toastify";
 import Selection, { SelectionOption } from "@/components/ui/selection";
-import FallbackComponent from "../fallback-components";
+import FallbackComponent from "@/components/fallback-components";
+
 interface FallbackProps {
   serviceId: string;
   sectionId: string;

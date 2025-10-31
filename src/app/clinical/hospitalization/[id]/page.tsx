@@ -9,7 +9,6 @@ export default async function Page({
 }){
   const { id } = await params;
   const bedPosition = await resolvedBed(id);
-  console.log(bedPosition);
 
   return(
     <div>
