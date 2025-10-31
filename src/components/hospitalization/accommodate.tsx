@@ -1,42 +1,3 @@
-// "use client";
-
-// import Selection from "@/components/ui/selection";
-// import Button from "../ui/button";
-
-// export default function Accommodate({ }: { id: string }){
-
-//   return(
-//     <form>
-//       <Selection
-//         label="Serviço de Intenamento"
-//         name="serviceId"
-//         options={[]} 
-//       />
-
-//       <Selection
-//         label="Ala"
-//         name="section"
-//         options={[]} 
-//       />
-
-//       <Selection
-//         label="Enfermaria"
-//         name="nursing"
-//         options={[]} 
-//       />
-
-//       <Selection
-//         label="Nº da Cama"
-//         name="bed"
-//         options={[]} 
-//       />
-
-//       <Button>Salvar</Button>
-//     </form>
-//   )
-// }
-
-
 "use client";
 
 import { useState, useActionState, useEffect } from "react";
@@ -55,8 +16,15 @@ import {
 
 import { toast } from "react-toastify";
 import Selection, { SelectionOption } from "@/components/ui/selection";
+import FallbackComponent from "../fallback-components";
+interface FallbackProps {
+  serviceId: string;
+  sectionId: string;
+  nursingId: string;
+  bedId: string;
+}
 
-export default function Accommodate(){
+export default function Accommodate(props: FallbackProps){
   const [ state, action ] = useActionState(signToHospitalize, { message: "", status: false }); 
   const [ serviceState, serviceAction ]= useActionState(signInternalService, { message: "", status: false});
   const [ modalService, setModalService ] = useState(false);
@@ -70,6 +38,18 @@ export default function Accommodate(){
 
   const router = useRouter();
   const params = useParams();
+
+  useEffect(()=>{
+    if(serviceState.message)
+      if(serviceState.status)
+        toast.success(serviceState.message, { 
+          onClose: () => setModalService(false),
+        });
+      else
+        toast.error(serviceState.message);
+
+    getInternalServices().then(setInternalServices);
+  }, [serviceState]);
   
   useEffect(()=>{
     if(state.message)
@@ -86,56 +66,51 @@ export default function Accommodate(){
 
   }, [state, selectedSection, selectedNursing]);
 
-  useEffect(()=>{
-    if(serviceState.message)
-      if(serviceState.status)
-        toast.success(serviceState.message, { 
-          onClose: () => setModalService(false),
-        });
-      else
-        toast.error(serviceState.message);
-
-    getInternalServices().then(setInternalServices);
-  }, [serviceState]);
-
   return(
     <div>
       <form action={action}>
         <input type="hidden" name="patientId" value={params.id} />
         <div className="flex gap-x-3 items-center">
+          {internalServices.length ? 
           <Selection
             label="Serviço de Internamento"
             name="serviceId"
             options={internalServices} 
             required
             className="grow"
-          />
+            defaultValue={props.serviceId}
+          />: <FallbackComponent />}
 
           <Button type="button" onClick={()=>setModalService(true)}>Novo</Button>
         </div>
 
+       { sections.length ? 
         <Selection
           label="Ala"
           name="sectionId"
           options={sections} 
           onChange={e => setSelectedSection(e.target.value)}
           required
-        />
+          defaultValue={props.sectionId}
+        />: <FallbackComponent className="my-3" />}
 
+        { nursings.length ? 
         <Selection
           label="Enfermaria"
           name="nursingId"
           options={nursings} 
           onChange={e => setSelectedNursing(e.target.value)}
           required
-        />
+          defaultValue={props.nursingId}
+        />: <FallbackComponent className="my-3" />}
 
+        {beds.length ? 
         <Selection
           label="Nº da Cama"
           name="bedId"
           options={beds} 
           required
-        />
+        />: <FallbackComponent className="my-3" />}
 
         <Button>Salvar</Button>
       </form>
