@@ -33,8 +33,8 @@ export default function Accommodate(props: FallbackProps){
   const [ sections, setSections ] = useState<SelectionOption[]>([]);
   const [ nursings, setNursings ] = useState<SelectionOption[]>([]);
   const [ beds, setBeds ] = useState<SelectionOption[]>([]);
-  const [ selectedSection, setSelectedSection ] = useState<string>();
-  const [ selectedNursing, setSelectedNursing ] = useState<string>();
+  const [ selectedSection, setSelectedSection ] = useState<string>(props.sectionId);
+  const [ selectedNursing, setSelectedNursing ] = useState<string>(props.nursingId);
 
   const router = useRouter();
   const params = useParams();
@@ -70,6 +70,7 @@ export default function Accommodate(props: FallbackProps){
     <div>
       <form action={action}>
         <input type="hidden" name="patientId" value={params.id} />
+
         <div className="flex gap-x-3 items-center">
           {internalServices.length ? 
           <Selection
@@ -110,6 +111,7 @@ export default function Accommodate(props: FallbackProps){
           name="bedId"
           options={beds} 
           required
+          defaultValue={props.bedId}
         />: <FallbackComponent className="my-3" />}
 
         <Button>Salvar</Button>
