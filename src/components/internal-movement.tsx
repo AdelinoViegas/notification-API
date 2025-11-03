@@ -21,11 +21,11 @@ export default function InternalMovement(){
   useEffect(()=>{
     if(state.message)
       if(state.status)
-        toast.success(state.message/*, {
+        toast.success(state.message, {
           onOpen: ()=> {
             router.replace("/clinical/urgency-bank");
           },
-        }*/);
+        });
       else 
         toast.error(state.message);
 
