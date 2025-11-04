@@ -11,8 +11,8 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
     <div>
       <h2 className="text-lg font-bold">Informações da Solicitação </h2>
       
-      <div className="flex gap-x-12">
-        <div className="ring ring-gray-200 ring-1 pl-6 pt-8 my-3 rounded-lg min-w-[20vw] space-y-4">
+      <div className="flex items-center gap-x-12">
+        <div className="ring ring-gray-200 ring-1 pl-6 py-8 rounded-lg min-w-[20vw]">
           <TitleAndSubtitle
             label="Nome do Utente"
             value={request?.patientName} 
