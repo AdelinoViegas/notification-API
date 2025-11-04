@@ -5,7 +5,7 @@ import Card from "@/components/ui/card";
 import PatientForm from "@/components/forms/patient-form";
 import ScheduleAppointment from "@/components/forms/schedule-appointment";
 import RequestExams from "@/components/forms/request-exam";
-import ScheduleSugery from "@/components/forms/schedule-sugery";
+//import ScheduleSugery from "@/components/forms/schedule-sugery";
 
 type MyRoute = "patient" | "appointment" | "exams" | "sugery";
 

@@ -527,6 +527,7 @@ export async function getRequest(id: string){
       patientId: req.patientId?.toString() as string,
       kind: (await serviceModel.findById({ _id: req.kind }))?.name as string,
       pending: req.pending && "Pendente",
+      originOfRequest: req.originOfrequest as string,
       requester: (await getUser(req.userId?.toString() as string))?.fullname,
       createdAt: req.createdAt
     };

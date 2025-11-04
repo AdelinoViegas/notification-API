@@ -36,7 +36,8 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
         <ScheduleSugery 
           patientId={request?.patientId as string}
-          requestId={request?.id as string}
+          requestId={request?.id}
+          originOfRequest={request?.originOfRequest}
         />
       </div>
     </div>

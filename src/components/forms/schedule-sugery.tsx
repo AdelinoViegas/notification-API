@@ -30,11 +30,13 @@ export default function ScheduleSugery(
   { 
     patientId,
     ispatient,
-    requestId
+    requestId,
+    originOfRequest
   }: { 
     patientId: string;
     ispatient?: boolean;
     requestId?: string;
+    originOfRequest?: string;
   }){
   const [ state, action ] = useActionState(scheduleSugery, { message: "", status: false });
   const [ doctors, setDoctors] = useState<SelectionOption[]>([]);
@@ -102,7 +104,7 @@ export default function ScheduleSugery(
           <input
             type="hidden"
             name="requestingService"
-            defaultValue={path.split("/")[2]}
+            defaultValue={originOfRequest ?? path.split("/")[2]}
           />
 
           <input
