@@ -6,15 +6,16 @@ import {
   useEffect,
   useActionState
 } from "react";
+import { toast } from "react-toastify";
+import { BiTrash as TrashIcon } from "react-icons/bi";
+import { useRouter, useParams } from "next/navigation";
 import Button from "@/components/ui/button";
 import InputField from "@/components/ui/input-field";
 import Selection, { SelectionOption } from "@/components/ui/selection";
 import Alert from "@/components/ui/alert";
 import SubTitle from "@/components/ui/subtitle";
 import { getFirstAndLastName } from "@/components/userbar";
-import { BiTrash as TrashIcon } from "react-icons/bi";
 import { signDoctorCalender, updateDoctorCalender } from "@/backend/api/clinical/urgency-bank-api";
-import { useRouter, useParams } from "next/navigation";
 
 type DoctorCalendar = {
   doctorId: string;
@@ -45,6 +46,8 @@ export default function CalendarForm({
   const [ localMessage, setLocalMessage ] = useState("");
   const [ dateRange, setDateRange ] = useState<{ min: string; max: string }>();
   const params = useParams();
+  const formRef = useRef<HTMLFormElement>(null);
+  const router = useRouter(); 
 
   const localMonths = Array(12).fill(1).map((v, i)=>{ 
     return { 
@@ -52,10 +55,6 @@ export default function CalendarForm({
       label: new Date(new Date().getFullYear(), i).toLocaleString('pt-AO', {dateStyle: 'full'}).split(' ')[3].toUpperCase()
     }
   });
-  
-  const formRef = useRef<HTMLFormElement>(null);
-  const [ messageState, setMessageState ] = useState(false);
-  const router = useRouter(); 
 
   const addCart = ()=>{
     let initialTime:string, finalTime:string, room:string, day:string;
@@ -118,17 +117,13 @@ export default function CalendarForm({
   }, [localMessageState]);
 
   useEffect(()=>{
-    if(state.message){
-      setMessageState(true);
-
-      setTimeout(()=>{
-        setMessageState(false);
-
-        if(state?.status){
-          router.push("/clinical/doctor-calendar");
-        }
-      }, state?.status?2000:3000);
-    }
+    if(state.message)
+      if(state.status)
+        toast.success(state.message, {
+          onOpen: ()=> router.push("/clinical/doctor-calendar")
+        });
+      else
+        toast.error(state.message);
   }, [state, router]);
 
   useEffect(()=>{
@@ -269,16 +264,6 @@ export default function CalendarForm({
       </div>
 
       <Button>Salvar</Button>
-
-      {
-        state.message && messageState &&
-        <div className="mt-3">
-          <Alert
-            type={state.status?'success':'error'}
-            message={state.message}
-          />
-        </div>
-      }
     </form>
   );
 }

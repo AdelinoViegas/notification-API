@@ -3,8 +3,6 @@
 import Button from "@/components/ui/button";
 import clsx from "clsx";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { MdOutlineCancel, MdOutlineModeEdit, MdOutlineSaveAlt, MdSystemUpdateAlt } from "react-icons/md";
-
 
 export default function ButtonEdit({
   state,
@@ -33,7 +31,6 @@ export default function ButtonEdit({
       {data && value.length === 0 && 
         <>
           <Button>
-            <MdOutlineSaveAlt className="w-5" />
             Salvar
           </Button>
         </>
@@ -42,7 +39,6 @@ export default function ButtonEdit({
       {data && value.length > 0 && 
         <>
           <Button className={clsx((location.length === 1 || (location.length === value.length && value.length > 0)) && "hidden")}>
-            <MdOutlineSaveAlt className="w-5" />
             Salvar
           </Button>
           <Button 
@@ -50,7 +46,6 @@ export default function ButtonEdit({
             type="button" 
             onClick={handle}
           >
-            <MdOutlineModeEdit className="w-5" /> 
             Editar
           </Button>                   
         </>
@@ -62,11 +57,9 @@ export default function ButtonEdit({
             onClick={handle}
           cancel
         >
-          <MdOutlineCancel className="w-5"/>
           Cancelar
         </Button>
         <Button name="update" data-location={JSON.stringify(location)}>
-          <MdSystemUpdateAlt className="w-5"/>
           Actualizar
         </Button>
         </>

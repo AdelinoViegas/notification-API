@@ -85,6 +85,7 @@ const triedSchema = new Schema({
   patientId: Schema.Types.ObjectId,
   userId: Schema.Types.ObjectId,
   serviceId: Schema.Types.ObjectId,
+  reasonChangingServices: String, 
   served: {
     type: Boolean,
     default: false

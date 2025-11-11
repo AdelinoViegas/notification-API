@@ -50,6 +50,7 @@ async function getPatients({
     const user = await clinicalUserModel.findOne({ userId }).select({ serviceId: 1});
     const patients = await triedModel.find({ serviceId: user?.serviceId, served: false });
     const patientList = [];
+    //console.log(patients);
 
     for(const patient of patients){
       const urgency = await patientModel.findById({ _id: patient.patientId });
@@ -60,7 +61,10 @@ async function getPatients({
          isInUse: true
       });
 
-      if(isProcess && isProcess.userId?.toString() !== await getUserId())
+      if(isProcess && 
+        isProcess.userId?.toString() !== userId && 
+        user?.serviceId.toString() !== patient.serviceId?.toString()
+      )
         continue;
 
       if(!urgency) 
@@ -367,7 +371,7 @@ async function updateDoctorCalender(prev: unknown, formData: FormData){
     });
 
     return {
-      message: "Agenda de actualizada com sucesso!",
+      message: "Agenda actualizada com sucesso!",
       status: true,
     }
   }catch(err: unknown){
@@ -1191,6 +1195,36 @@ async function updateUrgencyServices(prev: unknown, formData:FormData){
   }
 }
 
+async function movementInUrgencyBank(prev: unknown, formData: FormData){
+  try{
+    const patientId = formData.get("patientId");
+    const serviceId = formData.get("urgencyService");
+    const reasonChangingServices = formData.get("reason");
+    const service = await triedModel.findOne({ patientId, served: false });
+
+    if(!serviceId)
+      throw new Error("Escolha um serviço de urgência", {cause: "empty"});
+    
+    if(serviceId === service?.serviceId?.toString())
+      throw new Error("Escolha um serviço diferente do actual", {cause: "currentService"});
+
+    await processStateModel.updateOne({ patientId, location: "urgency" }, { isInUse: false });
+    await triedModel.updateOne({ patientId, served: false }, { serviceId, reasonChangingServices });
+
+    return {
+      message: "Serviço alterado com sucesso!",
+      status: true
+    }
+  }catch (e) {
+    const err = e as Error;
+
+    return {
+      message: err.cause ? err.message : "Não foi possivel finalizar!",
+      status: false
+    }
+  }
+}
+
 export {
   finishHospitalization,
   getPatients,
@@ -1220,5 +1254,6 @@ export {
   requestSurgery,
   getSurgery,
   applyDischarge,
-  getPrescription
+  getPrescription,
+  movementInUrgencyBank,
 };

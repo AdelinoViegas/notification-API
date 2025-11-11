@@ -305,6 +305,7 @@ const serviceRequestsSchema = new Schema({
     enum: [ "consultation", "urgency", "surgery" ],
     required: true
   },
+  originOfrequest: String,
   userId: Schema.ObjectId,
   kind: Schema.ObjectId,
   pending: {
