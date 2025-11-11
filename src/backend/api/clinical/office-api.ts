@@ -459,10 +459,12 @@ async function registerRequest(prev: unknown, formData: FormData){
     const patientId = formData.get("patientId");
     const kindOfService = formData.get("kind");
     const from = serviceRequestSchema.parse(formData.get("from"));
+    const originOfrequest = formData.get("originOfrequest");
 
     await serviceRequestsModel.create({
       patientId,
       from,
+      originOfrequest,
       userId: await getUserId(),
       kind: kindOfService
     });
@@ -525,6 +527,7 @@ export async function getRequest(id: string){
       patientId: req.patientId?.toString() as string,
       kind: (await serviceModel.findById({ _id: req.kind }))?.name as string,
       pending: req.pending && "Pendente",
+      originOfRequest: req.originOfrequest as string,
       requester: (await getUser(req.userId?.toString() as string))?.fullname,
       createdAt: req.createdAt
     };

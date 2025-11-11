@@ -5,7 +5,7 @@ import Card from "@/components/ui/card";
 import PatientForm from "@/components/forms/patient-form";
 import ScheduleAppointment from "@/components/forms/schedule-appointment";
 import RequestExams from "@/components/forms/request-exam";
-import ScheduleSugery from "@/components/forms/schedule-sugery";
+//import ScheduleSugery from "@/components/forms/schedule-sugery";
 
 type MyRoute = "patient" | "appointment" | "exams" | "sugery";
 
@@ -39,7 +39,7 @@ export default async function Page({
 						{ path: "patient", title: "Ficha de Cadastro" },
 						{ path: "appointment", title: "Agendar Consulta" },
 						{ path: "exams", title: "Agendar Exame" },
-						{ path: "sugery", title: "Agendar Cirurgia" }
+						/*{ path: "sugery", title: "Agendar Cirurgia" }*/
 					]}
         />
 
@@ -47,7 +47,7 @@ export default async function Page({
          { r === "patient" && <PatientForm patientId={id}/> }
 				 { r === "appointment" &&  <ScheduleAppointment patientId={id} /> }
 				 { r === "exams" &&  <RequestExams patientId={id} isFullWindow /> }
-         { r === "sugery" &&  <ScheduleSugery patientId={id} ispatient /> }
+         { /*r === "sugery" &&  <ScheduleSugery patientId={id} ispatient /> */}
         </div>
       </Card>
 		</div>

@@ -6,8 +6,9 @@ import { FaPlus } from "react-icons/fa";
 import RequestConsult from "@/components/request-consult";
 import Hospitalization from "@/components/hospitalization";
 import RequestSurgery from "@/components/request-surgery";
+import InternalMovement from "@/components/internal-movement";
 
-type Components = "internal_moviment" | "request_consult" | "request_hospital" | "request_surgery";
+type Components = "internal_movement" | "request_consult" | "request_hospital" | "request_surgery";
 
 type QuickComponent = {
   id: Components;
@@ -18,6 +19,7 @@ export default function QuickFabShurtcut({ visibleComponent }: { visibleComponen
   const [ state, setState ] = useState(false);
 
   const actions: QuickComponent [] = [
+    { id: "internal_movement", Component: <InternalMovement /> },
     { id: "request_consult", Component: <RequestConsult /> },
     { id: "request_surgery", Component: <RequestSurgery /> },
     { id: "request_hospital", Component: <Hospitalization /> }

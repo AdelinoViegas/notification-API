@@ -74,8 +74,11 @@ export default async function Layout({
         visibleComponent={[
           "request_consult",
           "request_surgery",
-          "request_hospital"
-        ]} 
+          "request_hospital",
+          "internal_movement"
+        ]}
+        
+        {...{patientId}} 
       />
     </div>
   )
