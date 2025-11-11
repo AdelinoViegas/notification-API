@@ -4,6 +4,7 @@
 import TabNav from "@/components/tabnav";
 import Card from "@/components/ui/card";
 import { MonitorAccess, UnlockProcessAccess } from "@/components/lock-unlock-monitor-process";
+import QuickFabShurtcut from "@/components/quick-fab-shurtcut";
 // import { getPatient } from "@/backend/api/clinical/urgency-bank-api";
 // import { getPatient } from "@/backend/api/clinical/api";
 export default async function Layout({ 
@@ -61,7 +62,7 @@ export default async function Layout({
             { path: "anamnesis", title: "Anamneses" },
             { path: "exam", title: "Exames" },
             { path: "clinical-diary", title: "Diário Clínico" },
-            { path: "office", title: "Consultas" },
+            { path: "consultation", title: "Consultas" },
             { path: "prescription", title: "Receituário" },
             { path: "surgery", title: "Cirurgia"},
             { path: "discharge", title: "Título de Alta" },
@@ -69,6 +70,13 @@ export default async function Layout({
           ]}
         />
       </div>
+
+      <QuickFabShurtcut 
+        visibleComponent={[
+          "request_consult",
+          "request_surgery"
+        ]} 
+      />
     </div>
   )
 }

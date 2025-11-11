@@ -128,9 +128,12 @@ export async function signNursing(p: unknown, formData: FormData){
     }
   }catch(e) {
     console.error(e);
+    const err = e as MongoError;
 
     return {
-      message: "Não foi possivel registrar!",
+      message: err.code === 11000 
+        ? "Ja existe esse Nº de cama registrado!"
+        : "Não foi possivel registrar!",
       status: false
     }
   }

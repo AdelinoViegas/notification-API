@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useActionState, useEffect } from "react";
+import { useState, useActionState, useEffect, useRef } from "react";
 import Modal from "@/components/modal";
 import Button from "@/components/ui/button";
 import InputField from "@/components/ui/input-field";
@@ -28,9 +28,12 @@ export default function RegisterNursing(){
   const [ nursings, setNursings ] = useState<SelectionOption[]>([]);
   const [ selectedSection, setSelectedSection ] = useState<string>();
 
+  const formRef = useRef<HTMLFormElement>(null);
+
   const reset = ()=>{
     setNewSectionState(false);
     setNewNursingState(false);
+    formRef.current?.reset();
   }
   
   useEffect(()=>{
@@ -43,8 +46,11 @@ export default function RegisterNursing(){
         toast.error(state.message);
 
     getSections().then(setSections);
+  }, [state]);
+
+  useEffect(()=>{
     getNursings(selectedSection).then(setNursings);
-  }, [state, selectedSection]);
+  }, [selectedSection]);
 
   useEffect(()=>{
     if(serviceState.message)
@@ -68,7 +74,7 @@ export default function RegisterNursing(){
         onClose={()=>setModal(false)}
         title="Registro de Enfermagem"
       >
-        <form action={action}>
+        <form action={action} ref={formRef}>
           <div className="flex gap-x-3 items-center">
             <Selection
               label="Serviço de Internamento"
