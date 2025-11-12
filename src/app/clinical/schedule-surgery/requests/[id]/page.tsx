@@ -1,6 +1,6 @@
 import { getDataAndHoursFormat } from "@/lib/date-formater";
 import TitleAndSubtitle from "@/components/title-subtitle";
-import ScheduleSugery from "@/components/forms/schedule-sugery";
+import ScheduleSugery from "@/components/forms/schedule-surgery";
 import { getRequest } from "@/backend/api/clinical/office-api";
 
 export default async function Page({ params }: { params: Promise<{ id: string }>}){ 

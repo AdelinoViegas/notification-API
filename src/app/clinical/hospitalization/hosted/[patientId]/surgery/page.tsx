@@ -1,5 +1,5 @@
 //import { getSurgery } from "@/backend/api/clinical/urgency-bank-api";
-import ScheduleSugery from "@/components/forms/schedule-sugery";
+import ScheduleSugery from "@/components/forms/schedule-surgery";
 /*import Surgery from "@/components/forms/surgery";
 import SurgeryList from "@/components/surgery-list";
 import Accordium from "@/components/ui/accordium";*/

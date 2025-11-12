@@ -26,7 +26,7 @@ export type DoctorRole = {
   roleId: string;
 };
 
-export default function ScheduleSugery(
+export default function ScheduleSurgery(
   { 
     patientId,
     ispatient,
