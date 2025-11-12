@@ -49,7 +49,7 @@ export default async function Layout({
 			</div>
       
       <div className="flex h-[70vh] gap-x-3">
-        <Card className="h-full w-full overflow-y-scroll">{children}</Card>
+        <Card className="h-full w-full overflow-y-auto">{children}</Card>
        
         <TabNav
           idAsIndexPage
