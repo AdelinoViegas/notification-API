@@ -75,10 +75,9 @@ export default async function Layout({
           "request_consult",
           "request_surgery",
           "request_hospital",
-          "internal_movement"
+          "internal_movement",
+          "define_state"
         ]}
-        
-        {...{patientId}} 
       />
     </div>
   )

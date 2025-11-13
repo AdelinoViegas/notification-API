@@ -7,8 +7,9 @@ import RequestConsult from "@/components/request-consult";
 import Hospitalization from "@/components/hospitalization";
 import RequestSurgery from "@/components/request-surgery";
 import InternalMovement from "@/components/internal-movement";
+import DefineState from "@/components/define-state";
 
-type Components = "internal_movement" | "request_consult" | "request_hospital" | "request_surgery";
+type Components = "internal_movement" | "request_consult" | "request_surgery" | "define_state" | "request_hospital";
 
 type QuickComponent = {
   id: Components;
@@ -22,6 +23,7 @@ export default function QuickFabShurtcut({ visibleComponent }: { visibleComponen
     { id: "internal_movement", Component: <InternalMovement /> },
     { id: "request_consult", Component: <RequestConsult /> },
     { id: "request_surgery", Component: <RequestSurgery /> },
+    { id: "define_state", Component: <DefineState />},
     { id: "request_hospital", Component: <Hospitalization /> }
   ];
 

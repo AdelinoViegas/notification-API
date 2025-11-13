@@ -324,6 +324,12 @@ const defaultServiceKinds = [
   { _id: "surgery", label: "Cirurgia" },
 ];
 
+const patientStatus = [
+  {_id:"critical", label:"Muito Grave"},
+  {_id:"serious", label:"Grave"},
+  {_id:"moderate", label:"Moderado"},
+];
+
 export { 
   patientGroup,
   civilState,
@@ -339,5 +345,6 @@ export {
   unitTypes,
   ccgTypes,
   surgerySchedulingArea,
-  defaultServiceKinds
+  defaultServiceKinds,
+  patientStatus
 };
