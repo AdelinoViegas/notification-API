@@ -325,9 +325,21 @@ const defaultServiceKinds = [
 ];
 
 const patientStatus = [
-  {_id:"critical", label:"Muito Grave"},
-  {_id:"serious", label:"Grave"},
-  {_id:"moderate", label:"Moderado"},
+  {
+    _id:"critical", 
+    label:"Muito Grave",
+    description: "Paciente em estado crítico, risco de morte iminente, necessita de suporte intensivo."
+  },
+  {
+    _id:"serious", 
+    label:"Grave", 
+    description: "Paciente com risco aumentado de complicações, exigindo monitorização continua."
+  },
+  {
+    _id:"moderate", 
+    label:"Moderado", 
+    description: "Paciente apresenta sintomas relevantes, mas com estabilidade clínica."
+  },
 ];
 
 export { 

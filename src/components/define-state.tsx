@@ -8,6 +8,8 @@ import Modal from "@/components/modal";
 import Selection from "@/components/ui/selection";
 import { defineStatePatient, getPatient } from "@/backend/api/clinical/urgency-bank-api";
 import { patientStatus } from "@/backend/api/clinical/translator";
+import SubTitle from "./ui/subtitle";
+import clsx from "clsx";
 
 export default function DefineState(){
   const [modalstate, setModalState] = useState(false);
@@ -56,11 +58,22 @@ export default function DefineState(){
               defaultValue={ patientId } 
             />
 
-            <div>
-              <span>Estado: </span> 
-              <span className="font-semibold">
+            <div className="mb-8">
+              <SubTitle className="inline-flex">Estado</SubTitle>
+              <p className={clsx("mt-1 ps-4 font-semibold", 
+                {"text-red-400": status === "critical"},
+                {"text-orange-400": status === "serious"},
+                {"text-yellow-500": status === "moderate"}
+               )}>
                 {status?patientStatus.find( props => props._id === status)?.label.toUpperCase():"Indefinido"}
-              </span>
+              </p>
+            </div>
+
+            <div className="my-8">
+              <SubTitle className="inline-flex">Descrição</SubTitle>
+              <p className="mt-1 ps-4">
+                {status?patientStatus.find( props => props._id === status)?.description:"Indefinido"}
+              </p>
             </div>
              
             <Selection
