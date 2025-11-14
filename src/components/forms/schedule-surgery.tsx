@@ -48,20 +48,15 @@ export default function ScheduleSurgery(
   useEffect(()=>{
     const loadData = async ()=>{
       const userId = await getUserId();
-      const doctors = await getDoctors() as SelectionOption[];
+      const doctors = await getDoctors();
       const user = doctors.filter( props => props._id === userId);
       
-      if(user)
+      if(doctors)
         setDoctors(user);
-    }
-
-    loadData();
-
-    const dataSugeries:SelectionOption[] = [];
-
-    getServices({ kind: "surgery" }).then(
-      data => {
-        const sugeries = data.filter( props => props.kind === "surgery")
+      
+      const dataSugeries:SelectionOption[] = [];
+      const data = await getServices({ kind: "surgery"});
+      const sugeries = data.filter( props => props.kind === "surgery")
         sugeries.forEach( props => {
           dataSugeries.push({
             _id: props._id,
@@ -69,8 +64,10 @@ export default function ScheduleSurgery(
           })
         })
 
-        setSugeriesType(dataSugeries);
-    })
+      setSugeriesType(dataSugeries);
+    }
+
+    loadData();
   }, []);
 
   useEffect(()=>{
