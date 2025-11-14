@@ -12,11 +12,13 @@ import {
   processStateModel,
   operatingRoomResultModel,
   serviceRequestsModel,
+
 } from "@/backend/model";
 import { getUser } from "@/backend/api/clinical/api";
 import { CustonAxiosError } from "@/backend/api/types";
 import { upload } from "@/backend/api/storage";
 import { ServiceRequest, serviceRequestSchema } from "../type-schema";
+import { getPatientIds } from "./process-control";
 
 async function getPatients({
   name,
@@ -749,11 +751,33 @@ async function closeRequest(id: string){
   }
 }
 
-/*export async function getSurgeriesHistory(id: string){
-  try{
+async function getSurgeriesHistory(id: string){
+  try{  
+    const patientIds = await getPatientIds(id);
+    const resolveds = [];
 
+    for(const id of patientIds){
+      const schedules = await scheduleSugeryModel.find({ patientId: id });
+
+      for (const schedule of schedules){
+        const service = await serviceModel.findById({ _id: schedule.sugeryType}).select({ name: 1});
+        const id = schedule.doctorId as unknown as string;
+        const user = await getUser(id);
+            
+        resolveds.push({
+          sugeryType: service?.name,
+          responsible: user.fullname,
+          makedt: schedule.createdAt
+        });
+      }
+    }
+  
+    return resolveds;
+  }catch(e){
+    console.error(e);
+    return[];
   }
-}*/
+}
 
 export {
   getPatients,
@@ -769,5 +793,5 @@ export {
   getRequest,
   registerRequest,
   closeRequest,
-  //getSurgeriesHistory,
+  getSurgeriesHistory,
 }
