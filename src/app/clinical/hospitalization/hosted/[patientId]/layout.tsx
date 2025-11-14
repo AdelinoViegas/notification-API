@@ -49,7 +49,7 @@ export default async function Layout({
 			</div>
        */}
       <div className="flex h-[70vh] gap-x-3 mt-3">
-        <Card className="h-full w-full overflow-y-scroll">{children}</Card>
+        <Card className="h-full w-full overflow-y-auto">{children}</Card>
        
         <TabNav
           idAsIndexPage
@@ -74,7 +74,8 @@ export default async function Layout({
       <QuickFabShurtcut 
         visibleComponent={[
           "request_consult",
-          "request_surgery"
+          "request_surgery",
+          "define_state"
         ]} 
       />
     </div>

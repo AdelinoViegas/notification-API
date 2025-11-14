@@ -23,7 +23,7 @@ export default async function Page({
 }) {
   const { name, area } = await searchParams;
   const scheduleData = await getScheduleSugeries({ name, area });
-  console.log(scheduleData);
+
   const patientRows = formater(scheduleData, {
     order: [
       "requestingService",

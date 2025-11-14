@@ -324,6 +324,24 @@ const defaultServiceKinds = [
   { _id: "surgery", label: "Cirurgia" },
 ];
 
+const patientStatus = [
+  {
+    _id:"critical", 
+    label:"Muito Grave",
+    description: "Paciente em estado crítico, risco de morte iminente, necessita de suporte intensivo."
+  },
+  {
+    _id:"serious", 
+    label:"Grave", 
+    description: "Paciente com risco aumentado de complicações, exigindo monitorização continua."
+  },
+  {
+    _id:"moderate", 
+    label:"Moderado", 
+    description: "Paciente apresenta sintomas relevantes, mas com estabilidade clínica."
+  },
+];
+
 export { 
   patientGroup,
   civilState,
@@ -339,5 +357,6 @@ export {
   unitTypes,
   ccgTypes,
   surgerySchedulingArea,
-  defaultServiceKinds
+  defaultServiceKinds,
+  patientStatus
 };

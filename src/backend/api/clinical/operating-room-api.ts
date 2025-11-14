@@ -749,6 +749,12 @@ async function closeRequest(id: string){
   }
 }
 
+/*export async function getSurgeriesHistory(id: string){
+  try{
+
+  }
+}*/
+
 export {
   getPatients,
   getPatient,
@@ -762,5 +768,6 @@ export {
   getRequests,
   getRequest,
   registerRequest,
-  closeRequest
+  closeRequest,
+  //getSurgeriesHistory,
 }

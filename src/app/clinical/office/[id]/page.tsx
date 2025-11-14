@@ -9,7 +9,7 @@ import FinishConsultation from "@/components/finish-consulation";
 import RequestReschedule from "@/components/request-reschedule";
 import { getScheduleAppointment } from "@/backend/api/clinical/scheduling-api";
 import RequestExams from "@/components/forms/request-exam";
-import ScheduleSugery from "@/components/forms/schedule-sugery";
+import ScheduleSugery from "@/components/forms/schedule-surgery";
 import ViewUserFile from "@/components/view-user-file-client";
 
 export default async function Page({ params }: { params: Promise<{ id: string }>}){

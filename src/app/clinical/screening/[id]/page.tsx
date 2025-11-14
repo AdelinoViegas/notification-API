@@ -1,3 +1,4 @@
+import { FaFilePdf } from "react-icons/fa6";
 import TabNav from "@/components/tabnav";
 import PatientForm from "@/components/forms/patient-form";
 import Card from "@/components/ui/card";
@@ -7,7 +8,9 @@ import Screening from "@/components/screening";
 import { UIComponent } from "@/components/forms/screening-ui";
 import { UnlockProcessAccess, MonitorAccess } from "@/components/lock-unlock-monitor-process";
 import ScheduleInScreening from "@/components/scheduleInScreening";
-import { getPatient } from "@/backend/api/clinical/api";
+import PDFButton, { ScreeningRecord } from "@/components/pdf-button";
+import Button from "@/components/ui/button";
+import { getPatient, getScreening } from "@/backend/api/clinical/api";
 
 type Routes = "patient" | "reason" | "vital-signals" | "priority" | "state" | "advice";
 
@@ -20,6 +23,35 @@ export default async function Page({
 }){
   const [{ id }, { r }] = await Promise.all([ params, searchParams ]);
   const { personal: { fullname } } = await getPatient(id);
+
+  const patientData = await (getScreening({ patientId: id, isServed: false })
+  );
+  
+  const dataToPDF:ScreeningRecord = {
+    reason: patientData.reason as string,
+    vitalSignals: {
+      paMax: String(patientData.vitalSignals?.paMax),
+      paMin: String(patientData.vitalSignals?.paMin),
+      jump: String(patientData.vitalSignals?.jump),
+      pvc: String(patientData.vitalSignals?.pvc),
+      imc: String(patientData.vitalSignals?.imc),
+      sp02: String(patientData.vitalSignals?.sp02),
+      temperature: String(patientData.vitalSignals?.temperature),
+      breathing: String(patientData.vitalSignals?.breathing),
+      weight: String(patientData.vitalSignals?.weight),
+      height: String(patientData.vitalSignals?.height),
+      bloodGlucose: String(patientData.vitalSignals?.bloodGlucose),
+    },
+    advice: patientData.advice as string,
+    priority: patientData.priority as string,
+    status: patientData.state as string,
+  }
+
+  const data = (patientData.reason && 
+    patientData.vitalSignals && 
+    patientData.priority && 
+    patientData.state 
+  )?dataToPDF:undefined;  
 
   return(
     <main>
@@ -74,6 +106,22 @@ export default async function Page({
           />
           
           <ArchiveButton />
+          
+          <div>
+            {
+              data?
+              <PDFButton
+                label="Ficha-Triagem"
+                type="screeningRecord"
+                args={data}
+              />
+              :        
+              <Button disabled type="button" className="flex gap-x-2">
+                <FaFilePdf className="size-5"/>
+                Ficha-Triagem
+              </Button>
+            }
+          </div>
         </div>
 
         <div className="max-h-[60vh] overflow-auto px-2 py-3">

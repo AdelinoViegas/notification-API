@@ -120,10 +120,12 @@ async function getPatient({ patientId }: {
   try{
     const [ 
       patient, 
-      personalData 
+      personalData,
+      state, 
     ] = await Promise.all([
       triedModel.findOne({ patientId, served: false }),
-      mainPatient(patientId)
+      mainPatient(patientId),
+      urgencyBankModel.findOne({ patientId }).select({ patientStatus: 1})
     ]);
      
     if(!patient || !personalData?.personal.fullname)
@@ -144,7 +146,8 @@ async function getPatient({ patientId }: {
         advice: screening.advice as string,
         state: screening.state as string,
         vitalSignals: {}
-      }
+      }, 
+      patientStatus: state?.patientStatus as string,
     }
   }catch(e){
     const err = e as Error;
@@ -1001,6 +1004,7 @@ async function finishHospitalization(prev: unknown, formData: FormData){
     const hospitalized = await hospitalizationModel.create({
       fromServiceId: tried?.serviceId,
       userId: await getUserId(),
+      triedId: urgency?.triedId,
       patientId
     });
 
@@ -1225,6 +1229,28 @@ async function movementInUrgencyBank(prev: unknown, formData: FormData){
   }
 }
 
+async function defineStatePatient(prev: unknown, formData: FormData){
+  try{
+    const patientId = formData.get("patientId");
+    const patientStatus = formData.get("patientStatus");
+
+    await urgencyBankModel.updateOne({ patientId }, { patientStatus });
+
+    return {
+      message: "Estado alterado com sucesso!",
+      status: true
+    }
+  }catch (e) {
+    const err = e as Error;
+
+    return {
+      message: err.cause ? err.message : "Não foi possivel finalizar!",
+      status: false
+    }
+  }
+}
+
+
 export {
   finishHospitalization,
   getPatients,
@@ -1256,4 +1282,5 @@ export {
   applyDischarge,
   getPrescription,
   movementInUrgencyBank,
+  defineStatePatient
 };

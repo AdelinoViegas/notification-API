@@ -29,91 +29,94 @@ function ViewConsultResult({ consult }: { consult: ConsultHistory }){
 
   return (
     <div>
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-x-4">
+      <div>
         <SubTitle className="inline-flex">Sinais Vitais</SubTitle>
-        <InputField
-          type="number"
-          textLabel="P.A MÁXIMA (mmHG)"
-          name="pamax" 
-          defaultValue={consult?.vitalSignal?.paMax}
-          disabled
-        />
-
-        <InputField
-          type="number"
-          textLabel="P.A MÍNIMA (mmHG)"
-          name="pamin" 
-          defaultValue={consult?.vitalSignal?.paMin}
-          disabled
-        />
         
-        <InputField
-          type="number"
-          textLabel="PULSO (BPM)"
-          name="jump" 
-          defaultValue={consult?.vitalSignal?.jump}
-          disabled
-        />
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-x-4">
+         <InputField
+            type="number"
+            textLabel="P.A MÁXIMA (mmHG)"
+            name="pamax" 
+            defaultValue={consult?.vitalSignal?.paMax}
+            disabled
+          />
 
-        <InputField
-          type="number"
-          step={0.01}
-          textLabel="TEMPERATURA (°)"
-          name="temperature"
-          required 
-          defaultValue={consult?.vitalSignal?.temperature}
-          disabled
-        />
+          <InputField
+            type="number"
+            textLabel="P.A MÍNIMA (mmHG)"
+            name="pamin" 
+            defaultValue={consult?.vitalSignal?.paMin}
+            disabled
+          />
+          
+          <InputField
+            type="number"
+            textLabel="PULSO (BPM)"
+            name="jump" 
+            defaultValue={consult?.vitalSignal?.jump}
+            disabled
+          />
 
-        <InputField
-          type="number"
-          textLabel="RESPIRAÇÂO (IRPM)"
-          name="breathing" 
-          required
-          defaultValue={consult?.vitalSignal?.breathing}
-          disabled
-        />
+          <InputField
+            type="number"
+            step={0.01}
+            textLabel="TEMPERATURA (°)"
+            name="temperature"
+            required 
+            defaultValue={consult?.vitalSignal?.temperature}
+            disabled
+          />
 
-        <InputField
-          type="number"
-          textLabel="PESO (kg)"
-          name="weight" 
-          defaultValue={consult?.vitalSignal?.weight}
-          disabled
-        />
+          <InputField
+            type="number"
+            textLabel="RESPIRAÇÂO (IRPM)"
+            name="breathing" 
+            required
+            defaultValue={consult?.vitalSignal?.breathing}
+            disabled
+          />
 
-        <InputField
-          type="number"
-          textLabel="ALTURA ((m)"
-          name="height"
-          defaultValue={consult?.vitalSignal?.height}
-          disabled
-        />
+          <InputField
+            type="number"
+            textLabel="PESO (kg)"
+            name="weight" 
+            defaultValue={consult?.vitalSignal?.weight}
+            disabled
+          />
 
-        <InputField
-          type="number"
-          textLabel="SpO2 ((%) opcional)"
-          name="sp02"
-          defaultValue={consult?.vitalSignal?.sp02}
-          disabled
-        />
+          <InputField
+            type="number"
+            textLabel="ALTURA ((m)"
+            name="height"
+            defaultValue={consult?.vitalSignal?.height}
+            disabled
+          />
 
-        <InputField
-          type="number"
-          textLabel="PVC ((CH20) opcional)"
-          name="pvc"
-          defaultValue={consult?.vitalSignal?.pvc}
-          disabled
-        />
+          <InputField
+            type="number"
+            textLabel="SpO2 ((%) opcional)"
+            name="sp02"
+            defaultValue={consult?.vitalSignal?.sp02}
+            disabled
+          />
 
-        <InputField
-          type="number"
-          step={0.01}
-          textLabel="GLICEMIA ( (mg/dl) opcional)"
-          name="bloodGlucose"
-          defaultValue={consult?.vitalSignal?.bloodGlucose}
-          disabled
-        />
+          <InputField
+            type="number"
+            textLabel="PVC ((CH20) opcional)"
+            name="pvc"
+            defaultValue={consult?.vitalSignal?.pvc}
+            disabled
+          />
+
+          <InputField
+            type="number"
+            step={0.01}
+            textLabel="GLICEMIA ( (mg/dl) opcional)"
+            name="bloodGlucose"
+            defaultValue={consult?.vitalSignal?.bloodGlucose}
+            disabled
+          />
+        </div>
       </div>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3">
@@ -133,7 +136,7 @@ function ViewConsultResult({ consult }: { consult: ConsultHistory }){
         </div>
       </div>
 
-    { consult?.storageId && 
+      { consult?.storageId && 
       <div className="mt-8">
         <SubTitle className="inline-flex">Resultado externo</SubTitle>
         <ViewUserFile id={consult.storageId} />
