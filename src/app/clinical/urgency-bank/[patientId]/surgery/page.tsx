@@ -1,13 +1,13 @@
-import { getConsultationHistory } from "@/backend/api/clinical/office-api"
+//import { getConsultationHistory } from "@/backend/api/clinical/office-api"
 /*import SubTitle from "@/components/ui/subtitle";
 import InputField from "@/components/ui/input-field";
 import Accordium from "@/components/ui/accordium";
 import ViewUserFile from "@/components/view-user-file-client";*/
 //import { getSurgeriesHistory } from "@/backend/api/clinical/operating-room-api";
 
-type SurgeryHistory = Awaited<ReturnType<typeof getConsultationHistory>>[number];
+//type SurgeryHistory = Awaited<ReturnType<typeof getConsultationHistory>>[number];
 
-export default async function Page({ params }: { params: Promise<{ patientId: string }>}){
+export default async function Page(/*{ }: { params: Promise<{ patientId: string }>}*/){
   //const { patientId } = await params;
   //const history = await getSurgeriesHistory(patientId);
   
@@ -26,11 +26,11 @@ export default async function Page({ params }: { params: Promise<{ patientId: st
   )
 }
 
-function ViewSurgery({ surgery }: { surgery: SurgeryHistory }){ 
+/*function ViewSurgery({ surgery }: { surgery: SurgeryHistory }){ 
 
   return (
     <div> teste
     
     </div>
   );
-}
+}*/
