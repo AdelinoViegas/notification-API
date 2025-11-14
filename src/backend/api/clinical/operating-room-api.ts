@@ -749,6 +749,38 @@ async function closeRequest(id: string){
   }
 }
 
+async function getSurgeriesHistory(id?: string){
+  /*try{
+    const patientIds = await getPatientIds(id);
+    const resolveds = [];
+
+    for(const id of patientIds){
+      const schedules = await scheduleAppointmentModel.find({ patientId: id });
+      
+      for (const schedule of schedules){
+        const results = await officeModel.find({ scheduleId: schedule._id, served: true });
+        
+        for (const result of results){
+          const consult = await getConsultResult(result._id?.toString() as string);
+          
+          if(!consult)
+            continue;
+
+          resolveds.push({
+            makedt: schedule.updatedAt,
+            ...consult
+          });
+        }
+      }
+    }
+   
+    return resolveds;
+  }catch(e){
+    console.error(e);
+    return[];
+  }*/
+}
+
 export {
   getPatients,
   getPatient,
@@ -762,5 +794,6 @@ export {
   getRequests,
   getRequest,
   registerRequest,
-  closeRequest
+  closeRequest,
+  getSurgeriesHistory,
 }
