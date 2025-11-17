@@ -12,13 +12,13 @@ import {
   processStateModel,
   operatingRoomResultModel,
   serviceRequestsModel,
-
 } from "@/backend/model";
 import { getUser } from "@/backend/api/clinical/api";
 import { CustonAxiosError } from "@/backend/api/types";
 import { upload } from "@/backend/api/storage";
 import { ServiceRequest, serviceRequestSchema } from "../type-schema";
 import { getPatientIds } from "./process-control";
+import { getDateInSlashFormat } from "@/lib/date-formater";
 
 async function getPatients({
   name,
@@ -379,8 +379,8 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
   }
 }
 
-async function getOperatingRoom(scheduleId: string){
-  const operatingRoom = await operatingRoomModel.findOne({ scheduleId, served: false });
+async function getOperatingRoom(scheduleId: string, served = false){
+  const operatingRoom = await operatingRoomModel.findOne({ scheduleId, served });
   const laboratoryResult = await operatingRoomResultModel.findOne({ _id: operatingRoom?.preoperativeEvaluation?.laboratoryTests?.externalId });
   const imagingResult = await operatingRoomResultModel.findOne({ _id: operatingRoom?.preoperativeEvaluation?.imagingTests?.externalId });
   const schedule = await scheduleSugeryModel.findById({_id: scheduleId}).select({requestingService: 1});
@@ -454,6 +454,7 @@ async function getOperatingRoom(scheduleId: string){
     },
     postAnestheticRecovery: {
       checkInTime: operatingRoom?.postAnestheticRecovery?.checkInTime as Date,
+      checkOutTime: operatingRoom?.postAnestheticRecovery?.checkOutTime as Date,
       vitalSignal,
       levelofConsciousness: {
         motorActivity: operatingRoom?.postAnestheticRecovery?.levelofConsciousness?.motorActivity as number,
@@ -754,25 +755,35 @@ async function closeRequest(id: string){
 async function getSurgeriesHistory(id: string){
   try{  
     const patientIds = await getPatientIds(id);
-    const resolveds = [];
+    const sugeriesHistory = [];
 
-    for(const id of patientIds){
-      const schedules = await scheduleSugeryModel.find({ patientId: id });
+    for(const patientId of patientIds){
+      const schedules = await scheduleSugeryModel.find({ patientId });
 
       for (const schedule of schedules){
-        const service = await serviceModel.findById({ _id: schedule.sugeryType}).select({ name: 1});
-        const id = schedule.doctorId as unknown as string;
-        const user = await getUser(id);
-            
-        resolveds.push({
+        const doctorId = schedule.doctorId as unknown as string;
+        const surgeryCompleted = await operatingRoomModel.findOne({ scheduleId: schedule._id, served: true}); 
+         
+        if(!surgeryCompleted)
+          continue
+
+        const [service, dataInOperatingRoom, user ] = await Promise.all([
+          serviceModel.findById({ _id: schedule.sugeryType}).select({ name: 1}),
+          getOperatingRoom(schedule._id.toString(), true),
+          getUser(doctorId)
+        ]);
+
+        sugeriesHistory.push({
           sugeryType: service?.name,
           responsible: user.fullname,
-          makedt: schedule.createdAt
+          surgeryDate: getDateInSlashFormat(schedule.sugeryDate as Date),
+          makedt: schedule.createdAt,
+          ...dataInOperatingRoom
         });
       }
     }
   
-    return resolveds;
+    return sugeriesHistory;
   }catch(e){
     console.error(e);
     return[];
