@@ -55,6 +55,8 @@ postAnestheticRecovery:{
 }:recovery & {
   scheduleId: string,
 }){
+  const values = [motorActivity, respiration, circulation, consciousness, saturation];
+  const data = values.map(value => value !== undefined?String(value):undefined);
   const [state, action] = useActionState(signOperatingRoom, { message:"", status: false });
   const [edit, setEdit] = useState<Record<string, boolean>>({
     dateTime: true,
@@ -87,7 +89,7 @@ postAnestheticRecovery:{
       for(const value of JSON.parse(submitter.dataset.location as string) as string[])
         setEdit( prev => ({...prev, [value]: !prev[value]}));
   }
-
+  console.log("activity: "+!!edit.activity);
   return(
     <div className="flex flex-col gap-y-4 py-8">         
       <Accordium title="Horários de entrada">
@@ -105,6 +107,7 @@ postAnestheticRecovery:{
             disabled={!!startDate && edit.dateTime}
             name="checkInTime"
             defaultValue={startDate}
+            required
           />
 
           <ButtonEdit
@@ -246,13 +249,7 @@ postAnestheticRecovery:{
           <ButtonEdit
             state={edit}
             setState={setEdit}
-            value={[
-              String(motorActivity), 
-              String(respiration), 
-              String(circulation),
-              String(consciousness),
-              String(saturation)
-            ].filter(Boolean)}
+            value={data.filter(Boolean)}
             location={[
               "activity",
               "respiration",
