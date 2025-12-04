@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 import clsx from "clsx";
-import Header from "@/components/header";
 import TabNav from "@/components/tabnav";
 import Card from "@/components/ui/card";
 import { MonitorAccess, UnlockProcessAccess } from "@/components/lock-unlock-monitor-process";

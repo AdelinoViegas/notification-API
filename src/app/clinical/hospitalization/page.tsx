@@ -24,7 +24,7 @@ export default async function Page({
         subPaths={[
           { path: "r", title: "Lista de Espera" },
           { path: "h", title: "Internados" },
-          { path: "n", title: "Infermagens" }
+          { path: "n", title: "Enfermaria" }
         ]}
       />
 

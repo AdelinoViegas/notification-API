@@ -46,11 +46,11 @@ export default async function Reception({ page }: {
       <Table
         baseRowLink="/clinical/hospitalization"
         columns={[
-          "Serviço", 
+          "Serviço de Origem", 
           "Data do Registro", 
           "Nome Completo",
           "Estado Actual",
-          "Medico"
+          "Medico Responsável"
         ]} 
         rows={rows}
       />
