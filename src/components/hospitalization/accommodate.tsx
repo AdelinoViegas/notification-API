@@ -19,10 +19,10 @@ import Selection, { SelectionOption } from "@/components/ui/selection";
 import FallbackComponent from "@/components/fallback-components";
 
 interface FallbackProps {
-  serviceId: string;
-  sectionId: string;
-  nursingId: string;
-  bedId: string;
+  serviceId?: string;
+  sectionId?: string;
+  nursingId?: string;
+  bedId?: string;
 }
 
 export default function Accommodate(props: FallbackProps){
@@ -34,8 +34,8 @@ export default function Accommodate(props: FallbackProps){
   const [ sections, setSections ] = useState<SelectionOption[]>([]);
   const [ nursings, setNursings ] = useState<SelectionOption[]>([]);
   const [ beds, setBeds ] = useState<SelectionOption[]>([]);
-  const [ selectedSection, setSelectedSection ] = useState<string>(props.sectionId);
-  const [ selectedNursing, setSelectedNursing ] = useState<string>(props.nursingId);
+  const [ selectedSection, setSelectedSection ] = useState<string>(props?.sectionId as string);
+  const [ selectedNursing, setSelectedNursing ] = useState<string>(props?.nursingId as string);
 
   const router = useRouter();
   const params = useParams();
@@ -80,7 +80,7 @@ export default function Accommodate(props: FallbackProps){
             options={internalServices} 
             required
             className="grow"
-            defaultValue={props.serviceId}
+            defaultValue={props?.serviceId}
           />: <FallbackComponent />}
 
           <Button type="button" onClick={()=>setModalService(true)}>Novo</Button>
@@ -93,7 +93,7 @@ export default function Accommodate(props: FallbackProps){
           options={sections} 
           onChange={e => setSelectedSection(e.target.value)}
           required
-          defaultValue={props.sectionId}
+          defaultValue={props?.sectionId}
         />: <FallbackComponent className="my-3" />}
 
         { nursings.length ? 
@@ -103,7 +103,7 @@ export default function Accommodate(props: FallbackProps){
           options={nursings} 
           onChange={e => setSelectedNursing(e.target.value)}
           required
-          defaultValue={props.nursingId}
+          defaultValue={props?.nursingId}
         />: <FallbackComponent className="my-3" />}
 
         {beds.length ? 
@@ -112,7 +112,7 @@ export default function Accommodate(props: FallbackProps){
           name="bedId"
           options={beds} 
           required
-          defaultValue={props.bedId}
+          defaultValue={props?.bedId}
         />: <FallbackComponent className="my-3" />}
 
         <Button>Salvar</Button>

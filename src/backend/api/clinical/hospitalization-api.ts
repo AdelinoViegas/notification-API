@@ -298,7 +298,7 @@ export async function getTransation(patientId: string){
     }
   }catch (e) {
     console.error(e);
-    
+
     return null;
   }
 }
