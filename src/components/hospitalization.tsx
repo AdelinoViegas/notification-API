@@ -16,7 +16,6 @@ export default function Hospitalization(){
   const [ state, action ] = useActionState(finishHospitalization, { message: "", status: false });
   const closeModal = ()=> setModalState(false);
   const [ internalServices, setInternalServices ] = useState<SelectionOption[]>([]);
-  
   const router = useRouter();
   const params = useParams();
 
@@ -47,7 +46,6 @@ export default function Hospitalization(){
         <form action={action}>
           <div className="my-4">
             <input type="hidden" name="patientId" value={params.patientId} />
-            <h2>selecionar o serviço de internamento</h2>
 
             <Selection
               label="Serviço de Internamento"

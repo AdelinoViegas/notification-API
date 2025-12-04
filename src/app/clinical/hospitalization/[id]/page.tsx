@@ -1,14 +1,9 @@
 import { resolvedBed } from "@/backend/api/clinical/hospitalization-api";
 import Accommodate from "@/components/hospitalization/accommodate";
 
-export default async function Page({
-  params
-}:{ 
-  params: Promise<{ id: string }>;
-  searchParams: Promise<{ r: "r" | "h" | "n" }>;
-}){
-  const { id } = await params;
-  const bedPosition = await resolvedBed(id);
+export default async function Page({ params }:{ params: Promise<{ id: string }> }){
+  const { id: patientId } = await params;
+  const bedPosition = await resolvedBed(patientId);
 
   return(
     <div>

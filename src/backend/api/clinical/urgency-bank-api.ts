@@ -987,6 +987,7 @@ async function finishHospitalization(prev: unknown, formData: FormData){
     const donedAt = formData.get("donedAt") as string;
     const currentState = formData.get("currentState") as string;
     const patientId = formData.get("patientId") as string;
+    const internalService = formData.get("serviceId");
     
     const urgencyId = (await getPatientUrgencyBank(patientId))?.id;
     const patient = await getSyncedHistories(patientId);

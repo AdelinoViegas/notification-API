@@ -66,13 +66,13 @@ export default function RegisterNursing(){
 
   return(
     <div>
-      <Button onClick={()=>setModal(true)}>Registrar Enfermagem</Button>
+      <Button onClick={()=>setModal(true)}>Registrar Enfermaria</Button>
 
       <Modal
         open={modal}
         asWindow
         onClose={()=>setModal(false)}
-        title="Registro de Enfermagem"
+        title="Registro de Enfermaria"
       >
         <form action={action} ref={formRef}>
           <div className="flex gap-x-3 items-center">
