@@ -8,12 +8,15 @@ import Modal from "@/components/modal";
 import InputDetails from "@/components/ui/input-details";
 import InputField from "@/components/ui/input-field";
 import { finishHospitalization } from "@/backend/api/clinical/urgency-bank-api";
+import Selection, { SelectionOption } from "@/components/ui/selection";
+import { getInternalServices } from "@/backend/api/clinical/hospitalization-api";
 
 export default function Hospitalization(){
   const [modalstate, setModalState] = useState(false);
   const [ state, action ] = useActionState(finishHospitalization, { message: "", status: false });
-  const  openModal = ()=> setModalState(true);
   const closeModal = ()=> setModalState(false);
+  const [ internalServices, setInternalServices ] = useState<SelectionOption[]>([]);
+  
   const router = useRouter();
   const params = useParams();
 
@@ -27,12 +30,13 @@ export default function Hospitalization(){
         });
       else 
         toast.error(state.message);
-
-    return;
+    
+      getInternalServices().then(setInternalServices);
+      
   }, [state]);
   return(
     <div>
-      <Button onClick={openModal}>Internamento</Button>
+      <Button onClick={()=> setModalState(true)}>Internamento</Button>
 
       <Modal 
         title="Internamento"
@@ -44,6 +48,14 @@ export default function Hospitalization(){
           <div className="my-4">
             <input type="hidden" name="patientId" value={params.patientId} />
             <h2>selecionar o serviço de internamento</h2>
+
+            <Selection
+              label="Serviço de Internamento"
+              name="serviceId"
+              options={internalServices} 
+              required
+              className="grow"
+            />
             
             <InputDetails
               textLabel="Descrição"

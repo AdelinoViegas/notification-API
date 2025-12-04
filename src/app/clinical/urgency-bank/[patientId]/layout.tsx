@@ -4,7 +4,6 @@ import TabNav from "@/components/tabnav";
 import Card from "@/components/ui/card";
 import { MonitorAccess, UnlockProcessAccess } from "@/components/lock-unlock-monitor-process";
 import { getPatient } from "@/backend/api/clinical/urgency-bank-api";
-import QuickFabShurtcut from "@/components/quick-fab-shurtcut";
 import DefineState from "@/components/define-state";
 import Hospitalization from "@/components/hospitalization";
 
@@ -18,9 +17,8 @@ export default async function Layout({
   const { patientId } = await params;
   const patient = await getPatient({patientId}); 
   
-  if(patient?.message || !patient.screening){
+  if(patient?.message || !patient.screening)
     redirect("/clinical/urgency-bank");
-  }
     
   return(
     <div>
@@ -42,7 +40,7 @@ export default async function Layout({
         <DefineState />
       </div>
       
-      <div className={clsx("my-4 text-center text-white",
+      <div className={clsx("my-4 text-center py-1",
         {"bg-red-500 animate-pulse": patient.screening.priority === "red"},
         {"bg-blue-500": patient.screening.priority === "blue"},
         {"bg-green-500": patient.screening?.priority === "green"},
@@ -50,7 +48,7 @@ export default async function Layout({
         {"bg-orange-600": patient.screening?.priority === "orange"}
        )}>
 
-        <h2 className="text-xl font-medium">{patient.fullname?.toUpperCase()}</h2>
+        <h2 className="text-xl text-white font-medium">{patient.fullname?.toUpperCase()}</h2>
 			</div>
       
       <div className="flex h-[70vh] gap-x-3">
@@ -74,16 +72,6 @@ export default async function Layout({
           ]}
         />
       </div>
-
-      <QuickFabShurtcut 
-        visibleComponent={[
-          // "request_consult",
-          // "request_surgery",
-          "request_hospital",
-          // "internal_movement",
-          // "define_state"
-        ]}
-      />
     </div>
   )
 }
