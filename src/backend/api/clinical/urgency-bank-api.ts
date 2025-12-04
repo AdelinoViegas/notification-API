@@ -991,7 +991,6 @@ async function finishHospitalization(prev: unknown, formData: FormData){
     
     const urgencyId = (await getPatientUrgencyBank(patientId))?.id;
     const patient = await getSyncedHistories(patientId);
-    const a = await getSyncedHistories(patientId);
     const lastPatientId = patient?.secondaries.pop();
     const hospitalizedPatient = await hospitalizationModel.findOne({ patientId: lastPatientId });
     
