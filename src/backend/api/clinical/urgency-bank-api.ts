@@ -987,16 +987,20 @@ async function finishHospitalization(prev: unknown, formData: FormData){
     const donedAt = formData.get("donedAt") as string;
     const currentState = formData.get("currentState") as string;
     const patientId = formData.get("patientId") as string;
-    const internalService = formData.get("serviceId");
+    const internalServiceId = formData.get("serviceId");
     
     const urgencyId = (await getPatientUrgencyBank(patientId))?.id;
     const patient = await getSyncedHistories(patientId);
+    const a = await getSyncedHistories(patientId);
     const lastPatientId = patient?.secondaries.pop();
     const hospitalizedPatient = await hospitalizationModel.findOne({ patientId: lastPatientId });
     
-    if(typeof hospitalizedPatient?.served === "boolean")
-      if(!hospitalizedPatient.served)
-        throw new Error("Paciente ja está no internamento!", { cause: "exist" });
+    if(hospitalizedPatient)
+      throw new Error("Este utente ja se encontra no internamento!");
+
+    // if(typeof hospitalizedPatient?.served === "boolean")
+    //   if(!hospitalizedPatient.served)
+    //     throw new Error("Paciente ja está no internamento!", { cause: "exist" });
 
     const urgency = await urgencyBankModel.findById({ _id: urgencyId });
     const tried = await triedModel.findOneAndUpdate({ _id: urgency?.triedId }, { served: true });
@@ -1004,6 +1008,7 @@ async function finishHospitalization(prev: unknown, formData: FormData){
 
     const hospitalized = await hospitalizationModel.create({
       fromServiceId: tried?.serviceId,
+      toInternalServiceId: internalServiceId,
       userId: await getUserId(),
       triedId: urgency?.triedId,
       patientId

@@ -277,6 +277,32 @@ export async function resolvedBed(id: string){
   }
 }
 
+export async function getTransation(patientId: string){
+  try{
+    const transation = await hospitalizationModel.findOne({ patientId });
+    const urgencyService = await urgencyServiceModel.findById({ _id: transation?.fromServiceId });
+    const internalService = await internalServiceModel.findById({ _id: transation?.toInternalServiceId });
+
+    if(!urgencyService || !internalService || !transation)
+      throw new Error;
+
+    return {
+      source: {
+        id: transation.fromServiceId?.toString() as string,
+        name: urgencyService.label
+      },
+      destination: {
+        id: transation.toInternalServiceId?.toString() as string,
+        name: internalService.name
+      }
+    }
+  }catch (e) {
+    console.error(e);
+    
+    return null;
+  }
+}
+
 export async function signToHospitalize(p: unknown, formData: FormData){
   try{
     const patientId = formData.get("patientId");
