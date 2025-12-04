@@ -5,10 +5,6 @@ import Card from "@/components/ui/card";
 import { MonitorAccess, UnlockProcessAccess } from "@/components/lock-unlock-monitor-process";
 import { getPatient } from "@/backend/api/clinical/urgency-bank-api";
 import QuickFabShurtcut from "@/components/quick-fab-shurtcut";
-
-import RequestConsult from "@/components/request-consult";
-import RequestSurgery from "@/components/request-surgery";
-
 import DefineState from "@/components/define-state";
 import Hospitalization from "@/components/hospitalization";
 
@@ -44,8 +40,6 @@ export default async function Layout({
         <Hospitalization />
         { /* Transferencia */}
         <DefineState />
-        <RequestConsult />
-        <RequestSurgery />
       </div>
       
       <div className={clsx("my-4 text-center text-white",
