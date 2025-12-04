@@ -48,9 +48,8 @@ async function getPatients({
   try{
     const userId = await getUserId() as string;
     const user = await clinicalUserModel.findOne({ userId }).select({ serviceId: 1});
-    const patients = await triedModel.find({ serviceId: user?.serviceId, served: false });
+    const patients = await triedModel.find({ serviceId: user?.serviceId, served: true });
     const patientList = [];
-    //console.log(patients);
 
     for(const patient of patients){
       const urgency = await patientModel.findById({ _id: patient.patientId });
@@ -96,7 +95,7 @@ async function getPatients({
     const _patients = name?orderByPriority(patientList.filter((item)=>item.fullname.match(new RegExp(`^${name}`, 'i')))).orderElements:
     priority?orderByPriority(patientList.filter((item)=>item.priorityType === priorityTranslator.find((props)=>props._id === priority)?.label)).orderElements:
     orderByPriority(patientList).orderElements;
-
+    
     return {
       patients: _patients,
       totalItems: _patients.length,
@@ -104,7 +103,8 @@ async function getPatients({
       currentPage: 1,
     }
   }catch(e){
-    console.log(e);
+    console.error(e);
+    
     return {
       patients: [],
       totalItems: 0,

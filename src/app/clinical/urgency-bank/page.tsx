@@ -21,11 +21,12 @@ export default async function Page({
   }>
 }){ 
   const { name, priority } = await searchParams;
-  const patientData = await getPatients({
+  const patients = await getPatients({
     name: name, 
     priority: priority
   });
-  const patientRows = formater(patientData.patients, {
+
+  const patientRows = formater(patients.patients, {
     order: [
       "priorityType",
       "createdAt",
@@ -79,8 +80,8 @@ export default async function Page({
       />
 
       <Pagination
-        availablePages={patientData.availablePages}
-        totalItems={patientData.totalItems} 
+        availablePages={patients.availablePages}
+        totalItems={patients.totalItems} 
       />
     </main>
   );
