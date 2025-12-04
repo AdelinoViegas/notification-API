@@ -43,10 +43,11 @@ export default function Hospitalization(){
         <form action={action}>
           <div className="my-4">
             <input type="hidden" name="patientId" value={params.patientId} />
+            <h2>selecionar o serviço de internamento</h2>
             
             <InputDetails
               textLabel="Descrição"
-              placeholder="Descreva"
+              placeholder="Descreva o motivo do internamento"
               name="description"
               required
               rows={3}
@@ -56,14 +57,6 @@ export default function Hospitalization(){
               type="datetime-local"
               textLabel="Data e Hora"
               name="donedAt"
-              required
-            />
-
-            <InputField
-              type="text"
-              textLabel="Estado ao internar"
-              placeholder="Estado antes do internamento"
-              name="currentState"
               required
             />
           </div>

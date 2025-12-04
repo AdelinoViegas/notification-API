@@ -7,6 +7,12 @@ import { MonitorAccess, UnlockProcessAccess } from "@/components/lock-unlock-mon
 import { getPatient } from "@/backend/api/clinical/urgency-bank-api";
 import QuickFabShurtcut from "@/components/quick-fab-shurtcut";
 
+import RequestConsult from "@/components/request-consult";
+import RequestSurgery from "@/components/request-surgery";
+
+import DefineState from "@/components/define-state";
+import Hospitalization from "@/components/hospitalization";
+
 export default async function Layout({ 
   children,
   params
@@ -23,29 +29,35 @@ export default async function Layout({
     
   return(
     <div>
-      <MonitorAccess
-        patientId={patientId}
-        place="urgency"
-        basePathname="/clinical/urgency-bank" 
-      />
+      <div className="flex gap-x-3">
+         <MonitorAccess
+          patientId={patientId}
+          place="urgency"
+          basePathname="/clinical/urgency-bank" 
+        />
 
-      <UnlockProcessAccess
-        patientId={patientId}
-        place="urgency"
-        basePathname="/clinical/urgency-bank" 
-      />
+        <UnlockProcessAccess
+          patientId={patientId}
+          place="urgency"
+          basePathname="/clinical/urgency-bank" 
+        />
+
+        <Hospitalization />
+        { /* Transferencia */}
+        <DefineState />
+        <RequestConsult />
+        <RequestSurgery />
+      </div>
       
-      <div className={clsx("my-4 text-center pt-3 text-white",
+      <div className={clsx("my-4 text-center text-white",
         {"bg-red-500 animate-pulse": patient.screening.priority === "red"},
         {"bg-blue-500": patient.screening.priority === "blue"},
         {"bg-green-500": patient.screening?.priority === "green"},
         {"bg-yellow-500": patient.screening?.priority === "yellow"},
         {"bg-orange-600": patient.screening?.priority === "orange"}
        )}>
-			 	<Header 
-          center 
-          title={patient.fullname}
-        />
+
+        <h2 className="text-xl font-medium">{patient.fullname?.toUpperCase()}</h2>
 			</div>
       
       <div className="flex h-[70vh] gap-x-3">
@@ -72,11 +84,11 @@ export default async function Layout({
 
       <QuickFabShurtcut 
         visibleComponent={[
-          "request_consult",
-          "request_surgery",
+          // "request_consult",
+          // "request_surgery",
           "request_hospital",
-          "internal_movement",
-          "define_state"
+          // "internal_movement",
+          // "define_state"
         ]}
       />
     </div>
