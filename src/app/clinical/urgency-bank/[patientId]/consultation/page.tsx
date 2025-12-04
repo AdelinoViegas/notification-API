@@ -3,6 +3,7 @@ import SubTitle from "@/components/ui/subtitle";
 import InputField from "@/components/ui/input-field";
 import Accordium from "@/components/ui/accordium";
 import ViewUserFile from "@/components/view-user-file-client";
+import RequestConsult from "@/components/request-consult";
 
 type ConsultHistory = Awaited<ReturnType<typeof getConsultationHistory>>[number];
 
@@ -12,6 +13,7 @@ export default async function Page({ params }: { params: Promise<{ patientId: st
   
   return(
     <div>
+      <RequestConsult />
       <h2 className="text-lg font-bold">Todas as consultas realizadas</h2>
 
       <div className="space-y-3 mt-3">

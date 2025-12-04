@@ -110,7 +110,7 @@ export async function syncPatientRegister(id: string){
     await accessType.save();
     console.log("dados do utente sincronizado!");
   }catch (e){
-    console.log(e);
+    console.error(e);
     throw new Error("Falha na sincronização!");
   }
 }

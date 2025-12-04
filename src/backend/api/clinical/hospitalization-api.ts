@@ -69,7 +69,9 @@ export async function getPatients({
 
     return {
       patients: formated.slice(0, 9),
-      availablePages:  formated.length/10,
+      availablePages: formated.length/10,//formated.length < 11 
+        // ? 1
+        // : formated.length/10,
       currentPage: page,
       totalItems: formated.length
     }
@@ -272,6 +274,32 @@ export async function resolvedBed(id: string){
     }
   }catch(e){
     console.error(e);
+  }
+}
+
+export async function getTransation(patientId: string){
+  try{
+    const transation = await hospitalizationModel.findOne({ patientId });
+    const urgencyService = await urgencyServiceModel.findById({ _id: transation?.fromServiceId });
+    const internalService = await internalServiceModel.findById({ _id: transation?.toInternalServiceId });
+
+    if(!urgencyService || !internalService || !transation)
+      throw new Error;
+
+    return {
+      source: {
+        id: transation.fromServiceId?.toString() as string,
+        name: urgencyService.label
+      },
+      destination: {
+        id: transation.toInternalServiceId?.toString() as string,
+        name: internalService.name
+      }
+    }
+  }catch (e) {
+    console.error(e);
+
+    return null;
   }
 }
 

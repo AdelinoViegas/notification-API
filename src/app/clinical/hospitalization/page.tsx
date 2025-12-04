@@ -5,14 +5,8 @@ import Nursings from "@/components/hospitalization/nursings";
 
 export const dynamic = "force-dynamic";
 
-export default async function Page({ 
-  params,
-  searchParams 
-}:{ 
-  params: Promise<{ id: string }>;
-  searchParams: Promise<{ r: "r" | "h" | "n" }>;
-}){
-  const [{ }, { r }] = await Promise.all([ params,  searchParams ]);
+export default async function Page({ searchParams }:{ searchParams: Promise<{ r: "r" | "h" | "n" }>}){
+  const { r: route } = await searchParams;
   
   return(
     <div>
@@ -24,13 +18,13 @@ export default async function Page({
         subPaths={[
           { path: "r", title: "Lista de Espera" },
           { path: "h", title: "Internados" },
-          { path: "n", title: "Infermagens" }
+          { path: "n", title: "Enfermaria" }
         ]}
       />
 
-      { r === "r" && <Reception /> }
-      { r === "h" && <Hospitalized /> }
-      { r === "n" && <Nursings />}
+      { route === "r" && <Reception /> }
+      { route === "h" && <Hospitalized /> }
+      { route === "n" && <Nursings />}
     </div>
   )
 }

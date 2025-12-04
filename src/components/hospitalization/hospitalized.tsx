@@ -19,7 +19,7 @@ export default async function Hospitalized({ page }: {
     page: page?Number(page):1,
     served: true
   });
-
+  
   const rows = formater(patients.patients, {
     filterKey: [
       "id",

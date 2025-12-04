@@ -27,6 +27,7 @@ export default function Pagination({
   const router = useRouter();
   const pageSearchParams = useSearchParams();
   const pathname = usePathname();
+  const _availablePages = Math.ceil(availablePages);
   
   const getCurrentPage = useCallback(()=> pageSearchParams.get('page'), [pageSearchParams]);
   
@@ -38,7 +39,7 @@ export default function Pagination({
   
   const nextPage = ()=>{
     const page = pageSearchParams.get('page');
-    if(page && Number(page) < availablePages)
+    if(page && Number(page) < _availablePages)
       setSearchPage(String(Number(page)+1));
   }
   
@@ -84,7 +85,7 @@ export default function Pagination({
           Anterior
         </button>
         <div className="flex gap-3 max-w-md overflow-x-auto py-1">
-          {genRange(availablePages).map(item => (
+          {genRange(_availablePages).map(item => (
             <button key={item} className={clsx('rounded-md border border-2 border-primary/25 hover:bg-blue-200 px-2', { "bg-primary text-white hover:bg-primary/50": Number(currentPage) === item})} onClick={()=>definedPage(item)}>{item}</button>
           ))}
         </div>

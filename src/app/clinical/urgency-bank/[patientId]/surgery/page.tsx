@@ -5,6 +5,7 @@ import TitleAndSubtitle from "@/components/title-subtitle";
 import ViewUserFile from "@/components/view-user-file-client";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
 import Table, { TableRow } from "@/components/table";
+import RequestSurgery from "@/components/request-surgery";
 
 type SurgeryHistory = Awaited<ReturnType<typeof getSurgeriesHistory>>[number];
 
@@ -18,6 +19,7 @@ export default async function Page({
   
   return(
     <div>
+      <RequestSurgery />
       <h2 className="text-lg font-bold">Histórico de Cirurgias Feitas</h2>
 
       <div className="space-y-3 mt-3">
@@ -25,7 +27,7 @@ export default async function Page({
           <Accordium key={index} title={params.makedt.toLocaleString("pt", { dateStyle: "full", timeStyle: "medium" })}>
             <ViewSurgery surgery={params} />
           </Accordium>
-      ))}
+        ))}
       </div>
     </div>
   )
