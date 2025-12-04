@@ -13,12 +13,12 @@ export default async function Reception({ page }: {
 }){
   // const { name, page } = await searchParams;
 
-  const patientsData = await getPatients({ 
+  const patients = await getPatients({ 
     // fullname: name, 
     page: page?Number(page):1,
   });
 
-  const rows = formater(patientsData.patients, {
+  const rows = formater(patients.patients, {
     transform: {
       targetKey: "createdAt",
       fn: e => getDataAndHoursFormat(new Date(e))
@@ -56,8 +56,8 @@ export default async function Reception({ page }: {
       />
 
       <Pagination
-        availablePages={patientsData.availablePages as number}
-        totalItems={patientsData.totalItems as number} 
+        availablePages={patients.availablePages as number}
+        totalItems={patients.totalItems as number} 
       />
     </main>
   );

@@ -69,7 +69,9 @@ export async function getPatients({
 
     return {
       patients: formated.slice(0, 9),
-      availablePages:  formated.length/10,
+      availablePages: formated.length/10,//formated.length < 11 
+        // ? 1
+        // : formated.length/10,
       currentPage: page,
       totalItems: formated.length
     }

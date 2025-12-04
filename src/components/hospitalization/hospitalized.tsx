@@ -20,6 +20,8 @@ export default async function Hospitalized({ page }: {
     served: true
   });
 
+
+  console.log(patients)
   const rows = formater(patients.patients, {
     filterKey: [
       "id",
