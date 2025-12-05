@@ -7,10 +7,10 @@ import { MonitorAccess, UnlockProcessAccess } from "@/components/lock-unlock-mon
 import QuickFabShurtcut from "@/components/quick-fab-shurtcut";
 // import { getPatient } from "@/backend/api/clinical/urgency-bank-api";
 // import { getPatient } from "@/backend/api/clinical/api";
-import RequestConsult from "@/components/request-consult";
-import Hospitalization from "@/components/hospitalization";
-import RequestSurgery from "@/components/request-surgery";
-import InternalMovement from "@/components/internal-movement";
+// import RequestConsult from "@/components/request-consult";
+// import Hospitalization from "@/components/hospitalization";
+// import RequestSurgery from "@/components/request-surgery";
+// import InternalMovement from "@/components/internal-movement";
 import DefineState from "@/components/define-state";
 
 export default async function Layout({ 

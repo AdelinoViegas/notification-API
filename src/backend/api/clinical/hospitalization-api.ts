@@ -7,7 +7,7 @@ import {
   internalMovimentModel, 
   internalServiceModel, 
   nursingModel, 
-  patientHospitalizedModel, 
+  // patientHospitalizedModel, 
   patientModel, 
   patientStateModel, 
   sectionModel, 
@@ -37,7 +37,7 @@ export async function getPatients({
       const doctor = await getUser(patient.userId?.toString() as string);
       const personalData = await patientModel.findById({ _id: patient.patientId }).select({ fullname: 1 });
       const serviceSource = await urgencyServiceModel.findById({ _id: patient?.fromServiceId })?.select({ label: 1 });
-      const reason = await patientHospitalizedModel.findOne({ hospitalizedId: patient?._id }).select({ currentState: 1 });
+      // const reason = await patientHospitalizedModel.findOne({ hospitalizedId: patient?._id }).select({ currentState: 1 });
       const inHospitalized = await inHospitalizeModel.findOne({ patientId: patient.patientId });
       const patientState = await patientStateModel.findOne({ patientId: patient.patientId });
       const resolvedPatientState = patientState 
