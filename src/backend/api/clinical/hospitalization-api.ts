@@ -7,14 +7,16 @@ import {
   internalMovimentModel, 
   internalServiceModel, 
   nursingModel, 
-  patientHospitalizedModel, 
+  // patientHospitalizedModel, 
   patientModel, 
+  patientStateModel, 
   sectionModel, 
   urgencyServiceModel 
 } from "@/backend/model";
 import { omitUndefined } from "mongoose";
 import { getUser } from "@/backend/api/clinical/api";
 import { getUserId } from "@/lib/web-token";
+import { patientStates } from "./translator";
 
 export async function getPatients({
   page,
@@ -35,8 +37,12 @@ export async function getPatients({
       const doctor = await getUser(patient.userId?.toString() as string);
       const personalData = await patientModel.findById({ _id: patient.patientId }).select({ fullname: 1 });
       const serviceSource = await urgencyServiceModel.findById({ _id: patient?.fromServiceId })?.select({ label: 1 });
-      const reason = await patientHospitalizedModel.findOne({ hospitalizedId: patient?._id }).select({ currentState: 1 });
+      // const reason = await patientHospitalizedModel.findOne({ hospitalizedId: patient?._id }).select({ currentState: 1 });
       const inHospitalized = await inHospitalizeModel.findOne({ patientId: patient.patientId });
+      const patientState = await patientStateModel.findOne({ patientId: patient.patientId });
+      const resolvedPatientState = patientState 
+        ? patientStates.find(state => state._id === patientState.stateId)?.label
+        : "Sem estado"
 
       if(inHospitalized){
         const bed = await bedNursingModel.findById({ _id: inHospitalized?.bedId });
@@ -47,11 +53,11 @@ export async function getPatients({
           service: serviceSource?.label as string ?? "Desconhecido",
           createdAt: patient?.createdAt as Date,
           fullname: personalData?.fullname as string,
-          currentState: reason?.currentState as string ?? "Sem motivo",
+          currentState: resolvedPatientState,//reason?.currentState as string ?? "Sem motivo",
           user: doctor?.fullname as string,
           processNumber: inHospitalized?.processNumber,
           bed: bed?.bed,
-          nursing: nursing?.name
+          nursing: nursing?.name,
         });
 
         continue;
@@ -62,7 +68,7 @@ export async function getPatients({
         service: serviceSource?.label as string ?? "Desconhecido",
         createdAt: patient?.createdAt as Date,
         fullname: personalData?.fullname as string,
-        currentState: reason?.currentState as string ?? "Sem motivo",
+        currentState: resolvedPatientState,
         user: doctor?.fullname as string
       });
     }

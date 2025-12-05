@@ -20,11 +20,13 @@ import {
   prescriptionModel,
   surgeryModel,
   processStateModel,
-  hospitalizationModel
+  hospitalizationModel,
+  patientStateModel
 } from "@/backend/model";
 import { 
   patientAccess,
-  patientGroup as patientGroups, 
+  patientGroup as patientGroups,
+  patientStates, 
 } from "@/backend/api/clinical/translator"; 
 
 import { 
@@ -1234,19 +1236,32 @@ async function movementInUrgencyBank(prev: unknown, formData: FormData){
   }
 }
 
-async function defineStatePatient(prev: unknown, formData: FormData){
+async function definePatientState(prev: unknown, formData: FormData){
   try{
     const patientId = formData.get("patientId");
-    const patientStatus = formData.get("patientStatus");
+    const stateId = formData.get("stateId");
 
-    await urgencyBankModel.updateOne({ patientId }, { patientStatus });
+    const state = await patientStateModel.findOneAndUpdate({ patientId }, { stateId });
+    
+    if(!state){
+      await patientStateModel.create({
+        patientId,
+        stateId
+      });
+
+      return {
+        message: "Estado do utente registrado!",
+        status: true
+      }
+    }
 
     return {
-      message: "Estado alterado com sucesso!",
+      message: "Estado atualizado com sucesso!",
       status: true
     }
   }catch (e) {
     const err = e as Error;
+    console.error(e);
 
     return {
       message: err.cause ? err.message : "Não foi possivel finalizar!",
@@ -1255,6 +1270,25 @@ async function defineStatePatient(prev: unknown, formData: FormData){
   }
 }
 
+async function getPatientState(patientId: string){
+  try{
+    const state = await patientStateModel.findOne({ patientId });
+
+    if(!state) 
+      return null;
+
+    const resolvedState = patientStates.find(e => e._id === state.stateId);
+
+    if(!resolvedState)
+      return null;
+
+    return resolvedState;
+  }catch (e){
+    console.error(e);
+
+    return null;
+  }
+}
 
 export {
   finishHospitalization,
@@ -1287,5 +1321,6 @@ export {
   applyDischarge,
   getPrescription,
   movementInUrgencyBank,
-  defineStatePatient
+  definePatientState,
+  getPatientState
 };

@@ -6,87 +6,107 @@ import { useParams, useRouter } from "next/navigation";
 import Button from "@/components/ui/button";
 import Modal from "@/components/modal";
 import Selection from "@/components/ui/selection";
-import { defineStatePatient, getPatient } from "@/backend/api/clinical/urgency-bank-api";
-import { patientStatus } from "@/backend/api/clinical/translator";
-import SubTitle from "./ui/subtitle";
+import { getPatientState, definePatientState } from "@/backend/api/clinical/urgency-bank-api";
+import { patientStates } from "@/backend/api/clinical/translator";
+import SubTitle from "@/components/ui/subtitle";
+import FallbackComponent from "@/components/fallback-components";
 import clsx from "clsx";
 
-export default function DefineState(){
-  const [modalstate, setModalState] = useState(false);
-  const [ state, action ] = useActionState(defineStatePatient, { message: "", status: false });
-  const [ status, setStatus] = useState<string | undefined>();
-  const  openModal = ()=> setModalState(true);
-  const closeModal = ()=> setModalState(false);
-  const router = useRouter();
-  const params = useParams();
-  const patientId = params.patientId as string;
+type PatientState = Awaited<ReturnType<typeof getPatientState>>;
 
+export default function DefineState({ id }: { id?: string }){
+  const [modalstate, setModalState] = useState(false);
+  const [ state, action ] = useActionState(definePatientState, { message: "", status: false });
+  const [ patientState, setPatientState] = useState<PatientState>(null);
+  const closeModal = () => {
+    setModalState(false);
+    setEdit(false);
+  };
+  const [ edit, setEdit ] = useState(false);
+  const [ isNewState, setIsNewState ] = useState(false);
+  const router = useRouter();
+  const params = useParams<{ id: string; patientId: string }>();
+  const patientId = id ?? params.id ?? params.patientId;
+  const updatePatientState = () => getPatientState(patientId).then(state => {
+    if(!state){
+      setIsNewState(true);
+      return;
+    }
+
+    setPatientState(state);
+  });
+  
   useEffect(()=>{
-    const fetchPatientStatus = async () => {
-      const { patientStatus } = await getPatient({ patientId });
-      setStatus(patientStatus);
-    };
-    console.log("useEffect")
-    fetchPatientStatus();
+    updatePatientState();
 
     if(state.message)
       if(state.status)
         toast.success(state.message, {
-          onOpen: ()=> router.refresh()    
+          onOpen: ()=> {
+            router.refresh();
+            setEdit(false);
+            setPatientState(null);
+            updatePatientState();
+          }   
         });
       else 
         toast.error(state.message);
-
-    return;
   }, [state, router]);
   
   return(
     <div>
-      <Button onClick={openModal}>Definir Estado</Button>
+      <div className="relative">
+        <Button onClick={()=> setModalState(true)}>Definir Estado</Button>
+        <div className={clsx(
+          "absolute -top-2 -right-2 z-0 rounded-full size-4",
+          patientState?.color.tw.bg,
+          { "animate-ping": [ "critical","serious", "moderate"].includes(patientState?._id ?? "none") }
+        )} />
+      </div>
+     
 
       <Modal 
-        title="Definir Estado do paciente"
+        title="Estado do Utente"
         open={modalstate}
         onClose={closeModal}
         asWindow
       >
         <form action={action}>
           <div className="my-4">
-            <input 
-              type="hidden" 
-              name="patientId" 
-              defaultValue={ patientId } 
-            />
-
-            <div className="mb-8">
-              <SubTitle className="inline-flex">Estado</SubTitle>
-              <p className={clsx("mt-1 ps-4 font-semibold", 
-                {"text-red-400": status === "critical"},
-                {"text-orange-400": status === "serious"},
-                {"text-yellow-500": status === "moderate"}
-               )}>
-                {status?patientStatus.find( props => props._id === status)?.label.toUpperCase():"Indefinido"}
-              </p>
-            </div>
+            <input type="hidden" name="patientId" defaultValue={patientId} />
+             
+           { patientState || isNewState
+            ? <Selection
+                label={patientState ? "Estado Atual" : "Selecione o Estado"}
+                options={patientStates}
+                name="stateId"
+                defaultValue={patientState?._id}
+                disabled={!edit}
+                required
+              />
+            : <FallbackComponent />
+            }
 
             <div className="my-8">
               <SubTitle className="inline-flex">Descrição</SubTitle>
               <p className="mt-1 ps-4">
-                {status?patientStatus.find( props => props._id === status)?.description:"Indefinido"}
+                {patientState?.description ?? "Não definido"}
               </p>
             </div>
-             
-            <Selection
-              label="Selecione o serviço"
-              options={patientStatus}
-              name="patientStatus"
-              required
-            />
           </div>
 
           <div className="flex gap-x-3 justify-end">
-            <Button cancel type="button" onClick={closeModal}>Cancelar</Button>
-            <Button>Salvar</Button>
+            <Button cancel type="button" onClick={closeModal}>Fechar</Button>
+            { edit && <Button>Salvar</Button> }
+
+            { !edit && 
+              <Button 
+                type="button" 
+                onClick={() => setEdit(true)}
+                >
+                  Editar
+              </Button>
+            }
           </div>
         </form>
       </Modal>

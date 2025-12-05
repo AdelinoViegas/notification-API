@@ -125,6 +125,21 @@ const municipalitySchema = new Schema({
   municipality: String
 });
 
+const patientStateSchema = new Schema({
+  patientId: Schema.Types.ObjectId,
+  stateId: {
+    type: String,
+    enum: [
+      "critical",
+      "serious",
+      "moderate",
+      "recovered",
+      "deceased"
+    ],
+    required: true
+  }
+});
+
 export {
   patientSchema,
   demographySchema,
@@ -134,5 +149,6 @@ export {
   processStateSchema,
   specialtyStateSchema,
   patientSyncSchema,
-  municipalitySchema
+  municipalitySchema,
+  patientStateSchema
 };

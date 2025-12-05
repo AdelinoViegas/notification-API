@@ -11,6 +11,7 @@ import ScheduleInScreening from "@/components/scheduleInScreening";
 import PDFButton, { ScreeningRecord } from "@/components/pdf-button";
 import Button from "@/components/ui/button";
 import { getPatient, getScreening } from "@/backend/api/clinical/api";
+import DefineState from "@/components/define-state";
 
 type Routes = "patient" | "reason" | "vital-signals" | "priority" | "state" | "advice";
 
@@ -122,6 +123,8 @@ export default async function Page({
               </Button>
             }
           </div>
+
+          { r === "state" && <DefineState /> }
         </div>
 
         <div className="max-h-[60vh] overflow-auto px-2 py-3">
