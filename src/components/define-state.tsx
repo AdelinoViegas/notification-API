@@ -10,6 +10,7 @@ import { getPatientState, definePatientState } from "@/backend/api/clinical/urge
 import { patientStates } from "@/backend/api/clinical/translator";
 import SubTitle from "@/components/ui/subtitle";
 import FallbackComponent from "@/components/fallback-components";
+import clsx from "clsx";
 
 type PatientState = Awaited<ReturnType<typeof getPatientState>>;
 
@@ -56,7 +57,11 @@ export default function DefineState({ id }: { id?: string }){
     <div>
       <div className="relative">
         <Button onClick={()=> setModalState(true)}>Definir Estado</Button>
-        <div className="absolute -top-2 -right-2 animate-ping z-0 rounded-full bg-orange-500 size-4 flex justify-center items-center"/>
+        <div className={clsx(
+          "absolute -top-2 -right-2 z-0 rounded-full size-4",
+          patientState?.color.tw.bg,
+          { "animate-ping": [ "critical","serious", "moderate"].includes(patientState?._id ?? "none") }
+        )} />
       </div>
      
 

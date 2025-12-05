@@ -379,7 +379,7 @@ const patientStates = [
     description: "Óbito do Paciente",
     color: {
       tw: {
-        bg: "bg-black",
+        bg: "bg-gray-500",
         tx: "text-black"
       },
       hex: "#000000ff"
