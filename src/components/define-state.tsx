@@ -22,11 +22,18 @@ export default function DefineState({ id }: { id?: string }){
     setEdit(false);
   };
   const [ edit, setEdit ] = useState(false);
-
+  const [ isNewState, setIsNewState ] = useState(false);
   const router = useRouter();
   const params = useParams<{ id: string; patientId: string }>();
   const patientId = id ?? params.id ?? params.patientId;
-  const updatePatientState = () => getPatientState(patientId).then(setPatientState);
+  const updatePatientState = () => getPatientState(patientId).then(state => {
+    if(!state){
+      setIsNewState(true);
+      return;
+    }
+
+    setPatientState(state);
+  });
   
   useEffect(()=>{
     updatePatientState();
@@ -59,7 +66,7 @@ export default function DefineState({ id }: { id?: string }){
           <div className="my-4">
             <input type="hidden" name="patientId" defaultValue={patientId} />
              
-           { patientState 
+           { patientState || isNewState
             ? <Selection
                 label={patientState ? "Estado Atual" : "Selecione o Estado"}
                 options={patientStates}
