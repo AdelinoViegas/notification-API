@@ -18,7 +18,12 @@ export default function DefineState({ id }: { id?: string }){
   const [modalstate, setModalState] = useState(false);
   const [ state, action ] = useActionState(definePatientState, { message: "", status: false });
   const [ patientState, setPatientState] = useState<PatientState>(null);
-  const closeModal = ()=> setModalState(false);
+  const closeModal = () => {
+    setModalState(false);
+    setEdit(false);
+  };
+  const [ edit, setEdit ] = useState(false);
+
 
   const router = useRouter();
   const params = useParams<{ id: string }>();
@@ -53,25 +58,6 @@ export default function DefineState({ id }: { id?: string }){
         <form action={action}>
           <div className="my-4">
             <input type="hidden" name="patientId" defaultValue={patientId} />
-
-            <div className="mb-8">
-              <SubTitle className="inline-flex">Estado</SubTitle>
-              <p  className="text-red-500">{patientState?.label}</p>
-              {/* <p className={clsx("mt-1 ps-4 font-semibold", 
-                {"text-red-400": status === "critical"},
-                {"text-orange-400": status === "serious"},
-                {"text-yellow-500": status === "moderate"}
-               )}>
-                {status?patientStatus.find( props => props._id === status)?.label.toUpperCase():"Não definido"}
-              </p> */}
-            </div>
-
-            {/* <div className="my-8">
-              <SubTitle className="inline-flex">Descrição</SubTitle>
-              <p className="mt-1 ps-4">
-                {status?patientStatus.find( props => props._id === status)?.description:"Não definido"}
-              </p>
-            </div> */}
              
            { patientState 
             ? <Selection
@@ -79,15 +65,26 @@ export default function DefineState({ id }: { id?: string }){
                 options={patientStates}
                 name="stateId"
                 defaultValue={patientState?._id}
+                disabled={!edit}
                 required
               />
             : <FallbackComponent />
             }
+
+            <div className="my-8">
+              <SubTitle className="inline-flex">Descrição</SubTitle>
+              <p className="mt-1 ps-4">
+                {patientState?.description ?? "Não definido"}
+              </p>
+            </div>
           </div>
 
           <div className="flex gap-x-3 justify-end">
             <Button cancel type="button" onClick={closeModal}>Cancelar</Button>
-            <Button>Salvar</Button>
+            { edit 
+              ? <Button>Salvar</Button>
+              : <Button type="button" onClick={() => setEdit(true)}>Editar</Button>
+            }
           </div>
         </form>
       </Modal>
