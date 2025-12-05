@@ -1238,8 +1238,6 @@ async function movementInUrgencyBank(prev: unknown, formData: FormData){
 
 async function definePatientState(prev: unknown, formData: FormData){
   try{
-    console.log(formData);
-    
     const patientId = formData.get("patientId");
     const stateId = formData.get("stateId");
 

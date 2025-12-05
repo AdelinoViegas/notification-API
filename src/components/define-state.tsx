@@ -24,22 +24,23 @@ export default function DefineState({ id }: { id?: string }){
   };
   const [ edit, setEdit ] = useState(false);
 
-
   const router = useRouter();
   const params = useParams<{ id: string }>();
   const patientId = id ?? params.id;
+  const updatePatientState = () => getPatientState(patientId).then(setPatientState);
   
   useEffect(()=>{
-    getPatientState(patientId)
-    .then(e => {
-      setPatientState(e);
-      
-    });
+    updatePatientState();
 
     if(state.message)
       if(state.status)
         toast.success(state.message, {
-          onOpen: ()=> router.refresh()    
+          onOpen: ()=> {
+            router.refresh();
+            setEdit(false);
+            setPatientState(null);
+            updatePatientState();
+          }   
         });
       else 
         toast.error(state.message);
@@ -80,10 +81,16 @@ export default function DefineState({ id }: { id?: string }){
           </div>
 
           <div className="flex gap-x-3 justify-end">
-            <Button cancel type="button" onClick={closeModal}>Cancelar</Button>
-            { edit 
-              ? <Button>Salvar</Button>
-              : <Button type="button" onClick={() => setEdit(true)}>Editar</Button>
+            <Button cancel type="button" onClick={closeModal}>Fechar</Button>
+            { edit && <Button>Salvar</Button> }
+
+            { !edit && 
+              <Button 
+                type="button" 
+                onClick={() => setEdit(true)}
+                >
+                  Editar
+              </Button>
             }
           </div>
         </form>
