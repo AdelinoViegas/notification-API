@@ -54,7 +54,11 @@ export default function DefineState({ id }: { id?: string }){
   
   return(
     <div>
-      <Button onClick={()=> setModalState(true)}>Definir Estado</Button>
+      <div className="relative">
+        <Button onClick={()=> setModalState(true)}>Definir Estado</Button>
+        <div className="absolute -top-2 -right-2 animate-ping z-0 rounded-full bg-orange-500 size-4 flex justify-center items-center"/>
+      </div>
+     
 
       <Modal 
         title="Estado do Utente"
