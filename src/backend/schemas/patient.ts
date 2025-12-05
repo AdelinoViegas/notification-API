@@ -138,7 +138,7 @@ const patientStateSchema = new Schema({
     ],
     required: true
   }
-})
+});
 
 export {
   patientSchema,

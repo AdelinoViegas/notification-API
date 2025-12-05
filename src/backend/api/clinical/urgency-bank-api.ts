@@ -20,7 +20,8 @@ import {
   prescriptionModel,
   surgeryModel,
   processStateModel,
-  hospitalizationModel
+  hospitalizationModel,
+  patientStateModel
 } from "@/backend/model";
 import { 
   patientAccess,
@@ -1237,12 +1238,24 @@ async function movementInUrgencyBank(prev: unknown, formData: FormData){
 async function defineStatePatient(prev: unknown, formData: FormData){
   try{
     const patientId = formData.get("patientId");
-    const patientStatus = formData.get("patientStatus");
+    const stateId = formData.get("stateId");
 
-    await urgencyBankModel.updateOne({ patientId }, { patientStatus });
+    const state = await patientStateModel.findOneAndUpdate({ patientId }, { stateId });
+    
+    if(!state){
+      await patientStateModel.create({
+        patientId,
+        stateId
+      });
+
+      return {
+        message: "Estado do utente registrado!",
+        status: true
+      }
+    }
 
     return {
-      message: "Estado alterado com sucesso!",
+      message: "Estado atualizado com sucesso!",
       status: true
     }
   }catch (e) {

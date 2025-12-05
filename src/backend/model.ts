@@ -26,7 +26,8 @@ import {
   demographySchema,
   processStateSchema,
   specialtyStateSchema,
-  patientSyncSchema
+  patientSyncSchema,
+  patientStateSchema
 } from "@/backend/schemas/patient";
 import { 
   screeningSchema,
@@ -77,6 +78,7 @@ const screeningModel = clinical.model('Screening', screeningSchema);
 const processStateModel = clinical.model("ProcessState", processStateSchema);
 const patientSyncModel = clinical.model("PatientSyncs", patientSyncSchema);
 const triedModel = clinical.model("Tried", triedSchema);
+const patientStateModel = clinical.model("PatientState", patientStateSchema);
 
 //agendamentos (schedulings)
 
@@ -124,6 +126,7 @@ const serviceRequestsModel = clinical.model("ServiceRequest", serviceRequestsSch
 
 export {
   userModel,
+  patientStateModel,
   currentLocationModel,
   patientModel,
   demographyModel,
