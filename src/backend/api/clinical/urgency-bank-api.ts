@@ -1273,7 +1273,7 @@ async function definePatientState(prev: unknown, formData: FormData){
 async function getPatientState(patientId: string){
   try{
     const state = await patientStateModel.findOne({ patientId });
-    
+
     if(!state) 
       return null;
 

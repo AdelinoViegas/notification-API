@@ -24,8 +24,8 @@ export default function DefineState({ id }: { id?: string }){
   const [ edit, setEdit ] = useState(false);
 
   const router = useRouter();
-  const params = useParams<{ id: string }>();
-  const patientId = id ?? params.id;
+  const params = useParams<{ id: string; patientId: string }>();
+  const patientId = id ?? params.id ?? params.patientId;
   const updatePatientState = () => getPatientState(patientId).then(setPatientState);
   
   useEffect(()=>{
