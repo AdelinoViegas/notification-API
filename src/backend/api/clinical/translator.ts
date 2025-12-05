@@ -328,18 +328,33 @@ const patientStatus = [
   {
     _id:"critical", 
     label:"Muito Grave",
-    description: "Paciente em estado crítico, risco de morte iminente, necessita de suporte intensivo."
+    description: "Paciente em estado crítico, risco de morte iminente, necessita de suporte intensivo.",
+    color: "#ff0000ff"
   },
   {
     _id:"serious", 
     label:"Grave", 
-    description: "Paciente com risco aumentado de complicações, exigindo monitorização continua."
+    description: "Paciente com risco aumentado de complicações, exigindo monitorização continua.",
+    color: "#ff611eff"
   },
   {
     _id:"moderate", 
     label:"Moderado", 
-    description: "Paciente apresenta sintomas relevantes, mas com estabilidade clínica."
+    description: "Paciente apresenta sintomas relevantes, mas com estabilidade clínica.",
+    color: "#ffdd00ff"
   },
+  {
+    _id:"recovered", 
+    label:"Recuperado", 
+    description: "Paciente encontra-se estável, semsinais de risco imediato",
+    color: "#00ff26ff"
+  },
+  {
+    _id:"deceased", 
+    label:"Falecido", 
+    description: "Óbito do Paciente",
+    color: "#000000ff"
+  }
 ];
 
 export { 
