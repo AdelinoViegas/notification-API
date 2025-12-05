@@ -25,7 +25,8 @@ import {
 } from "@/backend/model";
 import { 
   patientAccess,
-  patientGroup as patientGroups, 
+  patientGroup as patientGroups,
+  patientStates, 
 } from "@/backend/api/clinical/translator"; 
 
 import { 
@@ -1235,8 +1236,10 @@ async function movementInUrgencyBank(prev: unknown, formData: FormData){
   }
 }
 
-async function defineStatePatient(prev: unknown, formData: FormData){
+async function definePatientState(prev: unknown, formData: FormData){
   try{
+    console.log(formData);
+    
     const patientId = formData.get("patientId");
     const stateId = formData.get("stateId");
 
@@ -1260,6 +1263,7 @@ async function defineStatePatient(prev: unknown, formData: FormData){
     }
   }catch (e) {
     const err = e as Error;
+    console.error(e);
 
     return {
       message: err.cause ? err.message : "Não foi possivel finalizar!",
@@ -1268,6 +1272,25 @@ async function defineStatePatient(prev: unknown, formData: FormData){
   }
 }
 
+async function getPatientState(patientId: string){
+  try{
+    const state = await patientStateModel.findOne({ patientId });
+    
+    if(!state) 
+      return null;
+
+    const resolvedState = patientStates.find(e => e._id === state.stateId);
+
+    if(!resolvedState)
+      return null;
+
+    return resolvedState;
+  }catch (e){
+    console.error(e);
+
+    return null;
+  }
+}
 
 export {
   finishHospitalization,
@@ -1300,5 +1323,6 @@ export {
   applyDischarge,
   getPrescription,
   movementInUrgencyBank,
-  defineStatePatient
+  definePatientState,
+  getPatientState
 };

@@ -324,36 +324,66 @@ const defaultServiceKinds = [
   { _id: "surgery", label: "Cirurgia" },
 ];
 
-const patientStatus = [
+const patientStates = [
   {
     _id:"critical", 
     label:"Muito Grave",
     description: "Paciente em estado crítico, risco de morte iminente, necessita de suporte intensivo.",
-    color: "#ff0000ff"
+    color: {
+      tw: {
+        bg: "bg-red-500",
+        tx: "text-red-500"
+      },
+      hex: "#ff0000ff"
+    }
   },
   {
     _id:"serious", 
     label:"Grave", 
     description: "Paciente com risco aumentado de complicações, exigindo monitorização continua.",
-    color: "#ff611eff"
+    color: {
+      tw: {
+        bg: "bg-orange-500",
+        tx: "text-orange-500"
+      },
+      hex: "#ff611eff"
+    }
   },
   {
     _id:"moderate", 
     label:"Moderado", 
     description: "Paciente apresenta sintomas relevantes, mas com estabilidade clínica.",
-    color: "#ffdd00ff"
+    color: {
+      tw: {
+        bg: "bg-yellow-500",
+        tx: "text-yellow-500"
+      },
+      hex: "#ffdd00ff"
+    }
   },
   {
     _id:"recovered", 
     label:"Recuperado", 
     description: "Paciente encontra-se estável, semsinais de risco imediato",
-    color: "#00ff26ff"
+    color: {
+      tw: {
+        bg: "bg-green-500",
+        tx: "text-green-500"
+      },
+      hex: "#00ff26ff"
+    }
   },
   {
     _id:"deceased", 
     label:"Falecido", 
     description: "Óbito do Paciente",
-    color: "#000000ff"
+    color: {
+      tw: {
+        bg: "bg-black",
+        tx: "text-black"
+      },
+      hex: "#000000ff"
+    }
   }
 ];
 
@@ -373,5 +403,5 @@ export {
   ccgTypes,
   surgerySchedulingArea,
   defaultServiceKinds,
-  patientStatus
+  patientStates
 };

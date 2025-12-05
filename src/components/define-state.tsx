@@ -6,28 +6,30 @@ import { useParams, useRouter } from "next/navigation";
 import Button from "@/components/ui/button";
 import Modal from "@/components/modal";
 import Selection from "@/components/ui/selection";
-import { defineStatePatient, getPatient } from "@/backend/api/clinical/urgency-bank-api";
-import { patientStatus } from "@/backend/api/clinical/translator";
+import { getPatientState, definePatientState } from "@/backend/api/clinical/urgency-bank-api";
+import { patientStates } from "@/backend/api/clinical/translator";
 import SubTitle from "./ui/subtitle";
 import clsx from "clsx";
+import FallbackComponent from "./fallback-components";
 
-export default function DefineState(){
+type PatientState = Awaited<ReturnType<typeof getPatientState>>;
+
+export default function DefineState({ id }: { id?: string }){
   const [modalstate, setModalState] = useState(false);
-  const [ state, action ] = useActionState(defineStatePatient, { message: "", status: false });
-  const [ status, setStatus] = useState<string | undefined>();
-  const  openModal = ()=> setModalState(true);
+  const [ state, action ] = useActionState(definePatientState, { message: "", status: false });
+  const [ patientState, setPatientState] = useState<PatientState>(null);
   const closeModal = ()=> setModalState(false);
-  const router = useRouter();
-  const params = useParams();
-  const patientId = params.patientId as string;
 
+  const router = useRouter();
+  const params = useParams<{ id: string }>();
+  const patientId = id ?? params.id;
+  
   useEffect(()=>{
-    const fetchPatientStatus = async () => {
-      const { patientStatus } = await getPatient({ patientId });
-      setStatus(patientStatus);
-    };
-    console.log("useEffect")
-    fetchPatientStatus();
+    getPatientState(patientId)
+    .then(e => {
+      setPatientState(e);
+      
+    });
 
     if(state.message)
       if(state.status)
@@ -36,13 +38,11 @@ export default function DefineState(){
         });
       else 
         toast.error(state.message);
-
-    return;
   }, [state, router]);
   
   return(
     <div>
-      <Button onClick={openModal}>Definir Estado</Button>
+      <Button onClick={()=> setModalState(true)}>Definir Estado</Button>
 
       <Modal 
         title="Definir Estado do paciente"
@@ -52,36 +52,37 @@ export default function DefineState(){
       >
         <form action={action}>
           <div className="my-4">
-            <input 
-              type="hidden" 
-              name="patientId" 
-              defaultValue={ patientId } 
-            />
+            <input type="hidden" name="patientId" defaultValue={patientId} />
 
             <div className="mb-8">
               <SubTitle className="inline-flex">Estado</SubTitle>
-              <p className={clsx("mt-1 ps-4 font-semibold", 
+              <p  className="text-red-500">{patientState?.label}</p>
+              {/* <p className={clsx("mt-1 ps-4 font-semibold", 
                 {"text-red-400": status === "critical"},
                 {"text-orange-400": status === "serious"},
                 {"text-yellow-500": status === "moderate"}
                )}>
-                {status?patientStatus.find( props => props._id === status)?.label.toUpperCase():"Indefinido"}
-              </p>
+                {status?patientStatus.find( props => props._id === status)?.label.toUpperCase():"Não definido"}
+              </p> */}
             </div>
 
-            <div className="my-8">
+            {/* <div className="my-8">
               <SubTitle className="inline-flex">Descrição</SubTitle>
               <p className="mt-1 ps-4">
-                {status?patientStatus.find( props => props._id === status)?.description:"Indefinido"}
+                {status?patientStatus.find( props => props._id === status)?.description:"Não definido"}
               </p>
-            </div>
+            </div> */}
              
-            <Selection
-              label="Selecione o serviço"
-              options={patientStatus}
-              name="patientStatus"
-              required
-            />
+           { patientState 
+            ? <Selection
+                label="Informe o estado"
+                options={patientStates}
+                name="stateId"
+                defaultValue={patientState?._id}
+                required
+              />
+            : <FallbackComponent />
+            }
           </div>
 
           <div className="flex gap-x-3 justify-end">
