@@ -8,9 +8,8 @@ import Modal from "@/components/modal";
 import Selection from "@/components/ui/selection";
 import { getPatientState, definePatientState } from "@/backend/api/clinical/urgency-bank-api";
 import { patientStates } from "@/backend/api/clinical/translator";
-import SubTitle from "./ui/subtitle";
-import clsx from "clsx";
-import FallbackComponent from "./fallback-components";
+import SubTitle from "@/components/ui/subtitle";
+import FallbackComponent from "@/components/fallback-components";
 
 type PatientState = Awaited<ReturnType<typeof getPatientState>>;
 
@@ -51,7 +50,7 @@ export default function DefineState({ id }: { id?: string }){
       <Button onClick={()=> setModalState(true)}>Definir Estado</Button>
 
       <Modal 
-        title="Definir Estado do paciente"
+        title="Estado do Utente"
         open={modalstate}
         onClose={closeModal}
         asWindow
@@ -62,7 +61,7 @@ export default function DefineState({ id }: { id?: string }){
              
            { patientState 
             ? <Selection
-                label="Informe o estado"
+                label={patientState ? "Estado Atual" : "Selecione o Estado"}
                 options={patientStates}
                 name="stateId"
                 defaultValue={patientState?._id}
