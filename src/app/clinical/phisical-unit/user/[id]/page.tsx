@@ -4,6 +4,7 @@ import UserClinicalConfig from "@/components/user-clinical-config";
 import UserWorkplace from "@/components/user-workplace";
 import { getUrgencyServices } from "@/backend/api/clinical/urgency-bank-api";
 import { getUser, getSpecialties } from "@/backend/api/clinical/api";
+import { getInternalServices } from "@/backend/api/clinical/hospitalization-api";
 
 export default async function Page({ params }:{ params: Promise<{ id: string }>}){
   const { id } = await params;
@@ -11,10 +12,12 @@ export default async function Page({ params }:{ params: Promise<{ id: string }>}
     user,
     urgencyServices,
     specialties,
+    internalServices
   ] = await Promise.all([
     getUser(id),
     getUrgencyServices(),
     getSpecialties(),
+    getInternalServices()
   ]);
 
   return (
@@ -32,6 +35,8 @@ export default async function Page({ params }:{ params: Promise<{ id: string }>}
           orderNumber={user.orderNumber}
           services={urgencyServices}
           specialties={specialties}
+          internalServices={internalServices}
+          internalServiceId={user.internalServiceId}
         />
 
         <UserWorkplace userId={id} />

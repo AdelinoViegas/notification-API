@@ -9,6 +9,7 @@ export const userSchema = new Schema<ClinicalUser>({
   orderNumber: Number,
   serviceId: Schema.Types.ObjectId,
   specialtyId: Schema.Types.ObjectId,
+  internalServiceId: Schema.Types.ObjectId,
   categoryId: {
     type: String,
     enum: ["doctor", "nurse", "others"],

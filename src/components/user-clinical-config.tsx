@@ -5,7 +5,7 @@ import Button from "@/components/ui/button";
 import InputField from "@/components/ui/input-field";
 import Selection, { SelectionOption } from "./ui/selection";
 import { userCategory } from '@/backend/api/clinical/translator';
-import { addUser } from "@/backend/api/clinical/api";
+import { registerUser } from "@/backend/api/clinical/api";
 import { toast } from "react-toastify";
 
 export default function UserClinicalConfig({ 
@@ -15,7 +15,9 @@ export default function UserClinicalConfig({
   specialtyId,
   orderNumber,
   services,
-  specialties
+  specialties,
+  internalServiceId,
+  internalServices
 }: { 
   userId: string;
   categoryId: string;
@@ -24,8 +26,10 @@ export default function UserClinicalConfig({
   orderNumber: number;
   services: SelectionOption[];
   specialties: SelectionOption[];
+  internalServices: SelectionOption[];
+  internalServiceId: string;
 }){
-  const [ state, action ] = useActionState(addUser, { message: "", status: false });
+  const [ state, action ] = useActionState(registerUser, { message: "", status: false });
 
   useEffect(()=>{
     if(state.message){
@@ -70,6 +74,14 @@ export default function UserClinicalConfig({
           label="Especialidade"
           name="specialtyId"
           defaultValue={specialtyId}
+          className='w-full'
+        />
+
+        <Selection
+          options={internalServices}
+          label="Serviço de Internamento"
+          name="internalServiceId"
+          defaultValue={internalServiceId}
           className='w-full'
         />
 
