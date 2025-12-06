@@ -19,6 +19,7 @@ import { CustonAxiosError } from "@/backend/api/types";
 import { getPatientIds, syncPatientRegister } from "./process-control";
 import { calculateAge } from "@/lib/calculate-age";
 import { ServiceRequest, serviceRequestSchema } from "../type-schema";
+import { omitUndefined } from "mongoose";
 
 type ConsultationTypes = "vitalSignals" | "currentStates";
 
@@ -486,13 +487,24 @@ async function registerRequest(prev: unknown, formData: FormData){
   }
 }
 
-async function getRequests({ from, pending = true }: { 
+async function getRequests({ 
+  from, 
+  pending = true,
+  filterByUserId = false
+}:{ 
   from: ServiceRequest;
-  name: string; 
+  name?: string; 
   pending?: boolean;
+  filterByUserId?: boolean;
 }){
   try{
-    const requests = await serviceRequestsModel.find({ from, pending });
+    const requests = await serviceRequestsModel.find(omitUndefined({ 
+      from, 
+      pending,
+      userId: filterByUserId
+        ? await getUserId() 
+        : undefined
+    }));
     const formated = [];
     
     for (const req of requests){
