@@ -20,15 +20,20 @@ import { patientStates } from "./translator";
 
 export async function getPatients({
   page,
-  served
+  served,
+  filterByUserId
 }: {
   fullname?: string;
   page: number;
   served?: boolean;
+  filterByUserId?: boolean;
 }){
   try{
     const patients = await hospitalizationModel.find(omitUndefined({
-      served: served ?? false
+      served: served ?? false,
+      toInternalServiceId: filterByUserId 
+        ? (await getUser(await getUserId()))?.internalServiceId
+        : undefined
     }));
 
     const formated = [];
