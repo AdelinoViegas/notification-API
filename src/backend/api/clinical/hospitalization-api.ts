@@ -154,16 +154,24 @@ export async function signNursing(p: unknown, formData: FormData){
   }
 }
 
-export async function getNursings(sectionId?: string){
+export async function getNursings({
+  sectionId,
+  internalServiceId
+}: {
+  sectionId?: string;
+  internalServiceId?: string;
+}){
   try{
-    const nursings = await nursingModel.find(omitUndefined({ sectionId }));
+    const nursings = await nursingModel.find(omitUndefined({ sectionId, internalServiceId }));
 
     return nursings.map(props => ({
       _id: props._id.toString(),
       name: props.name as string,
       label: props.name as string
     }));
-  }catch {
+  }catch (e) {
+    console.error(e);
+    
     return [];
   }
 }

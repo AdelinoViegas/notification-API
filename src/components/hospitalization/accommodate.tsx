@@ -62,7 +62,7 @@ export default function Accommodate(props: FallbackProps){
         toast.error(state.message);
 
     getSections().then(setSections);
-    getNursings(props.serviceId).then(setNursings);
+    getNursings({ internalServiceId: props.serviceId }).then(setNursings);
     getBeds(selectedNursing).then(e => setBeds(e.beds));
 
   }, [state, selectedSection, selectedNursing]);
