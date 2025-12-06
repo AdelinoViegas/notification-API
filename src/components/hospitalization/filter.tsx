@@ -40,7 +40,7 @@ export default function Filter(){
   
   useEffect(()=>{
     getInternalServices().then(setInternalServices);
-    getNursings().then(setNursings);
+    getNursings({}).then(setNursings);
   },[]);
 
   return (

@@ -40,7 +40,7 @@ export default function InternalMoviment(){
         toast.error(state.message);
 
     getSections().then(setSections);
-    getNursings(selectedSection).then(setNursings);
+    getNursings({ sectionId: selectedSection }).then(setNursings);
     getBeds(selectedNursing).then(e => setBeds(e.beds));
 
   }, [state, selectedSection]);

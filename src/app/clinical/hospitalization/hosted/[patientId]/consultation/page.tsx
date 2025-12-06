@@ -5,8 +5,7 @@ import { formater } from "@/lib/table-formater";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
 import Table from "@/components/table";
 
-export default async function Page({ params }: { params: Promise<{ patientId: string }>}){
-  const { patientId } = await params;
+export default async function Page(){
   const requests = await getRequests({ 
     filterByUserId: true, 
     from: "consultation"

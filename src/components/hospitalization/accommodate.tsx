@@ -6,7 +6,6 @@ import Modal from "@/components/modal";
 import Button from "@/components/ui/button";
 import InputField from "@/components/ui/input-field";
 import { 
-  getInternalServices, 
   getNursings, 
   getSections, 
   getBeds,
@@ -30,7 +29,6 @@ export default function Accommodate(props: FallbackProps){
   const [ serviceState, serviceAction ]= useActionState(signInternalService, { message: "", status: false});
   const [ modalService, setModalService ] = useState(false);
   
-  const [ internalServices, setInternalServices ] = useState<SelectionOption[]>([]);
   const [ sections, setSections ] = useState<SelectionOption[]>([]);
   const [ nursings, setNursings ] = useState<SelectionOption[]>([]);
   const [ beds, setBeds ] = useState<SelectionOption[]>([]);
@@ -49,7 +47,6 @@ export default function Accommodate(props: FallbackProps){
       else
         toast.error(serviceState.message);
 
-    getInternalServices().then(setInternalServices);
   }, [serviceState]);
   
   useEffect(()=>{
@@ -71,21 +68,7 @@ export default function Accommodate(props: FallbackProps){
     <div>
       <form action={action}>
         <input type="hidden" name="patientId" value={params.id} />
-        <input type="hidden" name="serviceId" value={props?.serviceId} />
-
-        {/* <div className="flex gap-x-3 items-center">
-          {internalServices.length ? 
-          <Selection
-            label="Serviço de Internamento"
-            name="serviceId"
-            options={internalServices} 
-            required
-            className="grow"
-            defaultValue={props?.serviceId}
-          />: <FallbackComponent />}
-
-          <Button type="button" onClick={()=>setModalService(true)}>Novo</Button>
-        </div> */}
+        <input type="hidden" name="serviceId" value={props.serviceId} />
 
        { sections.length ? 
         <Selection
