@@ -9,10 +9,10 @@ export default async function Page({ params }:{ params: Promise<{ id: string }> 
   return(
     <div>
       <div className="w-1/2 space-y-3">
-        <Alert
+        {/* <Alert
           message={`O medico pediu para internar no serviço de ${transation?.destination.name}`} 
           type="warn"
-        />
+        /> */}
 
         <Accommodate
           serviceId={transation?.destination.id}

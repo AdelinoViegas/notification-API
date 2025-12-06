@@ -62,7 +62,7 @@ export default function Accommodate(props: FallbackProps){
         toast.error(state.message);
 
     getSections().then(setSections);
-    getNursings(selectedSection).then(setNursings);
+    getNursings(props.serviceId).then(setNursings);
     getBeds(selectedNursing).then(e => setBeds(e.beds));
 
   }, [state, selectedSection, selectedNursing]);
@@ -71,8 +71,9 @@ export default function Accommodate(props: FallbackProps){
     <div>
       <form action={action}>
         <input type="hidden" name="patientId" value={params.id} />
+        <input type="hidden" name="serviceId" value={props?.serviceId} />
 
-        <div className="flex gap-x-3 items-center">
+        {/* <div className="flex gap-x-3 items-center">
           {internalServices.length ? 
           <Selection
             label="Serviço de Internamento"
@@ -84,7 +85,7 @@ export default function Accommodate(props: FallbackProps){
           />: <FallbackComponent />}
 
           <Button type="button" onClick={()=>setModalService(true)}>Novo</Button>
-        </div>
+        </div> */}
 
        { sections.length ? 
         <Selection
