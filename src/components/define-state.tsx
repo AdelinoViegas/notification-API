@@ -60,7 +60,7 @@ export default function DefineState({ id }: { id?: string }){
         <div className={clsx(
           "absolute -top-2 -right-2 z-0 rounded-full size-4",
           patientState?.color.tw.bg,
-          { "animate-ping": [ "critical","serious", "moderate"].includes(patientState?._id ?? "none") }
+          { "animate-ping": [ "critical","serious" ].includes(patientState?._id ?? "none") }
         )} />
       </div>
      

@@ -12,6 +12,10 @@ import QuickFabShurtcut from "@/components/quick-fab-shurtcut";
 // import RequestSurgery from "@/components/request-surgery";
 // import InternalMovement from "@/components/internal-movement";
 import DefineState from "@/components/define-state";
+import clsx from "clsx";
+import { getPatient } from "@/backend/api/clinical/api";
+import { redirect } from "next/navigation";
+import { getPatientState } from "@/backend/api/clinical/urgency-bank-api";
 
 export default async function Layout({ 
   children,
@@ -20,44 +24,38 @@ export default async function Layout({
   children: React.ReactNode;
   params: Promise<{ patientId: string }>
 }){
-  const { patientId } = await params;
-  // const patient = await getPatient(patientId); 
+  const { patientId: id } = await params;
+  const patient = await getPatient(id); 
+  const patientState = await getPatientState(id);
   
-  // if(patient?.message || !patient.screening){
-  //   redirect("/clinical/urgency-bank");
-  // }
+  if(!patient || !patientState)
+    redirect("clinical/hospitalization/hosted");
     
   return(
     <div>
       <div className="flex gap-x-2">
         <MonitorAccess
-          patientId={patientId}
+          patientId={id}
           place="urgency"
           basePathname="/clinical/hospitalization/hosted" 
         />
 
         <UnlockProcessAccess
-          patientId={patientId}
+          patientId={id}
           place="urgency"
           basePathname="/clinical/hospitalization/hosted" 
         />
-
-        {/* <div className={clsx("my-4 text-center pt-3 text-white rounded-lg",
-          {"bg-red-500 animate-pulse": patient.screening.priority === "red"},
-          {"bg-blue-500": patient.screening.priority === "blue"},
-          {"bg-green-500": patient.screening?.priority === "green"},
-          {"bg-yellow-500": patient.screening?.priority === "yellow"},
-          {"bg-orange-600": patient.screening?.priority === "orange"}
-        )}>
-          <Header 
-            center 
-            title={patient.fullname}
-          />
-        </div>
-        */}
-
         <DefineState />
       </div>
+
+      <div className={clsx(
+        "text-center py-1 mt-2 text-white",
+        patientState.color.tw.bg,
+        { "animate-pulse": ["critica", "serious"].includes(patientState._id) }
+      )}>
+        <h2 className="text-xl font-medium">{patient.personal.fullname.toUpperCase()}</h2>
+      </div>
+
       <div className="flex h-[70vh] gap-x-3 mt-3">
         <Card className="h-full w-full overflow-y-auto">{children}</Card>
        
