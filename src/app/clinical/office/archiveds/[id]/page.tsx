@@ -1,7 +1,7 @@
 import Header from "@/components/header";
 import Card from "@/components/ui/card";
 import { getScheduleAppointment } from "@/backend/api/clinical/scheduling-api";
-import SubTitle from "@/components/ui/subtitle";
+import Tag from "@/components/ui/tag";
 import ArchivingAppointment from "@/components/archiving-appointment";
 import TitleAndSubtitle from "@/components/title-subtitle";
 import { angolaCurrency } from "@/lib/table-formater";
@@ -20,7 +20,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         <Card>
           <div className="grid grid-cols-2">
             <div>
-              <SubTitle className="inline-flex mt-3">Informações da Consulta</SubTitle>
+              <Tag className="inline-flex mt-3">Informações da Consulta</Tag>
               
               <TitleAndSubtitle
                 label="Nome do Utente"
@@ -59,7 +59,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
             </div>
 
             <div>
-              <SubTitle className="inline-flex mt-3">Informações do Pagamento</SubTitle>
+              <Tag className="inline-flex mt-3">Informações do Pagamento</Tag>
               
               <TitleAndSubtitle
                 label="Código da Fatura"

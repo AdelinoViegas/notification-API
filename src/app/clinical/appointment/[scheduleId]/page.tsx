@@ -1,7 +1,7 @@
 import Header from "@/components/header";
 import Card from "@/components/ui/card";
 import { getScheduleAppointment } from "@/backend/api/clinical/scheduling-api";
-import SubTitle from "@/components/ui/subtitle";
+import Tag from "@/components/ui/tag";
 import ArchivingAppointment from "@/components/archiving-appointment";
 import RescheduleAppointment from "@/components/reschedule-appointment";
 import ValidateAppointment from "@/components/validate-appointment";
@@ -30,7 +30,7 @@ export default async function Page({
         <Card>
           <div className="grid grid-cols-2">
             <div>
-              <SubTitle className="inline-flex mt-3">Informações da Consulta</SubTitle>
+              <Tag className="inline-flex mt-3">Informações da Consulta</Tag>
               
               <TitleAndSubtitle
                 label="Nome do Utente"
@@ -74,7 +74,7 @@ export default async function Page({
             </div>
 
             <div>
-              <SubTitle className="inline-flex mt-3">Informações do Pagamento</SubTitle>
+              <Tag className="inline-flex mt-3">Informações do Pagamento</Tag>
               
               <TitleAndSubtitle
                 label="Código da Fatura"

@@ -15,7 +15,7 @@ import Button from "@/components/ui/button";
 import Selection from "@/components/ui/selection";
 import { SelectionOption } from "@/components/ui/selection";
 import InputDetails from "@/components/ui/input-details";
-import SubTitle from "@/components/ui/subtitle";
+import Tag from "@/components/ui/tag";
 import { getUnits } from "@/backend/api/clinical/urgency-bank-api";
 import { 
   getServices,
@@ -105,7 +105,7 @@ export default function RequestExams({
 
   return(
     <div>
-      <SubTitle className="inline-flex mt-3">Solicitação de Exames</SubTitle>
+      <Tag className="inline-flex mt-3">Solicitação de Exames</Tag>
       <form 
         {...{action}} 
         ref={formRef} 
@@ -158,7 +158,7 @@ export default function RequestExams({
           />
 
           <div>
-            <SubTitle className="inline-flex my-3">Exames Selecionados</SubTitle>
+            <Tag className="inline-flex my-3">Exames Selecionados</Tag>
             {!!examCart.length && 
               <ul className="max-h-48 border rounded-md p-3 px-5 scroll overflow-auto grid gap-3">
                 {examCart.map((examId, index)=>(

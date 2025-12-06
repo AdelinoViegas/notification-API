@@ -13,7 +13,7 @@ import Button from "@/components/ui/button";
 import InputField from "@/components/ui/input-field";
 import Selection, { SelectionOption } from "@/components/ui/selection";
 import Alert from "@/components/ui/alert";
-import SubTitle from "@/components/ui/subtitle";
+import Tag from "@/components/ui/tag";
 import { getFirstAndLastName } from "@/components/userbar";
 import { signDoctorCalender, updateDoctorCalender } from "@/backend/api/clinical/urgency-bank-api";
 
@@ -144,7 +144,7 @@ export default function CalendarForm({
   
   return(
     <form ref={formRef} {...{action}}>
-      <SubTitle className="inline-flex">Informações do Calendário/Escala</SubTitle>
+      <Tag className="inline-flex">Informações do Calendário/Escala</Tag>
       <input type="hidden" name="doctors" value={JSON.stringify(cart)} />
       <input type="hidden" name="calendarId" value={params.calendarId} />
 
@@ -231,7 +231,7 @@ export default function CalendarForm({
         </div>
       }
 
-      <SubTitle className="inline-flex">Tabela dos dias...</SubTitle>
+      <Tag className="inline-flex">Tabela dos dias...</Tag>
       <div className="w-full mt-4">
         <div className="grid grid-cols-7 gap-2 border-b font-medium px-3 bg-primary/25 py-3 rounded-t-md">
           <p className="col-span-2">Nome</p>

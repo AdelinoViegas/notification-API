@@ -1,9 +1,9 @@
 import { getConsultationHistory } from "@/backend/api/clinical/office-api"
-import SubTitle from "@/components/ui/subtitle";
 import InputField from "@/components/ui/input-field";
 import Accordium from "@/components/ui/accordium";
 import ViewUserFile from "@/components/view-user-file-client";
-
+import RequestConsult from "@/components/request-consult";
+import Tag from "@/components/ui/tag";
 type ConsultHistory = Awaited<ReturnType<typeof getConsultationHistory>>[number];
 
 export default async function Page({ params }: { params: Promise<{ patientId: string }>}){
@@ -12,7 +12,8 @@ export default async function Page({ params }: { params: Promise<{ patientId: st
   
   return(
     <div>
-      <h2 className="text-lg font-bold">Todas as consultas realizadas</h2>
+      <RequestConsult />
+      <Tag className="inline-flex my-3">Histórico de Pedidos</Tag>
 
       <div className="space-y-3 mt-3">
         {history.map((params, index) => (
@@ -30,7 +31,7 @@ function ViewConsultResult({ consult }: { consult: ConsultHistory }){
   return (
     <div>
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-x-4">
-        <SubTitle className="inline-flex">Sinais Vitais</SubTitle>
+        <Tag className="inline-flex">Sinais Vitais</Tag>
         <InputField
           type="number"
           textLabel="P.A MÁXIMA (mmHG)"
@@ -118,24 +119,24 @@ function ViewConsultResult({ consult }: { consult: ConsultHistory }){
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3">
         <div className="my-8">
-          <SubTitle className="inline-flex">Queixas</SubTitle>
+          <Tag className="inline-flex">Queixas</Tag>
           <p className="mx-3">{consult?.currentStates?.complaints}</p>
         </div>
 
         <div className="my-8">
-          <SubTitle className="inline-flex">Exame Físico</SubTitle>
+          <Tag className="inline-flex">Exame Físico</Tag>
           <p className="mt-1 mx-3">{consult?.currentStates?.phisicalExam}</p>
         </div>
 
         <div className="my-8">
-          <SubTitle className="inline-flex">Observações</SubTitle>
+          <Tag className="inline-flex">Observações</Tag>
           <p className="mx-3">{consult?.currentStates?.detail}</p>
         </div>
       </div>
 
     { consult?.storageId && 
       <div className="mt-8">
-        <SubTitle className="inline-flex">Resultado externo</SubTitle>
+        <Tag className="inline-flex">Resultado externo</Tag>
         <ViewUserFile id={consult.storageId} />
       </div>
       }

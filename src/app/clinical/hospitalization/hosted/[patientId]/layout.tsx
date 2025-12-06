@@ -4,7 +4,7 @@
 import TabNav from "@/components/tabnav";
 import Card from "@/components/ui/card";
 import { MonitorAccess, UnlockProcessAccess } from "@/components/lock-unlock-monitor-process";
-import QuickFabShurtcut from "@/components/quick-fab-shurtcut";
+// import QuickFabShurtcut from "@/components/quick-fab-shurtcut";
 // import { getPatient } from "@/backend/api/clinical/urgency-bank-api";
 // import { getPatient } from "@/backend/api/clinical/api";
 // import RequestConsult from "@/components/request-consult";
@@ -79,13 +79,13 @@ export default async function Layout({
         />
       </div>
 
-      <QuickFabShurtcut 
+      {/* <QuickFabShurtcut 
         visibleComponent={[
           "request_consult",
           "request_surgery",
           "define_state"
         ]} 
-      />
+      /> */}
     </div>
   )
 }

@@ -1,5 +1,5 @@
 import Card from "@/components/ui/card";
-import SubTitle from "@/components/ui/subtitle";
+import Tag from "@/components/ui/tag";
 import TitleAndSubtitle from "@/components/title-subtitle";
 import InputField from "@/components/ui/input-field";
 import { getConsultResult, getPatient } from "@/backend/api/clinical/office-api";
@@ -54,7 +54,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
           </Accordium>
 
           <div className="mt-8">
-            <SubTitle className="inline-flex">Sinais Vitais</SubTitle>
+            <Tag className="inline-flex">Sinais Vitais</Tag>
             <div className="grid grid-cols-2 lg:grid-cols-5 gap-x-4">
               <InputField
                 type="number"
@@ -144,24 +144,24 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3">
             <div className="my-8">
-              <SubTitle className="inline-flex">Queixas</SubTitle>
+              <Tag className="inline-flex">Queixas</Tag>
               <p className="mx-3">{consult?.currentStates?.complaints}</p>
             </div>
 
             <div className="my-8">
-              <SubTitle className="inline-flex">Exame Físico</SubTitle>
+              <Tag className="inline-flex">Exame Físico</Tag>
               <p className="mt-1 mx-3">{consult?.currentStates?.phisicalExam}</p>
             </div>
 
             <div className="my-8">
-              <SubTitle className="inline-flex">Observações</SubTitle>
+              <Tag className="inline-flex">Observações</Tag>
               <p className="mx-3">{consult?.currentStates?.detail}</p>
             </div>
           </div>
 
           { consult?.storageId && 
             <div className="mt-8">
-              <SubTitle className="inline-flex">Resultado externo</SubTitle>
+              <Tag className="inline-flex">Resultado externo</Tag>
               <ViewUserFile id={consult.storageId} />
             </div>
            }

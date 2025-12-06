@@ -4,7 +4,7 @@ import { getSchedulePatientExam } from "@/backend/api/clinical/scheduling-api";
 import RescheduleExam from "@/components/reschedule-exam";
 import { getUnits } from "@/backend/api/clinical/urgency-bank-api";
 import { SelectionOption } from "@/components/ui/selection";
-import SubTitle from "@/components/ui/subtitle";
+import Tag from "@/components/ui/tag";
 import ArchivingScheduleExam from "@/components/archiving-schedule-exam";
 import { angolaCurrency } from "@/lib/table-formater";
 import TitleAndSubtitle from "@/components/title-subtitle";
@@ -28,7 +28,7 @@ export default async function Page({ params }:{ params: Promise<{ id: string }>
         <Card>
           <div className="grid lg:grid-cols-2">
             <div>
-              <SubTitle className="inline-flex mt-3">Informações do Agendamento</SubTitle>
+              <Tag className="inline-flex mt-3">Informações do Agendamento</Tag>
               <TitleAndSubtitle
                 label="Nome Completo do Utente"
                 value={schedule?.patient as string} 
@@ -77,7 +77,7 @@ export default async function Page({ params }:{ params: Promise<{ id: string }>
 
             </div>
             <div>                                                    
-              <SubTitle className="inline-flex mt-3">Informações do Pagamento</SubTitle>
+              <Tag className="inline-flex mt-3">Informações do Pagamento</Tag>
               
               <TitleAndSubtitle
                 label="Código da Fatura"

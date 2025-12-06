@@ -1,6 +1,6 @@
 import Header from "@/components/header";
 import Card from "@/components/ui/card";
-import SubTitle from "@/components/ui/subtitle";
+import Tag from "@/components/ui/tag";
 import TitleAndSubtitle from "@/components/title-subtitle";
 import { angolaCurrency } from "@/lib/table-formater";
 import { getDateInSlashFormat } from "@/lib/date-formater";
@@ -27,7 +27,7 @@ export default async function Page({
         <Card>
           <div className="grid grid-cols-2 py-2">
             <div>
-              <SubTitle className="inline-flex mt-3">Informações da Cirurgia</SubTitle>
+              <Tag className="inline-flex mt-3">Informações da Cirurgia</Tag>
               
               <TitleAndSubtitle
                 label="Nome do Utente"
@@ -70,7 +70,7 @@ export default async function Page({
             </div>
 
             <div>
-            <SubTitle className="inline-flex mt-3">Informações do arquivamento</SubTitle>
+            <Tag className="inline-flex mt-3">Informações do arquivamento</Tag>
 
               <TitleAndSubtitle
                 label="Motivo do arquivamento"

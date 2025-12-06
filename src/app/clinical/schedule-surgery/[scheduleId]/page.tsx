@@ -2,7 +2,7 @@ import { angolaCurrency } from "@/lib/table-formater";
 import { getDateInSlashFormat } from "@/lib/date-formater";
 import Header from "@/components/header";
 import Card from "@/components/ui/card";
-import SubTitle from "@/components/ui/subtitle";
+import Tag from "@/components/ui/tag";
 import ArchivingSugery from "@/components/archiving-sugery";
 import TitleAndSubtitle from "@/components/title-subtitle";
 //import PDFButton from "@/components/pdf-button";
@@ -33,7 +33,7 @@ export default async function Page({
         <Card>
           <div className="grid grid-cols-2">
             <div>
-              <SubTitle className="inline-flex mt-3">Informações da Cirurgia</SubTitle>
+              <Tag className="inline-flex mt-3">Informações da Cirurgia</Tag>
               
               <TitleAndSubtitle
                 label="Nome do Utente"
@@ -77,7 +77,7 @@ export default async function Page({
             </div>
 
             <div>
-              <SubTitle className="inline-flex mt-3">Informações do Pagamento</SubTitle>
+              <Tag className="inline-flex mt-3">Informações do Pagamento</Tag>
               
               <TitleAndSubtitle
                 label="Código da Fatura"
