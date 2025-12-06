@@ -114,7 +114,8 @@ export async function signNursing(p: unknown, formData: FormData){
       const nursing = await nursingModel.create({
         sectionId: section._id,
         name: nursingName,
-        maxBedNumber
+        maxBedNumber,
+        internalServiceId: hospitalizationServiceId
       });
 
       nursingId = nursing._id.toString();
@@ -123,7 +124,8 @@ export async function signNursing(p: unknown, formData: FormData){
         const nursing = await nursingModel.create({
           sectionId,
           name: nursingName,
-          maxBedNumber
+          maxBedNumber,
+          internalServiceId: hospitalizationServiceId
         });
 
         nursingId = nursing._id.toString();

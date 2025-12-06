@@ -41,7 +41,8 @@ bedNursingSchema.index({
 }); // criação de indice
 
 export const nursingSchema = new Schema({
-  sectionId: Schema.ObjectId,
+  sectionId: Schema.Types.ObjectId,
+  internalServiceId: Schema.Types.ObjectId,
   name: String,
   maxBedNumber: {
     type: Number,
