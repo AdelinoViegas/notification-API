@@ -6,12 +6,10 @@ export default async function Page({ params }:{ params: Promise<{ id: string }> 
   const transation = await getTransation(patientId);
 
   return(
-    <div>
-      <div className="w-1/2 space-y-3">
-        <Accommodate
-          serviceId={transation?.destination.id}
-        />
-      </div>
+   <div className="w-1/2 space-y-3">
+      <Accommodate
+        serviceId={transation?.destination.id}
+      />
     </div>
   )
 }

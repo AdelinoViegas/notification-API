@@ -48,7 +48,7 @@ export default async function Nursings({}: {
       </div>
 
       <Table
-        baseRowLink="/clinical/hospitalization/bed-update"
+        baseRowLink="/clinical/hospitalization/bu"
         columns={[
           "Data de Registro",
           "Serviço de Internamento",

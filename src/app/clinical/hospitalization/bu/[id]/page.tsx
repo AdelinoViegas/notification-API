@@ -1,12 +1,9 @@
-import { getBeds, getTransation, resolvedBed } from "@/backend/api/clinical/hospitalization-api";
-import Accommodate from "@/components/hospitalization/accommodate";
 import BedUpdate from "@/components/hospitalization/bed-update";
 import { 
   getInternalServices, 
   getNursings, 
   getSections, 
-  signInternalService, 
-  signNursing 
+  resolvedBed
 } from "@/backend/api/clinical/hospitalization-api";
 
 export default async function Page({ params }:{ params: Promise<{ id: string }> }){
@@ -16,7 +13,6 @@ export default async function Page({ params }:{ params: Promise<{ id: string }> 
   const sections = await getSections();
   const nursings = await getNursings({ internalServiceId: bed?.internalService?.id  });
 
-  
   return(
     <div className="w-1/2 space-y-3">
       <BedUpdate
