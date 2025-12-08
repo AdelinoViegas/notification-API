@@ -7,9 +7,7 @@ export default async function Page({ params }:{ params: Promise<{ id: string }> 
 
   return(
    <div className="w-1/2 space-y-3">
-      <Accommodate
-        serviceId={transation?.destination.id}
-      />
+      <Accommodate internalServiceId={transation?.destination.id as string} />
     </div>
   )
 }
