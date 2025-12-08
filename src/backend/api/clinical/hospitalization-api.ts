@@ -298,7 +298,7 @@ export async function resolvedBed(id: string){
   }
 }
 
-export async function canAddBedToNusing(id: string){
+export async function canAddBedToNursing(id: string){
   // id da enfermaria
   try{
     const nursing = await nursingModel.findById({ _id: id });
@@ -333,8 +333,7 @@ export async function updateBed(prev: unknown, formData: FormData){
 
     const bed = await bedNursingModel.findById({ _id: id });
 
-    const allocated = await canAddBedToNusing(nursingId);
-    console.log(allocated);
+    const allocated = await canAddBedToNursing(nursingId);
 
     if(!bed) throw new Error("cama não encontrada!");
 
