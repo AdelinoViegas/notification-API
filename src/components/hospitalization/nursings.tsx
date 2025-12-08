@@ -1,5 +1,6 @@
 import Table from "@/components/table";
 import Search from "@/components/ui/search";
+import Filter from "./filter";
 import { formater } from "@/lib/table-formater";
 import Pagination from "@/components/pagination";
 import Refresh from "@/components/refresh";
@@ -39,12 +40,7 @@ export default async function Nursings({}: {
           <RegisterNursing />
         </div>
 
-        <Search
-          className="flex items-center gap-3"
-          filterKey="name"
-          label="Filtar por nome"
-          placeholder="Buscar pelo nome do utente..."
-        />
+        <Filter />
       </div>
 
       <Table

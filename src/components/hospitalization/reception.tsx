@@ -16,6 +16,8 @@ export default async function Reception({ page }: {
   const patients = await getPatients({ 
     // fullname: name, 
     page: page?Number(page):1,
+    filterByUserId: true,
+    strictQuery: true
   });
 
   const rows = formater(patients.patients, {

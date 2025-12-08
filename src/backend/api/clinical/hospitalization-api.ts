@@ -21,21 +21,31 @@ import { patientStates } from "./translator";
 export async function getPatients({
   page,
   served,
-  filterByUserId
+  filterByUserId,
+  strictQuery
 }: {
   fullname?: string;
   page: number;
   served?: boolean;
   filterByUserId?: boolean;
+  strictQuery?: boolean; // busca sem a omissão de undefined
 }){
   try{
-    const patients = await hospitalizationModel.find(omitUndefined({
-      served: served ?? false,
-      toInternalServiceId: filterByUserId 
-        ? (await getUser(await getUserId()))?.internalServiceId
-        : undefined
-    }));
+    const queryParams = strictQuery 
+      ? {
+          served: served ?? false,
+          toInternalServiceId: filterByUserId 
+            ? (await getUser(await getUserId()))?.internalServiceId
+            : undefined
+        }
+      : omitUndefined({
+          served: served ?? false,
+          toInternalServiceId: filterByUserId 
+            ? (await getUser(await getUserId()))?.internalServiceId
+            : undefined
+        });
 
+    const patients =  await hospitalizationModel.find(queryParams);
     const formated = [];
 
     for(const patient of patients){
