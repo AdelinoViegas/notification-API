@@ -25,14 +25,14 @@ export default function NavLabel({ routes }: { routes: RouteMap }){
 
     TYPE_SERVICES.forEach(ev => {
       if(directory.includes(ev)){
-        console.log(ev);
         getMyClinicalProfile().then(e => {
           if(e){
             const serviceName = e[ev];
             setService(serviceName);
           }
         })
-      }
+      }else 
+        setService(undefined);
     });
 
   }, [pathname]);
