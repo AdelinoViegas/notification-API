@@ -21,6 +21,8 @@ import {
   specialtyModel,
   urgencyBankModel,
   processStateModel,
+  internalServiceModel,
+  urgencyServiceModel,
 } from "@/backend/model";
 import { 
   patientAccess,
@@ -113,6 +115,34 @@ async function getUser(id: string){
     serviceId: clinical?.serviceId?.toString() as string,
     internalServiceId: clinical?.internalServiceId?.toString() as string,
     ...user
+  }
+}
+
+export async function getMyClinicalProfile(){
+  try{
+    const user = await getUser(await getUserId());
+
+    const internalService = await internalServiceModel.findById({ _id: user.internalServiceId });
+    if(!internalService) throw new Error;
+
+    const urgencyService = await urgencyServiceModel.findById({ _id: user.serviceId });
+    if(!internalService) throw new Error;
+
+    return {
+      internalService: {
+        id: internalService._id.toString(),
+        name: internalService.name
+      },
+      urgencyService: {
+        id: internalService._id.toString(),
+        name: internalService.name
+      },
+      "urgency-bank": urgencyService?.label,
+      hospitalization: internalService.name
+    }
+  }catch(e){
+    console.error(e);
+    return null;
   }
 }
 

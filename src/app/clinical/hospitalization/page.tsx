@@ -21,7 +21,6 @@ export default async function Page({ searchParams }:{ searchParams: Promise<{ r:
           { path: "n", title: "Enfermaria" }
         ]}
       />
-
       { route === "r" && <Reception /> }
       { route === "h" && <Hospitalized /> }
       { route === "n" && <Nursings />}
