@@ -34,7 +34,6 @@ export default function RegisterNursing(){
   const reset = ()=>{
     setNewSectionState(false);
     setNewNursingState(false);
-    formRef.current?.reset();
   }
   
   useEffect(()=>{

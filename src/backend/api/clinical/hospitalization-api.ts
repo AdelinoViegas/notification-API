@@ -152,7 +152,9 @@ export async function signNursing(p: unknown, formData: FormData){
     return {
       message: err.code === 11000 
         ? "Nº da cama ja existente na enfermaria selecionada!"
-        : "Não foi possivel registrar!",
+        : err.cause 
+          ? err.message
+          : "Não foi possivel registrar!",
       status: false
     }
   }
@@ -223,7 +225,8 @@ export async function getInternalServices(){
       name: props.name as string,
       label: props.name as string
     }));
-  }catch {
+  }catch (e) {
+    console.error(e);
     return [];
   }
 }
@@ -237,6 +240,8 @@ export async function getBeds(nursingId?: string){
       const nursing = await nursingModel.findById({ _id: bed.nursingId });
       const internalService = await internalServiceModel.findById({_id: bed.internalServiceId });
       const section = await sectionModel.findById({ _id: nursing?.sectionId });
+
+      if(!nursing || !internalService || !section) continue; // pula provaveis camas com erro 
 
       formatedBeds.push({
         id: bed._id.toString(),
@@ -307,11 +312,11 @@ export async function canAddBedToNursing(id: string){
   try{
     const nursing = await nursingModel.findById({ _id: id });
     
-    if(!nursing) throw new Error("cama não alocada!");
+    if(!nursing) throw new Error("Cama não alocada!");
     
     const beds = (await getBeds(id)).totalItems;
     
-    if(beds >= nursing.maxBedNumber) throw new Error("número maximo de cama atingido!");
+    if(beds >= nursing.maxBedNumber) throw new Error("Limite de cama atingido!");
     
     return {
       state: true,

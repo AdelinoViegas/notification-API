@@ -9,7 +9,7 @@ import { getDateInSlashFormat } from "@/lib/date-formater";
 
 export default async function Nursings({}: {
   fullname?: string;
-  page?: number;
+  p?: number;
 }){
   // const { name, page } = await searchParams;
 
@@ -38,7 +38,7 @@ export default async function Nursings({}: {
         <div>
           <RegisterNursing />
         </div>
-        
+
         <Search
           className="flex items-center gap-3"
           filterKey="name"
