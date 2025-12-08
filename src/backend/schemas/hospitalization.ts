@@ -50,7 +50,13 @@ export const nursingSchema = new Schema({
   }
 });
 
-export const sectionSchema = new Schema({ name: String });
+export const sectionSchema = new Schema({
+  name: {
+    type: String,
+    unique: true,
+    required: true
+  }
+});
 
 export const inHospitalizeSchema = new Schema({
   patientId: String,
