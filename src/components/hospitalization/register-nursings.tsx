@@ -53,9 +53,10 @@ export default function RegisterNursing(){
     getNursings({
       sectionId: selectedSection,
       internalServiceId: selectedService
-    }).then(setNursings);
+    })
+    .then(setNursings);
     
-  }, [selectedSection]);
+  }, [selectedSection, selectedService]);
 
   useEffect(()=>{
     if(serviceState.message)

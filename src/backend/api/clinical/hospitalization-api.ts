@@ -147,7 +147,7 @@ export async function signNursing(p: unknown, formData: FormData){
 
     return {
       message: err.code === 11000 
-        ? "Ja existe esse Nº de cama registrado!"
+        ? "Nº da cama ja existente na enfermaria selecionada!"
         : "Não foi possivel registrar!",
       status: false
     }
