@@ -41,7 +41,8 @@ bedNursingSchema.index({
 }); // criação de indice
 
 export const nursingSchema = new Schema({
-  sectionId: Schema.ObjectId,
+  sectionId: Schema.Types.ObjectId,
+  internalServiceId: Schema.Types.ObjectId,
   name: String,
   maxBedNumber: {
     type: Number,
@@ -49,7 +50,13 @@ export const nursingSchema = new Schema({
   }
 });
 
-export const sectionSchema = new Schema({ name: String });
+export const sectionSchema = new Schema({
+  name: {
+    type: String,
+    unique: true,
+    required: true
+  }
+});
 
 export const inHospitalizeSchema = new Schema({
   patientId: String,

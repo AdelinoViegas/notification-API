@@ -11,11 +11,10 @@ export default async function Reception({ page }: {
   fullname?: string;
   page?: number;
 }){
-  // const { name, page } = await searchParams;
-
   const patients = await getPatients({ 
-    // fullname: name, 
     page: page?Number(page):1,
+    filterByUserId: true,
+    strictQuery: true
   });
 
   const rows = formater(patients.patients, {

@@ -27,13 +27,13 @@ export default function RegisterNursing(){
   const [ sections, setSections ] = useState<SelectionOption[]>([]);
   const [ nursings, setNursings ] = useState<SelectionOption[]>([]);
   const [ selectedSection, setSelectedSection ] = useState<string>();
+  const [ selectedService, setSelectedService ] = useState<string>();
 
   const formRef = useRef<HTMLFormElement>(null);
 
   const reset = ()=>{
     setNewSectionState(false);
     setNewNursingState(false);
-    formRef.current?.reset();
   }
   
   useEffect(()=>{
@@ -49,8 +49,13 @@ export default function RegisterNursing(){
   }, [state]);
 
   useEffect(()=>{
-    getNursings(selectedSection).then(setNursings);
-  }, [selectedSection]);
+    getNursings({
+      sectionId: selectedSection,
+      internalServiceId: selectedService
+    })
+    .then(setNursings);
+    
+  }, [selectedSection, selectedService]);
 
   useEffect(()=>{
     if(serviceState.message)
@@ -82,6 +87,7 @@ export default function RegisterNursing(){
               options={internalServices} 
               required
               className="grow"
+              onChange={e => setSelectedService(e.target.value)}
             />
 
             <Button type="button" onClick={()=>setModalService(true)}>Novo</Button>

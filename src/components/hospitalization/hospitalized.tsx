@@ -6,18 +6,18 @@ import Refresh from "@/components/refresh";
 import { getPatients } from "@/backend/api/clinical/hospitalization-api";
 import Filter from "./filter";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
+import Alert from "../ui/alert";
 
 export default async function Hospitalized({ page }: {
   pfn?: string;
   _fn?: string;
   page?: number;
 }){
-  // const { name, page } = await searchParams;
-
   const patients = await getPatients({ 
-    // fullname: name, 
     page: page?Number(page):1,
-    served: true
+    served: true,
+    filterByUserId: true,
+    strictQuery: true
   });
   
   const rows = formater(patients.patients, {
@@ -49,18 +49,20 @@ export default async function Hospitalized({ page }: {
       <Refresh />
 
       <div className="flex flex-col lg:flex-row justify-between lg:items-center">
-        {/* <Alert 
+        <Alert 
           type="info" 
           message="Faça duplo click sobre o utente para seguir com o atendimento!" 
-        /> */}
-        <Filter />
-        
-        <Search
-          className="flex items-center gap-3"
-          filterKey="pfn" // patient fullname
-          label="Filtar por nome"
-          placeholder="Buscar pelo nome do utente..."
         />
+        <div className="flex gap-x-3 items-top">
+          <Filter />
+        
+          <Search
+            className="flex items-center gap-3"
+            filterKey="pfn" // patient fullname
+            label="Filtar por nome"
+            placeholder="Buscar pelo nome do utente..."
+          />
+        </div>
       </div>
 
       <Table

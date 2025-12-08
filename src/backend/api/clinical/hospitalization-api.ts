@@ -20,17 +20,32 @@ import { patientStates } from "./translator";
 
 export async function getPatients({
   page,
-  served
+  served,
+  filterByUserId,
+  strictQuery
 }: {
   fullname?: string;
   page: number;
   served?: boolean;
+  filterByUserId?: boolean;
+  strictQuery?: boolean; // busca sem a omissão de undefined
 }){
   try{
-    const patients = await hospitalizationModel.find(omitUndefined({
-      served: served ?? false
-    }));
+    const queryParams = strictQuery 
+      ? {
+          served: served ?? false,
+          toInternalServiceId: filterByUserId 
+            ? (await getUser(await getUserId()))?.internalServiceId
+            : undefined
+        }
+      : omitUndefined({
+          served: served ?? false,
+          toInternalServiceId: filterByUserId 
+            ? (await getUser(await getUserId()))?.internalServiceId
+            : undefined
+        });
 
+    const patients =  await hospitalizationModel.find(queryParams);
     const formated = [];
 
     for(const patient of patients){
@@ -109,7 +124,8 @@ export async function signNursing(p: unknown, formData: FormData){
       const nursing = await nursingModel.create({
         sectionId: section._id,
         name: nursingName,
-        maxBedNumber
+        maxBedNumber,
+        internalServiceId: hospitalizationServiceId
       });
 
       nursingId = nursing._id.toString();
@@ -118,11 +134,16 @@ export async function signNursing(p: unknown, formData: FormData){
         const nursing = await nursingModel.create({
           sectionId,
           name: nursingName,
-          maxBedNumber
+          maxBedNumber,
+          internalServiceId: hospitalizationServiceId
         });
 
         nursingId = nursing._id.toString();
       }
+    
+    const allocated = await canAddBedToNursing(nursingId);
+
+    if(!allocated.state) throw new Error(allocated?.message, { cause: 403 });
     
     await bedNursingModel.create({
       internalServiceId: hospitalizationServiceId,
@@ -131,7 +152,7 @@ export async function signNursing(p: unknown, formData: FormData){
     });
 
     return {
-      message: "Registrado com sucesso!",
+      message: "Cama registrado com sucesso!",
       status: true
     }
   }catch(e) {
@@ -140,23 +161,33 @@ export async function signNursing(p: unknown, formData: FormData){
 
     return {
       message: err.code === 11000 
-        ? "Ja existe esse Nº de cama registrado!"
-        : "Não foi possivel registrar!",
+        ? "Nº da cama ja existente na enfermaria selecionada!"
+        : err.cause 
+          ? err.message
+          : "Não foi possivel registrar!",
       status: false
     }
   }
 }
 
-export async function getNursings(sectionId?: string){
+export async function getNursings({
+  sectionId,
+  internalServiceId
+}: {
+  sectionId?: string;
+  internalServiceId?: string;
+}){
   try{
-    const nursings = await nursingModel.find(omitUndefined({ sectionId }));
+    const nursings = await nursingModel.find(omitUndefined({ sectionId, internalServiceId }));
 
     return nursings.map(props => ({
       _id: props._id.toString(),
       name: props.name as string,
       label: props.name as string
     }));
-  }catch {
+  }catch (e) {
+    console.error(e);
+    
     return [];
   }
 }
@@ -204,7 +235,8 @@ export async function getInternalServices(){
       name: props.name as string,
       label: props.name as string
     }));
-  }catch {
+  }catch (e) {
+    console.error(e);
     return [];
   }
 }
@@ -216,8 +248,13 @@ export async function getBeds(nursingId?: string){
 
     for (const bed of beds){
       const nursing = await nursingModel.findById({ _id: bed.nursingId });
+      if(!nursing) continue;
+
       const internalService = await internalServiceModel.findById({_id: bed.internalServiceId });
+      if(!internalService) continue;
+
       const section = await sectionModel.findById({ _id: nursing?.sectionId });
+      if(!section) continue; // pula provaveis camas com erro 
 
       formatedBeds.push({
         id: bed._id.toString(),
@@ -280,6 +317,67 @@ export async function resolvedBed(id: string){
     }
   }catch(e){
     console.error(e);
+  }
+}
+
+export async function canAddBedToNursing(id: string){
+  // id da enfermaria
+  try{
+    const nursing = await nursingModel.findById({ _id: id });
+    
+    if(!nursing) throw new Error("Cama não alocada!");
+    
+    const beds = (await getBeds(id)).totalItems;
+    
+    if(beds >= nursing.maxBedNumber) throw new Error("Limite de cama atingido!");
+    
+    return {
+      state: true,
+      allocatedBed: beds,
+      maxAllowed: nursing.maxBedNumber
+    }
+  }catch(e) {
+    console.error(e);
+    const err = e as Error;
+
+    return {
+      state: false,
+      message: err?.message 
+    }
+  }
+}
+
+export async function updateBed(prev: unknown, formData: FormData){
+  try{
+    const id = formData.get("id") // id da cama;
+    const nursingId = formData.get("nursingId") as string;
+    const bedName = formData.get("name");
+
+    const bed = await bedNursingModel.findById({ _id: id });
+
+    const allocated = await canAddBedToNursing(nursingId);
+
+    if(!bed) throw new Error("cama não encontrada!");
+
+    if(!allocated.state) throw new Error(allocated.message);
+
+    await bedNursingModel.updateOne({ _id: id }, {
+      nursingId,
+      bed: bedName
+    });
+
+    return {
+      message: "Informações atualizadas!",
+      status: true
+    }
+  }catch(e){
+    console.error(e);
+    const err = e as Error;
+
+    return {
+      message: err? err.message : "Não foi possivel atualizar!",
+      status: false
+    }
   }
 }
 

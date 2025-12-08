@@ -11,7 +11,7 @@ import {
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import InputField from "@/components/ui/input-field";
-import SubTitle from "@/components/ui/subtitle";
+import Tag from "@/components/ui/tag";
 import ButtonEdit from "@/components/ui/button-edit";
 import InputDetails from "@/components/ui/input-details";
 import ViewUserFile from "@/components/view-user-file-client";
@@ -81,7 +81,7 @@ export function UploadExamBlock({
         defaultValue={operatingRoomId}
       />
 
-      <SubTitle className="inline-flex mt-3">Enviar resultado por JPEG/PNG/PDF</SubTitle>
+      <Tag className="inline-flex mt-3">Enviar resultado por JPEG/PNG/PDF</Tag>
 
       <InputField
         textLabel="Arquivo (PDF/IMAGEM/VIDEO)"

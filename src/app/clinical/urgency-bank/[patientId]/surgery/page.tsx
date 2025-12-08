@@ -1,4 +1,4 @@
-import SubTitle from "@/components/ui/subtitle";
+import Tag from "@/components/ui/tag";
 import Accordium from "@/components/ui/accordium";
 import { getSurgeriesHistory } from "@/backend/api/clinical/operating-room-api";
 import TitleAndSubtitle from "@/components/title-subtitle";
@@ -54,7 +54,7 @@ function ViewSurgery({ surgery }: { surgery: SurgeryHistory }){
   return (
     <div> 
       <div className="mt-4 mb-4">
-        <SubTitle className="inline-flex">Identificação do Paciente</SubTitle>
+        <Tag className="inline-flex">Identificação do Paciente</Tag>
         <div className="grid grid-cols-3 gap-x-6 ps-4">
           <TitleAndSubtitle
             label="Diagnóstico pré-operatório"
@@ -77,7 +77,7 @@ function ViewSurgery({ surgery }: { surgery: SurgeryHistory }){
       </div>
 
       <div className="my-10">
-        <SubTitle className="inline-flex">Avaliação Pré-Operatória</SubTitle>
+        <Tag className="inline-flex">Avaliação Pré-Operatória</Tag>
 
         <div className="grid grid-cols-2 gap-x-6 ps-4 mb-4">
           <TitleAndSubtitle
@@ -145,7 +145,7 @@ function ViewSurgery({ surgery }: { surgery: SurgeryHistory }){
       </div>
 
       <div className="mt-4 mb-4">
-        <SubTitle className="inline-flex">Planeamento da Cirurgia</SubTitle>
+        <Tag className="inline-flex">Planeamento da Cirurgia</Tag>
 
         <div className="grid grid-cols-2 gap-x-6 ps-4 mb-4">
           <TitleAndSubtitle
@@ -199,7 +199,7 @@ function ViewSurgery({ surgery }: { surgery: SurgeryHistory }){
       </div>
 
       <div className="my-10">
-        <SubTitle className="inline-flex">Checklist de Segurânça Cirúrgica</SubTitle>
+        <Tag className="inline-flex">Checklist de Segurânça Cirúrgica</Tag>
 
         <div className="ps-4 mb-4">
           <TitleAndSubtitle
@@ -231,7 +231,7 @@ function ViewSurgery({ surgery }: { surgery: SurgeryHistory }){
       </div>
 
       <div className="my-10">
-        <SubTitle className="inline-flex">Procedimento Intraoperatório</SubTitle>
+        <Tag className="inline-flex">Procedimento Intraoperatório</Tag>
 
         <div className="grid grid-cols-2 gap-x-6 ps-4 mb-4">
           <TitleAndSubtitle
@@ -299,7 +299,7 @@ function ViewSurgery({ surgery }: { surgery: SurgeryHistory }){
       </div>
 
       <div className="mt-4 mb-4">
-        <SubTitle className="inline-flex">Recuperação Pós-Anestésica</SubTitle>
+        <Tag className="inline-flex">Recuperação Pós-Anestésica</Tag>
 
         <div className="grid grid-cols-2 gap-x-6 ps-4 mb-4">
           <TitleAndSubtitle
@@ -376,7 +376,7 @@ function ViewSurgery({ surgery }: { surgery: SurgeryHistory }){
       </div>
 
       <div className="my-10">
-        <SubTitle className="inline-flex">Alta do Bloco</SubTitle>
+        <Tag className="inline-flex">Alta do Bloco</Tag>
 
         <div className="grid grid-cols-2 gap-x-6 ps-4 mb-4">
           <TitleAndSubtitle

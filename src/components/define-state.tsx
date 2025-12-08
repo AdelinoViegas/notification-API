@@ -8,7 +8,7 @@ import Modal from "@/components/modal";
 import Selection from "@/components/ui/selection";
 import { getPatientState, definePatientState } from "@/backend/api/clinical/urgency-bank-api";
 import { patientStates } from "@/backend/api/clinical/translator";
-import SubTitle from "@/components/ui/subtitle";
+import Tag from "@/components/ui/tag";
 import FallbackComponent from "@/components/fallback-components";
 import clsx from "clsx";
 
@@ -60,7 +60,7 @@ export default function DefineState({ id }: { id?: string }){
         <div className={clsx(
           "absolute -top-2 -right-2 z-0 rounded-full size-4",
           patientState?.color.tw.bg,
-          { "animate-ping": [ "critical","serious", "moderate"].includes(patientState?._id ?? "none") }
+          { "animate-ping": [ "critical","serious" ].includes(patientState?._id ?? "none") }
         )} />
       </div>
      
@@ -88,7 +88,7 @@ export default function DefineState({ id }: { id?: string }){
             }
 
             <div className="my-8">
-              <SubTitle className="inline-flex">Descrição</SubTitle>
+              <Tag className="inline-flex">Descrição</Tag>
               <p className="mt-1 ps-4">
                 {patientState?.description ?? "Não definido"}
               </p>

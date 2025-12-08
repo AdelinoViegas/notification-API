@@ -21,6 +21,8 @@ import {
   specialtyModel,
   urgencyBankModel,
   processStateModel,
+  internalServiceModel,
+  urgencyServiceModel,
 } from "@/backend/model";
 import { 
   patientAccess,
@@ -111,11 +113,40 @@ async function getUser(id: string){
     specialtyId: clinical?.specialtyId?.toString() as string,
     orderNumber: clinical?.orderNumber as number,
     serviceId: clinical?.serviceId?.toString() as string,
+    internalServiceId: clinical?.internalServiceId?.toString() as string,
     ...user
   }
 }
 
-async function addUser(prev: unknown, formData: FormData){
+export async function getMyClinicalProfile(){
+  try{
+    const user = await getUser(await getUserId());
+
+    const internalService = await internalServiceModel.findById({ _id: user.internalServiceId });
+    if(!internalService) throw new Error;
+
+    const urgencyService = await urgencyServiceModel.findById({ _id: user.serviceId });
+    if(!internalService) throw new Error;
+
+    return {
+      internalService: {
+        id: internalService._id.toString(),
+        name: internalService.name
+      },
+      urgencyService: {
+        id: internalService._id.toString(),
+        name: internalService.name
+      },
+      "urgency-bank": urgencyService?.label,
+      hospitalization: internalService.name
+    }
+  }catch(e){
+    console.error(e);
+    return null;
+  }
+}
+
+async function registerUser(prev: unknown, formData: FormData){
   try{
     const id = formData.get("id") as string;
     const orderNumber = formData.get("orderNumber") as string;
@@ -124,6 +155,7 @@ async function addUser(prev: unknown, formData: FormData){
     const categoryId = formData.get("categoryId") as string;
     const specialtyId = formData.get("specialtyId");
     const serviceId = formData.get("serviceId");
+    const internalServiceId = formData.get("internalServiceId"); 
 
     const filter = omitUndefined({
       orderNumber,
@@ -131,7 +163,8 @@ async function addUser(prev: unknown, formData: FormData){
       roleId: roleId || undefined,
       categoryId,
       specialtyId: specialtyId || undefined,
-      serviceId: serviceId || undefined
+      serviceId: serviceId || undefined,
+      internalServiceId: internalServiceId || undefined
     });
 
     const hasUser = await userModel.findOneAndUpdate({ userId: id }, filter);
@@ -1010,5 +1043,5 @@ export {
   signSpecialty,
   getScreening,
   insertScreening,
-  addUser,
+  registerUser,
 };

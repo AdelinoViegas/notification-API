@@ -990,6 +990,14 @@ async function finishHospitalization(prev: unknown, formData: FormData){
     const currentState = formData.get("currentState") as string;
     const patientId = formData.get("patientId") as string;
     const internalServiceId = formData.get("serviceId");
+    const patientState = await getPatientState(patientId);
+
+    if(!patientState) 
+      throw new Error("Por favor, defina o estado do utente!", { cause: 404 });
+    
+    // validação do estado para internamento
+    if(!["critical", "serious", "moderate"].includes(patientState._id))
+      throw new Error("Lamentamos, mas este utente não aprensenta um estado clínico válido para internar!", { cause: 404 });
     
     const urgencyId = (await getPatientUrgencyBank(patientId))?.id;
     const patient = await getSyncedHistories(patientId);

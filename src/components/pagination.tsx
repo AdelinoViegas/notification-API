@@ -16,6 +16,8 @@ import {
 } from "next/navigation";
 import clsx from "clsx";
 
+const URL_KEYNAME = "p";
+
 export default function Pagination({
   availablePages,
   totalItems,
@@ -29,22 +31,22 @@ export default function Pagination({
   const pathname = usePathname();
   const _availablePages = Math.ceil(availablePages);
   
-  const getCurrentPage = useCallback(()=> pageSearchParams.get('page'), [pageSearchParams]);
+  const getCurrentPage = useCallback(()=> pageSearchParams.get(URL_KEYNAME), [pageSearchParams]);
   
   const setSearchPage = useCallback((n: string)=>{
     const searchParams = new URLSearchParams(pageSearchParams);
-    searchParams.set('page', n);
+    searchParams.set(URL_KEYNAME, n);
     router.push(`${pathname}?${searchParams.toString()}`);
   }, [router, pageSearchParams, pathname]);
   
   const nextPage = ()=>{
-    const page = pageSearchParams.get('page');
+    const page = pageSearchParams.get(URL_KEYNAME);
     if(page && Number(page) < _availablePages)
       setSearchPage(String(Number(page)+1));
   }
   
   const previousPage = ()=>{
-    const page = pageSearchParams.get('page');
+    const page = pageSearchParams.get(URL_KEYNAME);
     if(page && Number(page) > 1)
       setSearchPage(String(Number(page)-1));
   }

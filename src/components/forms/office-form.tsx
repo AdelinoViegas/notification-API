@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import InputField from "@/components/ui/input-field";
 import InputDetails from "@/components/ui/input-details";
 import Button from "@/components/ui/button";
-import SubTitle from "@/components/ui/subtitle";
+import Tag from "@/components/ui/tag";
 import type { ConsultCurrentStates, ConsultVitalSignal } from "@/backend/schemas/types";
 import { signConsutation, uploadExternalExamFile } from "@/backend/api/clinical/office-api";
 
@@ -247,7 +247,7 @@ export function UploadExternalExam({
       <input type="hidden" name="officeId" defaultValue={officeId} />
       <input type="hidden" name="storageId" defaultValue={storageId} />
 
-      <SubTitle className="inline-flex mt-3">Enviar resultado por JPEG/PNG/PDF</SubTitle>
+      <Tag className="inline-flex mt-3">Enviar resultado por JPEG/PNG/PDF</Tag>
 
       <InputField
         textLabel="Arquivo (PDF/IMAGEM/VIDEO)"

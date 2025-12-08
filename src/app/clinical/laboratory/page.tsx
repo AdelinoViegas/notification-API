@@ -18,10 +18,10 @@ export default async function Page({
   searchParams: Promise<{
     patient: string;
     unitId: string;
-    page: number;
+    p: number;
   }>
 }){
-  const { patient, unitId, page } = await searchParams;
+  const { patient, unitId, p: page } = await searchParams;
   const patientsData = await getPatients({
     served: false, 
     page,

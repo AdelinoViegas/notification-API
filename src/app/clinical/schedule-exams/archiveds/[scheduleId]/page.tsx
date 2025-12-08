@@ -1,7 +1,7 @@
 import Header from "@/components/header";
 import Card from "@/components/ui/card";
 import React from "react";
-import SubTitle from "@/components/ui/subtitle";
+import Tag from "@/components/ui/tag";
 import RescheduleExam from "@/components/reschedule-exam";
 import { SelectionOption } from "@/components/ui/selection";
 import { getUnits } from "@/backend/api/clinical/urgency-bank-api";
@@ -46,7 +46,7 @@ export default async function Page({
       <div className="block overflow-auto h-[80vh] scroll overflow-auto">
         <Card className="grid lg:grid-cols-2">
           <div>
-            <SubTitle className="inline-flex mt-3">Informações do Agendamento</SubTitle>
+            <Tag className="inline-flex mt-3">Informações do Agendamento</Tag>
             
             <TitleAndSubtitle
               label="Nome Completo do Utente"
@@ -85,7 +85,7 @@ export default async function Page({
           </div>
 
           <div>
-          <SubTitle className="inline-flex mt-3">Exames solicitados</SubTitle>
+          <Tag className="inline-flex mt-3">Exames solicitados</Tag>
             <TitleAndSubtitle
               label="Exames Selecionados"
               value={

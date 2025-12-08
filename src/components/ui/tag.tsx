@@ -1,6 +1,6 @@
 import clsx from "clsx";
 
-export default function SubTitle({
+export default function Tag({
   children,
   className
 }:{

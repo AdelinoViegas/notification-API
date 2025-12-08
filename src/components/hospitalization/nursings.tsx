@@ -1,5 +1,5 @@
 import Table from "@/components/table";
-import Search from "@/components/ui/search";
+import Filter from "./filter";
 import { formater } from "@/lib/table-formater";
 import Pagination from "@/components/pagination";
 import Refresh from "@/components/refresh";
@@ -9,7 +9,7 @@ import { getDateInSlashFormat } from "@/lib/date-formater";
 
 export default async function Nursings({}: {
   fullname?: string;
-  page?: number;
+  p?: number;
 }){
   // const { name, page } = await searchParams;
 
@@ -38,17 +38,12 @@ export default async function Nursings({}: {
         <div>
           <RegisterNursing />
         </div>
-        
-        <Search
-          className="flex items-center gap-3"
-          filterKey="name"
-          label="Filtar por nome"
-          placeholder="Buscar pelo nome do utente..."
-        />
+
+        <Filter />
       </div>
 
       <Table
-        baseRowLink="/clinical/hospitalization"
+        baseRowLink="/clinical/hospitalization/bu"
         columns={[
           "Data de Registro",
           "Serviço de Internamento",
