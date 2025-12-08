@@ -133,7 +133,7 @@ export async function signNursing(p: unknown, formData: FormData){
     
     const allocated = await canAddBedToNursing(nursingId);
 
-    if(allocated.state) throw new Error(allocated?.message, { cause: 403 });
+    if(!allocated.state) throw new Error(allocated?.message, { cause: 403 });
     
     await bedNursingModel.create({
       internalServiceId: hospitalizationServiceId,
