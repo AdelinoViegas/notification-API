@@ -248,10 +248,13 @@ export async function getBeds(nursingId?: string){
 
     for (const bed of beds){
       const nursing = await nursingModel.findById({ _id: bed.nursingId });
-      const internalService = await internalServiceModel.findById({_id: bed.internalServiceId });
-      const section = await sectionModel.findById({ _id: nursing?.sectionId });
+      if(!nursing) continue;
 
-      if(!nursing || !internalService || !section) continue; // pula provaveis camas com erro 
+      const internalService = await internalServiceModel.findById({_id: bed.internalServiceId });
+      if(!internalService) continue;
+
+      const section = await sectionModel.findById({ _id: nursing?.sectionId });
+      if(!section) continue; // pula provaveis camas com erro 
 
       formatedBeds.push({
         id: bed._id.toString(),

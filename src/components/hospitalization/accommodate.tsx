@@ -90,7 +90,7 @@ export default function Accommodate(props: FallbackProps){
           defaultValue={props?.nursingId}
         />: <FallbackComponent className="my-3" />}
 
-        {beds.length ? 
+        {beds.length || selectedNursing ? 
         <Selection
           label="Nº da Cama"
           name="bedId"
