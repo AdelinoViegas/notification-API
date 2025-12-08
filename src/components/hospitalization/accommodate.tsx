@@ -7,8 +7,7 @@ import {
   getNursings, 
   getSections, 
   getBeds,
-  signToHospitalize,
-  signInternalService
+  signToHospitalize
 } from "@/backend/api/clinical/hospitalization-api";
 import { toast } from "react-toastify";
 import Selection, { SelectionOption } from "@/components/ui/selection";

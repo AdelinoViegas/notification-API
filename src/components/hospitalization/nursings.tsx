@@ -1,5 +1,4 @@
 import Table from "@/components/table";
-import Search from "@/components/ui/search";
 import Filter from "./filter";
 import { formater } from "@/lib/table-formater";
 import Pagination from "@/components/pagination";
