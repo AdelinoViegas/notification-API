@@ -298,6 +298,68 @@ export async function resolvedBed(id: string){
   }
 }
 
+export async function canAddBedToNusing(id: string){
+  // id da enfermaria
+  try{
+    const nursing = await nursingModel.findById({ _id: id });
+    
+    if(!nursing) throw new Error("cama não alocada!");
+    
+    const beds = (await getBeds(id)).totalItems;
+    
+    if(beds >= nursing.maxBedNumber) throw new Error("número maximo de cama atingido!");
+    
+    return {
+      state: true,
+      allocatedBed: beds,
+      maxAllowed: nursing.maxBedNumber
+    }
+  }catch(e) {
+    console.error(e);
+    const err = e as Error;
+
+    return {
+      state: false,
+      message: err?.message 
+    }
+  }
+}
+
+export async function updateBed(prev: unknown, formData: FormData){
+  try{
+    const id = formData.get("id") // id da cama;
+    const nursingId = formData.get("nursingId") as string;
+    const bedName = formData.get("name");
+
+    const bed = await bedNursingModel.findById({ _id: id });
+
+    const allocated = await canAddBedToNusing(nursingId);
+    console.log(allocated);
+
+    if(!bed) throw new Error("cama não encontrada!");
+
+    if(!allocated.state) throw new Error(allocated.message);
+
+    await bedNursingModel.updateOne({ _id: id }, {
+      nursingId,
+      bed: bedName
+    });
+
+    return {
+      message: "Informações atualizadas!",
+      status: true
+    }
+  }catch(e){
+    console.error(e);
+    const err = e as Error;
+
+    return {
+      message: err? err.message : "Não foi possivel atualizar!",
+      status: false
+    }
+  }
+}
+
 export async function getTransation(patientId: string){
   try{
     const transation = await hospitalizationModel.findOne({ patientId });
