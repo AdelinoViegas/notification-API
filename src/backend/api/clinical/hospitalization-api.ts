@@ -131,6 +131,10 @@ export async function signNursing(p: unknown, formData: FormData){
         nursingId = nursing._id.toString();
       }
     
+    const allocated = await canAddBedToNursing(nursingId);
+
+    if(allocated.state) throw new Error(allocated?.message, { cause: 403 });
+    
     await bedNursingModel.create({
       internalServiceId: hospitalizationServiceId,
       nursingId,
@@ -138,7 +142,7 @@ export async function signNursing(p: unknown, formData: FormData){
     });
 
     return {
-      message: "Registrado com sucesso!",
+      message: "Cama registrado com sucesso!",
       status: true
     }
   }catch(e) {

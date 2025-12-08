@@ -1,11 +1,9 @@
 "use client";
 
-
 import { useActionState, useEffect } from "react";
 import Button from "@/components/ui/button";
 import InputField from "@/components/ui/input-field";
 import { updateBed } from "@/backend/api/clinical/hospitalization-api";
-
 import { toast } from "react-toastify";
 import Selection, { SelectionOption } from "@/components/ui/selection";
 import { useParams, useRouter } from "next/navigation";
