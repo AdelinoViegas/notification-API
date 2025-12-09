@@ -4,7 +4,7 @@ import Modal from "@/components/modal";
 import Button from "./ui/button";
 import { useActionState, useEffect, useState } from "react";
 import Selection from "./ui/selection";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { registerRequest } from "@/backend/api/clinical/office-api";
 import { toast } from "react-toastify";
 import { getServices } from "@/backend/api/clinical/scheduling-api";
@@ -16,13 +16,16 @@ export default function RequestConsult(){
   const [ state, action ] = useActionState(registerRequest, { message: "", status: false });
   const params = useParams<{ patientId: string }>();
   const [ consultations, setConsultations ] = useState<GetServices>([]);
+  const router = useRouter();
   
   useEffect(()=>{
     getServices({ kind: "consultation" }).then(setConsultations);
 
     if(state.message)
       if(state.status)
-        toast.success(state.message);
+        toast.success(state.message, {
+          onOpen: router.refresh
+        });
       else
         toast.error(state.message);
 

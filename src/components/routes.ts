@@ -19,12 +19,12 @@ export const clinicalIcons = [
     Icon: LuStethoscope
   },
   {
-    route: 'office',
-    Icon: FaUserDoctor
-  },
-  {
     route: 'urgency-bank',
     Icon: PiAmbulance
+  },
+  {
+    route: 'office',
+    Icon: FaUserDoctor
   },
   {
     route: 'schedule-exams',
@@ -80,14 +80,14 @@ export const clinicalRoutes = [
     label: 'Triagem',
   },
   {
-    href: "/clinical/office",
-    route: 'office',
-    label: 'Consultório',
-  },
-  {
     href: "/clinical/urgency-bank",
     route: 'urgency-bank',
     label: 'Banco de Urgência',
+  },
+  {
+    href: "/clinical/office",
+    route: 'office',
+    label: 'Consultório',
   },
   {
     href: "/clinical/schedule-exams",

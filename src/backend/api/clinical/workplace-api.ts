@@ -71,11 +71,20 @@ export async function countIndicator(indicator: CountIndicator){
         })
         .countDocuments());
       }
+
+      case "req-surgery": {
+        
+        return (await serviceRequestsModel.find({ 
+          pending: true,
+          from: "surgery" 
+        })
+        .countDocuments());
+      }
     }
 
     return 0;
   }catch (e) {
-    console.error(e);
+    console.error("workplace:", e);
     return -1;
   }
 }

@@ -43,7 +43,6 @@ const workplaceSchema = new Schema({
   timestamps: true,
 });
 
-
 // models 
 const unitModel = con.model("Unit", unitSchema);
 const workplaceModel = con.model("Workplace", workplaceSchema);
@@ -63,8 +62,8 @@ const main = async ()=>{
     }
     console.log("[*] database is configured!");
   }catch(e){
-    console.log("[-] failed setup database: ", e);
-    console.lgo("[*] Check the database connection and try again...");
+    console.error("[-] failed setup database: ", e);
+    console.error("[*] Check the database connection and try again...");
   }finally{
     process.exit();
   }

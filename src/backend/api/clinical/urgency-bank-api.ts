@@ -21,7 +21,8 @@ import {
   surgeryModel,
   processStateModel,
   hospitalizationModel,
-  patientStateModel
+  patientStateModel,
+  patientExitModel
 } from "@/backend/model";
 import { 
   patientAccess,
@@ -1170,9 +1171,11 @@ async function getSurgery({ id }:{ id?: string }){
 async function applyDischarge(p:unknown, formdata:FormData){
   try{
     const patientId = formdata.get("patientId") as string;
-    
+    const userMakedAt = formdata.get("makedAt");
+    const userId = await getUserId();
+
     await triedModel.updateOne({
-      userId: await getUserId(),
+      userId,
       patientId,
       served: false
     }, {
@@ -1181,13 +1184,23 @@ async function applyDischarge(p:unknown, formdata:FormData){
 
     await closePatientProcess(patientId, "urgency");
     await syncPatientRegister(patientId);
+    const id = (await getSyncedHistories(patientId))?.id as string;
+
+    await patientExitModel.create({
+      patientId: id,
+      userId,
+      userEventAt: userMakedAt,
+      where: "high"
+    });
 
     return {
       message: "Alta registrada com sucesso!",
       status: true
     }
-  }catch {
-     return {
+  }catch (e){
+    console.error("urgency:", e);
+    
+    return {
       message: "Alta registrada com sucesso!",
       status: false
     }

@@ -112,12 +112,18 @@ export async function updateService(prev: unknown, formData: FormData){
 
 export async function getServices({ 
   specialtyId, 
-  kind 
+  kind,
+  strictQuery
 }:{ 
   specialtyId?: string; 
-  kind?: "exam" | "consultation" | "surgery"
+  kind?: "exam" | "consultation" | "surgery";
+  strictQuery?: boolean;
 }){
-    const services = await serviceModel.find(omitUndefined({ specialtyId, kind }));
+    const queryParams = strictQuery
+      ? { specialtyId, kind }
+      : omitUndefined({ specialtyId, kind });
+
+    const services = await serviceModel.find(queryParams);
     const formatedList = [];
 
   for(const service of services){

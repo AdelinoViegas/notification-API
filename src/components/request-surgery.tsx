@@ -4,7 +4,7 @@ import Modal from "@/components/modal";
 import Button from "./ui/button";
 import { useActionState, useEffect, useState } from "react";
 import Selection, { SelectionOption } from "./ui/selection";
-import { useParams, usePathname } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { registerRequest } from "@/backend/api/clinical/office-api";
 import { toast } from "react-toastify";
 import { getServices } from "@/backend/api/clinical/scheduling-api";
@@ -15,6 +15,7 @@ export default function RequestSurgery(){
   const params = useParams<{ patientId: string }>();
   const [ surgeries, setSurgeries ] = useState<SelectionOption[]>([]);
   const path = usePathname();
+  const router = useRouter();
   
   useEffect(()=> {
     const getSurgeries = async () => { 
@@ -28,7 +29,9 @@ export default function RequestSurgery(){
   useEffect(()=>{
     if(state.message)
       if(state.status)
-        toast.success(state.message);
+        toast.success(state.message, {
+          onOpen: router.refresh
+        });
       else
         toast.error(state.message);
 
