@@ -498,14 +498,25 @@ async function getRequests({
   filterByUserId?: boolean;
 }){
   try{
-    const requests = await serviceRequestsModel.find(omitUndefined({ 
-      from, 
-      pending,
-      userId: filterByUserId
-        ? await getUserId() 
-        : undefined
-    }));
+    const queryParams = filterByUserId 
+      ? { from, userId: await getUserId() }
+      : omitUndefined({ pending, from })
+
+    // const requests = await serviceRequestsModel.find(omitUndefined({ 
+    //   from, 
+    //   pending: filterByUserId
+    //     ? undefined
+    //     : pending
+    //   ,
+    //   userId: filterByUserId
+    //     ? await getUserId() 
+    //     : undefined
+    // }));
+
+    const requests = await serviceRequestsModel.find(queryParams);
     const formated = [];
+
+    console.log(requests, filterByUserId);
     
     for (const req of requests){
       formated.push({
@@ -520,7 +531,7 @@ async function getRequests({
       
     return formated;
   }catch (e){
-    console.error(e);
+    console.error("office-api:", e);
     
     return []
   }
