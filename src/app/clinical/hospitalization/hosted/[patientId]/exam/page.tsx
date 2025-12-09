@@ -7,7 +7,7 @@ export default async function Page({ params }: { params: Promise<{ patientId: st
   const { patientId } = await params;
   
   return(
-    <main>
+    <main className="space-y-3">
       <Refresh />
       <Accordium title="Solicitação de Exames">
         <RequestExams {...{patientId}} isFullWindow />
