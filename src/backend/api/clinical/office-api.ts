@@ -515,15 +515,13 @@ async function getRequests({
 
     const requests = await serviceRequestsModel.find(queryParams);
     const formated = [];
-
-    console.log(requests, filterByUserId);
     
     for (const req of requests){
       formated.push({
         id: req._id.toString(),
         patientName: (await patientModel.findById({ _id: req.patientId }))?.fullname as string,
         kind: (await serviceModel.findById({ _id: req.kind }))?.name as string,
-        pending: req.pending && "Pendente",
+        pending: req.pending ? "Pendente" : "Antendido",
         requester: (await getUser(req.userId?.toString() as string))?.fullname,
         createdAt: req.createdAt
       });
