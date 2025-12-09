@@ -176,5 +176,6 @@ export {
   inHospitalizeModel,
   internalMovimentModel,
   serviceRequestsModel,
-  serviceModel
+  serviceModel,
+  patientExitModel
 };

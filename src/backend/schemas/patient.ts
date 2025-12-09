@@ -141,7 +141,11 @@ const patientStateSchema = new Schema({
 });
 
 const patientExitSchema = new Schema({
-  patientId: Schema.Types.ObjectId,
+  patientId: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    unique: true
+  },
   userId: Schema.Types.ObjectId,
   userEventAt: {
     type: Date,
@@ -155,9 +159,8 @@ const patientExitSchema = new Schema({
     type: String,
     required: true,
     enum: [
-      "high",
-      "consultation",
-      "transfer"
+      "transfer",
+      "high"
     ]
   },
 }, {
