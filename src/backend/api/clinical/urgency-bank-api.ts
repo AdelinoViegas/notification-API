@@ -1197,8 +1197,10 @@ async function applyDischarge(p:unknown, formdata:FormData){
       message: "Alta registrada com sucesso!",
       status: true
     }
-  }catch {
-     return {
+  }catch (e){
+    console.error("urgency:", e);
+    
+    return {
       message: "Alta registrada com sucesso!",
       status: false
     }
