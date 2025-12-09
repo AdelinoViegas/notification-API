@@ -7,9 +7,9 @@ import Alert from "@/components/ui/alert";
 import Button from "@/components/ui/button";
 import Search from "@/components/ui/search";
 import Refresh from "@/components/refresh";
-import Header from "@/components/header";
 import SelectionFilter from "@/components/ui/selection-filter";
 import { getScheduleSugeries } from "@/backend/api/clinical/scheduling-api";
+import CountIndicator from "@/components/count-indicator";
 
 export const dynamic = "force-dynamic";
 
@@ -37,11 +37,6 @@ export default async function Page({
   return (
     <main className="space-y-3">
       <Refresh />
-
-      <div className="mt-6">
-          <Header title="Pedido de agendamento de cirurgia"/>
-      </div>
-
        <div className="flex gap-x-3">
         {/*<Link href="/clinical/appointment/serveds">*/}
           <Button className="flex gap-3">
@@ -56,8 +51,11 @@ export default async function Page({
             Arquivados
           </Button>
         </Link>
-        
-        <Link href="/clinical/schedule-surgery/requests">
+
+        <Link href="/clinical/schedule-surgery/requests" className="inline-flex relative">
+          <div className="absolute -right-4 z-10" title="Indicador de solicitações">
+            <CountIndicator from="req-surgery" />
+          </div>
           <Button className="flex gap-3">Solicitações</Button>
         </Link>
       </div>
