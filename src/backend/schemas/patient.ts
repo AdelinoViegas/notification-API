@@ -140,6 +140,30 @@ const patientStateSchema = new Schema({
   }
 });
 
+const patientExitSchema = new Schema({
+  patientId: Schema.Types.ObjectId,
+  userId: Schema.Types.ObjectId,
+  userEventAt: {
+    type: Date,
+    default: new Date
+  },
+  lockProfileState: {
+    type: Boolean,
+    default: false
+  },
+  where: {
+    type: String,
+    required: true,
+    enum: [
+      "high",
+      "consultation",
+      "transfer"
+    ]
+  },
+}, {
+  timestamps: true
+});
+
 export {
   patientSchema,
   demographySchema,
@@ -150,5 +174,6 @@ export {
   specialtyStateSchema,
   patientSyncSchema,
   municipalitySchema,
-  patientStateSchema
+  patientStateSchema,
+  patientExitSchema
 };
