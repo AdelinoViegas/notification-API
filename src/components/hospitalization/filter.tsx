@@ -10,7 +10,6 @@ export default function Filter(){
   const pathname = usePathname();
   const router = useRouter();
   const [ nursings, setNursings ] = useState<SelectionOption[]>([]);
-  const [ internalServices, setInternalServices ] = useState<SelectionOption[]>([]);
 
   const handlerFilter = (e: React.ChangeEvent<HTMLSelectElement>)=>{
     const _search = new URLSearchParams(search);
@@ -39,18 +38,11 @@ export default function Filter(){
   }
   
   useEffect(()=>{
-    getInternalServices().then(setInternalServices);
     getNursings({}).then(setNursings);
   },[]);
 
   return (
     <div className="flex gap-x-3">
-      <Selection
-        label="Filtrar por Serviço"
-        options={internalServices} 
-        onChange={handlerFilterByServices}
-      />
-
       <Selection
         label="Filtrar por Enfermaria"
         options={nursings} 

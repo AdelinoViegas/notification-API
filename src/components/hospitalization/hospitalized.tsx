@@ -4,9 +4,9 @@ import { formater } from "@/lib/table-formater";
 import Pagination from "@/components/pagination";
 import Refresh from "@/components/refresh";
 import { getPatients } from "@/backend/api/clinical/hospitalization-api";
-import Filter from "./filter";
+import Filter from "@/components/hospitalization/filter";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
-import Alert from "../ui/alert";
+import Alert from "@/components/ui/alert";
 
 export default async function Hospitalized({ page }: {
   pfn?: string;
