@@ -2,8 +2,9 @@
 
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import Selection, { SelectionOption } from "@/components/ui/selection";
-import { useEffect, useState } from "react";
-import { getNursings, getInternalServices } from "@/backend/api/clinical/hospitalization-api";
+import React, { useEffect, useState } from "react";
+import { getNursings, getInternalServices, getSections } from "@/backend/api/clinical/hospitalization-api";
+type FilterKeys = { [ key: string ] : "_fst" | "_fs" | "_fn"};
 
 export default function Filter({ internalServiceId }: { internalServiceId?: string }){
   const search = useSearchParams();
@@ -11,36 +12,59 @@ export default function Filter({ internalServiceId }: { internalServiceId?: stri
   const router = useRouter();
   const componentRoute = useSearchParams().get("r") as "n" | null;
   const [ nursings, setNursings ] = useState<SelectionOption[]>([]);
+  const [ sections, setSections ] = useState<SelectionOption[]>([]);
   const [ internalServices, setInternalServices ] = useState<SelectionOption[]>([]);
 
-  const handlerFilter = (e: React.ChangeEvent<HTMLSelectElement>)=>{
+  const filterHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const _search = new URLSearchParams(search);
-
-    if(e.target.value){
-      _search.set("_fn", e.target.value); // filter by nursings
-      router.push([pathname, _search.toString()].join("?"));
-      return;
+    const keyIds = ["section", "service", "nursing"];
+    const filterKeys: FilterKeys = {
+      section: "_fst",
+      service: "_fs",
+      nursing: "_fn"
     }
 
-    _search.delete("_fn");
-    router.push([pathname, _search.toString()].join("?"));
-  }
+    if(keyIds.includes(e.target.id)){
+      switch(e.target.id){
+        case "section": {
 
-  const handlerFilterByServices = (e: React.ChangeEvent<HTMLSelectElement>)=>{
-    const _search = new URLSearchParams(search);
+          if(e.target.value)
+            _search.set(filterKeys[e.target.id], e.target.value); // filter by sections
+          else
+            _search.delete(filterKeys[e.target.id]);
+          
+          router.push([pathname, _search.toString()].join("?"));
+          break;
+        }
 
-    if(e.target.value){
-      _search.set("_fs", e.target.value); // filter by nursings
-      router.push([pathname, _search.toString()].join("?"));
-      return;
+        case "service": {
+          
+          if(e.target.value)
+            _search.set(filterKeys[e.target.id], e.target.value); // filter by sections
+          else
+            _search.delete(filterKeys[e.target.id]);
+          
+          router.push([pathname, _search.toString()].join("?"));
+          break;
+        }
+
+        case "nursing": {
+          
+          if(e.target.value)
+            _search.set(filterKeys[e.target.id], e.target.value); // filter by sections
+          else
+            _search.delete(filterKeys[e.target.id]);
+          
+          router.push([pathname, _search.toString()].join("?"));
+          break;
+        }
+      }
     }
-
-    _search.delete("_fs");
-    router.push([pathname, _search.toString()].join("?"));
   }
   
   useEffect(()=>{
     getInternalServices().then(setInternalServices);
+    getSections().then(setSections);
     getNursings({ internalServiceId }).then(setNursings);
   },[]);
 
@@ -50,14 +74,23 @@ export default function Filter({ internalServiceId }: { internalServiceId?: stri
         <Selection
           label="Filtrar por Serviço"
           options={internalServices} 
-          onChange={handlerFilterByServices}
+          id="service"
+          onChange={filterHandler}
         />
       }
 
       <Selection
+        label="Filtrar por Ala"
+        id="section"
+        options={sections} 
+        onChange={filterHandler}
+      />
+
+      <Selection
         label="Filtrar por Enfermaria"
         options={nursings} 
-        onChange={handlerFilter}
+        id="nursing"
+        onChange={filterHandler}
       />
     </div>
   )
