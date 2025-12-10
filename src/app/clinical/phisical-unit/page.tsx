@@ -27,7 +27,6 @@ export default async function Page({
       "createdAt",
       "unitName",
       "type",
-      "user",
       "status",
     ],
     transform: {
@@ -41,7 +40,6 @@ export default async function Page({
       "createdAt", 
       "unitName", 
       "type",
-      "user",
       "status",
     ], 
   });
@@ -62,11 +60,11 @@ export default async function Page({
         </Link>
 
         <Link href="/clinical/phisical-unit/specialty">
-          <Button>Especialidade</Button>
+          <Button>Especialidades</Button>
         </Link>
 
         <Link href="/clinical/phisical-unit/urgency-service">
-          <Button>Servicos de Urgencia</Button>
+          <Button>Serviços de Urgencia</Button>
         </Link>
       </div>
 
@@ -90,7 +88,6 @@ export default async function Page({
           "Data de Registo", 
           "Nome da Unidade", 
           "Tipo",
-          "Responsável",
           "Estado"
         ]} 
         rows={patientRows}
