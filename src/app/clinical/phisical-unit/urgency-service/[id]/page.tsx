@@ -8,11 +8,8 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
   return(
     <main>
-      <div className="mt-6">
-        <Header title="Editar Unidade Externa"/>
-      </div>
-      
-     <UrgencyServiceForm data={JSON.stringify(service)}/>
+      <Header title="Editar Serviço de Urgência"/>
+      <UrgencyServiceForm data={JSON.stringify(service)}/>
     </main>
   );
 }
