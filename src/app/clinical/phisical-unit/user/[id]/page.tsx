@@ -28,12 +28,12 @@ export default async function Page({ params }:{ params: Promise<{ id: string }>}
           userId={id}
           categoryId={user.categoryId}
           specialtyId={user.specialtyId}
-          serviceId={user.serviceId} 
+          serviceId={user?.serviceId ?? ""} 
           orderNumber={user.orderNumber}
           services={urgencyServices}
           specialties={specialties}
           internalServices={internalServices}
-          internalServiceId={user.internalServiceId}
+          internalServiceId={user?.internalServiceId ?? ""}
         />
 
         <UserWorkplace userId={id} />
