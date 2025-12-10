@@ -1,4 +1,3 @@
-import Header from "@/components/header";
 import Card from "@/components/ui/card";
 import UserClinicalConfig from "@/components/user-clinical-config";
 import UserWorkplace from "@/components/user-workplace";
@@ -22,9 +21,7 @@ export default async function Page({ params }:{ params: Promise<{ id: string }>}
 
   return (
     <main className="space-y-3">
-      <div className="mt-6">
-        <Header title={`Area de Trabalho | ${user.fullname}`}/>
-      </div>
+      <h2 className="uppercase text-lg font-medium">{user.fullname}</h2>
       
       <Card className="grid lg:grid-cols-2 gap-y-3 gap-x-10">
         <UserClinicalConfig 
