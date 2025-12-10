@@ -21,9 +21,7 @@ export default async function Hospitalized({ page }: {
     strictQuery: true
   });
 
-  const currentUser = await getMyClinicalProfile();
-
-  console.log(currentUser); 
+  const intService = (await getMyClinicalProfile())?.internalService;
   
   const rows = formater(patients.patients, {
     filterKey: [
@@ -59,7 +57,7 @@ export default async function Hospitalized({ page }: {
           message="Faça duplo click sobre o utente para seguir com o atendimento!" 
         />
         <div className="flex gap-x-3 items-top">
-          <Filter />
+          <Filter internalServiceId={intService?.id} />
         
           <Search
             className="flex items-center gap-3"
