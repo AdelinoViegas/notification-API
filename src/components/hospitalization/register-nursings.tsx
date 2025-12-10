@@ -40,7 +40,7 @@ export default function RegisterNursing(){
     if(state.message)
       if(state.status)
         toast.success(state.message, { 
-          onClose: reset
+          onOpen: reset
         });
       else
         toast.error(state.message);
