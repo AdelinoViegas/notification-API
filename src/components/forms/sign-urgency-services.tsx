@@ -20,7 +20,7 @@ export default function SignUrgencyService(){
       if(state.status)
         toast.success(state.message, {
           autoClose: 3500,
-          onClose: ()=> router.refresh(),
+          onOpen: ()=> router.refresh(),
         });
       else
         toast.error(state.message, {autoClose: 3500});
@@ -34,6 +34,7 @@ export default function SignUrgencyService(){
         <BiPlus />  
         Novo Serviço
       </Button>
+
       <Modal
         open={modalState}
         onClose={closeModal}

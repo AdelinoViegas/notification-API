@@ -1,14 +1,10 @@
 import Link from "next/link";
-import { BiPlus as PlusIcon } from "react-icons/bi";
-import { IoPerson } from "react-icons/io5";
-import { FaHospital, FaUserMd } from "react-icons/fa";
 import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
 import Button from "@/components/ui/button";
 import { formater } from "@/lib/table-formater";
 import { getDateInSlashFormat } from "@/lib/date-formater";
-import { RiHospitalFill } from "react-icons/ri";
 import { getUnits } from "@/backend/api/clinical/urgency-bank-api";
 
 export const dynamic = "force-dynamic";
@@ -64,7 +60,7 @@ export default async function Page({
         </Link>
 
         <Link href="/clinical/phisical-unit/urgency-service">
-          <Button>Serviços de Urgencia</Button>
+          <Button>Serviços de Urgência</Button>
         </Link>
       </div>
 
