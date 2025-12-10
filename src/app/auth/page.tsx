@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { RESTproxy } from "./rest-proxy";
+import { RESTproxy } from "@/app/auth/rest-proxy";
 import { useSearchParams, useRouter } from "next/navigation";
 
 export default function Auth(){
@@ -11,10 +11,10 @@ export default function Auth(){
 
   useEffect(()=>{
     RESTproxy(token, true)
-    .then(()=>router.replace("/workplace"))
+    .then(()=>router.replace("/wp"))
 
   }, [token]);
   return(
-    <>Autenticando ...</>
-  )
+    <>Estamos a verificar, por favor aguarde ...</>
+  );
 }

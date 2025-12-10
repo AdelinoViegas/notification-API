@@ -4,9 +4,10 @@ import { formater } from "@/lib/table-formater";
 import Pagination from "@/components/pagination";
 import Refresh from "@/components/refresh";
 import { getPatients } from "@/backend/api/clinical/hospitalization-api";
-import Filter from "./filter";
+import Filter from "@/components/hospitalization/filter";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
-import Alert from "../ui/alert";
+import Alert from "@/components/ui/alert";
+import { getMyClinicalProfile } from "@/backend/api/clinical/api";
 
 export default async function Hospitalized({ page }: {
   pfn?: string;
@@ -19,6 +20,8 @@ export default async function Hospitalized({ page }: {
     filterByUserId: true,
     strictQuery: true
   });
+
+  const intService = (await getMyClinicalProfile())?.internalService;
   
   const rows = formater(patients.patients, {
     filterKey: [
@@ -54,7 +57,7 @@ export default async function Hospitalized({ page }: {
           message="Faça duplo click sobre o utente para seguir com o atendimento!" 
         />
         <div className="flex gap-x-3 items-top">
-          <Filter />
+          <Filter internalServiceId={intService?.id} />
         
           <Search
             className="flex items-center gap-3"

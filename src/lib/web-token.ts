@@ -33,7 +33,8 @@ export async function getUserId(){
     
     const userId = await decAdminJWT(token.value);
     return userId;
-  } catch { 
+  } catch (e) {
+    console.error("get-user-id: ", e); 
     redirect("/clinical");
   }
 }

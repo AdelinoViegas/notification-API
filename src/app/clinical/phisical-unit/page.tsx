@@ -1,14 +1,10 @@
 import Link from "next/link";
-import { BiPlus as PlusIcon } from "react-icons/bi";
-import { IoPerson } from "react-icons/io5";
-import { FaHospital, FaUserMd } from "react-icons/fa";
 import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
 import Button from "@/components/ui/button";
 import { formater } from "@/lib/table-formater";
 import { getDateInSlashFormat } from "@/lib/date-formater";
-import { RiHospitalFill } from "react-icons/ri";
 import { getUnits } from "@/backend/api/clinical/urgency-bank-api";
 
 export const dynamic = "force-dynamic";
@@ -27,7 +23,6 @@ export default async function Page({
       "createdAt",
       "unitName",
       "type",
-      "user",
       "status",
     ],
     transform: {
@@ -41,7 +36,6 @@ export default async function Page({
       "createdAt", 
       "unitName", 
       "type",
-      "user",
       "status",
     ], 
   });
@@ -50,38 +44,23 @@ export default async function Page({
     <main className="space-y-3">
       <div className="flex gap-x-2">
         <Link href="/clinical/phisical-unit/sign">
-          <Button className="flex gap-x-2">
-            <PlusIcon className="w-5" />
-            Nova Unidade
-          </Button>
+          <Button>Nova Unidade Interna</Button>
         </Link>
 
         <Link href="/clinical/phisical-unit/external">
-          <Button className="flex gap-x-2">
-            <FaHospital/>
-            Unidades Externas
-          </Button>
+          <Button>Unidades Externas</Button>
         </Link>
 
         <Link href="/clinical/phisical-unit/user">
-          <Button className="flex gap-x-2 bg-slate-500">
-            <IoPerson/>
-            Funcionários
-          </Button>
+          <Button>Funcionários</Button>
         </Link>
 
         <Link href="/clinical/phisical-unit/specialty">
-          <Button className="flex gap-x-2">
-            <FaUserMd/>
-            Especialidade
-          </Button>
+          <Button>Especialidades</Button>
         </Link>
 
         <Link href="/clinical/phisical-unit/urgency-service">
-          <Button className="flex gap-x-2">
-            <RiHospitalFill /> 
-            Novo Serviço
-          </Button>
+          <Button>Serviços de Urgência</Button>
         </Link>
       </div>
 
@@ -105,7 +84,6 @@ export default async function Page({
           "Data de Registo", 
           "Nome da Unidade", 
           "Tipo",
-          "Responsável",
           "Estado"
         ]} 
         rows={patientRows}

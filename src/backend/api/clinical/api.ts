@@ -112,36 +112,43 @@ async function getUser(id: string){
     categoryId: clinical?.categoryId?.toString() as string,
     specialtyId: clinical?.specialtyId?.toString() as string,
     orderNumber: clinical?.orderNumber as number,
-    serviceId: clinical?.serviceId?.toString() as string,
-    internalServiceId: clinical?.internalServiceId?.toString() as string,
+    serviceId: clinical?.serviceId?.toString(),
+    internalServiceId: clinical?.internalServiceId?.toString(),
     ...user
   }
 }
 
 export async function getMyClinicalProfile(){
   try{
-    const user = await getUser(await getUserId());
+    const id = await getUserId();
+    const user = await getUser(id);
+    
+    const internalService = user?.internalServiceId 
+      ? await internalServiceModel.findById({ _id: user.internalServiceId })
+      : null
 
-    const internalService = await internalServiceModel.findById({ _id: user.internalServiceId });
-    if(!internalService) throw new Error;
-
-    const urgencyService = await urgencyServiceModel.findById({ _id: user.serviceId });
-    if(!internalService) throw new Error;
+    const urgencyService = user?.serviceId 
+      ? await urgencyServiceModel.findById({ _id: user.serviceId })
+      : null
 
     return {
-      internalService: {
-        id: internalService._id.toString(),
-        name: internalService.name
-      },
-      urgencyService: {
-        id: internalService._id.toString(),
-        name: internalService.name
-      },
+      internalService: internalService 
+        ? {
+            id: internalService._id.toString(),
+            name: internalService.name
+          }
+        : null,
+      urgencyService: urgencyService 
+        ? {
+            id: urgencyService._id.toString(),
+            name: urgencyService.label
+          } 
+        : null,
       "urgency-bank": urgencyService?.label,
-      hospitalization: internalService.name
+      hospitalization: internalService?.name
     }
   }catch(e){
-    console.error(e);
+    console.error("clincal-profile: ", e);
     return null;
   }
 }
