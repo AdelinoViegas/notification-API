@@ -41,7 +41,7 @@ export default function Filter({ internalServiceId }: { internalServiceId?: stri
   
   useEffect(()=>{
     getInternalServices().then(setInternalServices);
-    getNursings({}).then(setNursings);
+    getNursings({ internalServiceId }).then(setNursings);
   },[]);
 
   return (

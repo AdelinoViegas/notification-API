@@ -112,18 +112,24 @@ async function getUser(id: string){
     categoryId: clinical?.categoryId?.toString() as string,
     specialtyId: clinical?.specialtyId?.toString() as string,
     orderNumber: clinical?.orderNumber as number,
-    serviceId: clinical?.serviceId?.toString() as string,
-    internalServiceId: clinical?.internalServiceId?.toString() as string,
+    serviceId: clinical?.serviceId?.toString(),
+    internalServiceId: clinical?.internalServiceId?.toString(),
     ...user
   }
 }
 
 export async function getMyClinicalProfile(){
   try{
-    const userId = await getUserId();
-    const user = await getUser(userId);
-    const internalService = await internalServiceModel.findById({ _id: user.internalServiceId });
-    const urgencyService = await urgencyServiceModel.findById({ _id: user.serviceId });
+    const id = await getUserId();
+    const user = await getUser(id);
+    
+    const internalService = user?.internalServiceId 
+      ? await internalServiceModel.findById({ _id: user.internalServiceId })
+      : null
+
+    const urgencyService = user?.serviceId 
+      ? await urgencyServiceModel.findById({ _id: user.serviceId })
+      : null
 
     return {
       internalService: internalService 
