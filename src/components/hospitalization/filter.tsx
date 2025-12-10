@@ -5,7 +5,7 @@ import Selection, { SelectionOption } from "@/components/ui/selection";
 import { useEffect, useState } from "react";
 import { getNursings, getInternalServices } from "@/backend/api/clinical/hospitalization-api";
 
-export default function Filter(){
+export default function Filter({ internalServiceId }: { internalServiceId?: string }){
   const search = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();

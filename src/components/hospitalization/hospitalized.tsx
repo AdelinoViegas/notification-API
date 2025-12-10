@@ -7,6 +7,7 @@ import { getPatients } from "@/backend/api/clinical/hospitalization-api";
 import Filter from "@/components/hospitalization/filter";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
 import Alert from "@/components/ui/alert";
+import { getMyClinicalProfile } from "@/backend/api/clinical/api";
 
 export default async function Hospitalized({ page }: {
   pfn?: string;
@@ -19,6 +20,10 @@ export default async function Hospitalized({ page }: {
     filterByUserId: true,
     strictQuery: true
   });
+
+  const currentUser = await getMyClinicalProfile();
+
+  console.log(currentUser); 
   
   const rows = formater(patients.patients, {
     filterKey: [

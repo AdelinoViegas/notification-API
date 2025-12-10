@@ -120,28 +120,29 @@ async function getUser(id: string){
 
 export async function getMyClinicalProfile(){
   try{
-    const user = await getUser(await getUserId());
-
+    const userId = await getUserId();
+    const user = await getUser(userId);
     const internalService = await internalServiceModel.findById({ _id: user.internalServiceId });
-    if(!internalService) throw new Error;
-
     const urgencyService = await urgencyServiceModel.findById({ _id: user.serviceId });
-    if(!internalService) throw new Error;
 
     return {
-      internalService: {
-        id: internalService._id.toString(),
-        name: internalService.name
-      },
-      urgencyService: {
-        id: internalService._id.toString(),
-        name: internalService.name
-      },
+      internalService: internalService 
+        ? {
+            id: internalService._id.toString(),
+            name: internalService.name
+          }
+        : null,
+      urgencyService: urgencyService 
+        ? {
+            id: urgencyService._id.toString(),
+            name: urgencyService.label
+          } 
+        : null,
       "urgency-bank": urgencyService?.label,
-      hospitalization: internalService.name
+      hospitalization: internalService?.name
     }
   }catch(e){
-    console.error(e);
+    console.error("clincal-profile: ", e);
     return null;
   }
 }
