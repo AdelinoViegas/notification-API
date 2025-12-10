@@ -65,8 +65,11 @@ export default function Filter({ internalServiceId }: { internalServiceId?: stri
   useEffect(()=>{
     getInternalServices().then(setInternalServices);
     getSections().then(setSections);
-    getNursings({ internalServiceId }).then(setNursings);
-  },[]);
+    getNursings({ 
+      internalServiceId,
+      sectionId: search.get("_fst") ?? undefined 
+    }).then(setNursings);
+  },[search]);
 
   return (
     <div className="flex gap-x-3">
