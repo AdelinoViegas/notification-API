@@ -50,38 +50,23 @@ export default async function Page({
     <main className="space-y-3">
       <div className="flex gap-x-2">
         <Link href="/clinical/phisical-unit/sign">
-          <Button className="flex gap-x-2">
-            <PlusIcon className="w-5" />
-            Nova Unidade
-          </Button>
+          <Button>Nova Unidade Interna</Button>
         </Link>
 
         <Link href="/clinical/phisical-unit/external">
-          <Button className="flex gap-x-2">
-            <FaHospital/>
-            Unidades Externas
-          </Button>
+          <Button>Unidades Externas</Button>
         </Link>
 
         <Link href="/clinical/phisical-unit/user">
-          <Button className="flex gap-x-2 bg-slate-500">
-            <IoPerson/>
-            Funcionários
-          </Button>
+          <Button>Funcionários</Button>
         </Link>
 
         <Link href="/clinical/phisical-unit/specialty">
-          <Button className="flex gap-x-2">
-            <FaUserMd/>
-            Especialidade
-          </Button>
+          <Button>Especialidade</Button>
         </Link>
 
         <Link href="/clinical/phisical-unit/urgency-service">
-          <Button className="flex gap-x-2">
-            <RiHospitalFill /> 
-            Novo Serviço
-          </Button>
+          <Button>Servicos de Urgencia</Button>
         </Link>
       </div>
 

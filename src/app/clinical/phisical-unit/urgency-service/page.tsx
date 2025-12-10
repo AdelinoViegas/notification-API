@@ -29,11 +29,6 @@ export default async function Page({
 
   return (
     <main className="space-y-3">
-
-      <div className="mt-6">
-        <Header title="Unidades Externas"/>
-      </div>
-
       <div className="flex gap-x-2 pb-4">
         <SignUrgencyService />
       </div>
