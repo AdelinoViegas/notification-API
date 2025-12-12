@@ -157,7 +157,7 @@ export async function updateWaintingState({
 
 export async function patientWaiting(pv: unknown, formData: FormData){
   try{
-    const id = formData.get("patientId");
+    const id = formData.get("patientId") as string;
     
     // ja está em espera ? 
     const patient = await patientWaitingModel.findOne({ 
@@ -167,6 +167,7 @@ export async function patientWaiting(pv: unknown, formData: FormData){
 
     if(patient) {
       await patientWaitingModel.deleteOne({ _id: patient._id });
+      await updateWaintingState({ id, toWaint: false });
       return {
         message: "Retirado da lista de espera!",
         status: true
@@ -178,11 +179,14 @@ export async function patientWaiting(pv: unknown, formData: FormData){
       doctorId: await getUserId()
     });
 
+    await updateWaintingState({ id, toWaint: true });
+
     return {
       message: "Utente colocado em espera!",
       status: true
     }
   }catch (e){
+    console.error("urgency-bank: ", e);
     
     return {
       message: "Opps!!",
