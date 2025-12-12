@@ -35,7 +35,7 @@ import {
   unitTypes,
   priority as priorityTranslator
 } from "@/backend/api/clinical/translator";
-import { getUser, patientFilters } from "@/backend/api/clinical/api";
+import { getUser } from "@/backend/api/clinical/api";
 import { DoctorCalendar } from "@/backend/api/clinical/types";
 import { getPatient as mainPatient } from "@/backend/api/clinical/api";
 import { closePatientProcess, getSyncedHistories, syncPatientRegister } from "@/backend/api/clinical/process-control";
@@ -44,14 +44,31 @@ import { omitUndefined } from "mongoose";
 
 type UnitType = "workplace" | "internment" | "laboratory" | "imaging";
 
+type Props = {
+  name?: string;
+  priority?: string;
+  filterByWaiting?: boolean;
+}
+
 async function getPatients({ 
   name,
-  priority 
-}:patientFilters){
+  priority,
+  filterByWaiting
+}:Props){
   try{
+    // se estiver em espera filtrar pelo id do usuario responsavel por colocar o restrito em espera
+    // ao settar como em espera atualizar o userId  para facilitar no filtro dos pacientes em espera
     const userId = await getUserId() as string;
-    const user = await clinicalUserModel.findOne({ userId }).select({ serviceId: 1});
-    const patients = await triedModel.find({ serviceId: user?.serviceId, served: false });
+    const user = await clinicalUserModel.findOne({ userId }).select({ serviceId: 1 });
+    const queryParams = filterByWaiting 
+      ? {
+          serviceId: user?.serviceId,
+          served: false,
+          userId: await getUserId()
+        }
+      : { serviceId: user?.serviceId, served: false }
+
+    const patients = await triedModel.find(queryParams);
     const patientList = [];
 
     for(const patient of patients){
@@ -114,6 +131,26 @@ async function getPatients({
       availablePages: 1,
       currentPage: 1,
     };
+  }
+}
+
+export async function updateWaintingState({
+  id,
+  toWaint
+}: {
+  id: string; // patientId
+  toWaint: boolean;
+}){
+  try{
+    await triedModel.updateOne({ patientId: id }, {
+      isWaiting: toWaint,
+      userId: await getUserId()
+    });
+
+    return true;
+  }catch(e){
+    console.error("urgency-bank: ", e);
+    return false;
   }
 }
 

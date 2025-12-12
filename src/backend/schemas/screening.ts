@@ -85,6 +85,10 @@ const triedSchema = new Schema({
   patientId: Schema.Types.ObjectId,
   userId: Schema.Types.ObjectId,
   serviceId: Schema.Types.ObjectId,
+  isWaiting: {
+    type: Boolean,
+    default: false
+  },
   reasonChangingServices: String, 
   served: {
     type: Boolean,
