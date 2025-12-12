@@ -74,6 +74,7 @@ async function getPatients({
 
     for(const patient of patients){
       const urgency = await patientModel.findById({ _id: patient.patientId });
+      
  
       const isProcess = await processStateModel.findOne({
          patientId: patient.patientId,
@@ -135,6 +136,19 @@ async function getPatients({
   }
 }
 
+export async function isWaiting(id: string){
+  try{
+    const patient = await triedModel.findOne({ patientId: id, isWaiting: true });
+    const state = await patientWaitingModel.findOne({ id, doctorId: await getUserId() });
+    if(patient && state)
+      return true;
+
+    return false;
+  }catch(e){
+    return false;
+  }
+}
+
 export async function updateWaintingState({
   id,
   toWaint
@@ -187,7 +201,7 @@ export async function patientWaiting(pv: unknown, formData: FormData){
     }
   }catch (e){
     console.error("urgency-bank: ", e);
-    
+
     return {
       message: "Opps!!",
       status: false
