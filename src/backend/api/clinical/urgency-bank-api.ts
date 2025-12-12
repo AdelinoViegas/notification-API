@@ -22,7 +22,8 @@ import {
   processStateModel,
   hospitalizationModel,
   patientStateModel,
-  patientExitModel
+  patientExitModel,
+  patientWaitingModel
 } from "@/backend/model";
 import { 
   patientAccess,
@@ -151,6 +152,42 @@ export async function updateWaintingState({
   }catch(e){
     console.error("urgency-bank: ", e);
     return false;
+  }
+}
+
+export async function patientWaiting(pv: unknown, formData: FormData){
+  try{
+    const id = formData.get("patientId");
+    
+    // ja está em espera ? 
+    const patient = await patientWaitingModel.findOne({ 
+      id, 
+      doctorId: await getUserId() 
+    });
+
+    if(patient) {
+      await patientWaitingModel.deleteOne({ _id: patient._id });
+      return {
+        message: "Retirado da lista de espera!",
+        status: true
+      }
+    }
+
+    await patientWaitingModel.create({
+      id,
+      doctorId: await getUserId()
+    });
+
+    return {
+      message: "Utente colocado em espera!",
+      status: true
+    }
+  }catch (e){
+    
+    return {
+      message: "Opps!!",
+      status: false
+    }
   }
 }
 

@@ -31,6 +31,7 @@ import {
   patientExitSchema
 } from "@/backend/schemas/patient";
 import { 
+  patientWaitingSchema,
   screeningSchema,
   triedSchema
 } from "@/backend/schemas/screening";
@@ -79,6 +80,7 @@ const screeningModel = clinical.model('Screening', screeningSchema);
 const processStateModel = clinical.model("ProcessState", processStateSchema);
 const patientSyncModel = clinical.model("PatientSyncs", patientSyncSchema);
 const triedModel = clinical.model("Tried", triedSchema);
+const patientWaitingModel = clinical.model("PatientWaiting", patientWaitingSchema);
 const patientStateModel = clinical.model("PatientState", patientStateSchema);
 const patientExitModel = clinical.model("PatientExit", patientExitSchema);
 
@@ -177,5 +179,6 @@ export {
   internalMovimentModel,
   serviceRequestsModel,
   serviceModel,
-  patientExitModel
+  patientExitModel,
+  patientWaitingModel
 };
