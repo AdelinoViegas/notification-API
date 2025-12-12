@@ -15,6 +15,6 @@ export default function Auth(){
 
   }, [token]);
   return(
-    <>Estamos a verificar, por favor aguarde ...</>
+    <div className="ml-10">Estamos a verificar, por favor aguarde ...</div>
   );
 }
