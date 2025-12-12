@@ -6,6 +6,7 @@ import { MonitorAccess, UnlockProcessAccess } from "@/components/lock-unlock-mon
 import { getPatient } from "@/backend/api/clinical/urgency-bank-api";
 import DefineState from "@/components/define-state";
 import Hospitalization from "@/components/hospitalization";
+import WaitingState from "@/components/waiting-state";
 
 export default async function Layout({ 
   children,
@@ -38,6 +39,7 @@ export default async function Layout({
         <Hospitalization />
         { /* Transferencia */}
         <DefineState />
+        <WaitingState />
       </div>
       
       <div className={clsx("my-4 text-center py-1",
