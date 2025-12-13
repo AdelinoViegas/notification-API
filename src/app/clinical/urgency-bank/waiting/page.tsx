@@ -8,8 +8,6 @@ import Refresh from "@/components/refresh";
 import { getPatients } from "@/backend/api/clinical/urgency-bank-api";
 import { getDateInSlashFormat } from "@/lib/date-formater";
 import Pagination from "@/components/pagination";
-import Link from "next/link";
-import Button from "@/components/ui/button";
 
 export const dynamic = "force-dynamic";
 
@@ -25,7 +23,8 @@ export default async function Page({
   const { name, priority } = await searchParams;
   const patients = await getPatients({
     name: name, 
-    priority: priority
+    priority: priority,
+    filterByWaiting: true
   });
 
   const patientRows = formater(patients.patients, {
@@ -54,8 +53,6 @@ export default async function Page({
           type="info" 
           message="Faça duplo click sobre o utente para seguir com o atendimento!" 
         />
-
-        <Link href="/clinical/urgency-bank/waiting"><Button>Em espera</Button></Link>
       </div>
       
       <div className="flex justify-between items-center">
@@ -69,7 +66,7 @@ export default async function Page({
       </div>
 
       <Table
-        baseRowLink="/clinical/urgency-bank"
+        baseRowLink="/clinical/urgency-bank/waiting/"
         rowLength={6}
         priorityCol
         rows={patientRows}

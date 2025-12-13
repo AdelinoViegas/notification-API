@@ -22,7 +22,8 @@ import {
   processStateModel,
   hospitalizationModel,
   patientStateModel,
-  patientExitModel
+  patientExitModel,
+  patientWaitingModel
 } from "@/backend/model";
 import { 
   patientAccess,
@@ -35,7 +36,7 @@ import {
   unitTypes,
   priority as priorityTranslator
 } from "@/backend/api/clinical/translator";
-import { getUser, patientFilters } from "@/backend/api/clinical/api";
+import { getUser } from "@/backend/api/clinical/api";
 import { DoctorCalendar } from "@/backend/api/clinical/types";
 import { getPatient as mainPatient } from "@/backend/api/clinical/api";
 import { closePatientProcess, getSyncedHistories, syncPatientRegister } from "@/backend/api/clinical/process-control";
@@ -44,19 +45,36 @@ import { omitUndefined } from "mongoose";
 
 type UnitType = "workplace" | "internment" | "laboratory" | "imaging";
 
+type Props = {
+  name?: string;
+  priority?: string;
+  filterByWaiting?: boolean;
+}
+
 async function getPatients({ 
   name,
-  priority 
-}:patientFilters){
+  priority,
+  filterByWaiting
+}:Props){
   try{
     const userId = await getUserId() as string;
-    const user = await clinicalUserModel.findOne({ userId }).select({ serviceId: 1});
+    const user = await clinicalUserModel.findOne({ userId }).select({ serviceId: 1 });
     const patients = await triedModel.find({ serviceId: user?.serviceId, served: false });
     const patientList = [];
-
+    
     for(const patient of patients){
+      const currentUserId = await getUserId();
+
+      const waitingState = await patientWaitingModel.findOne({ id: patient?.patientId });
+
+      if(waitingState && !filterByWaiting) 
+        continue;
+
+      if(filterByWaiting && waitingState?.doctorId?.toString() !== currentUserId.toString())
+        continue
+
       const urgency = await patientModel.findById({ _id: patient.patientId });
- 
+
       const isProcess = await processStateModel.findOne({
          patientId: patient.patientId,
          location: "urgency",
@@ -98,7 +116,7 @@ async function getPatients({
     const _patients = name?orderByPriority(patientList.filter((item)=>item.fullname.match(new RegExp(`^${name}`, 'i')))).orderElements:
     priority?orderByPriority(patientList.filter((item)=>item.priorityType === priorityTranslator.find((props)=>props._id === priority)?.label)).orderElements:
     orderByPriority(patientList).orderElements;
-    
+
     return {
       patients: _patients,
       totalItems: _patients.length,
@@ -117,9 +135,54 @@ async function getPatients({
   }
 }
 
-async function getPatient({ patientId }: {
-  patientId: string;
-}){
+export async function isWaiting(id: string){
+  try{
+    const state = await patientWaitingModel.findOne({ id, doctorId: await getUserId() });
+    return state ? true : false;
+  }catch(e){
+    console.error("urgency-bank: ", e);
+    return false;
+  }
+}
+
+export async function patientWaiting(pv: unknown, formData: FormData){
+  try{
+    const id = formData.get("patientId") as string;
+    
+    const patient = await patientWaitingModel.findOne({ 
+      id, 
+      doctorId: await getUserId() 
+    });
+
+    if(patient) {
+      await patientWaitingModel.deleteOne({ _id: patient._id });
+
+      return {
+        message: "Retirado da lista de espera!",
+        status: true
+      }
+    }
+
+    await patientWaitingModel.create({
+      id,
+      doctorId: await getUserId()
+    });
+
+    return {
+      message: "Utente colocado em espera!",
+      status: true
+    }
+  }catch (e){
+    console.error("urgency-bank: ", e);
+
+    return {
+      message: "Opps!!",
+      status: false
+    }
+  }
+}
+
+async function getPatient({ patientId }: { patientId: string }){
   try{
     const [ 
       patient, 

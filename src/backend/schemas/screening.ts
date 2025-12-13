@@ -95,7 +95,13 @@ const triedSchema = new Schema({
   collection: "tried_to_urgency_back"
 });
 
+const patientWaitingSchema = new Schema({
+  id: Schema.Types.ObjectId,
+  doctorId: Schema.Types.ObjectId
+});
+
 export {
   screeningSchema,
-  triedSchema
+  triedSchema,
+  patientWaitingSchema
 };
