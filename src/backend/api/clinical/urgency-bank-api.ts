@@ -57,19 +57,17 @@ async function getPatients({
   filterByWaiting
 }:Props){
   try{
-    // se estiver em espera filtrar pelo id do usuario responsavel por colocar o restrito em espera
-    // ao settar como em espera atualizar o userId  para facilitar no filtro dos pacientes em espera
     const userId = await getUserId() as string;
     const user = await clinicalUserModel.findOne({ userId }).select({ serviceId: 1 });
-    const queryParams = filterByWaiting 
-      ? {
-          serviceId: user?.serviceId,
-          served: false,
-          userId: await getUserId()
-        }
-      : { serviceId: user?.serviceId, served: false }
+    // const queryParams = filterByWaiting 
+    //   ? {
+    //       serviceId: user?.serviceId,
+    //       served: false,
+    //       userId: await getUserId()
+    //     }
+    //   : {  }
 
-    const patients = await triedModel.find(queryParams);
+    const patients = await triedModel.find({ serviceId: user?.serviceId, served: false });
     const patientList = [];
     
     for(const patient of patients){
