@@ -13,14 +13,21 @@ export default function WaitingState({ id }: { id?: string }){
   const [modalstate, setModalState] = useState(false);
   const [ state, action ] = useActionState(patientWaiting, { message: "", status: false });
   const [ patientState, setPatientState] = useState<PatientState | null>(null);
+  const [ isLoading, setIsLoading ] = useState(true);
   const closeModal = () => {
     setModalState(false);
   };
   const router = useRouter();
   const params = useParams<{ id: string; patientId: string }>();
   const patientId = id ?? params.id ?? params.patientId;
-  const updatePatientState = () => isWaiting(patientId).then(setPatientState);
-  
+
+  const updatePatientState = () => {
+    setIsLoading(true)
+    isWaiting(patientId)
+      .then(setPatientState)
+      .finally(()=> setIsLoading(false));
+  }
+    
   useEffect(()=>{
     updatePatientState();
 
@@ -28,9 +35,12 @@ export default function WaitingState({ id }: { id?: string }){
       if(state.status)
         toast.success(state.message, {
           onOpen: ()=> {
-            router.replace("/clinical/urgency-bank".concat(
-              patientState ? "" : ["/", patientId].join("")
-            ));
+            closeModal();
+
+            if(!patientState)
+              router.replace("/clinical/urgency-bank");
+            else
+              router.replace(`/clinical/urgency-bank/${patientId}`);
           }   
         });
       else 
@@ -40,13 +50,13 @@ export default function WaitingState({ id }: { id?: string }){
   return(
     <div>
       <div className="relative">
-        <Button onClick={()=> setModalState(true)}>
-          { patientState ? "Continuar": "Em espera"}
+        <Button disabled={isLoading} onClick={()=> setModalState(true)}>
+          { isLoading ? "..." : patientState ? "Continuar": "Em espera"}
         </Button>
       </div>
      
       <Modal 
-        title={patientState ? "Retirar da lista de espera": "Mover para a lista de espera"}
+        title={patientState ? "Continuar com o atendimento": "Mover para a lista de espera"}
         open={modalstate}
         onClose={closeModal}
         asWindow
