@@ -71,13 +71,22 @@ async function getPatients({
 
     const patients = await triedModel.find(queryParams);
     const patientList = [];
-
+    
     for(const patient of patients){
-      const urgency = await patientModel.findById({ _id: patient.patientId });
-      
-      // para utentes em espera 
-      if(filterByWaiting && !(await isWaiting(patient?._id.toString())))
+      const currentUserId = await getUserId();
+
+      const waitingState = await patientWaitingModel.findOne({ 
+        id: patient?.patientId,
+        doctorId: currentUserId
+      });
+
+      if(waitingState && !filterByWaiting) 
         continue;
+
+      if(filterByWaiting && waitingState?.doctorId?.toString() !== currentUserId.toString())
+        continue
+
+      const urgency = await patientModel.findById({ _id: patient.patientId });
 
       const isProcess = await processStateModel.findOne({
          patientId: patient.patientId,
@@ -120,7 +129,7 @@ async function getPatients({
     const _patients = name?orderByPriority(patientList.filter((item)=>item.fullname.match(new RegExp(`^${name}`, 'i')))).orderElements:
     priority?orderByPriority(patientList.filter((item)=>item.priorityType === priorityTranslator.find((props)=>props._id === priority)?.label)).orderElements:
     orderByPriority(patientList).orderElements;
-    
+
     return {
       patients: _patients,
       totalItems: _patients.length,
@@ -143,6 +152,7 @@ export async function isWaiting(id: string){
   try{
     const patient = await triedModel.findOne({ patientId: id, isWaiting: true });
     const state = await patientWaitingModel.findOne({ id, doctorId: await getUserId() });
+
     if(patient && state)
       return true;
 
@@ -152,25 +162,25 @@ export async function isWaiting(id: string){
   }
 }
 
-export async function updateWaintingState({
-  id,
-  toWaint
-}: {
-  id: string; // patientId
-  toWaint: boolean;
-}){
-  try{
-    await triedModel.updateOne({ patientId: id }, {
-      isWaiting: toWaint,
-      userId: await getUserId()
-    });
+// export async function updateWaintingState({
+//   id,
+//   toWaint
+// }: {
+//   id: string; // patientId
+//   toWaint: boolean;
+// }){
+//   try{
+//     await triedModel.updateOne({ patientId: id }, {
+//       isWaiting: toWaint,
+//       userId: await getUserId()
+//     });
 
-    return true;
-  }catch(e){
-    console.error("urgency-bank: ", e);
-    return false;
-  }
-}
+//     return true;
+//   }catch(e){
+//     console.error("urgency-bank: ", e);
+//     return false;
+//   }
+// }
 
 export async function patientWaiting(pv: unknown, formData: FormData){
   try{
@@ -184,7 +194,7 @@ export async function patientWaiting(pv: unknown, formData: FormData){
 
     if(patient) {
       await patientWaitingModel.deleteOne({ _id: patient._id });
-      await updateWaintingState({ id, toWaint: false });
+      // await updateWaintingState({ id, toWaint: false });
       return {
         message: "Retirado da lista de espera!",
         status: true
@@ -196,7 +206,7 @@ export async function patientWaiting(pv: unknown, formData: FormData){
       doctorId: await getUserId()
     });
 
-    await updateWaintingState({ id, toWaint: true });
+    // await updateWaintingState({ id, toWaint: true });
 
     return {
       message: "Utente colocado em espera!",
