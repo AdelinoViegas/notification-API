@@ -66,7 +66,7 @@ export default async function Page({
       </div>
 
       <Table
-        baseRowLink="/clinical/urgency-bank"
+        baseRowLink="/clinical/urgency-bank/waiting/"
         rowLength={6}
         priorityCol
         rows={patientRows}
