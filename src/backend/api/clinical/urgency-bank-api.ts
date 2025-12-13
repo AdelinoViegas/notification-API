@@ -73,10 +73,7 @@ async function getPatients({
     for(const patient of patients){
       const currentUserId = await getUserId();
 
-      const waitingState = await patientWaitingModel.findOne({ 
-        id: patient?.patientId,
-        doctorId: currentUserId
-      });
+      const waitingState = await patientWaitingModel.findOne({ id: patient?.patientId });
 
       if(waitingState && !filterByWaiting) 
         continue;
