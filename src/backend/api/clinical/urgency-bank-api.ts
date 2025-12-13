@@ -59,14 +59,6 @@ async function getPatients({
   try{
     const userId = await getUserId() as string;
     const user = await clinicalUserModel.findOne({ userId }).select({ serviceId: 1 });
-    // const queryParams = filterByWaiting 
-    //   ? {
-    //       serviceId: user?.serviceId,
-    //       served: false,
-    //       userId: await getUserId()
-    //     }
-    //   : {  }
-
     const patients = await triedModel.find({ serviceId: user?.serviceId, served: false });
     const patientList = [];
     
@@ -145,43 +137,18 @@ async function getPatients({
 
 export async function isWaiting(id: string){
   try{
-    const patient = await triedModel.findOne({ patientId: id, isWaiting: true });
     const state = await patientWaitingModel.findOne({ id, doctorId: await getUserId() });
-
-    if(patient && state)
-      return true;
-
-    return false;
+    return state ? true : false;
   }catch(e){
+    console.error("urgency-bank: ", e);
     return false;
   }
 }
-
-// export async function updateWaintingState({
-//   id,
-//   toWaint
-// }: {
-//   id: string; // patientId
-//   toWaint: boolean;
-// }){
-//   try{
-//     await triedModel.updateOne({ patientId: id }, {
-//       isWaiting: toWaint,
-//       userId: await getUserId()
-//     });
-
-//     return true;
-//   }catch(e){
-//     console.error("urgency-bank: ", e);
-//     return false;
-//   }
-// }
 
 export async function patientWaiting(pv: unknown, formData: FormData){
   try{
     const id = formData.get("patientId") as string;
     
-    // ja está em espera ? 
     const patient = await patientWaitingModel.findOne({ 
       id, 
       doctorId: await getUserId() 
@@ -189,7 +156,7 @@ export async function patientWaiting(pv: unknown, formData: FormData){
 
     if(patient) {
       await patientWaitingModel.deleteOne({ _id: patient._id });
-      // await updateWaintingState({ id, toWaint: false });
+
       return {
         message: "Retirado da lista de espera!",
         status: true
@@ -200,8 +167,6 @@ export async function patientWaiting(pv: unknown, formData: FormData){
       id,
       doctorId: await getUserId()
     });
-
-    // await updateWaintingState({ id, toWaint: true });
 
     return {
       message: "Utente colocado em espera!",
@@ -217,9 +182,7 @@ export async function patientWaiting(pv: unknown, formData: FormData){
   }
 }
 
-async function getPatient({ patientId }: {
-  patientId: string;
-}){
+async function getPatient({ patientId }: { patientId: string }){
   try{
     const [ 
       patient, 
