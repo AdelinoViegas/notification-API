@@ -160,8 +160,8 @@ const clinicalDiary = new Schema({
 },{_id: false});
 
 const urgencyBankSchema = new Schema({
-  patientId: Schema.Types.ObjectId,
-  triedId: Schema.Types.ObjectId,
+  patientId: Schema.ObjectId,
+  triedId: Schema.ObjectId,
   patientStatus: String,
   anamnesis: anamnesis,
   clinicalDiary: clinicalDiary,
@@ -181,7 +181,7 @@ const urgencyService = new Schema({
     required: true,
     trim: true,
   },
-  userId: Schema.Types.ObjectId,
+  userId: Schema.ObjectId,
   isActive: {
     type: Boolean,
     default: true

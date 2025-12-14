@@ -18,14 +18,14 @@ const patientSchema = new Schema({
     type: Boolean,
     default: false
   },
-  userId: Schema.Types.ObjectId,
+  userId: Schema.ObjectId,
   used: Boolean
 }, {
   timestamps: true,
 });
 
 const demographySchema = new Schema({
-  patientId: Schema.Types.ObjectId,
+  patientId: Schema.ObjectId,
   nationality: String,
   naturality: String,
   province: String,
@@ -38,7 +38,7 @@ const demographySchema = new Schema({
 });
 
 const responsibleSchema = new Schema<Responsables>({
-  patientId: Schema.Types.ObjectId,
+  patientId: Schema.ObjectId,
   responsibles: [
     { 
       name: String,  
@@ -53,7 +53,7 @@ const responsibleSchema = new Schema<Responsables>({
 });
 
 const groupSchema = new Schema<Group>({
-  patientId: Schema.Types.ObjectId,
+  patientId: Schema.ObjectId,
   type: {
     type: String,
   },
@@ -72,17 +72,17 @@ const groupSchema = new Schema<Group>({
 });
 
 const accessTypeSchema = new Schema({
-  patientId: Schema.Types.ObjectId,
+  patientId: Schema.ObjectId,
   type: { type: String },
-  externalUnitId: Schema.Types.ObjectId,
+  externalUnitId: Schema.ObjectId,
 }, {
   collection: "patient_access_type",
   timestamps: true,
 });
 
 const processStateSchema = new Schema({
-  patientId: Schema.Types.ObjectId,
-  userId: Schema.Types.ObjectId,
+  patientId: Schema.ObjectId,
+  userId: Schema.ObjectId,
   location: {
     type: String,
     required: true,
@@ -126,7 +126,7 @@ const municipalitySchema = new Schema({
 });
 
 const patientStateSchema = new Schema({
-  patientId: Schema.Types.ObjectId,
+  patientId: Schema.ObjectId,
   stateId: {
     type: String,
     enum: [
@@ -142,11 +142,11 @@ const patientStateSchema = new Schema({
 
 const patientExitSchema = new Schema({
   patientId: {
-    type: Schema.Types.ObjectId,
+    type: Schema.ObjectId,
     required: true,
     unique: true
   },
-  userId: Schema.Types.ObjectId,
+  userId: Schema.ObjectId,
   userEventAt: {
     type: Date,
     default: new Date

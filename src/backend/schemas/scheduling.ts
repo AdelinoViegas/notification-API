@@ -11,10 +11,10 @@ const serviceSchema = new Schema({
     type: Number,
     default: () => randomInt(111111, 999999)
   },
-  categoryId: Schema.Types.ObjectId,
-  classificationId: Schema.Types.ObjectId,
-  groupId: Schema.Types.ObjectId,
-  specialtyId: Schema.Types.ObjectId,
+  categoryId: Schema.ObjectId,
+  classificationId: Schema.ObjectId,
+  groupId: Schema.ObjectId,
+  specialtyId: Schema.ObjectId,
   kind: {
     type: String,
     enum: [ "surgery" , "consultation", "exam" ],
@@ -59,9 +59,9 @@ const examClassificationSchema = new Schema({
 });
 
 const scheduleExamSchema = new Schema({
-  patientId: Schema.Types.ObjectId,
-  exams: [ Schema.Types.ObjectId ],
-  laboratoryId: Schema.Types.ObjectId,
+  patientId: Schema.ObjectId,
+  exams: [ Schema.ObjectId ],
+  laboratoryId: Schema.ObjectId,
   dateTime: Date,
   Type: String,
   payment: {
@@ -91,18 +91,18 @@ const scheduleExamSchema = new Schema({
     default: false,
   },
   detail: String,
-  userId: Schema.Types.ObjectId,
+  userId: Schema.ObjectId,
 }, {
   collection: "schedule_patient_exam",
   timestamps: true,
 });
 
 const scheduleAppointmentSchema = new Schema({
-  patientId: Schema.Types.ObjectId,
-  doctorId: Schema.Types.ObjectId,
-  userId: Schema.Types.ObjectId,
+  patientId: Schema.ObjectId,
+  doctorId: Schema.ObjectId,
+  userId: Schema.ObjectId,
   doctorTime: String,
-  consultId: Schema.Types.ObjectId,
+  consultId: Schema.ObjectId,
   doctorDay: Date,
   detail: String,
   payment: {
@@ -134,7 +134,7 @@ const scheduleAppointmentSchema = new Schema({
   },
   archiving: {
     reason: String,
-    userId: Schema.Types.ObjectId,
+    userId: Schema.ObjectId,
   },
   doctorReschedule: {
     type: Boolean,
@@ -147,9 +147,9 @@ const scheduleAppointmentSchema = new Schema({
 
 
 const examResultSchema = new Schema({
-  scheduleId: Schema.Types.ObjectId,
+  scheduleId: Schema.ObjectId,
   detail: String,
-  userId: Schema.Types.ObjectId,
+  userId: Schema.ObjectId,
 }, {
   collection: "schedule_exam_result",
   timestamps: true,
@@ -157,24 +157,24 @@ const examResultSchema = new Schema({
 
 
 const examCancelSchema = new Schema({
-  scheduleId: Schema.Types.ObjectId,
+  scheduleId: Schema.ObjectId,
   reason: {
     type: String,
     required: true,
   },
-  userId: Schema.Types.ObjectId,
+  userId: Schema.ObjectId,
 }, {
   collection: "schedule_exam_cancel",
   timestamps: true,
 });
 
 const appointmentCancelSchema = new Schema({
-  scheduleId: Schema.Types.ObjectId,
+  scheduleId: Schema.ObjectId,
   reason: {
     type: String,
     required: true,
   },
-  userId: Schema.Types.ObjectId,
+  userId: Schema.ObjectId,
 }, {
   collection: "schedule_appointment_cancel",
   timestamps: true,
@@ -185,7 +185,7 @@ const doctorCalendarSchema = new Schema({
   month: Number,
   doctors: [
     {
-      doctorId: Schema.Types.ObjectId,
+      doctorId: Schema.ObjectId,
       initialTime: String,
       finalTime: String,
       room: String,
@@ -194,7 +194,7 @@ const doctorCalendarSchema = new Schema({
     }
   ],
   maxSchedule: Number,
-  userId: Schema.Types.ObjectId,
+  userId: Schema.ObjectId,
   signatureDateTo: {
     type: String,
     unique: true,
@@ -206,17 +206,17 @@ const doctorCalendarSchema = new Schema({
 });
 
 const officeSchema = new Schema<ConsultResult>({
-  scheduleId: Schema.Types.ObjectId,
-  externalId: Schema.Types.ObjectId,
+  scheduleId: Schema.ObjectId,
+  externalId: Schema.ObjectId,
   served: {
     type: Boolean,
     default: false,
   },
   archiving: {
     reason: String,
-    userId: Schema.Types.ObjectId,
+    userId: Schema.ObjectId,
   },
-  userId: Schema.Types.ObjectId,
+  userId: Schema.ObjectId,
   results: {
     vitalSignal: {
       paMax: Number,
@@ -254,9 +254,9 @@ const officeSchema = new Schema<ConsultResult>({
 });
 
 const scheduleSugerySchema = new Schema({
-  patientId: Schema.Types.ObjectId,
-  doctorId: Schema.Types.ObjectId,
-  sugeryType: Schema.Types.ObjectId,
+  patientId: Schema.ObjectId,
+  doctorId: Schema.ObjectId,
+  sugeryType: Schema.ObjectId,
   sugeryDate: Date,
   sugeryTime: String,
   description: String,
@@ -291,7 +291,7 @@ const scheduleSugerySchema = new Schema({
   },
   archiving: {
     reason: String,
-    userId: Schema.Types.ObjectId,
+    userId: Schema.ObjectId,
   }
 }, {
   collection: "schedule_sugery",

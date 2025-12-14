@@ -1,11 +1,11 @@
 import { Schema } from "mongoose";
 
 export const hospitalizationSchema = new Schema({
-  fromServiceId: Schema.Types.ObjectId,
-  patientId: Schema.Types.ObjectId,
-  toInternalServiceId: Schema.Types.ObjectId,
-  triedId: Schema.Types.ObjectId,
-  userId: Schema.Types.ObjectId,
+  fromServiceId: Schema.ObjectId,
+  patientId: Schema.ObjectId,
+  toInternalServiceId: Schema.ObjectId,
+  triedId: Schema.ObjectId,
+  userId: Schema.ObjectId,
   served: {
     type: Boolean,
     default: false
@@ -41,8 +41,8 @@ bedNursingSchema.index({
 }); // criação de indice
 
 export const nursingSchema = new Schema({
-  sectionId: Schema.Types.ObjectId,
-  internalServiceId: Schema.Types.ObjectId,
+  sectionId: Schema.ObjectId,
+  internalServiceId: Schema.ObjectId,
   name: String,
   maxBedNumber: {
     type: Number,
@@ -83,4 +83,17 @@ export const internalMovimentsSchema = new Schema({
   by: Schema.ObjectId
 }, {
   timestamps: true
+});
+
+export const namePatternsSchema = new Schema({
+  to: {
+    type: String,
+    enum: ["bed", "nursing"],
+    required: true,
+    unique: true
+  },
+  regex: {
+    type: String,
+    required: true
+  }
 });
