@@ -135,7 +135,14 @@ export async function signNursing(p: unknown, formData: FormData){
       });
 
       if(!isPossible){
-        
+        // ja existe um padrao registrado
+        const isValide = await validatePattern({
+          value: nursingName,
+          to: "nursing"
+        });
+
+        if(!isValide) 
+          throw new Error("O nome da enfermaria nao corresponde ao formato do primeiro registro!", { cause: 400 });
       }
 
       nursingId = nursing._id.toString();
