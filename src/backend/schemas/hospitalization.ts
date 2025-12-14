@@ -86,9 +86,9 @@ export const internalMovimentsSchema = new Schema({
 });
 
 export const namePatternsSchema = new Schema({
-  for: {
+  to: {
     type: String,
-    enum: ["bed", "nursing"],
+    enum: ["bed", "nursing", "urgency"],
     required: true,
     unique: true
   },

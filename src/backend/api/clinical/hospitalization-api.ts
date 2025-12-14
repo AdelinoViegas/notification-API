@@ -6,6 +6,7 @@ import {
   inHospitalizeModel, 
   internalMovimentModel, 
   internalServiceModel, 
+  namePatternsModel, 
   nursingModel, 
   // patientHospitalizedModel, 
   patientModel, 
@@ -504,5 +505,17 @@ export async function movePatientTo(p: unknown, formData: FormData){
       message: err?.cause ? err.message : "Não foi possivel!",
       status: false
     }
+  }
+}
+
+export async function registerPattern({ value, to }:{
+  value: string;
+  to: "bed" | "nursing";
+}){
+  try{
+    await namePatternsModel.create({ to, regex: value });
+    return true;
+  }catch (e){
+    return false
   }
 }
