@@ -120,6 +120,7 @@ export async function signNursing(p: unknown, formData: FormData){
     const bedNumber = formData.get("bed");
 
     if(sectionName && nursingName){
+      await validateNursingPattern(nursingName);
       const section = await sectionModel.create({ name: sectionName });
 
       const nursing = await nursingModel.create({
@@ -129,25 +130,11 @@ export async function signNursing(p: unknown, formData: FormData){
         internalServiceId: hospitalizationServiceId
       });
 
-      const isPossible = await registerPattern({
-        value: nursingName,
-        to: "nursing"
-      });
-
-      if(!isPossible){
-        // ja existe um padrao registrado
-        const isValide = await validatePattern({
-          value: nursingName,
-          to: "nursing"
-        });
-
-        if(!isValide) 
-          throw new Error("O nome da enfermaria nao corresponde ao formato do primeiro registro!", { cause: 400 });
-      }
-
       nursingId = nursing._id.toString();
     }else
       if(nursingName){
+        await validateNursingPattern(nursingName);
+
         const nursing = await nursingModel.create({
           sectionId,
           name: nursingName,
@@ -553,7 +540,7 @@ export async function validatePattern({ value, to }:{
     const regex = await getPattern(to);
     
     if(!regex) 
-      return false;
+      throw new Error("padrao nao registrado!");
 
     const reg = new RegExp(regex);
 
@@ -564,5 +551,23 @@ export async function validatePattern({ value, to }:{
   }catch (e){
     console.error(e);
     return null;
+  }
+}
+
+export async function validateNursingPattern(name: string){
+  const isPossible = await registerPattern({
+    value: name,
+    to: "nursing"
+  });
+
+  if(!isPossible){
+    // ja existe um padrao registrado
+    const isValide = await validatePattern({
+      value: name,
+      to: "nursing"
+    });
+
+    if(!isValide) 
+      throw new Error("O nome da enfermaria nao corresponde ao formato do primeiro registro!", { cause: 400 });
   }
 }
