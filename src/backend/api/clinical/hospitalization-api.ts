@@ -18,6 +18,7 @@ import { omitUndefined } from "mongoose";
 import { getUser } from "@/backend/api/clinical/api";
 import { getUserId } from "@/lib/web-token";
 import { patientStates } from "./translator";
+import { inferRegexPattern } from "@/lib/regexp";
 
 export async function getPatients({
   page,
@@ -516,7 +517,7 @@ export async function registerPattern({ value, to }:{
   to: "bed" | "nursing";
 }){
   try{
-    await namePatternsModel.create({ to, regex: value });
+    await namePatternsModel.create({ to, regex: inferRegexPattern(value) });
     return true;
   }catch (e){
     return false
@@ -568,6 +569,6 @@ export async function validateNursingPattern(name: string){
     });
 
     if(!isValide) 
-      throw new Error("O nome da enfermaria nao corresponde ao formato do primeiro registro!", { cause: 400 });
+      throw new Error("O nome da enfermaria nao corresponde ao formato valido!", { cause: 400 });
   }
 }
