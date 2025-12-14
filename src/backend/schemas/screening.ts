@@ -1,9 +1,9 @@
 import { Schema } from "mongoose";
 
 const screeningSchema = new Schema({
-  patientId: Schema.Types.ObjectId,
-  userId: Schema.Types.ObjectId,
-  adviceId: Schema.Types.ObjectId,
+  patientId: Schema.ObjectId,
+  userId: Schema.ObjectId,
+  adviceId: Schema.ObjectId,
   reason: {
     type: String,
     trim: true
@@ -81,10 +81,10 @@ const screeningSchema = new Schema({
 });
 
 const triedSchema = new Schema({
-  srcId: Schema.Types.ObjectId,
-  patientId: Schema.Types.ObjectId,
-  userId: Schema.Types.ObjectId,
-  serviceId: Schema.Types.ObjectId,
+  srcId: Schema.ObjectId,
+  patientId: Schema.ObjectId,
+  userId: Schema.ObjectId,
+  serviceId: Schema.ObjectId,
   reasonChangingServices: String, 
   served: {
     type: Boolean,
@@ -96,8 +96,8 @@ const triedSchema = new Schema({
 });
 
 const patientWaitingSchema = new Schema({
-  id: Schema.Types.ObjectId,
-  doctorId: Schema.Types.ObjectId
+  id: Schema.ObjectId,
+  doctorId: Schema.ObjectId
 });
 
 export {

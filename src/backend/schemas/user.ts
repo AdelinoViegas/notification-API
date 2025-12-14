@@ -3,27 +3,27 @@ import type { ClinicalUser } from "./types";
 
 export const userSchema = new Schema<ClinicalUser>({
   userId: {
-    type: Schema.Types.ObjectId,
+    type: Schema.ObjectId,
     unique: true,
   },
   orderNumber: Number,
-  serviceId: Schema.Types.ObjectId,
-  specialtyId: Schema.Types.ObjectId,
-  internalServiceId: Schema.Types.ObjectId,
+  serviceId: Schema.ObjectId,
+  specialtyId: Schema.ObjectId,
+  internalServiceId: Schema.ObjectId,
   categoryId: {
     type: String,
     enum: ["doctor", "nurse", "others"],
     default: "others"
   }, // do arquivo translator.ts
-  officeId: Schema.Types.ObjectId
+  officeId: Schema.ObjectId
 }, {
   timestamps: true,
   collection: "users",
 });
 
 export const currentLocationSchema = new Schema({
-  locationId: Schema.Types.ObjectId,
-  userId: Schema.Types.ObjectId,
+  locationId: Schema.ObjectId,
+  userId: Schema.ObjectId,
   isActive: {
     type: Boolean,
     default: true,

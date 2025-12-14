@@ -28,16 +28,16 @@ const unitSchema = new Schema({
   wing: String,
   nursing: String,
   bed: Number,
-  userId: Schema.Types.ObjectId,
+  userId: Schema.ObjectId,
 }, {
   collection: "phisical_unit",
   timestamps: true,
 });
 
 const workplaceSchema = new Schema({
-  userId: Schema.Types.ObjectId,
-  workplaceId: Schema.Types.ObjectId,
-  actor: Schema.Types.ObjectId, 
+  userId: Schema.ObjectId,
+  workplaceId: Schema.ObjectId,
+  actor: Schema.ObjectId, 
 }, {
   collection: 'user_workplace_access',
   timestamps: true,

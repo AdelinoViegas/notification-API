@@ -25,16 +25,16 @@ const unitSchema = new Schema({
   wing: String,
   nursing: String,
   bed: Number,
-  userId: Schema.Types.ObjectId,
+  userId: Schema.ObjectId,
 }, {
   collection: "phisical_unit",
   timestamps: true,
 });
 
 const workplaceSchema = new Schema({
-  userId: Schema.Types.ObjectId,
-  workplaceId: Schema.Types.ObjectId,
-  actor: Schema.Types.ObjectId, 
+  userId: Schema.ObjectId,
+  workplaceId: Schema.ObjectId,
+  actor: Schema.ObjectId, 
 }, {
   collection: 'user_workplace_access',
   timestamps: true,
@@ -51,14 +51,14 @@ const externalUnitSchema = new Schema({
   street: String,
   municipality: String,
   province: String,
-  userId: Schema.Types.ObjectId,
+  userId: Schema.ObjectId,
 }, {
   collection: 'external_units',
   timestamps: true,
 });
 
 const scheduleServiceSchema = new Schema({
-  scheduleId: Schema.Types.ObjectId,
+  scheduleId: Schema.ObjectId,
   served: {
     type: Boolean,
     default: false,
@@ -69,9 +69,9 @@ const scheduleServiceSchema = new Schema({
   },
   archiving: {
     reason: String,
-    userId: Schema.Types.ObjectId,
+    userId: Schema.ObjectId,
   },
-  userId: Schema.Types.ObjectId,
+  userId: Schema.ObjectId,
   Type: { 
     type: String,
     enum: UNIT_TYPES
@@ -82,10 +82,10 @@ const scheduleServiceSchema = new Schema({
 });
 
 const serviceResultSchema = new Schema({
-  resultId: Schema.Types.ObjectId,
+  resultId: Schema.ObjectId,
   exams: [{
     _id: false,
-    serviceId: Schema.Types.ObjectId, //o _id do examSchema
+    serviceId: Schema.ObjectId, //o _id do examSchema
     storageId: String,
     description: String,
     sourceType: {
@@ -93,13 +93,13 @@ const serviceResultSchema = new Schema({
       enum: ["laboratory", "imaginig"],
       required: true
     },
-    userId: Schema.Types.ObjectId,
+    userId: Schema.ObjectId,
     createdAt: {
       type: Date,
       default: new Date()
     }
   }],
-  userId: Schema.Types.ObjectId,
+  userId: Schema.ObjectId,
   isFinished: {
     type: Boolean,
     default: false
@@ -114,10 +114,10 @@ const serviceResultSchema = new Schema({
 });  // para laboratorio e imagiologia (a principio)
 
 const externalResultSchema = new Schema({
-  patientId: Schema.Types.ObjectId,
-  officeId: Schema.Types.ObjectId,
+  patientId: Schema.ObjectId,
+  officeId: Schema.ObjectId,
   storageId: String,
-  userId: Schema.Types.ObjectId,
+  userId: Schema.ObjectId,
 }, {
   collection: "office_external_results",
   timestamps: true,

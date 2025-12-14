@@ -6,6 +6,7 @@ import {
   inHospitalizeModel, 
   internalMovimentModel, 
   internalServiceModel, 
+  namePatternsModel, 
   nursingModel, 
   // patientHospitalizedModel, 
   patientModel, 
@@ -17,6 +18,7 @@ import { omitUndefined } from "mongoose";
 import { getUser } from "@/backend/api/clinical/api";
 import { getUserId } from "@/lib/web-token";
 import { patientStates } from "./translator";
+import { inferRegexPattern } from "@/lib/regexp";
 
 export async function getPatients({
   page,
@@ -115,10 +117,11 @@ export async function signNursing(p: unknown, formData: FormData){
     const sectionName = formData.get("sectionName") as string;
     const maxBedNumber = formData.get("maxBedNumber");
     let nursingId = formData.get("nursingId") as string;
-    const nursingName = formData.get("nursingName");
-    const bedNumber = formData.get("bed");
+    const nursingName = formData.get("nursingName") as string;
+    const bedNumber = formData.get("bed") as string;
 
     if(sectionName && nursingName){
+      await throwValidatePattern({ value: nursingName, to: "nursing" });
       const section = await sectionModel.create({ name: sectionName });
 
       const nursing = await nursingModel.create({
@@ -131,6 +134,8 @@ export async function signNursing(p: unknown, formData: FormData){
       nursingId = nursing._id.toString();
     }else
       if(nursingName){
+        await throwValidatePattern({ value: nursingName, to: "nursing" });
+        
         const nursing = await nursingModel.create({
           sectionId,
           name: nursingName,
@@ -145,6 +150,8 @@ export async function signNursing(p: unknown, formData: FormData){
 
     if(!allocated.state) throw new Error(allocated?.message, { cause: 403 });
     
+    await throwValidatePattern({ value: bedNumber, to: "bed" });
+
     await bedNursingModel.create({
       internalServiceId: hospitalizationServiceId,
       nursingId,
@@ -506,3 +513,67 @@ export async function movePatientTo(p: unknown, formData: FormData){
     }
   }
 }
+
+export async function registerPattern({ value, to }:{
+  value: string;
+  to: "bed" | "nursing";
+}){
+  try{
+    await namePatternsModel.create({ to, regex: inferRegexPattern(value) });
+    return true;
+  }catch (e){
+    console.error(e);
+    return false
+  }
+}
+
+export async function getPattern(type: "bed" | "nursing") {
+  try { 
+    const pattern = await namePatternsModel.findOne({ to: type });
+    return pattern?.regex;
+  }catch (e){
+    console.error(e)
+    return null;
+  }
+}
+
+export async function validatePattern({ value, to }:{
+  value: string;
+  to: "bed" | "nursing";
+}){
+  try{
+    const regex = await getPattern(to);
+    
+    if(!regex) 
+      throw new Error("padrao nao registrado!");
+
+    const reg = new RegExp(regex);
+
+    if(!reg.test(value))
+      return false
+    
+    return true;
+  }catch (e){
+    console.error(e);
+    return null;
+  }
+}
+
+export async function throwValidatePattern({ value, to }: { value: string; to: "bed" | "nursing" }){
+  const isPossible = await registerPattern({
+    value,
+    to
+  });
+
+  if(!isPossible){
+    // ja existe um padrao registrado
+    const isValide = await validatePattern({
+      value,
+      to
+    });
+
+    if(!isValide) 
+      throw new Error(`O nome da ${to == "bed"?"cama": "enfermaria"} não corresponde ao formato válido.!`, { cause: 400 });
+  }
+}
+
