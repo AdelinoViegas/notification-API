@@ -522,6 +522,7 @@ export async function registerPattern({ value, to }:{
     await namePatternsModel.create({ to, regex: inferRegexPattern(value) });
     return true;
   }catch (e){
+    console.error(e);
     return false
   }
 }
@@ -531,6 +532,7 @@ export async function getPattern(type: "bed" | "nursing") {
     const pattern = await namePatternsModel.findOne({ to: type });
     return pattern?.regex;
   }catch (e){
+    console.error(e)
     return null;
   }
 }
@@ -571,7 +573,7 @@ export async function throwValidatePattern({ value, to }: { value: string; to: "
     });
 
     if(!isValide) 
-      throw new Error(`O nome da ${to == "bed"?"cama": "enfermaria"} nao corresponde ao formato valido!`, { cause: 400 });
+      throw new Error(`O nome da ${to == "bed"?"cama": "enfermaria"} não corresponde ao formato válido.!`, { cause: 400 });
   }
 }
 
