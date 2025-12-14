@@ -121,7 +121,7 @@ export async function signNursing(p: unknown, formData: FormData){
     const bedNumber = formData.get("bed");
 
     if(sectionName && nursingName){
-      await validateNursingPattern(nursingName);
+      await throwValidatePattern({ value: nursingName, to: "nursing" });
       const section = await sectionModel.create({ name: sectionName });
 
       const nursing = await nursingModel.create({
@@ -134,8 +134,8 @@ export async function signNursing(p: unknown, formData: FormData){
       nursingId = nursing._id.toString();
     }else
       if(nursingName){
-        await validateNursingPattern(nursingName);
-
+        await throwValidatePattern({ value: nursingName, to: "nursing" });
+        
         const nursing = await nursingModel.create({
           sectionId,
           name: nursingName,
@@ -555,20 +555,21 @@ export async function validatePattern({ value, to }:{
   }
 }
 
-export async function validateNursingPattern(name: string){
+export async function throwValidatePattern({ value, to }: { value: string; to: "bed" | "nursing" }){
   const isPossible = await registerPattern({
-    value: name,
-    to: "nursing"
+    value,
+    to
   });
 
   if(!isPossible){
     // ja existe um padrao registrado
     const isValide = await validatePattern({
-      value: name,
-      to: "nursing"
+      value,
+      to
     });
 
     if(!isValide) 
-      throw new Error("O nome da enfermaria nao corresponde ao formato valido!", { cause: 400 });
+      throw new Error(`O nome da ${to == "bed"?"cama": "enfermaria"} nao corresponde ao formato valido!`, { cause: 400 });
   }
 }
+

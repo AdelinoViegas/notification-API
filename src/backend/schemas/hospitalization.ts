@@ -50,10 +50,7 @@ export const nursingSchema = new Schema({
   }
 });
 
-nursingSchema.index({
-  internalServiceId: 1,
-  name: 1
-}, {
+nursingSchema.index({ internalServiceId: 1, name: 1 }, {
   unique: true
 });
 
