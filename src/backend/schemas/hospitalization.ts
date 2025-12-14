@@ -35,7 +35,7 @@ export const bedNursingSchema = new Schema({
 bedNursingSchema.index({ 
   bed: 1, 
   nursingId: 1, 
-  internalServiceSchema: 1 
+  internalServiceId: 1 
 }, { 
   unique: true 
 }); // criação de indice
@@ -48,6 +48,13 @@ export const nursingSchema = new Schema({
     type: Number,
     default: 0
   }
+});
+
+nursingSchema.index({
+  internalServiceId: 1,
+  name: 1
+}, {
+  unique: true
 });
 
 export const sectionSchema = new Schema({
