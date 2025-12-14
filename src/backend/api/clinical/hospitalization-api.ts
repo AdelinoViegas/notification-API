@@ -118,7 +118,7 @@ export async function signNursing(p: unknown, formData: FormData){
     const maxBedNumber = formData.get("maxBedNumber");
     let nursingId = formData.get("nursingId") as string;
     const nursingName = formData.get("nursingName") as string;
-    const bedNumber = formData.get("bed");
+    const bedNumber = formData.get("bed") as string;
 
     if(sectionName && nursingName){
       await throwValidatePattern({ value: nursingName, to: "nursing" });
@@ -150,6 +150,8 @@ export async function signNursing(p: unknown, formData: FormData){
 
     if(!allocated.state) throw new Error(allocated?.message, { cause: 403 });
     
+    await throwValidatePattern({ value: bedNumber, to: "bed" });
+
     await bedNursingModel.create({
       internalServiceId: hospitalizationServiceId,
       nursingId,
