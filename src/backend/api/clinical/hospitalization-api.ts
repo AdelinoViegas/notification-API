@@ -116,7 +116,7 @@ export async function signNursing(p: unknown, formData: FormData){
     const sectionName = formData.get("sectionName") as string;
     const maxBedNumber = formData.get("maxBedNumber");
     let nursingId = formData.get("nursingId") as string;
-    const nursingName = formData.get("nursingName");
+    const nursingName = formData.get("nursingName") as string;
     const bedNumber = formData.get("bed");
 
     if(sectionName && nursingName){
@@ -128,6 +128,15 @@ export async function signNursing(p: unknown, formData: FormData){
         maxBedNumber,
         internalServiceId: hospitalizationServiceId
       });
+
+      const isPossible = await registerPattern({
+        value: nursingName,
+        to: "nursing"
+      });
+
+      if(!isPossible){
+        
+      }
 
       nursingId = nursing._id.toString();
     }else
@@ -517,5 +526,36 @@ export async function registerPattern({ value, to }:{
     return true;
   }catch (e){
     return false
+  }
+}
+
+export async function getPattern(type: "bed" | "nursing") {
+  try { 
+    const pattern = await namePatternsModel.findOne({ to: type });
+    return pattern?.regex;
+  }catch (e){
+    return null;
+  }
+}
+
+export async function validatePattern({ value, to }:{
+  value: string;
+  to: "bed" | "nursing";
+}){
+  try{
+    const regex = await getPattern(to);
+    
+    if(!regex) 
+      return false;
+
+    const reg = new RegExp(regex);
+
+    if(!reg.test(value))
+      return false
+    
+    return true;
+  }catch (e){
+    console.error(e);
+    return null;
   }
 }
