@@ -57,6 +57,7 @@ import {
   inHospitalizeSchema, 
   internalMovimentsSchema, 
   internalServiceSchema, 
+  namePatternsSchema, 
   nursingSchema, 
   sectionSchema 
 } from "@/backend/schemas/hospitalization";
@@ -127,6 +128,9 @@ const hospitalizationModel = clinical.model("Hospitalization", hospitalizationSc
 const inHospitalizeModel = clinical.model("inHospitalize", inHospitalizeSchema);
 const internalMovimentModel = clinical.model("InternalMoviments", internalMovimentsSchema);
 const serviceRequestsModel = clinical.model("ServiceRequest", serviceRequestsSchema);
+const namePatternsModel = clinical.model("NamePattern", namePatternsSchema);
+
+export { namePatternsModel }
 
 export {
   userModel,
