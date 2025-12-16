@@ -23,6 +23,7 @@ import {
   processStateModel,
   internalServiceModel,
   urgencyServiceModel,
+  externalTransferModel,
 } from "@/backend/model";
 import { 
   patientAccess,
@@ -1033,7 +1034,14 @@ export async function externalTransfer(prev: unknown, formData: FormData){
     const patientId = formData.get("patientId");
     const externalUnitId = formData.get("unitId");
     const reason = formData.get("reason");
+    const createdAt = formData.get("date");
 
+    await externalTransferModel.create({
+      patientId,
+      unitId: externalUnitId,
+      userId: await getUserId(),
+
+    })
     return {
       message: "Transferido com sucesso!",
       status: true,

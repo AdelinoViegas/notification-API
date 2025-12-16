@@ -11,6 +11,7 @@ import { patientStates } from "@/backend/api/clinical/translator";
 import FallbackComponent from "@/components/fallback-components";
 import { externalTransfer } from "@/backend/api/clinical/api";
 import InputDetails from "@/components/ui/input-details";
+import InputField from "./ui/input-field";
 
 export default function ExternalTransfer({ id }: { id?: string }){
   const [modalstate, setModalState] = useState(false);
@@ -71,6 +72,13 @@ export default function ExternalTransfer({ id }: { id?: string }){
               placeholder="Descreva o motivo da transferencia ..."
               name="reason"
               required
+            />
+
+            <InputField
+              textLabel="Data do registro"
+              type="datetime-local"
+              required
+              name="date"
             />
           </div>
 
