@@ -7,8 +7,6 @@ import Button from "@/components/ui/button";
 import Modal from "@/components/modal";
 import Selection, { SelectionOption } from "@/components/ui/selection";
 import { getExternalUnits } from "@/backend/api/clinical/urgency-bank-api";
-import { patientStates } from "@/backend/api/clinical/translator";
-import FallbackComponent from "@/components/fallback-components";
 import { externalTransfer } from "@/backend/api/clinical/api";
 import InputDetails from "@/components/ui/input-details";
 import InputField from "./ui/input-field";

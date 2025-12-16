@@ -1,4 +1,4 @@
-export async function Page(){
+export default async function Page(){
   return(
     <div>retomar das transferencias</div>
   )

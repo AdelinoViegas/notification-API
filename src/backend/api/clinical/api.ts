@@ -2,7 +2,7 @@
 
 import { getUserId } from "@/lib/web-token";
 import { validatePatientDoc } from "@/lib/regexp";
-import { closePatientProcess, getSyncedHistories, syncPatientHistories, syncPatientRegister } from "./process-control";
+import { closePatientProcess, getSyncedHistories, syncPatientRegister } from "./process-control";
 import {
   Responsable,
   Assured,
@@ -36,7 +36,7 @@ import {
 } from "@/backend/api/admin";
 import { omitUndefined } from "mongoose";
 import { calculateAge } from "@/lib/calculate-age";
-import { closePatientInUrgency, getPatientUrgencyBank } from "./urgency-bank-api";
+import { closePatientInUrgency } from "./urgency-bank-api";
 
 type ChoosedGroup = Assured | Employee | Enterprise | undefined;
 
