@@ -36,6 +36,7 @@ import {
 } from "@/backend/api/admin";
 import { omitUndefined } from "mongoose";
 import { calculateAge } from "@/lib/calculate-age";
+import { closePatientInUrgency, getPatientUrgencyBank } from "./urgency-bank-api";
 
 type ChoosedGroup = Assured | Employee | Enterprise | undefined;
 
@@ -1048,9 +1049,8 @@ export async function externalTransfer(prev: unknown, formData: FormData){
     const newId = (await getSyncedHistories(id))?.id?.toString() as string;
 
     await Promise.all([
-      patientModel.updateOne({ _id: newId }, { transfered: true }),
-      triedModel.updateOne({ patientId: id, served: false }),
-      closePatientProcess(id, "urgency")
+      closePatientInUrgency(id),
+      patientModel.updateOne({ _id: newId }, { transfered: true })
     ]);
     
     return {
@@ -1059,7 +1059,7 @@ export async function externalTransfer(prev: unknown, formData: FormData){
     }
   }catch(e) {
     console.error(e);
-    
+
     return {
       message: "Opps!!",
       status: false,

@@ -1112,6 +1112,23 @@ async function finishHospitalization(prev: unknown, formData: FormData){
   }
 }
 
+export async function closePatientInUrgency(patientId: string){
+  try{
+    const urgencyId = (await getPatientUrgencyBank(patientId))?.id;
+    const urgency = await urgencyBankModel.findById({ _id: urgencyId });
+
+    await Promise.all([
+      triedModel.updateOne({ _id: urgency?.triedId }, { served: true }),
+      urgencyBankModel.updateOne({ _id: urgencyId }, { served: true }),
+      closePatientProcess(patientId, "urgency")
+    ]);
+    
+    return true;
+  }catch (e) {
+    console.error("close urgency: ", e);
+    return false;
+  }
+}
 async function addPrescription(p: unknown, form: FormData){
   try{
     const description = form.get("description");
