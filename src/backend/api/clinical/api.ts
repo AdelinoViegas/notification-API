@@ -358,6 +358,7 @@ async function getPatients({
   fullname?: string;
   served?: boolean;
   page: number;
+  transfered?: boolean
 }){
   try{
     const formated = [];

@@ -1,6 +1,6 @@
 import { Schema } from "mongoose";
 import { Responsables, Group } from "@/backend/api/clinical/types";
-import { AngolaProvices } from "../api/clinical/translator";
+import { AngolaProvices } from "@/backend/api/clinical/translator";
 
 const patientSchema = new Schema({
   fullname: {
@@ -13,6 +13,7 @@ const patientSchema = new Schema({
   gender: String,
   tel: String,
   documentation: String,
+  transfered: Boolean,
   lang: String,
   served: {
     type: Boolean,
@@ -23,6 +24,15 @@ const patientSchema = new Schema({
 }, {
   timestamps: true,
 });
+
+export const externalTransferSchema = new Schema({
+  patientId: Schema.ObjectId,
+  userCreatedAt: Date,
+  unitId: Schema.ObjectId,
+  userId: Schema.ObjectId
+}, {
+  timestamps: true
+})
 
 const demographySchema = new Schema({
   patientId: Schema.ObjectId,
