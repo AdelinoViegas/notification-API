@@ -594,7 +594,7 @@ async function signExternalUnit(prev: unknown, formData: FormData){
     if(!name) 
       throw new Error("Informe o nome da unidade!", { cause: "empty" });
 
-    const externalUnit = new externalUnitModel({
+    await externalUnitModel.create({
       name,
       street,
       municipality,
@@ -602,13 +602,11 @@ async function signExternalUnit(prev: unknown, formData: FormData){
       userId: await getUserId()
     });
 
-    await externalUnit.save();
-
     return {
       message: "Unidade externa registrada com sucesso!",
       status: true,
     }
-  }catch(e: unknown){
+  }catch(e){
     const err = e as Error;
 
     return {

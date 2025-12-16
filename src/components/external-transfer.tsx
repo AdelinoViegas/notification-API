@@ -40,7 +40,7 @@ export default function ExternalTransfer({ id }: { id?: string }){
         toast.error(state.message);
 
     getExternalUnits({}).then(setExternalUnits)
-  }, [state, router]);
+  }, [state, router, selectState]);
   
   return(
     <div>
@@ -63,6 +63,7 @@ export default function ExternalTransfer({ id }: { id?: string }){
                 label="Unidades Externas"
                 options={externalUnits}
                 name="unitId"
+                onClick={() => setSelectState(!selectState)}
                 className="grow"
                 required
               />
