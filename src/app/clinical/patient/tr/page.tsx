@@ -61,7 +61,6 @@ export default async function Page({
       </div>
 
       <Table
-        baseRowLink="/clinical/patient"
         columns={[
           "Data Registo", 
           "Nº de Registo", 
