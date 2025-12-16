@@ -1040,20 +1040,26 @@ export async function externalTransfer(prev: unknown, formData: FormData){
       patientId: id,
       unitId: externalUnitId,
       userId: await getUserId(),
-      userCreatedAt: createdAt
+      userCreatedAt: createdAt,
+      reason
     });
 
     await syncPatientRegister(id);
     const newId = (await getSyncedHistories(id))?.id?.toString() as string;
-    await patientModel.updateOne({ _id: newId }, { transfered: true });
-    await triedModel.updateOne({ patientId: id, served: false });
-    await closePatientProcess(id, "urgency");
+
+    await Promise.all([
+      patientModel.updateOne({ _id: newId }, { transfered: true }),
+      triedModel.updateOne({ patientId: id, served: false }),
+      closePatientProcess(id, "urgency")
+    ]);
     
     return {
       message: "Transferido com sucesso!",
       status: true,
     }
-  }catch {
+  }catch(e) {
+    console.error(e);
+    
     return {
       message: "Opps!!",
       status: false,

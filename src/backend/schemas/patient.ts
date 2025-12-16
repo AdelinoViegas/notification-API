@@ -29,7 +29,11 @@ export const externalTransferSchema = new Schema({
   patientId: Schema.ObjectId,
   userCreatedAt: Date,
   unitId: Schema.ObjectId,
-  userId: Schema.ObjectId
+  userId: Schema.ObjectId,
+  reason: {
+    type: String,
+    required: true
+  }
 }, {
   timestamps: true
 })
