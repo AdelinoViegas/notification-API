@@ -22,6 +22,8 @@ export default async function Page({
   const patientsData = await getPatients({ 
     fullname: name, 
     page: page?Number(page):1,
+    transfered: true,
+    served: true
   });
 
   const patientRows = formater(patientsData.patients, {

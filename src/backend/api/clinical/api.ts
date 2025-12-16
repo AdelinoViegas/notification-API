@@ -355,24 +355,27 @@ async function signPatient(prev: unknown, formData: FormData){
 async function getPatients({
   fullname,
   served,
-  page
+  page,
+  transfered  
 }: {
   fullname?: string;
   served?: boolean;
   page: number;
-  transfered?: boolean
+  transfered?: boolean;
 }){
   try{
     const formated = [];
     let patients = await patientModel.find({ 
       served: !!served, 
       used: undefined,
+      transfered,
       fullname: fullname?new RegExp(`^${fullname}`, 'i'):/\w*/ig, 
     }).select({
       fullname: 1,
       createdAt: 1,
       registerNumber: 1,
     });
+
     let numberOfItems = 10;
     numberOfItems *= page;
     patients = served?patients.reverse():patients;

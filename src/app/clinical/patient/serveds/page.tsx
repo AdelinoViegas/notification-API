@@ -5,6 +5,8 @@ import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
 import Pagination from "@/components/pagination";
 import { getPatients } from "@/backend/api/clinical/api";
+import Link from "next/link";
+import Button from "@/components/ui/button";
 
 export const dynamic = "force-dynamic";
 
@@ -42,6 +44,13 @@ export default async function Page({
   
   return(
     <main>
+      <div className="flex gap-x-2">
+        <Link href="/clinical/patient/tr" >
+          <Button>Transferidos</Button>
+        </Link>
+        
+      </div>
+
       <div className="flex justify-between lg:flex-row gap-3 items-center">
         <Alert 
           type="info" 
