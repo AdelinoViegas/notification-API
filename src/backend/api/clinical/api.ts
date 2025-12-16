@@ -2,7 +2,7 @@
 
 import { getUserId } from "@/lib/web-token";
 import { validatePatientDoc } from "@/lib/regexp";
-import { closePatientProcess } from "./process-control";
+import { closePatientProcess, getSyncedHistories, syncPatientHistories, syncPatientRegister } from "./process-control";
 import {
   Responsable,
   Assured,
@@ -1031,17 +1031,23 @@ async function updateSpecialty(prev: unknown, formData:FormData){
 
 export async function externalTransfer(prev: unknown, formData: FormData){
   try{
-    const patientId = formData.get("patientId");
+    const id = formData.get("patientId") as string;
     const externalUnitId = formData.get("unitId");
     const reason = formData.get("reason");
     const createdAt = formData.get("date");
 
-    await externalTransferModel.create({
-      patientId,
-      unitId: externalUnitId,
-      userId: await getUserId(),
+    // await externalTransferModel.create({
+    //   patientId: id,
+    //   unitId: externalUnitId,
+    //   userId: await getUserId(),
+    //   userCreatedAt: createdAt
+    // });
 
-    })
+    await syncPatientRegister(id);
+    const newPatientId = await getSyncedHistories(id);
+
+    console.log(newPatientId, )
+    // await patientModel.updateOne({ _id: })
     return {
       message: "Transferido com sucesso!",
       status: true,
