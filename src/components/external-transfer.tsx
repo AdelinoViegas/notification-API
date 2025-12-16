@@ -44,7 +44,7 @@ export default function ExternalTransfer({ id }: { id?: string }){
   return(
     <div>
       <div className="relative">
-        <Button onClick={()=> setModalState(true)}>Definir Estado</Button>
+        <Button onClick={()=> setModalState(true)}>Transferencia</Button>
       </div>
 
       <Modal 
