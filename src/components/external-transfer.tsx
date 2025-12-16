@@ -12,6 +12,7 @@ import FallbackComponent from "@/components/fallback-components";
 import { externalTransfer } from "@/backend/api/clinical/api";
 import InputDetails from "@/components/ui/input-details";
 import InputField from "./ui/input-field";
+import ExternalUnitForm from "./forms/external-unit-form";
 
 export default function ExternalTransfer({ id }: { id?: string }){
   const [modalstate, setModalState] = useState(false);
@@ -57,15 +58,17 @@ export default function ExternalTransfer({ id }: { id?: string }){
           <div className="my-4">
             <input type="hidden" name="patientId" defaultValue={patientId} />
              
-           { externalUnits.length
-            ? <Selection
+            <div className="flex gap-x-3 items-center">
+              <Selection
                 label="Unidades Externas"
-                options={patientStates}
+                options={externalUnits}
                 name="unitId"
+                className="grow"
                 required
               />
-            : <FallbackComponent />
-            }
+              
+              <ExternalUnitForm />
+            </div>
 
             <InputDetails
               textLabel="Movito"
