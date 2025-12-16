@@ -1027,7 +1027,23 @@ async function updateSpecialty(prev: unknown, formData:FormData){
   }
 }
 
+export async function externalTransfer(prev: unknown, formData: FormData){
+  try{
+    const patientId = formData.get("patientId");
+    const externalUnitId = formData.get("unitId");
+    const reason = formData.get("reason");
 
+    return {
+      message: "Transferido com sucesso!",
+      status: true,
+    }
+  }catch {
+    return {
+      message: "Opps!!",
+      status: false,
+    }
+  }
+}
 export {
   getUsers,
   getUser,
