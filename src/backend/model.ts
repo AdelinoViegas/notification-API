@@ -28,7 +28,8 @@ import {
   specialtyStateSchema,
   patientSyncSchema,
   patientStateSchema,
-  patientExitSchema
+  patientExitSchema,
+  externalTransferSchema
 } from "@/backend/schemas/patient";
 import { 
   patientWaitingSchema,
@@ -84,6 +85,7 @@ const triedModel = clinical.model("Tried", triedSchema);
 const patientWaitingModel = clinical.model("PatientWaiting", patientWaitingSchema);
 const patientStateModel = clinical.model("PatientState", patientStateSchema);
 const patientExitModel = clinical.model("PatientExit", patientExitSchema);
+export const externalTransferModel = clinical.model("ExternalTransfer", externalTransferSchema);
 
 //agendamentos (schedulings)
 

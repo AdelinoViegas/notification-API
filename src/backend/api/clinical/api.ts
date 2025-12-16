@@ -2,7 +2,7 @@
 
 import { getUserId } from "@/lib/web-token";
 import { validatePatientDoc } from "@/lib/regexp";
-import { closePatientProcess } from "./process-control";
+import { closePatientProcess, getSyncedHistories, syncPatientRegister } from "./process-control";
 import {
   Responsable,
   Assured,
@@ -23,6 +23,7 @@ import {
   processStateModel,
   internalServiceModel,
   urgencyServiceModel,
+  externalTransferModel,
 } from "@/backend/model";
 import { 
   patientAccess,
@@ -35,6 +36,7 @@ import {
 } from "@/backend/api/admin";
 import { omitUndefined } from "mongoose";
 import { calculateAge } from "@/lib/calculate-age";
+import { closePatientInUrgency } from "./urgency-bank-api";
 
 type ChoosedGroup = Assured | Employee | Enterprise | undefined;
 
@@ -353,23 +355,27 @@ async function signPatient(prev: unknown, formData: FormData){
 async function getPatients({
   fullname,
   served,
-  page
+  page,
+  transfered  
 }: {
   fullname?: string;
   served?: boolean;
   page: number;
+  transfered?: boolean;
 }){
   try{
     const formated = [];
     let patients = await patientModel.find({ 
       served: !!served, 
       used: undefined,
+      transfered,
       fullname: fullname?new RegExp(`^${fullname}`, 'i'):/\w*/ig, 
     }).select({
       fullname: 1,
       createdAt: 1,
       registerNumber: 1,
     });
+
     let numberOfItems = 10;
     numberOfItems *= page;
     patients = served?patients.reverse():patients;
@@ -1027,7 +1033,42 @@ async function updateSpecialty(prev: unknown, formData:FormData){
   }
 }
 
+export async function externalTransfer(prev: unknown, formData: FormData){
+  try{
+    const id = formData.get("patientId") as string;
+    const externalUnitId = formData.get("unitId");
+    const reason = formData.get("reason");
+    const createdAt = formData.get("date");
 
+    await externalTransferModel.create({
+      patientId: id,
+      unitId: externalUnitId,
+      userId: await getUserId(),
+      userCreatedAt: createdAt,
+      reason
+    });
+
+    await syncPatientRegister(id);
+    const newId = (await getSyncedHistories(id))?.id?.toString() as string;
+
+    await Promise.all([
+      closePatientInUrgency(id),
+      patientModel.updateOne({ _id: newId }, { transfered: true })
+    ]);
+    
+    return {
+      message: "Transferido com sucesso!",
+      status: true,
+    }
+  }catch(e) {
+    console.error(e);
+
+    return {
+      message: "Opps!!",
+      status: false,
+    }
+  }
+}
 export {
   getUsers,
   getUser,

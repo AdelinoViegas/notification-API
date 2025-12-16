@@ -1,8 +1,7 @@
 "use client";
 
 import { 
-  useState, 
-  useCallback, 
+  useState,
   useEffect, 
   ChangeEvent
 } from "react";
@@ -23,14 +22,10 @@ import { calculateAge } from "@/lib/calculate-age";
 function AccesTypeForm(){
   const [ type, setType ] = useState("");
   const [ externalUnits, setExternalUnits ] = useState<SelectionOption[]>([]);
-  const loadExternalUnits = useCallback(async()=>{
-    const externalUnits = await getExternalUnits({}) as SelectionOption[];
-    setExternalUnits(externalUnits);
-  }, []);
 
   useEffect(()=>{
-    loadExternalUnits();
-  }, [type, loadExternalUnits]);
+    getExternalUnits({}).then(setExternalUnits)
+  }, [type]);
 
   return(
     <div className="grid md:grid-cols-3 gap-3">
@@ -49,7 +44,6 @@ function AccesTypeForm(){
             options={externalUnits}
             name="externalUnitId"
             className="grow"
-            onClick={loadExternalUnits}
             required
           />
 

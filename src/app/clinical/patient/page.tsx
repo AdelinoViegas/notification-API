@@ -49,7 +49,7 @@ export default async function Page({
       <Refresh />
       
       <div className="flex gap-x-2">
-        <Link href="patient/sign" >
+        <Link href="/clinical/patient/new" >
           <Button className="flex gap-x-2">
             <PlusIcon className="w-5" />
             Novo Utente

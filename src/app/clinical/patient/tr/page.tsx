@@ -1,12 +1,11 @@
-import { getDateInSlashFormat } from "@/lib/date-formater";
 import { formater } from "@/lib/table-formater";
 import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
-import Pagination from "@/components/pagination";
 import { getPatients } from "@/backend/api/clinical/api";
-import Link from "next/link";
-import Button from "@/components/ui/button";
+import Pagination from "@/components/pagination";
+import Refresh from "@/components/refresh";
+import { getDateInSlashFormat } from "@/lib/date-formater";
 
 export const dynamic = "force-dynamic";
 
@@ -23,6 +22,7 @@ export default async function Page({
   const patientsData = await getPatients({ 
     fullname: name, 
     page: page?Number(page):1,
+    transfered: true,
     served: true
   });
 
@@ -39,24 +39,19 @@ export default async function Page({
       fn(e) {
         return getDateInSlashFormat(new Date(e));
       }
-    }
+    },
   });
   
-  return(
-    <main>
-      <div className="flex gap-x-2">
-        <Link href="/clinical/patient/tr" >
-          <Button>Transferidos</Button>
-        </Link>
-        
-      </div>
+  return (
+    <main className="space-y-3">
+      <Refresh />
 
-      <div className="flex justify-between lg:flex-row gap-3 items-center">
+      <div className="flex flex-col lg:flex-row justify-between lg:items-center">
         <Alert 
           type="info" 
           message="Faça duplo click sobre o utente para seguir com o atendimento!" 
         />
-
+        
         <Search
           className="flex items-center gap-3"
           filterKey="name"
@@ -66,7 +61,6 @@ export default async function Page({
       </div>
 
       <Table
-        baseRowLink="/clinical/patient"
         columns={[
           "Data Registo", 
           "Nº de Registo", 
@@ -82,5 +76,5 @@ export default async function Page({
         totalItems={patientsData.totalItems as number} 
       />
     </main>
-  )
+  );
 }

@@ -10,7 +10,6 @@ import { useRouter } from "next/navigation";
 import Modal from "@/components/modal";
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
-import { BiPlus as PlusIcon } from "react-icons/bi";
 import { signExternalUnit } from "@/backend/api/clinical/urgency-bank-api";
 import { toast } from "react-toastify";
 
@@ -41,9 +40,9 @@ export default function ExternalUnitForm(){
       <Button 
         type="button" 
         onClick={openModal} 
-        className="flex gap-x-2">
-        <PlusIcon className="w-5" />
-        Nova Unidade
+        className="flex gap-x-2"
+      >
+        Nova
       </Button>
 
       <Modal 
@@ -81,7 +80,10 @@ export default function ExternalUnitForm(){
             <Button
               onClick={closeModal} 
               type="button" 
-              cancel>Cancelar</Button>
+              cancel
+            >
+              Fechar
+            </Button>
             <Button>Salvar</Button>
           </div>
         </form>

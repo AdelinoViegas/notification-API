@@ -45,7 +45,6 @@ workplaceSchema.index({ userId: 1, workplaceId: 1 }, { unique: true });
 const externalUnitSchema = new Schema({
   name: {
     type: String,
-    unique: true,
     required: true,
   },
   street: String,
@@ -55,6 +54,15 @@ const externalUnitSchema = new Schema({
 }, {
   collection: 'external_units',
   timestamps: true,
+});
+
+externalUnitSchema.index({
+  name: 1,
+  street: 1,
+  municipality: 1,
+  province: 1
+}, {
+  unique: true
 });
 
 const scheduleServiceSchema = new Schema({

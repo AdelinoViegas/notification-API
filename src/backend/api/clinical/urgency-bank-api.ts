@@ -594,7 +594,7 @@ async function signExternalUnit(prev: unknown, formData: FormData){
     if(!name) 
       throw new Error("Informe o nome da unidade!", { cause: "empty" });
 
-    const externalUnit = new externalUnitModel({
+    await externalUnitModel.create({
       name,
       street,
       municipality,
@@ -602,13 +602,11 @@ async function signExternalUnit(prev: unknown, formData: FormData){
       userId: await getUserId()
     });
 
-    await externalUnit.save();
-
     return {
       message: "Unidade externa registrada com sucesso!",
       status: true,
     }
-  }catch(e: unknown){
+  }catch(e){
     const err = e as Error;
 
     return {
@@ -1114,6 +1112,23 @@ async function finishHospitalization(prev: unknown, formData: FormData){
   }
 }
 
+export async function closePatientInUrgency(patientId: string){
+  try{
+    const urgencyId = (await getPatientUrgencyBank(patientId))?.id;
+    const urgency = await urgencyBankModel.findById({ _id: urgencyId });
+
+    await Promise.all([
+      triedModel.updateOne({ _id: urgency?.triedId }, { served: true }),
+      urgencyBankModel.updateOne({ _id: urgencyId }, { served: true }),
+      closePatientProcess(patientId, "urgency")
+    ]);
+    
+    return true;
+  }catch (e) {
+    console.error("close urgency: ", e);
+    return false;
+  }
+}
 async function addPrescription(p: unknown, form: FormData){
   try{
     const description = form.get("description");
