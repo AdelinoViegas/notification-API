@@ -2,28 +2,19 @@
 
 import { useActionState, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Button from "@/components/ui/button";
 import Modal from "@/components/modal";
-import Selection, { SelectionOption } from "@/components/ui/selection";
-import { getExternalUnits } from "@/backend/api/clinical/urgency-bank-api";
-import { externalTransfer, recuverFromExternalTransfer } from "@/backend/api/clinical/api";
-import Alert from "./ui/alert";
+import { recuverFromExternalTransfer } from "@/backend/api/clinical/api";
+import Alert from "@/components/ui/alert";
 
 export default function RecuverExternalTransfer({ id }: { id: string }){
   const [modalstate, setModalState] = useState(false);
   const [ state, action ] = useActionState(recuverFromExternalTransfer, { message: "", status: false });
-  const [ selectState, setSelectState ] = useState(false);
-  const [ externalUnits, setExternalUnits ] = useState<SelectionOption[]>([]);
-
-  const closeModal = () => {
-    setModalState(false);
-  };
+  const closeModal = () => setModalState(false);
   const router = useRouter();
-  const params = useParams<{ id: string; patientId: string }>();
 
   useEffect(()=>{
-
     if(state.message)
       if(state.status)
         toast.success(state.message, {
@@ -33,8 +24,7 @@ export default function RecuverExternalTransfer({ id }: { id: string }){
         });
       else 
         toast.error(state.message);
-
-  }, [state, router, selectState]);
+  }, [state, router]);
   
   return(
     <div>
