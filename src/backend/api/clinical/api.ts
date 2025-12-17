@@ -1102,18 +1102,26 @@ export async function getTransferedPatient(id: string){
   }
 }
 
-export async function recuverFromExternalTransfer(id: string){
+export async function recuverFromExternalTransfer(prev: unknown, formData: FormData){
   try{
-    // id da transferencia
+    // id da transferenciar
+    const id = formData.get("id");
     const transfer = await externalTransferModel.findById({ _id: id });
+    const patientId = await getSyncedHistories(transfer?.patientId?.toString() as string);
+
     if(!transfer) throw new Error;
+    await patientModel.updateOne({ _id: patientId?.id }, { transfered: false });
 
-    await patientModel.updateOne({ _id: transfer.patientId }, { transfered: false });
-
-    return true;
+    return {
+      message: "Ficha do utente recuperada com sucesso!",
+      status: true
+    };
   }catch(e){
     console.error(e);
-    return false;
+    return {
+      message: "Não foi possivel!",
+      status: false
+    };
   }
 }
 
