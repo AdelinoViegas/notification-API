@@ -1076,7 +1076,7 @@ export async function getTransferedPatient(id: string){
     const latestPatientId = (await getSyncedHistories(id))?.secondaries.pop();
     const transfer = await externalTransferModel.findOne({ patientId: latestPatientId });
     if(!transfer) throw new Error;
-
+    
     const externalUnit = await externalUnitModel.findById({ _id: transfer?.unitId })
     .select({ 
       userId: 0, 
@@ -1086,9 +1086,12 @@ export async function getTransferedPatient(id: string){
     });
 
     if(!externalUnit) throw new Error;
+    const patientName = (await patientModel.findById({ _id: latestPatientId })
+    .select({ fullname: 1 }))?.fullname;
 
     return {
       id: transfer._id.toString(),
+      patientName,
       externalUnit: externalUnit,
       createdAt: transfer.userCreatedAt,
       reason: transfer.reason
