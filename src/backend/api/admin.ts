@@ -11,11 +11,11 @@ import type {
 } from "@/backend/api/types";
 
 const instance = axios.create({ 
-  baseURL: process.env.API_ADMIN_URL
+  baseURL: `${process.env.API_URL}/ath`
 });
 
 const clientInstance = axios.create({ 
-  baseURL: process.env.API_ADMIN_URL
+  baseURL: `${process.env.API_URL}/ath`
 });
 
 export async function getUsers(): Promise<User[]>{
