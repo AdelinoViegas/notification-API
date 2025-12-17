@@ -1091,6 +1091,21 @@ export async function getTransferedPatient(id: string){
   }
 }
 
+export async function recuverFromExternalTransfer(id: string){
+  try{
+    // id da transferencia
+    const transfer = await externalTransferModel.findById({ _id: id });
+    if(!transfer) throw new Error;
+
+    await patientModel.updateOne({ _id: transfer.patientId }, { transfered: false });
+
+    return true;
+  }catch(e){
+    console.error(e);
+    return false;
+  }
+}
+
 export {
   getUsers,
   getUser,
