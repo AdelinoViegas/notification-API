@@ -24,6 +24,7 @@ import {
   internalServiceModel,
   urgencyServiceModel,
   externalTransferModel,
+  externalUnitModel,
 } from "@/backend/model";
 import { 
   patientAccess,
@@ -1069,6 +1070,27 @@ export async function externalTransfer(prev: unknown, formData: FormData){
     }
   }
 }
+
+export async function getTransferedPatient(id: string){
+  try{
+    const transfer = await externalTransferModel.findOne({ patientId: id });
+    if(!transfer) throw new Error;
+
+    const externalUnit = await externalUnitModel.findById({ _id: transfer?.unitId });
+    if(!externalUnit) throw new Error;
+
+    return {
+      id: transfer._id.toString(),
+      externalUnit: externalUnit.name,
+      createdAt: transfer.userCreatedAt,
+      reason: transfer.reason
+    }
+  }catch(e){
+    console.error(e);
+    return null;
+  }
+}
+
 export {
   getUsers,
   getUser,
