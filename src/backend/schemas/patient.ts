@@ -13,7 +13,10 @@ const patientSchema = new Schema({
   gender: String,
   tel: String,
   documentation: String,
-  transfered: Boolean,
+  transfered: {
+    type: Boolean,
+    default: false
+  },
   lang: String,
   served: {
     type: Boolean,

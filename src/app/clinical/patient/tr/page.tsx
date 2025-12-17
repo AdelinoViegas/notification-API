@@ -69,6 +69,7 @@ export default async function Page({
           "Tipo de Acesso"
         ]} 
         rows={patientRows}
+        baseRowLink="/clinical/patient/tr"
       />
 
       <Pagination

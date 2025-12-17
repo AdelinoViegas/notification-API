@@ -1,5 +1,27 @@
-export default async function Page(){
+import { getTransferedPatient } from "@/backend/api/clinical/api"
+import RecuverExternalTransfer from "@/components/recuver-external-transfer";
+import Tag from "@/components/ui/tag";
+import { getDataAndHoursFormat } from "@/lib/date-formater";
+
+export default async function Page({ params }: { params: Promise<{ id: string }>}){
+  const { id } = await params;
+  const transfer = await getTransferedPatient(id);
+  
   return(
-    <div>retomar das transferencias</div>
+    <div className="space-y-3">
+      <RecuverExternalTransfer id={transfer?.id as string} />
+
+      <div>
+        <Tag className="inline-flex">Detalhes da Transferencia</Tag>
+        <h2>Nome: {transfer?.patientName}</h2>
+        
+        <div>
+          Motivo: {transfer?.reason}
+        </div>
+
+        <div>Unidade Externa: {transfer?.externalUnit.name}</div>
+        <div>Data: {getDataAndHoursFormat(new Date(transfer?.createdAt as Date))}</div>
+      </div>
+    </div>
   )
 }

@@ -24,6 +24,7 @@ import {
   internalServiceModel,
   urgencyServiceModel,
   externalTransferModel,
+  externalUnitModel,
 } from "@/backend/model";
 import { 
   patientAccess,
@@ -1069,6 +1070,61 @@ export async function externalTransfer(prev: unknown, formData: FormData){
     }
   }
 }
+
+export async function getTransferedPatient(id: string){
+  try{
+    const latestPatientId = (await getSyncedHistories(id))?.secondaries.pop();
+    const transfer = await externalTransferModel.findOne({ patientId: latestPatientId });
+    if(!transfer) throw new Error;
+    
+    const externalUnit = await externalUnitModel.findById({ _id: transfer?.unitId })
+    .select({ 
+      userId: 0, 
+      createdAt: 0, 
+      updatedAt: 0,
+      _id: 0
+    });
+
+    if(!externalUnit) throw new Error;
+    const patientName = (await patientModel.findById({ _id: latestPatientId })
+    .select({ fullname: 1 }))?.fullname;
+
+    return {
+      id: transfer._id.toString(),
+      patientName,
+      externalUnit: externalUnit,
+      createdAt: transfer.userCreatedAt,
+      reason: transfer.reason
+    }
+  }catch(e){
+    console.error(e);
+    return null;
+  }
+}
+
+export async function recuverFromExternalTransfer(prev: unknown, formData: FormData){
+  try{
+    // id da transferenciar
+    const id = formData.get("id");
+    const transfer = await externalTransferModel.findById({ _id: id });
+    const patientId = await getSyncedHistories(transfer?.patientId?.toString() as string);
+
+    if(!transfer) throw new Error;
+    await patientModel.updateOne({ _id: patientId?.id }, { transfered: false });
+
+    return {
+      message: "Ficha do utente recuperada com sucesso!",
+      status: true
+    };
+  }catch(e){
+    console.error(e);
+    return {
+      message: "Não foi possivel!",
+      status: false
+    };
+  }
+}
+
 export {
   getUsers,
   getUser,
