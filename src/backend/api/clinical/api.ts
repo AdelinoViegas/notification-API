@@ -1073,15 +1073,23 @@ export async function externalTransfer(prev: unknown, formData: FormData){
 
 export async function getTransferedPatient(id: string){
   try{
-    const transfer = await externalTransferModel.findOne({ patientId: id });
+    const latestPatientId = (await getSyncedHistories(id))?.secondaries.pop();
+    const transfer = await externalTransferModel.findOne({ patientId: latestPatientId });
     if(!transfer) throw new Error;
 
-    const externalUnit = await externalUnitModel.findById({ _id: transfer?.unitId });
+    const externalUnit = await externalUnitModel.findById({ _id: transfer?.unitId })
+    .select({ 
+      userId: 0, 
+      createdAt: 0, 
+      updatedAt: 0,
+      _id: 0
+    });
+
     if(!externalUnit) throw new Error;
 
     return {
       id: transfer._id.toString(),
-      externalUnit: externalUnit.name,
+      externalUnit: externalUnit,
       createdAt: transfer.userCreatedAt,
       reason: transfer.reason
     }
