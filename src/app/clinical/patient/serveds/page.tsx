@@ -23,7 +23,8 @@ export default async function Page({
   const patientsData = await getPatients({ 
     fullname: name, 
     page: page?Number(page):1,
-    served: true
+    served: true,
+    transfered: false
   });
 
   const patientRows = formater(patientsData.patients, {
