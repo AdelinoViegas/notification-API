@@ -10,8 +10,8 @@ interface DecPayload extends JWTPayload {
   id: string;
 }
 
-export async function genWebToken(){
-  return new SignJWT({ id: "", jti: "test"})
+export async function getServiceToken(){
+  return new SignJWT()
     .setProtectedHeader({ alg: "HS384" })
     .setIssuedAt()
     .setIssuer('urn:master-clinical:issuer')
