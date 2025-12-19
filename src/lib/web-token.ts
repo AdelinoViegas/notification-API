@@ -1,26 +1,26 @@
 "use server";
 
-import { SignJWT, jwtVerify, type JWTPayload } from 'jose';
+import { createSigner, createVerifier } from "fast-jwt";
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
-const adminKey = new TextEncoder().encode(process.env.JWT_SECRET_ADMIN_KEY);
+type DecPayload = { id: string }
 
-interface DecPayload extends JWTPayload {
-  id: string;
+const jwtConfig = {
+  key: process.env.SHARED_KEY,
+  iss: "urn:master-clinical:issuer"
 }
 
 export async function getServiceToken(){
-  return new SignJWT()
-    .setProtectedHeader({ alg: "HS384" })
-    .setIssuedAt()
-    .setIssuer('urn:master-clinical:issuer')
-    .sign(adminKey)
-}
+  const signToken = createSigner(jwtConfig);
 
-async function decAdminJWT(token: string){
-  const { payload } = await jwtVerify<DecPayload>(token, adminKey);
-  return payload.id;
+  const tk = signToken({
+    jti: null,
+    id: null
+  });
+  
+  console.log(tk);
+  return tk;
 }
 
 export async function getUserId(){
@@ -30,9 +30,12 @@ export async function getUserId(){
     
     if(!token)
       throw new Error("falta de cookie de autenticação!");
+
+    const verifyTK = createVerifier(jwtConfig);
+    const tk = verifyTK(token.value) as DecPayload;
     
-    const userId = await decAdminJWT(token.value);
-    return userId;
+    console.log(tk.id)
+    return tk.id;
   } catch (e) {
     console.error("get-user-id: ", e); 
     redirect("/clinical");
