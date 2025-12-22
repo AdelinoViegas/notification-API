@@ -364,7 +364,7 @@ const patientStates = [
   {
     _id:"recovered", 
     label:"Recuperado", 
-    description: "Paciente encontra-se estável, semsinais de risco imediato",
+    description: "Paciente encontra-se estável, sem sinais de risco imediato",
     color: {
       tw: {
         bg: "bg-green-500",
