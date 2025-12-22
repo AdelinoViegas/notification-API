@@ -357,7 +357,7 @@ async function getPatients({
   fullname,
   served,
   page,
-  transfered  
+  transfered  = false
 }: {
   fullname?: string;
   served?: boolean;
