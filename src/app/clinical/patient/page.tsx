@@ -25,7 +25,7 @@ export default async function Page({
   const { name, p: page } = await searchParams;
   const patientsData = await getPatients({ 
     fullname: name, 
-    page: page?Number(page):1,
+    page: page?Number(page):1
   });
 
   const patientRows = formater(patientsData.patients, {
