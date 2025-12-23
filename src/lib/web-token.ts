@@ -19,7 +19,6 @@ export async function getServiceToken(){
     id: null
   });
   
-  console.log(tk);
   return tk;
 }
 
@@ -33,8 +32,7 @@ export async function getUserId(){
 
     const verifyTK = createVerifier(jwtConfig);
     const tk = verifyTK(token.value) as DecPayload;
-    
-    console.log(tk.id)
+
     return tk.id;
   } catch (e) {
     console.error("get-user-id: ", e); 

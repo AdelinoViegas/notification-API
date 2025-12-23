@@ -9,7 +9,10 @@ export const dynamic = "force-dynamic";
 
 export default async function Page(){
   const id = await getUserId();
-  const [ units, user ] = await Promise.all([ getGrantedUnitAccess(id), getUser(id)]);
+  const [ units, user ] = await Promise.all([
+    getGrantedUnitAccess(id), 
+    getUser(id)
+  ]);
  
   return(
     <main className="flex bg-white h-[100%] flex-col-reverse lg:flex-row gap-3 items-center">
