@@ -36,22 +36,19 @@ export default async function Page({
   return(
     <main className="space-y-3">
       <Refresh />
-      <div className="mt-6">
-        <Header title="Bloco Operatório"/>
-      </div>
       
-      <Link href="/clinical/operating-room/serveds">
-        <Button className="flex gap-x-2 bg-slate-700">
-          <PiArchiveDuotone/>
-          Pacientes Atendidos
-        </Button>
-      </Link>
-
       <div className="flex lg:flex-row justify-between items-center m-0">
         <Alert 
           type="info" 
           message="Faça duplo click sobre o utente para seguir com o atendimento!" 
         />
+
+        <Link href="/clinical/operating-room/serveds">
+          <Button className="flex gap-x-2 bg-slate-700 mt-0">
+            <PiArchiveDuotone/>
+              Pacientes Atendidos
+            </Button>
+        </Link>
       </div>
       
       <div className="flex justify-between items-center">
