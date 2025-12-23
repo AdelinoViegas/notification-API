@@ -4,12 +4,12 @@ import axios from "axios";
 import { cookies } from "next/headers";
 
 const instance = axios.create({ 
-  baseURL: process.env.API_ADMIN_URL
+  baseURL: process.env.API_URL
 });
 
 async function userState(token: string){
   instance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-  const res = await instance.get("/users/myProfile/status");
+  const res = await instance.get("/ath/users/myProfile/status");
   return res.status === 200;
 }
 
@@ -30,7 +30,8 @@ export async function RESTproxy(extToken?: string, set = false){
     }
 
     return await userState(token);
-  }catch {
+  }catch (e) {
+    console.error(e);
     return false;
   }
 }

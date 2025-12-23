@@ -1,7 +1,7 @@
 "use server";
 
 import axios from "axios";
-import { genWebToken, getUserToken } from "@/lib/web-token";
+import { getServiceToken, getUserToken } from "@/lib/web-token";
 import { clinicalRoutes } from '@/components/routes';
 import type { 
   MyProfile, 
@@ -10,17 +10,17 @@ import type {
   DefaultResponse
 } from "@/backend/api/types";
 
-const instance = axios.create({ 
-  baseURL: process.env.API_ADMIN_URL
+const privInstance = axios.create({ 
+  baseURL: `${process.env.API_URL}/ath`
 });
 
-const clientInstance = axios.create({ 
-  baseURL: process.env.API_ADMIN_URL
+const clientprivInstance = axios.create({ 
+  baseURL: `${process.env.API_URL}/ath`
 });
 
 export async function getUsers(): Promise<User[]>{
-  instance.defaults.headers.common.Authorization = `Bearer ${await genWebToken()}`;
-  const res = await instance.get("/users", {
+  privInstance.defaults.headers.common.Authorization = `Bearer ${await getServiceToken()}`;
+  const res = await privInstance.get("/users", {
     params: { g: "clinico" }
   });
 
@@ -28,8 +28,8 @@ export async function getUsers(): Promise<User[]>{
 }
 
 export async function getUser(id: string){
-  instance.defaults.headers.common.Authorization = `Bearer ${await genWebToken()}`;
-  const res = await instance.get<User>("/users/user", {
+  privInstance.defaults.headers.common.Authorization = `Bearer ${await getServiceToken()}`;
+  const res = await privInstance.get<User>("/users/user", {
     params: { id }
   });
 
@@ -38,20 +38,20 @@ export async function getUser(id: string){
 
 // chamadas do usuário
 export async function getUserRoles(){
-  clientInstance.defaults.headers.common["Authorization"] = `Bearer ${await getUserToken()}`
-  const res = await clientInstance.get<UserRole[]>("/users/myProfile/roles");
+  clientprivInstance.defaults.headers.common["Authorization"] = `Bearer ${await getUserToken()}`
+  const res = await clientprivInstance.get<UserRole[]>("/users/myProfile/roles");
   return res.data;
 }
 
 export async function getMyProfile(){
-  clientInstance.defaults.headers.common["Authorization"] = `Bearer ${await getUserToken()}`
-  const res = await clientInstance.get<MyProfile>("/users/myProfile");
+  clientprivInstance.defaults.headers.common["Authorization"] = `Bearer ${await getUserToken()}`
+  const res = await clientprivInstance.get<MyProfile>("/users/myProfile");
   return res.data;
 }
 
 export async function logout(){
-  clientInstance.defaults.headers.common["Authorization"] = `Bearer ${await getUserToken()}`
-  const res = await clientInstance.delete<DefaultResponse>("/auth/logout");
+  clientprivInstance.defaults.headers.common["Authorization"] = `Bearer ${await getUserToken()}`
+  const res = await clientprivInstance.delete<DefaultResponse>("/auth/logout");
   return res.data;
 }
 

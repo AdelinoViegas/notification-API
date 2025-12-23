@@ -4,11 +4,7 @@ import Userbar from "@/components/userbar";
 import NavLabel from "@/components/clinical/nav-label";
 import { getGrantedRoles } from "@/backend/api/admin";
 
-export default async function Layout({
-  children
-}: Readonly<{
-  children: React.ReactNode;
-}>){
+export default async function Layout({ children }: Readonly<{ children: React.ReactNode }>){
   const routes = await getGrantedRoles();
   const routeMap = new Map<string, typeof routes[number]>();
   routes.forEach(e => routeMap.set(e.href, e));
