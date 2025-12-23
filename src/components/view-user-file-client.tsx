@@ -10,7 +10,7 @@ type MyFile = Awaited<ReturnType<typeof getFile>>;
 export default function ViewUserFile({ id }:{ id: string }){
   const [ file, setFile ] = useState<MyFile>();
   const [ finalState, setFinalState ] = useState(false); 
-  const baseUrl = new URL(process.env.NEXT_PUBLIC_STORAGE_URL as string).origin;
+  const baseUrl = new URL(`${process.env.API_URL}/st/public`).origin;
 
   useEffect(()=>{
     getFile(id).then(data => {
