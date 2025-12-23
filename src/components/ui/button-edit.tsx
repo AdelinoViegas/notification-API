@@ -25,7 +25,7 @@ export default function ButtonEdit({
     for(const value of location)
       setState( prev => ({...prev, [value]: !prev[value]}))
   }
-  //console.log(value)
+
   return (
     <div className="flex gap-x-2">
       {data && value.length === 0 && 

@@ -3,7 +3,6 @@ import { priorityInOperatingRoom } from "@/lib/filters";
 import { PiArchiveDuotone } from "react-icons/pi";
 import { formater } from "@/lib/table-formater";
 import Button from "@/components/ui/button";
-import Header from "@/components/header";
 import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";

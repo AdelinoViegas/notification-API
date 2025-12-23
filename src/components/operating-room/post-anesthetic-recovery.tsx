@@ -55,7 +55,7 @@ postAnestheticRecovery:{
 }:recovery & {
   scheduleId: string,
 }){
-  const values = [motorActivity, respiration, circulation, consciousness, saturation];
+  const values = [motorActivity, respiration, circulation, consciousness, saturation]; console.log(values);
   const data = values.map(value => value !== undefined?String(value):undefined);
   const [state, action] = useActionState(signOperatingRoom, { message:"", status: false });
   const [edit, setEdit] = useState<Record<string, boolean>>({
@@ -89,7 +89,7 @@ postAnestheticRecovery:{
       for(const value of JSON.parse(submitter.dataset.location as string) as string[])
         setEdit( prev => ({...prev, [value]: !prev[value]}));
   }
-  console.log("activity: "+!!edit.activity);
+
   return(
     <div className="flex flex-col gap-y-4 py-8">         
       <Accordium title="Horários de entrada">
@@ -130,8 +130,9 @@ postAnestheticRecovery:{
           />
 
           <div className="grid grid-cols-2 gap-x-4">
-            {!edit.activity?
+            {!motorActivity?.toString()|| !edit.activity?
               <Selection
+                required
                 label="Actividade Motora"
                 options={[
                   {_id:"0", label:"Incapaz de se mover"},
@@ -152,8 +153,9 @@ postAnestheticRecovery:{
               />
             }
 
-            {!edit.respiration?
+            {!respiration?.toString() || !edit.respiration?
               <Selection
+                required
                 label="Respiração"
                 options={[
                   {_id:"0", label:"Apneia"},
@@ -174,8 +176,9 @@ postAnestheticRecovery:{
              />
             }
 
-            {!edit.circulation?
+            {!circulation?.toString() || !edit.circulation?
               <Selection
+                required
                 label="Circulação"
                 options={[
                   {_id:"0", label:"P/A alterada em >= 50% do valor pré-anestésico"},
@@ -196,7 +199,9 @@ postAnestheticRecovery:{
              />
             }
 
-            {!edit.consciousness?<Selection
+            {!consciousness?.toString() || !edit.consciousness?
+            <Selection
+              required
               label="Consciência"
               options={[
                 {_id:"0", label:"Não desperta"},
@@ -217,7 +222,9 @@ postAnestheticRecovery:{
              />
             }
 
-            {!edit.saturation?<Selection
+            {!saturation?.toString() || !edit.saturation?
+            <Selection
+              required
               label="Saturação O2"
               options={[
                 {_id:"0", label:"SpO2 < 90% com O2"},
