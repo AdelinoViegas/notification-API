@@ -1,21 +1,36 @@
-MIT License
+MASTER ERP License
 
-Copyright (c) 2024 サムライシノビ
+Copyright (c) 2025 Socompser Lda
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Proprietary License Description: API RESTful do Serviço Administrador
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+This proprietary license governs the use of the API RESTful Service designed for centralized user, permissions, and authentication management. As the core component of identity management, access control, and group organization, this service provides JWT authentication and facilitates integration with external services.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+Usage:
+
+- The API is intended solely for legitimate use within the designated platform.
+- Any unauthorized use, distribution, or modification is strictly prohibited and may result in legal consequences.
+
+License Grant:
+
+- Users are granted a non-exclusive, non-transferable license to utilize the API as specified in the documentation.
+- The license is limited to the functionalities provided, including user authentication, account management, and role-based access controls.
+
+Restrictions:
+
+- Redistribution of the API or its components without explicit written permission is not permitted.
+- Users may not reverse engineer or decompile any part of the API.
+- The license does not grant any rights to use the API for illegal activities or purposes contrary to public interest.
+
+Compliance:
+
+- Users are responsible for ensuring compliance with all local, state, and federal laws while utilizing the API.
+- Any use of the API must align with the intended functionalities as outlined in the API documentation.
+
+Termination:
+
+- This license terminates automatically upon any breach of its terms. Upon termination, users must discontinue all use of the API and destroy any copies in their possession.
+
+Acceptance:
+
+- By using the API, users agree to adhere to the terms of this proprietary license.
