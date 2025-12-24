@@ -55,7 +55,7 @@ postAnestheticRecovery:{
 }:recovery & {
   scheduleId: string,
 }){
-  const values = [motorActivity, respiration, circulation, consciousness, saturation]; console.log(values);
+  const values = [motorActivity, respiration, circulation, consciousness, saturation];
   const data = values.map(value => value !== undefined?String(value):undefined);
   const [state, action] = useActionState(signOperatingRoom, { message:"", status: false });
   const [edit, setEdit] = useState<Record<string, boolean>>({
@@ -89,6 +89,36 @@ postAnestheticRecovery:{
       for(const value of JSON.parse(submitter.dataset.location as string) as string[])
         setEdit( prev => ({...prev, [value]: !prev[value]}));
   }
+
+  const activityOptions = [
+    {_id:"0", label:"Incapaz de se mover"},
+    {_id:"1", label:"Capaz de mover 2 membros"},
+    {_id:"2", label:"Capaz de mover 4 membros"},
+  ];
+
+  const respirationOptions = [
+    {_id:"0", label:"Apneia"},
+    {_id:"1", label:"Dispneia ou respira superficial"},
+    {_id:"2", label:"Respira profundamente e tosse"},
+  ];
+  
+  const circulationOptions = [
+    {_id:"0", label:"P/A alterada em >= 50% do valor pré-anestésico"},
+    {_id:"1", label:"P/A dentro de +/-20% do valor pré-anestésico"},
+    {_id:"2", label:"P/A dentro de +/-20% do valor pré-anestésico"},
+  ];
+  
+  const consciousnessOptions = [
+    {_id:"0", label:"Não desperta"},
+    {_id:"1", label:"Responde a estímulo"},
+    {_id:"2", label:"Acordado e orientado"},
+  ];
+  
+  const saturationOptions = [
+    {_id:"0", label:"SpO2 < 90% com O2"},
+    {_id:"1", label:"SpO2 > 90% com O2"},
+    {_id:"2", label:"SpO2 > 92% em ar ambiente"},
+  ];
 
   return(
     <div className="flex flex-col gap-y-4 py-8">         
@@ -130,26 +160,17 @@ postAnestheticRecovery:{
           />
 
           <div className="grid grid-cols-2 gap-x-4">
-            {!motorActivity?.toString()|| !edit.activity?
+            {!motorActivity?.toString() || !edit.activity?
               <Selection
-                required
                 label="Actividade Motora"
-                options={[
-                  {_id:"0", label:"Incapaz de se mover"},
-                  {_id:"1", label:"Capaz de mover 2 membros"},
-                  {_id:"2", label:"Capaz de mover 4 membros"},
-                ]}
+                options={activityOptions}
                 name="motorActivity"
               />  
             :
               <InputField
               textLabel="Actividade Motora"
               disabled
-              defaultValue={[
-                {_id:"0", label:"Incapaz de se mover"},
-                {_id:"1", label:"Capaz de mover 2 membros"},
-                {_id:"2", label:"Capaz de mover 4 membros"},
-              ].find( value => Number(value._id) === motorActivity)?.label}
+              defaultValue={activityOptions.find( value => Number(value._id) === motorActivity)?.label}
               />
             }
 
@@ -157,22 +178,14 @@ postAnestheticRecovery:{
               <Selection
                 required
                 label="Respiração"
-                options={[
-                  {_id:"0", label:"Apneia"},
-                  {_id:"1", label:"Dispneia ou respira superficial"},
-                  {_id:"2", label:"Respira profundamente e tosse"},
-                ]}
+                options={respirationOptions}
                 name="respiration"
               />
             :
              <InputField
               textLabel="Respiração"
               disabled
-              defaultValue={[
-                {_id:"0", label:"Apneia"},
-                {_id:"1", label:"Dispneia ou respira superficial"},
-                {_id:"2", label:"Respira profundamente e tosse"},
-              ].find( value => Number(value._id) ===respiration)?.label}
+              defaultValue={respirationOptions.find( value => Number(value._id) ===respiration)?.label}
              />
             }
 
@@ -180,22 +193,14 @@ postAnestheticRecovery:{
               <Selection
                 required
                 label="Circulação"
-                options={[
-                  {_id:"0", label:"P/A alterada em >= 50% do valor pré-anestésico"},
-                  {_id:"1", label:"P/A dentro de +/-20% do valor pré-anestésico"},
-                  {_id:"2", label:"P/A dentro de +/-20% do valor pré-anestésico"},
-                ]}
+                options={circulationOptions}
                 name="circulation"
               />
             :
              <InputField
               textLabel="Circulação"
               disabled
-              defaultValue={[
-                {_id:"0", label:"P/A alterada em >= 50% do valor pré-anestésico"},
-                {_id:"1", label:"P/A dentro de +/-20% do valor pré-anestésico"},
-                {_id:"2", label:"P/A dentro de +/-20% do valor pré-anestésico"},
-              ].find( value => Number(value._id) === circulation)?.label}
+              defaultValue={circulationOptions.find( value => Number(value._id) === circulation)?.label}
              />
             }
 
@@ -203,22 +208,14 @@ postAnestheticRecovery:{
             <Selection
               required
               label="Consciência"
-              options={[
-                {_id:"0", label:"Não desperta"},
-                {_id:"1", label:"Responde a estímulo"},
-                {_id:"2", label:"Acordado e orientado"},
-              ]}
+              options={consciousnessOptions}
               name="consciousness"
             />
             :
              <InputField
               textLabel="Consciência"
               disabled
-              defaultValue={[
-                {_id:"0", label:"P/A alterada em >= 50% do valor pré-anestésico"},
-                {_id:"1", label:"P/A dentro de +/-20% do valor pré-anestésico"},
-                {_id:"2", label:"P/A dentro de +/-20% do valor pré-anestésico"},
-              ].find( value => Number(value._id) === consciousness)?.label}
+              defaultValue={consciousnessOptions.find( value => Number(value._id) === consciousness)?.label}
              />
             }
 
@@ -226,22 +223,14 @@ postAnestheticRecovery:{
             <Selection
               required
               label="Saturação O2"
-              options={[
-                {_id:"0", label:"SpO2 < 90% com O2"},
-                {_id:"1", label:"SpO2 > 90% com O2"},
-                {_id:"2", label:"SpO2 > 92% em ar ambiente"},
-              ]}
+              options={saturationOptions}
               name="saturation"
             />
             :
              <InputField
               textLabel="Saturação O2"
               disabled
-              defaultValue={[
-                {_id:"0", label:"SpO2 < 90% com O2"},
-                {_id:"1", label:"SpO2 > 90% com O2"},
-                {_id:"2", label:"SpO2 > 92% em ar ambiente"},
-              ].find( value => Number(value._id) === saturation)?.label}
+              defaultValue={saturationOptions.find( value => Number(value._id) === saturation)?.label}
              />
             }
 
