@@ -11,14 +11,14 @@ RUN apk add --no-cache alpine-conf && \
 
 WORKDIR /app
 
-COPY --from=builder /app/package.json ./
-COPY --from=builder /app/yarn.lock ./
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/next.config.ts ./next.config.ts
-COPY --from=builder /app/.env ./.env
-COPY --from=builder /app/clinical-setup.mjs clinical-setup.mjs
+COPY --from=builder /app/package.json .
+COPY --from=builder /app/yarn.lock .
+COPY --from=builder /app/.next .
+COPY --from=builder /app/public .
+COPY --from=builder /app/node_modules .
+COPY --from=builder /app/next.config.ts .
+COPY --from=builder /app/.env .
+COPY --from=builder /app/clinical-setup.mjs .
 
 EXPOSE 3000
 
