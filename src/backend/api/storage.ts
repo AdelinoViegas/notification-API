@@ -1,7 +1,7 @@
 "use server";
 
 import axios from "axios";
-import type { FileResponse, ListAllFiles, ResponseDriveFile } from "@/backend/api/types";
+import type { CidResponse, FileResponse, ListAllFiles, ResponseDriveFile } from "@/backend/api/types";
 
 const instance = axios.create({ 
   baseURL: process.env.API_URL+"/st"
@@ -25,5 +25,10 @@ export async function getFile(id: string){
     params: { id }
   });
 
+  return res.data;
+}
+
+export async function queryCid(ref: string){
+  const res = await instance.get<CidResponse>(`/cid/10/${ref}`);
   return res.data;
 }
