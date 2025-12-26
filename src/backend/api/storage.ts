@@ -1,7 +1,7 @@
 "use server";
 
 import axios from "axios";
-import type { CidResponse, FileResponse, ListAllFiles, ResponseDriveFile } from "@/backend/api/types";
+import type { CidResponse, DefaultResponse, FileResponse, ListAllFiles, ResponseDriveFile } from "@/backend/api/types";
 import { getServiceToken } from "@/lib/web-token";
 
 const instance = axios.create({ 
@@ -33,6 +33,6 @@ export async function getFile(id: string){
 }
 
 export async function queryCid(ref: string){
-  const res = await instance.get<CidResponse>(`/cid/10/${ref}`);
+  const res = await instance.get<CidResponse[] | CidResponse | DefaultResponse>(`/cid/10/${ref}`);
   return res.data;
 }

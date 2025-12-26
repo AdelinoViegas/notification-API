@@ -53,7 +53,7 @@ export interface ResponseDriveFile {
 }
 
 
-export type CidResponse = DefaultResponse | {
+export type CidResponse = {
   code: string;
   value: string;
 }
