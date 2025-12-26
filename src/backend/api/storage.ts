@@ -2,9 +2,13 @@
 
 import axios from "axios";
 import type { CidResponse, FileResponse, ListAllFiles, ResponseDriveFile } from "@/backend/api/types";
+import { getServiceToken } from "@/lib/web-token";
 
 const instance = axios.create({ 
-  baseURL: process.env.API_URL+"/st"
+  baseURL: process.env.API_URL+"/st",
+  headers: {
+    Authorization: `Bearer ${getServiceToken()}`
+  }
 });
 
 export async function upload(params: unknown, authorId: string){
