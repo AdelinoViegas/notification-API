@@ -6,6 +6,7 @@ import debounce from "debounce";
 import { queryCid } from "@/backend/api/storage";
 import { type AxiosError } from "axios";
 import { useState } from "react";
+import Button from "./ui/button";
 
 type Cid = {
   code: string;
@@ -14,7 +15,8 @@ type Cid = {
 
 export default function CidInputComponent({ }: { defaultValue?: string }){
   const [ results, setResults ] = useState<SelectionOption[]>([]);
-  const [ selectedRefs, setSelectedRefs ] = useState([])
+  const [ selectedRefs, setSelectedRefs ] = useState("")
+  const [ allSavedRefs, setAllSavedRefs ] = useState<string[]>([]);
 
   const handlerSearchByReference = debounce((ev: React.ChangeEvent<HTMLInputElement>) => {
     console.log(ev.target.value);
@@ -43,6 +45,13 @@ export default function CidInputComponent({ }: { defaultValue?: string }){
 
   }, 500);
 
+  const handlerAddSelectedRef = () => {
+    if(!allSavedRefs.includes(selectedRefs))
+      setAllSavedRefs([selectedRefs, ...selectedRefs]);
+
+    console.log(allSavedRefs);
+  }
+
   return (
     <div>
       
@@ -52,10 +61,18 @@ export default function CidInputComponent({ }: { defaultValue?: string }){
         onChange={handlerSearchByReference}
       />
 
-      <Selection
-        label="Referências Cid"
-        options={results} 
-      />
+      <div className="flex gap-x-3 items-center">
+        <Selection
+          label="Referências Cid"
+          options={results} 
+          className="grow"
+          id="ref"
+          onChange={e => setSelectedRefs(e.target.value)}
+        />
+        <Button onClick={handlerAddSelectedRef} type="button">Adicionar</Button>
+      </div>
+
+      
     </div>
   )
 }
