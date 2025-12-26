@@ -11,7 +11,6 @@ import Button from "@/components/ui/button";
 import InputDetails from "@/components/ui/input-details";
 import InputField from "@/components/ui/input-field";
 import Selection, { SelectionOption } from "@/components/ui/selection";
-import ComboBox from "@/components/ui/combobox";
 import { toast } from 'react-toastify';
 import CidInputComponent from "./cid-input-component";
 
