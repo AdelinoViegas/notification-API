@@ -5,7 +5,7 @@ import Selection, { SelectionOption } from "./ui/selection";
 import debounce from "debounce";
 import { queryCid } from "@/backend/api/storage";
 import { type AxiosError } from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "./ui/button";
 
 type Cid = {
@@ -14,14 +14,19 @@ type Cid = {
 }
 
 export default function CidInputComponent({ }: { defaultValue?: string }){
+  // o defaultValue deve ser um array de codigos cid: { code: string }[]
   const [ results, setResults ] = useState<SelectionOption[]>([]);
   const [ selectedRef, setSelectedRef ] = useState("")
   const [ allSavedRefs, setAllSavedRefs ] = useState<string[]>([]);
+  const [ nameRefs, setNameRefs ] = useState<Cid[]>([]);
 
   const handlerSearchByReference = debounce((ev: React.ChangeEvent<HTMLInputElement>) => {
     queryCid(ev.target.value).then(data => {
 
-      if(!(data instanceof Array)){}
+      console.log(data);
+
+      if(!(data instanceof Array))
+        setResults([]);
 
       const normalized = data instanceof Array 
       ? (data as Cid[]).map(el => ({
@@ -39,16 +44,27 @@ export default function CidInputComponent({ }: { defaultValue?: string }){
     })
     .catch((ev: AxiosError) =>{
       console.log(ev.response?.statusText);
+      setResults([]);
     });
 
   }, 500);
 
   const handlerAddSelectedRef = () => {
-    if(!allSavedRefs.includes(selectedRef))
+    if(!allSavedRefs.includes(selectedRef)){
       setAllSavedRefs([selectedRef, ...allSavedRefs]);
-
-    console.log(allSavedRefs);
+      queryCid(selectedRef).then(data => {
+        setNameRefs([ ...nameRefs, data as Cid ]);
+      });
+    }
   }
+
+  // useEffect(()=>{
+  //   allSavedRefs.forEach(cidCode =>{
+  //     queryCid(cidCode).then(data => {
+  //       setNameRefs([ ...nameRefs, data as Cid ]);
+  //     });
+  //   });
+  // }, []);
 
   return (
     <div>
@@ -67,10 +83,33 @@ export default function CidInputComponent({ }: { defaultValue?: string }){
           id="ref"
           onChange={e => setSelectedRef(e.target.value)}
         />
-        <Button onClick={handlerAddSelectedRef} type="button">Adicionar</Button>
+
+        <Button 
+          disabled={!selectedRef} 
+          onClick={handlerAddSelectedRef} 
+          type="button"
+        >
+          Adicionar
+        </Button>
       </div>
 
-      
+      <div>
+        <ul>
+          {nameRefs.map(e => (
+            <li key={e.code} className="flex gap-x-3">
+              <span>{e.code}</span>
+              <span>{e.value}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="absolute z-10 bg-black p-3 text-green-500 top-0 right-0 font-bold">
+        <div>
+          <pre>{JSON.stringify(allSavedRefs)}</pre>
+           <pre>{JSON.stringify(nameRefs, null,2)}</pre>
+        </div>
+      </div>
     </div>
   )
 }
