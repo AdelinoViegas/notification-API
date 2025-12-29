@@ -15,12 +15,10 @@ type Cid = {
 
 export default function CidInputComponent({ }: { defaultValue?: string }){
   const [ results, setResults ] = useState<SelectionOption[]>([]);
-  const [ selectedRefs, setSelectedRefs ] = useState("")
+  const [ selectedRef, setSelectedRef ] = useState("")
   const [ allSavedRefs, setAllSavedRefs ] = useState<string[]>([]);
 
   const handlerSearchByReference = debounce((ev: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(ev.target.value);
-
     queryCid(ev.target.value).then(data => {
 
       if(!(data instanceof Array)){}
@@ -46,8 +44,8 @@ export default function CidInputComponent({ }: { defaultValue?: string }){
   }, 500);
 
   const handlerAddSelectedRef = () => {
-    if(!allSavedRefs.includes(selectedRefs))
-      setAllSavedRefs([selectedRefs, ...selectedRefs]);
+    if(!allSavedRefs.includes(selectedRef))
+      setAllSavedRefs([selectedRef, ...allSavedRefs]);
 
     console.log(allSavedRefs);
   }
@@ -67,7 +65,7 @@ export default function CidInputComponent({ }: { defaultValue?: string }){
           options={results} 
           className="grow"
           id="ref"
-          onChange={e => setSelectedRefs(e.target.value)}
+          onChange={e => setSelectedRef(e.target.value)}
         />
         <Button onClick={handlerAddSelectedRef} type="button">Adicionar</Button>
       </div>
