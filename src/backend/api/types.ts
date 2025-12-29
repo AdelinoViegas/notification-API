@@ -52,6 +52,12 @@ export interface ResponseDriveFile {
   extension: "png" | "jpeg" | "png" | "mp4" | "pdf";
 }
 
+
+export type CidResponse = {
+  code: string;
+  value: string;
+}
+
 export interface PublicDriveFile extends ResponseDriveFile {
   size: string;
   type: "png" | "jpeg" | "pdf" | "mp4";

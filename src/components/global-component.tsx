@@ -11,8 +11,8 @@ import Button from "@/components/ui/button";
 import InputDetails from "@/components/ui/input-details";
 import InputField from "@/components/ui/input-field";
 import Selection, { SelectionOption } from "@/components/ui/selection";
-import ComboBox from "@/components/ui/combobox";
 import { toast } from 'react-toastify';
+import CidInputComponent from "./cid-input-component";
 
 type InitialValue = {
   message?: string;
@@ -136,38 +136,81 @@ export default function GlobalComponent({
 }
 
 export function RenderUIElement({ items }: { items: UIComponent[]}){
+  // return items.map((item, key)=>{
+  //   if(item.type === "select")
+  //     return(
+  //       <Selection
+  //         key={key}
+  //         label={item.props.label}
+  //         options={item.props.options?item.props.options:[]}
+  //         defaultValue={item.props.defaultValue}
+  //       />
+  //     );
+  //   else if (item.type === "textarea")
+  //     return(
+  //       <InputDetails
+  //         key={key}
+  //         textLabel={item.props.label}
+  //         {...item.props} 
+  //       />
+  //     )
+  //   else if (item.type === "combobox")
+  //     return(
+  //       <ComboBox key={key} defaultValue={item.props.defaultValue as string} />
+  //     )
+  //   else
+  //     return(
+  //       <InputField
+  //         key={key}
+  //         textLabel={item.props.label}
+  //         type={item.type}
+  //         {...item.props}
+  //       />
+  //     );
+  // });
+
   return items.map((item, key)=>{
-    if(item.type === "select")
-      return(
-        <Selection
-          key={key}
-          label={item.props.label}
-          options={item.props.options?item.props.options:[]}
-          defaultValue={item.props.defaultValue}
-        />
-      );
-    else if (item.type === "textarea")
-      return(
-        <InputDetails
-          key={key}
-          textLabel={item.props.label}
-          {...item.props} 
-        />
-      )
-    else if (item.type === "combobox")
-      return(
-        <ComboBox key={key} defaultValue={item.props.defaultValue as string} />
-      )
-    else
-      return(
-        <InputField
-          key={key}
-          textLabel={item.props.label}
-          type={item.type}
-          {...item.props}
-        />
-      );
+    switch(item.type){
+      case "select": {
+        return  (
+          <Selection
+            key={key}
+            label={item.props.label}
+            options={item.props.options?item.props.options:[]}
+            defaultValue={item.props.defaultValue}
+          />
+        );
+      }
+
+      case "textarea": {
+        return  (
+          <InputDetails
+            key={key}
+            textLabel={item.props.label}
+            {...item.props} 
+          />
+        );
+      }
+
+      case "cid": {
+        return  (
+          <CidInputComponent defaultValue={item.props.defaultValue as string} />
+        );
+      }
+
+      default: {
+        return(
+          <InputField
+            key={key}
+            textLabel={item.props.label}
+            type={item.type}
+            {...item.props}
+          />
+        )
+      }
+    }
   })
+  
 }
 
 // função de fallback

@@ -120,7 +120,7 @@ function diagnosticInternalComponent(defaultValue: string){
 			{
 				elements:[
 					{ 
-						type: "combobox",
+						type: "cid",
 						props: {
 							label: "Código/Nome da CID 10",
 							placeholder: "Digite o código ou a discrição da CID...",

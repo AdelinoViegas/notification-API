@@ -220,11 +220,13 @@ export function CurrentDataInOffice({
 export function UploadExternalExam({ 
   patientId,
   officeId,
-  storageId
+  storageId,
+  labelDescription
 }: { 
   patientId: string;
   officeId: string;
   storageId?: string;
+  labelDescription?: string;
 }){
   const [ state, action ] = useActionState(uploadExternalExamFile, { message: "", status: false });
   const router = useRouter();
@@ -247,7 +249,9 @@ export function UploadExternalExam({
       <input type="hidden" name="officeId" defaultValue={officeId} />
       <input type="hidden" name="storageId" defaultValue={storageId} />
 
-      <Tag className="inline-flex mt-3">Enviar resultado por JPEG/PNG/PDF</Tag>
+      <Tag className="inline-flex mt-3">
+        { labelDescription ?? "Enviar resultado por JPEG/PNG/PDF" }
+      </Tag>
 
       <InputField
         textLabel="Arquivo (PDF/IMAGEM/VIDEO)"

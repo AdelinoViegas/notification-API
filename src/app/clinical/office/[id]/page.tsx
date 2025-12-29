@@ -90,6 +90,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                   officeId={id}
                   patientId={patient?.personal._id as string}
                   storageId={consultResult?.storageId}
+                  labelDescription="Anexar resultado de exame externo"
                 />
 
                 {consultResult?.storageId && <ViewUserFile id={consultResult.storageId} />}

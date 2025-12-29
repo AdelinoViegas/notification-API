@@ -1,10 +1,14 @@
 "use server";
 
 import axios from "axios";
-import type { FileResponse, ListAllFiles, ResponseDriveFile } from "@/backend/api/types";
+import type { CidResponse, DefaultResponse, FileResponse, ListAllFiles, ResponseDriveFile } from "@/backend/api/types";
+import { getServiceToken } from "@/lib/web-token";
 
 const instance = axios.create({ 
-  baseURL: process.env.API_URL+"/st"
+  baseURL: process.env.API_URL+"/st",
+  headers: {
+    Authorization: `Bearer ${getServiceToken()}`
+  }
 });
 
 export async function upload(params: unknown, authorId: string){
@@ -25,5 +29,10 @@ export async function getFile(id: string){
     params: { id }
   });
 
+  return res.data;
+}
+
+export async function queryCid(ref: string){
+  const res = await instance.get<CidResponse[] | CidResponse | DefaultResponse>(`/cid/10/${ref}`);
   return res.data;
 }
