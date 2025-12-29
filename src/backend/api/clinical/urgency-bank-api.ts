@@ -2,7 +2,6 @@
 
 import { getUserId } from "@/lib/web-token";
 import { orderByPriority } from "@/lib/filters";
-import { CID } from "@/lib/cid-query";
 import { 
   patientModel,
   groupModel,
@@ -44,6 +43,11 @@ import { getDataAndHoursFormat } from "@/lib/date-formater";
 import { omitUndefined } from "mongoose";
 
 type UnitType = "workplace" | "internment" | "laboratory" | "imaging";
+
+interface CID {
+  code: string;
+  value: string;
+}
 
 type Props = {
   name?: string;
