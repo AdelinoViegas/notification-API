@@ -5,7 +5,7 @@ import Selection, { SelectionOption } from "./ui/selection";
 import debounce from "debounce";
 import { queryCid } from "@/backend/api/storage";
 import { type AxiosError } from "axios";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import Button from "./ui/button";
 
 type Cid = {
@@ -16,7 +16,7 @@ type Cid = {
 export default function CidInputComponent({ defaultValue }: { defaultValue?: string }){
   // o defaultValue deve ser um array de codigos cid: { code: string }[]
   const [ results, setResults ] = useState<SelectionOption[]>([]);
-  const tempNamesRefs = useRef([]);
+  // const tempNamesRefs = useRef([]);
   const [ selectedRef, setSelectedRef ] = useState("")
   const [ allSavedRefs, setAllSavedRefs ] = useState<string[]>(
     defaultValue 
@@ -63,17 +63,17 @@ export default function CidInputComponent({ defaultValue }: { defaultValue?: str
     }
   }
 
-  useEffect(()=>{
-    allSavedRefs.forEach(el => {
-      queryCid(el).then(data =>{
-        tempNamesRefs.current = [ data, ...tempNamesRefs.current ]
-      });
-    });
+  // useEffect(()=>{
+  //   allSavedRefs.forEach(el => {
+  //     queryCid(el).then(data =>{
+  //       tempNamesRefs.current = [ data, ...tempNamesRefs.current ]
+  //     });
+  //   });
 
-    console.log(tempNamesRefs);
-    setNameRefs(tempNamesRefs.current);
+  //   console.log(tempNamesRefs);
+  //   setNameRefs(tempNamesRefs.current);
 
-  }, []);
+  // }, []);
 
   return (
     <div>
@@ -118,7 +118,7 @@ export default function CidInputComponent({ defaultValue }: { defaultValue?: str
         <div>
           <pre>{JSON.stringify(allSavedRefs)}</pre>
            <pre>{JSON.stringify(nameRefs, null,2)}</pre>
-            <pre>{JSON.stringify({ dv: JSON.parse(defaultValue) }, null,2)}</pre>
+            {/* <pre>{JSON.stringify({ dv: JSON.parse(defaultValue) }, null,2)}</pre> */}
         </div>
       </div>
     </div>

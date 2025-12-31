@@ -44,11 +44,6 @@ import { omitUndefined } from "mongoose";
 
 type UnitType = "workplace" | "internment" | "laboratory" | "imaging";
 
-interface CID {
-  code: string;
-  value: string;
-}
-
 type Props = {
   name?: string;
   priority?: string;
@@ -689,13 +684,6 @@ async function updateExternalUnit(prev: unknown, formData: FormData){
       detail: err.message,
     }
   }
-}
-
-function handleCidsInputs(encondedData: string){
-  const data = JSON.parse(encondedData) as CID[];
-  if(!data.length)
-    throw new Error("Escolha uma hipótese!", { cause: "empty_hy" });
-  return data;
 }
 
 async function signUrgencyBank(prev: unknown, formData:FormData){
