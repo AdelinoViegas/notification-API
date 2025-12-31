@@ -50,8 +50,8 @@ export interface ResponseDriveFile {
   name: string;
   size: string;
   extension: "png" | "jpeg" | "png" | "mp4" | "pdf";
+  uniqueName: string;
 }
-
 
 export type CidResponse = {
   code: string;

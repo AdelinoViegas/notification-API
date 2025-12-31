@@ -718,11 +718,13 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
     const h = Number(payload.height);
     const imc = Number((w/(h*h)).toFixed(2));
 
-    const cidCodes = payload?.cids
-    ? handleCidsInputs(payload.cids)
-      .filter((diagnostic: CID) => !generalClinic?.diagnosticHypothesis?.includes(diagnostic.code))
-      .map((cid: CID)=> cid.code)
-    : undefined;
+    // const cidCodes = payload?.cids
+    // ? handleCidsInputs(payload.cids)
+    //   .filter((diagnostic: CID) => !generalClinic?.diagnosticHypothesis?.includes(diagnostic.code))
+    //   .map((cid: CID)=> cid.code)
+    // : undefined;
+
+    console.log( payload?.CID.split(","));
     
     if(h === 0)
       throw new Error("defina uma altura maior que 0", {cause: "Infinity"});
@@ -732,7 +734,7 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
         symptoms: payload.symptoms || generalClinic?.symptoms,
         diseaseData: payload.diseaseData || generalClinic?.diseaseData,
         complementaryExams: payload.complementaryExams || generalClinic?.complementaryExams,
-        diagnosticHypothesis: !!cidCodes?.length?generalClinic?.diagnosticHypothesis.concat(cidCodes):generalClinic?.diagnosticHypothesis,
+        diagnosticHypothesis: payload?.CID.split(","), //!!cidCodes?.length?generalClinic?.diagnosticHypothesis.concat(cidCodes):generalClinic?.diagnosticHypothesis,
         others: payload.others || generalClinic?.others,
         diseasesInFamily: payload.diseasesInFamily || generalClinic?.diseasesInFamily,
         evaluation: payload.evaluation || generalClinic?.evaluation,

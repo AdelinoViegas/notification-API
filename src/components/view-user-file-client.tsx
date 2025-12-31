@@ -10,7 +10,7 @@ type MyFile = Awaited<ReturnType<typeof getFile>>;
 export default function ViewUserFile({ id }:{ id: string }){
   const [ file, setFile ] = useState<MyFile>();
   const [ finalState, setFinalState ] = useState(false); 
-  const baseUrl = new URL(process.env.NEXT_PUBLIC_STORAGE_URL as string).origin;
+  const baseUrl = new URL(process.env.NEXT_PUBLIC_STORAGE_URL as string).toString();
 
   useEffect(()=>{
     getFile(id).then(data => {
@@ -28,7 +28,7 @@ export default function ViewUserFile({ id }:{ id: string }){
         <UserViewerButton
           driveFile={{
             name: file.name,
-            link: [baseUrl, file.link].join(""),
+            link: [baseUrl, file.uniqueName].join("/"),
             size: file.size,
             extension: file.extension
           }}
