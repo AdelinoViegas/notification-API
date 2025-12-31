@@ -136,39 +136,6 @@ export default function GlobalComponent({
 }
 
 export function RenderUIElement({ items }: { items: UIComponent[]}){
-  // return items.map((item, key)=>{
-  //   if(item.type === "select")
-  //     return(
-  //       <Selection
-  //         key={key}
-  //         label={item.props.label}
-  //         options={item.props.options?item.props.options:[]}
-  //         defaultValue={item.props.defaultValue}
-  //       />
-  //     );
-  //   else if (item.type === "textarea")
-  //     return(
-  //       <InputDetails
-  //         key={key}
-  //         textLabel={item.props.label}
-  //         {...item.props} 
-  //       />
-  //     )
-  //   else if (item.type === "combobox")
-  //     return(
-  //       <ComboBox key={key} defaultValue={item.props.defaultValue as string} />
-  //     )
-  //   else
-  //     return(
-  //       <InputField
-  //         key={key}
-  //         textLabel={item.props.label}
-  //         type={item.type}
-  //         {...item.props}
-  //       />
-  //     );
-  // });
-
   return items.map((item, key)=>{
     switch(item.type){
       case "select": {
@@ -194,7 +161,10 @@ export function RenderUIElement({ items }: { items: UIComponent[]}){
 
       case "cid": {
         return  (
-          <CidInputComponent defaultValue={item.props.defaultValue as string} />
+          <CidInputComponent 
+            key={key} 
+            defaultValue={item.props.defaultValue as string}
+          />
         );
       }
 
