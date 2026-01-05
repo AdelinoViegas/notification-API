@@ -5,8 +5,8 @@ O modulo responsável pela gestão de processos clínicos dentro da plataforma M
 ## Instalação
 
 Para a instalação do modulo clinico configurar os serviços abaixo:
-* [Api Gateway Master]()
-* [Painel Web Admin](https://github.com/mr0xff/web-master-admin)
+* [Api Gateway Master]() - rodar em Pod
+* [Painel Web Admin](https://github.com/mr0xff/web-master-admin) - rodar em container
 * **MongoDb** (rodar em container ou configurá-lo em bare metal)
 
 > Atenção: Ajustar a porta do `web-admin` de acordo com a porta que estiver na .env (nesse caso é a porta `8081`)
