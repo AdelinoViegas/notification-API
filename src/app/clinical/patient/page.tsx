@@ -72,7 +72,7 @@ export default async function Page({
         <Search
           className="flex items-center gap-3"
           filterKey="name"
-          label="Filtar por nome"
+          label="Filtrar por nome"
           placeholder="Buscar pelo nome do utente..."
         />
       </div>
