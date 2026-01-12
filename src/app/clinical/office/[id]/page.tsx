@@ -21,8 +21,12 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
   return(
     <main className="space-y-3">
-      <div className="mt-6">
-        <Header title="Consultar" />
+
+      <div className="my-4 text-center pt-3 text-white bg-blue-400 rounded-lg">
+        <Header 
+          center 
+          title={patient?.personal.fullname as string}
+        />
       </div>
 
       <div className="overflow-auto h-[80vh] scroll overflow-auto">

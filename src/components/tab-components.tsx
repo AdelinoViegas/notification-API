@@ -208,7 +208,7 @@ const tabComponents = [
 
       <div className="flex gap-3 items-center">
         <InputField
-          textLabel="Documentação (BI | Passaporte |Cédula)"
+          textLabel="Documentação (BI | Passaporte | Cédula)"
           name="patientDocument" 
           placeholder="Nº de BI / Nº de Cédula / Nº de Passaporte"
           required

@@ -8,7 +8,7 @@ const postAnestheticRecovery = new Schema({
     fr: Number,
     pulse: Number,
     spo2: Number,
-    ta: Number,
+    ta: String,
     t: Number,
   }],
   levelofConsciousness: {
