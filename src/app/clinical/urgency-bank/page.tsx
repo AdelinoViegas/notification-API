@@ -56,7 +56,7 @@ export default async function Page({
         />
 
         <Link href="/clinical/urgency-bank/waiting">
-          <Button className="mt-0">Utentes em espera</Button>
+          <Button className="mt-0">Pacientes em espera</Button>
         </Link>
       </div>
       
