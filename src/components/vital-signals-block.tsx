@@ -43,8 +43,8 @@ export default function VitalSignalInBlock({
           String(props.t),
         ]
     })});
-   console.log(data);
-  return(
+
+    return(
     <Accordium className="bg-primary/15 hover:bg-primary/20" title="Sinais Vitais à admissão">
       <Button 
         type="button" 
