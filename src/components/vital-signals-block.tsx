@@ -14,7 +14,7 @@ type vitalSignalProps = {
     fr: number,
     pulse: number,
     spo2: number,
-    ta: number,
+    ta: string,
     t: number,
 }[];
 
@@ -43,9 +43,9 @@ export default function VitalSignalInBlock({
           String(props.t),
         ]
     })});
-
+   console.log(data);
   return(
-    <Accordium className="bg-primary/15 hover:bg-primary/20" title="Sinal vital à admissão">
+    <Accordium className="bg-primary/15 hover:bg-primary/20" title="Sinais Vitais à admissão">
       <Button 
         type="button" 
         onClick={()=>setModalState(true)}
@@ -112,10 +112,11 @@ export default function VitalSignalInBlock({
             />
 
             <InputField
-              type="number"
+              type="text"
               step={0.01}
               textLabel="T/A"
               name="ta"
+              pattern="^\d+(?:[.,]\d+)?\/\d+(?:[.,]\d+)?$"
               required 
               placeholder="t/a"
             />

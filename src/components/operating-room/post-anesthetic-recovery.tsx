@@ -20,7 +20,7 @@ type recovery = {
       fr: number,
       pulse: number,
       spo2: number,
-      ta: number,
+      ta: string,
       t: number,
     }[],
     levelofConsciousness: {
