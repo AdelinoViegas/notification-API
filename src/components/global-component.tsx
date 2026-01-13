@@ -80,8 +80,7 @@ function Component({
     if(state?.message){
       if(state.status)
         toast.success(state.message, {
-          onClose: router.refresh,
-          autoClose: 1500
+          onClose: router.refresh
         });
       else 
         if(state?.isWarn)
