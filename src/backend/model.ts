@@ -66,7 +66,7 @@ import { operatingRoomResultSchema, operatingRoomSchema } from "@/backend/schema
 
 const clinical = createConnection(process.env.MONGO_URL as string, {
   dbName: process.env.MONGO_DB_NAME,
-  family: 4,
+  family: process.env.NODE_ENV === "development" ? 4 : undefined,
   appName: "master-clinical"
 });
 
