@@ -84,22 +84,25 @@ const anamnesis = new Schema({
   },*/
 },{ _id: false });
 
-const clinicalDiary = new Schema({
-  medicalDiary : [{
+
+ const medicalDiary =  new Schema({
     date: Date,
     description: String,
-  }],
-  therapeuticDiary:[{
-    date: Date,
-    signature: String,
-    description: String,
-  }],
-  treatmentDiary:[{
+ });
+
+ const therapeuticDiary =  new Schema({
     date: Date,
     signature: String,
     description: String,
-  }],
-  vitalSignals: [{
+ });
+
+  const treatmentDiary =  new Schema({
+    date: Date,
+    signature: String,
+    description: String,
+  });
+
+  const vitalSignals =  new Schema({
     date: Date,
     description: String,
     vitalSignals: {
@@ -123,7 +126,10 @@ const clinicalDiary = new Schema({
         type: Number,
         default: 0,
       },
-      sp02: Number,
+      spO2:{
+        type: Number,
+        default: 0,
+      },
       temperature: {
         type: Number,
         default: 0,
@@ -145,26 +151,35 @@ const clinicalDiary = new Schema({
         default: 0
       },
     },
-  }],
-  nursingNotes: [{
+  });
+
+  const nursingNotes = new Schema({
     date: Date,
     description: String,
-  }],
-  hydromineralBalance: [{
+  });
+
+  const hydromineralBalance = new Schema({
     date: Date,
     siteOfDrugAdministration: String, 
     amount: String,
     hidromineralBalance: String,
     description: String,
-  }]
-},{_id: false});
+  });
+
 
 const urgencyBankSchema = new Schema({
   patientId: Schema.ObjectId,
   triedId: Schema.ObjectId,
   patientStatus: String,
   anamnesis: anamnesis,
-  clinicalDiary: clinicalDiary,
+  clinicalDiary: {
+    medicalDiary: [medicalDiary],
+    therapeuticDiary: [therapeuticDiary],
+    treatmentDiary: [treatmentDiary],
+    vitalSignals: [vitalSignals],
+    nursingNotes: [nursingNotes],
+    hydromineralBalance: [hydromineralBalance],
+  },
   served: {
     type: Boolean,
     default: false
