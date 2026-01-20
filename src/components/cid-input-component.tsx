@@ -113,8 +113,10 @@ export default function CidInputComponent({ defaultValue }: { defaultValue?: str
         <ul>
           {nameRefs.map(e => (
             <li key={e.code} className="flex gap-x-3 bg-gray-200 p-2 mb-2 rounded">
-              <span>{e.code}</span>
-              <span>{e.value}</span>
+              <div className="flex gap-x-3">
+                <span className="font-bold">{e.code}</span>
+                <span title={e.value} className="line-clamp-1">{e.value}</span>
+              </div>
             </li>
           ))}
         </ul>
