@@ -1,5 +1,6 @@
 "use client";
 
+import { SetStateAction, memo } from "react";
 import { 
   useRouter, 
   usePathname,
@@ -20,25 +21,37 @@ type TableProps = {
   status?: boolean;
   priorityCol?: boolean;
   isEdit?: boolean;
+  dataEdit?: boolean;
   searchParams?: string;
+  openModal?: (value: SetStateAction<boolean>) => void;
+  setParams?: (value: SetStateAction<string>) => void;
 };
 
-export default function Table({
+function Table({
   columns,
   rows,
   baseRowLink,
   rowLength,
   priorityCol,
   isEdit,
-  searchParams
+  dataEdit,
+  searchParams,
+  openModal,
+  setParams 
 }:TableProps){
   const { push } = useRouter();
   const pathname = usePathname();
 
   const handleDoubleClick = (rowId: string)=>{
-    if(isEdit)
-      push(`${baseRowLink}/edit?id=${rowId}`);
+    if(dataEdit && openModal && setParams){
+      setParams(rowId);
+      openModal(true);
+    }
 
+    if(isEdit){
+      push(`${baseRowLink}/edit?id=${rowId}`);
+    }
+    
     if(baseRowLink)
       push(`${baseRowLink}/${rowId}`);
 
@@ -75,8 +88,8 @@ export default function Table({
               onDoubleClick={()=>handleDoubleClick(rowProps.id)}
               key={rowIndex} 
               className={clsx("hover:bg-primary/15 ",
-                {"hover:cursor-not-allowed": !baseRowLink},
-                {"hover:cursor-pointer": baseRowLink}
+                {"hover:cursor-not-allowed": (!dataEdit && !baseRowLink)},
+                {"hover:cursor-pointer": (dataEdit || baseRowLink)}
               )}>
               {rowProps.row.map((props, columnIndex)=>{
                 return(
@@ -104,3 +117,5 @@ export default function Table({
     </>
   )
 }
+
+export default memo(Table);
