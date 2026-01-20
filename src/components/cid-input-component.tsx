@@ -5,7 +5,6 @@ import InputField from "@/components/ui/input-field";
 import Selection, { SelectionOption } from "@/components/ui/selection";
 import debounce from "debounce";
 import { queryCid } from "@/backend/api/storage";
-import { type AxiosError } from "axios";
 import Button from "@/components/ui/button";
 import FallbackComponent from "@/components/fallback-components";
 import { RiDeleteBin6Line } from "react-icons/ri";
@@ -48,7 +47,7 @@ export default function CidInputComponent({ defaultValue }: { defaultValue?: str
 
       setResults(normalized);
     })
-    .catch((ev: AxiosError) =>{
+    .catch(() =>{
       setResults([]);
     });
 
