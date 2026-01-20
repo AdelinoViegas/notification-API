@@ -82,28 +82,30 @@ export default function CidInputComponent({ defaultValue }: { defaultValue?: str
     <div>
       <input type="hidden" name="CID" value={allSavedRefs.slice(0, -1)} />
 
-      <InputField
-        textLabel="Nome ou Código CID 10"
-        placeholder="Descreva com precisão a referência da CID 10 ou o código"
-        onChange={handlerSearchByReference}
-      />
-
-      <div className="flex gap-x-3 items-center">
-        <Selection
-          label="Referências Cid"
-          options={results} 
-          className="grow"
-          id="ref"
-          onChange={e => setSelectedRef(e.target.value)}
+      <div className="flex gap-x-3">
+        <InputField
+          textLabel="Nome ou Código CID 10"
+          placeholder="Descreva com precisão a referência da CID 10 ou o código"
+          onChange={handlerSearchByReference}
         />
 
-        <Button 
-          disabled={!selectedRef} 
-          onClick={handlerAddSelectedRef} 
-          type="button"
-        >
-          Adicionar
-        </Button>
+        <div className="flex gap-x-3 items-center grow">
+          <Selection
+            label="Referências Cid"
+            options={results} 
+            className="grow"
+            id="ref"
+            onChange={e => setSelectedRef(e.target.value)}
+          />
+
+          <Button 
+            disabled={!selectedRef} 
+            onClick={handlerAddSelectedRef} 
+            type="button"
+          >
+            Adicionar
+          </Button>
+        </div>
       </div>
 
       <div>
