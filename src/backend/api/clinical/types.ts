@@ -178,6 +178,80 @@ export interface ListPatient<T>{
   currentPage: number;
 }
 
+type diariesProps = {
+  _id: string,
+  date: string,
+  description: string,
+  signature?: string,
+  vitalSignals?: {
+    paMax: number,
+    paMin: number,
+    jump: number,
+    pvc: number,
+    imc: number,
+    spO2: number,
+    temperature: number,
+    breathing: number,
+    weight: number,
+    height: number,
+    bloodGlucose: number,
+  }
+  siteOfDrugAdministration?: string,
+  amount?: string,
+  hidromineralBalance?: string,
+}
+
+type diaryTypeProps = {
+  medicineDiary?: {
+    _id: string,
+    date: string,
+    description: string,
+  }[],
+  nursingNotes?: {
+    _id: string,
+    date: string,
+    description: string,
+  }[], 
+  therapeuticDiary?:{
+    _id: string,
+    date: string,
+    signature: string,
+    description:string,
+  }[],
+  treatmentDiary?:{
+    _id: string,
+    date: string,
+    signature: string,
+    description:string,
+  }[],
+  vitalSignals?:{
+    _id: string,
+    date: string,  
+    description: string,
+    vitalSignals: {
+      paMax: number,
+      paMin: number,
+      jump: number,
+      pvc: number,
+      imc: number,
+      spO2: number,
+      temperature: number,
+      breathing: number,
+      weight: number,
+      height: number,
+      bloodGlucose: number,
+    }
+  }[],
+  hydromineralBalance?: {
+    _id: string,
+    date: string,
+    siteOfDrugAdministration: string,
+    amount: string,
+    hidromineralBalance: string,
+    description: string,
+  }[],  
+}
+
 export type {
   Responsable,
   Responsables,
@@ -199,4 +273,6 @@ export type {
   Calendar,
   DoctorCalendarReference,
   DoctorDayAndTime,
+  diariesProps,
+  diaryTypeProps,
 };
