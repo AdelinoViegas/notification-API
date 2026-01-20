@@ -1,14 +1,13 @@
 "use client";
 
-import InputField from "./ui/input-field";
-import Selection, { SelectionOption } from "./ui/selection";
+import { useCallback, useEffect, useState } from "react";
+import InputField from "@/components/ui/input-field";
+import Selection, { SelectionOption } from "@/components/ui/selection";
 import debounce from "debounce";
 import { queryCid } from "@/backend/api/storage";
 import { type AxiosError } from "axios";
-import { useCallback, useEffect, useState } from "react";
-import Button from "./ui/button";
-import { CidResponse } from "@/backend/api/types";
-import FallbackComponent from "./fallback-components";
+import Button from "@/components/ui/button";
+import FallbackComponent from "@/components/fallback-components";
 
 type Cid = {
   code: string;
@@ -65,10 +64,10 @@ export default function CidInputComponent({ defaultValue }: { defaultValue?: str
   }
 
   const resolveAllSavedRefs = useCallback(async()=> {
-    const refs: CidResponse[] = [];
+    const refs: Cid[] = [];
 
     for(const ref of allSavedRefs)
-      refs.push(await queryCid(ref) as CidResponse);
+      refs.push(await queryCid(ref) as Cid);
 
     setNameRefs(refs);
     setIsLoading(false);

@@ -34,6 +34,5 @@ export async function getFile(id: string){
 
 export async function queryCid(ref: string){
   const res = await instance.get<CidResponse[] | CidResponse | DefaultResponse>(`/cid/10/${ref}`);
-  console.log(res.data);
   return res.data;
 }
