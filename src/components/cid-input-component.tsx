@@ -8,6 +8,7 @@ import { queryCid } from "@/backend/api/storage";
 import { type AxiosError } from "axios";
 import Button from "@/components/ui/button";
 import FallbackComponent from "@/components/fallback-components";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 type Cid = {
   code: string;
@@ -48,7 +49,6 @@ export default function CidInputComponent({ defaultValue }: { defaultValue?: str
       setResults(normalized);
     })
     .catch((ev: AxiosError) =>{
-      console.log(ev.response?.statusText);
       setResults([]);
     });
 
@@ -61,6 +61,13 @@ export default function CidInputComponent({ defaultValue }: { defaultValue?: str
         setNameRefs([ ...nameRefs, data as Cid ]);
       });
     }
+  }
+
+  const handlerRemoveRefItem = (itemRef: string) => {
+    const filterItems = allSavedRefs.filter(ref => ref !== itemRef);
+    const filterNames = nameRefs.filter(ref => ref.code !== itemRef);
+    setAllSavedRefs(filterItems);
+    setNameRefs(filterNames);
   }
 
   const resolveAllSavedRefs = useCallback(async()=> {
@@ -112,11 +119,18 @@ export default function CidInputComponent({ defaultValue }: { defaultValue?: str
         {isLoading && <FallbackComponent lines={3} />}
         <ul>
           {nameRefs.map(e => (
-            <li key={e.code} className="flex gap-x-3 bg-gray-200 p-2 mb-2 rounded">
+            <li key={e.code} className="flex gap-x-3 bg-gray-200 p-2 mb-2 rounded justify-between">
               <div className="flex gap-x-3">
                 <span className="font-bold">{e.code}</span>
                 <span title={e.value} className="line-clamp-1">{e.value}</span>
               </div>
+              <button 
+                type="button" 
+                onClick={()=>handlerRemoveRefItem(e.code)}
+                className="px-2 bg-red-500 text-white rounded"
+              >
+                <RiDeleteBin6Line />
+              </button>
             </li>
           ))}
         </ul>
