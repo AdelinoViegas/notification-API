@@ -22,7 +22,7 @@ export default async function Page({
 		},
 		{
 			accordiumTitle: "Diário Terapéutico",
-			modalTitle: "Novo Diário Clínico",
+			modalTitle: "Novo Diário Terapéutico",
 			apiType: "therapeutic",
 			patientId,
 		    columns: ["Data-Hora", "assinatura", "Descrição"],
@@ -30,7 +30,7 @@ export default async function Page({
 		},
 		{
 			accordiumTitle: "Diário Tratamento",
-			modalTitle: "Novo Diário Clínico",
+			modalTitle: "Novo Diário Tratamento",
 			apiType: "treatment",
 			patientId,
 		    columns: ["Data-Hora", "assinatura", "Descrição"],
@@ -38,15 +38,15 @@ export default async function Page({
 		},
 		{
 			accordiumTitle: "Sinais Vitais",
-			modalTitle: "Novo Diário Clínico",
+			modalTitle: "Novos Sinais Vitais",
 			apiType: "vital",
 			patientId,
 			columns: ["Data-Hora","Descrição","pM","pm","BPM","pvc","imc","sp02","(°)","IRPM","(kg)","(m)","(mg/dl)"],
 			dataDiary: { vitalSignals: clinicalDiary.vitalSignals}
 		},
 		{
-			accordiumTitle: "Anotações Enfermagem",
-			modalTitle: "Novo Diário Clínico",
+			accordiumTitle: "Anotações de Enfermagem",
+			modalTitle: "Novas Anotações de Enfermagem",
 			apiType: "annotation",
 			patientId,
 			columns: ["Data-Hora", "Descrição"],
@@ -54,7 +54,7 @@ export default async function Page({
 		},
 		{
 			accordiumTitle: "Balanço Hidromineral",
-			modalTitle: "Novo Diário Clínico",
+			modalTitle: "Novo Balanço Hidromineral",
 			apiType: "balance",
 			patientId,
 		    columns: ["Data-Hora","via","Qtd","Bal-Hidromineral", "Descrição"],
