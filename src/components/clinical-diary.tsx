@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useCallback, useEffect, useState } from "react";
 import Accordium from "@/components/ui/accordium";
 import Modal from "@/components/modal";
 import Button from "@/components/ui/button";
@@ -10,74 +10,42 @@ import InputField from "@/components/ui/input-field";
 import InputDetails from "@/components/ui/input-details";
 import Selection from "@/components/ui/selection";
 import { toast } from "react-toastify";
-import { signUrgencyBank } from "@/backend/api/clinical/urgency-bank-api";
-
-export type DiaryTypeProps = {
-  medicineDiary?: {
-    date: string,
-    description: string,
-  }[],
-  nursingNotes?: {
-    date: string,
-    description: string,
-  }[], 
-  therapeuticDiary?:{
-    date: string,
-    signature: string,
-    description:string,
-  }[],
-  treatmentDiary?:{
-    date: string,
-    signature: string,
-    description:string,
-  }[],
-  vitalSignals?:{
-    date: string,  
-    description: string,
-    vitalSignals: {
-      paMax: number,
-      paMin: number,
-      jump: number,
-      pvc: number,
-      imc: number,
-      sp02: number,
-      temperature: number,
-      breathing: number,
-      weight: number,
-      height: number,
-      bloodGlucose: number,
-    }
-  }[],
-  hydromineralBalance?: {
-    date: string,
-    siteOfDrugAdministration: string,
-    amount: string,
-    hidromineralBalance: string,
-    description: string,
-  }[],  
-}
+import { signUrgencyBank, updateClinicalDiary } from "@/backend/api/clinical/urgency-bank-api";
+import { parseDateTimeLocal } from "@/lib/date-formater";
+import { diariesProps, diaryTypeProps } from "@/backend/api/clinical/types";
 
 export type ClinicalDiaryProps = {
   accordiumTitle: string;
   modalTitle: string;
-  apiType: "diary" | "therapeutic" | "treatment" | "vital" | "annotation" | "balance";
+  diaryType: "diary" | "therapeutic" | "treatment" | "vital" | "annotation" | "balance";
   patientId: string;
   columns: string[];
-  dataDiary: DiaryTypeProps;
+  dataDiary: diaryTypeProps;
 }
 
 export default function ClinicalDiary({
   accordiumTitle,
   modalTitle,
-  apiType,
+  diaryType,
   patientId,
   columns,
   dataDiary,
 }: ClinicalDiaryProps){
-  const [ state, action ] = useActionState(signUrgencyBank, {message: "", status: false});
+  const [selectedId , setSelectedId] = useState("");
   const [ modalState, setModalState ] = useState(false);
+  const actionWrapper = useCallback( async (prevState: unknown, formData: FormData) => {
+    if(selectedId) 
+      return updateClinicalDiary(prevState, formData);
+    
+    return signUrgencyBank(prevState, formData);
+  },[selectedId]);
+  const [ state, action ] = useActionState(actionWrapper, {message: "", status: false});
   const router = useRouter();
-  
+  const selectedData:diariesProps[] = [];
+  const tableData: Array<{ id: string; row: string[] }> = [];
+  const diaryTwoFields = dataDiary.medicineDiary ?? dataDiary.nursingNotes;
+  const diaryThreeFields = dataDiary.therapeuticDiary ?? dataDiary.treatmentDiary;
+
   useEffect(()=>{
     if(state.message){
       if(state.status)
@@ -88,30 +56,22 @@ export default function ClinicalDiary({
         toast.error(state.message);
     }   
   },[state, router])
-   
-    const data: Array<{ id: string; row: string[] }> = [];
+    
+    if(diaryTwoFields){
+      diaryTwoFields.forEach((value, index) => {
+          tableData.push({
+            id: String(index),
+            row: [
+              value.date,
+              value.description,
+            ]
+      })});
 
-    if(dataDiary.medicineDiary)
-      dataDiary?.medicineDiary.forEach((value, index) => {
-          data.push({
-            id: String(index),
-            row: [
-              value.date,
-              value.description,
-            ]
-      })});
-    else if(dataDiary.nursingNotes)
-        dataDiary?.nursingNotes.forEach((value, index) => {
-          data.push({
-            id: String(index),
-            row: [
-              value.date,
-              value.description,
-            ]
-      })});
-    else if(dataDiary.therapeuticDiary)
-        dataDiary?.therapeuticDiary.forEach((value, index) => {
-          data.push({
+      selectedData.push(diaryTwoFields[Number(selectedId)]);  
+    }
+    else if(diaryThreeFields){
+        diaryThreeFields.forEach((value, index) => {
+          tableData.push({
             id: String(index),
             row: [
               value.date,
@@ -119,19 +79,12 @@ export default function ClinicalDiary({
               value.description,
             ]
       })});
-    else if(dataDiary.treatmentDiary)
-      dataDiary?.treatmentDiary.forEach((value, index) => {
-        data.push({
-          id: String(index),
-          row: [
-            value.date,
-            value.signature,
-            value.description,
-          ]
-      })});
-    else if(dataDiary.vitalSignals)
+
+      selectedData.push(diaryThreeFields[Number(selectedId)]);
+    }
+    else if(dataDiary.vitalSignals){
       dataDiary?.vitalSignals.forEach((value, index) => {
-        data.push({
+        tableData.push({
           id: String(index),
           row: [
             value.date,
@@ -141,7 +94,7 @@ export default function ClinicalDiary({
             String(value.vitalSignals.jump),
             String(value.vitalSignals.pvc),
             String(value.vitalSignals.imc),
-            String(value.vitalSignals.sp02),
+            String(value.vitalSignals.spO2),
             String(value.vitalSignals.temperature),
             String(value.vitalSignals.breathing),
             String(value.vitalSignals.weight),
@@ -149,11 +102,14 @@ export default function ClinicalDiary({
             String(value.vitalSignals.bloodGlucose),
           ]
       })});
-      else if(dataDiary.hydromineralBalance)
-        dataDiary?.hydromineralBalance.forEach((value, index) => {
-          data.push({
-            id: String(index),
-            row: [
+      
+      selectedData.push(dataDiary.vitalSignals[Number(selectedId)]);  
+    }
+    else if(dataDiary.hydromineralBalance){
+      dataDiary?.hydromineralBalance.forEach((value, index) => {
+        tableData.push({
+          id: String(index),
+          row: [
               value.date,
               value.siteOfDrugAdministration,
               value.amount,
@@ -162,15 +118,26 @@ export default function ClinicalDiary({
             ]
       })});
 
+      selectedData.push(dataDiary.hydromineralBalance[Number(selectedId)]);  
+    }
+  
   return(
     <Accordium className="bg-primary/15 hover:bg-primary/20" title={accordiumTitle}>
       <div>
-        <Button onClick={()=>setModalState(true)}>Novo</Button>
+        <Button onClick={()=>{
+          setSelectedId("");
+          setModalState(true);
+        }}>
+          Novo
+        </Button>
       </div>
 
       <Table
         columns={columns} 
-        rows={data}
+        rows={tableData}
+        openModal={setModalState}
+        setParams={setSelectedId}
+        dataEdit
       />
 
       <Modal
@@ -185,6 +152,14 @@ export default function ClinicalDiary({
             name="createAt"
             required
             type="datetime-local"
+            defaultValue={selectedId?parseDateTimeLocal(selectedData[0]?.date):""}
+          />
+          
+          <input
+            className="hidden"
+            type="text"
+            name="diaryId"
+            defaultValue={selectedData[0]?._id}
           />
 
           <input
@@ -198,24 +173,26 @@ export default function ClinicalDiary({
             className="hidden"
             type="text"
             name="typeClinicalDiary"
-            defaultValue={apiType}
+            defaultValue={diaryType}
           />
 
-          {(apiType === "therapeutic" || apiType === "treatment") &&
+          {(diaryType === "therapeutic" || diaryType === "treatment") &&
             <InputField 
               textLabel="Assinatura"
               placeholder="Digite a assinatura"
               name="signature"
               required
+              defaultValue={selectedId?selectedData[0]?.signature:""}
             />
           }
 
-          {apiType === "balance" && <div>
+          {diaryType === "balance" && <div>
             <InputField 
               textLabel="Via de administração"
               placeholder="Local de admininstração do medicamento"
               name="local"
               required
+              defaultValue={selectedId?selectedData[0]?.siteOfDrugAdministration:""}
             />
 
             <div className="grid grid-cols-2 gap-x-3"> 
@@ -225,6 +202,7 @@ export default function ClinicalDiary({
                 type="number"
                 name="amount"
                 required
+                defaultValue={selectedId?selectedData[0]?.amount:""}
               />
 
               <Selection
@@ -235,6 +213,7 @@ export default function ClinicalDiary({
                   { _id: "ingested", label: "Ingeridos" },
                   { _id: "eliminated", label: "Eliminados" },
                 ]}
+                defaultValue={selectedId?selectedData[0]?.hidromineralBalance:""}
               />
             </div>
           </div>}
@@ -244,15 +223,17 @@ export default function ClinicalDiary({
             placeholder="Descreva a sua observação..."
             name="description"
             required
+            defaultValue={selectedId?selectedData[0]?.description:""}
           />
 
-          { apiType === "vital" && <div className="grid grid-cols-2 gap-x-3">
+          { diaryType === "vital" && <div className="grid grid-cols-2 gap-x-3">
             <InputField
               type="number"
               textLabel="P.A MÁXIMA (mmHG)"
               name="pamax" 
               placeholder="0 (mmHG)"
               required
+              defaultValue={selectedId?selectedData[0].vitalSignals?.paMax:""}
             />
   
             <InputField
@@ -261,6 +242,7 @@ export default function ClinicalDiary({
               name="pamin" 
               placeholder="0 (mmHG)"
               required
+              defaultValue={selectedId?selectedData[0].vitalSignals?.paMin:""}
             />
             
             <InputField
@@ -268,7 +250,8 @@ export default function ClinicalDiary({
               textLabel="PULSO (BPM)"
               name="jump" 
               placeholder="0 (BPM)"
-              required 
+              required
+              defaultValue={selectedId?selectedData[0].vitalSignals?.jump:""}
             />
   
             <InputField
@@ -278,6 +261,7 @@ export default function ClinicalDiary({
               name="temperature"
               required 
               placeholder="0 graus(°)"
+              defaultValue={selectedId?selectedData[0].vitalSignals?.temperature:""}
             />
   
             <InputField
@@ -286,6 +270,8 @@ export default function ClinicalDiary({
               name="breathing" 
               required
               placeholder="0 (IRPM)"
+              defaultValue={selectedId?selectedData[0].vitalSignals?.breathing:""}
+
             />
   
             <InputField
@@ -294,7 +280,8 @@ export default function ClinicalDiary({
               name="weight" 
               placeholder="0 (kg)"
               step={0.01}
-              required 
+              required
+              defaultValue={selectedId?selectedData[0].vitalSignals?.weight:""} 
             />
   
             <InputField
@@ -303,14 +290,16 @@ export default function ClinicalDiary({
               textLabel="ALTURA ((m)"
               name="height"
               placeholder="0 (m)"
+              defaultValue={selectedId?selectedData[0].vitalSignals?.height:""}
             />
   
             <InputField
               type="number"
               textLabel="SpO2 ((%) opcional)"
-              name="sp02"
+              name="spO2"
               step={0.01}
               placeholder="0 (%)"
+              defaultValue={selectedId?selectedData[0].vitalSignals?.spO2:""}
             />
   
             <InputField
@@ -318,6 +307,7 @@ export default function ClinicalDiary({
               textLabel="PVC ((CH20) opcional)"
               name="pvc"
               placeholder="0 (CH20)"
+              defaultValue={selectedId?selectedData[0].vitalSignals?.pvc:""}
             />
   
             <InputField
@@ -326,6 +316,7 @@ export default function ClinicalDiary({
               textLabel="GLICEMIA ( (mg/dl) opcional)"
               name="bloodGlucose"
               placeholder="0 (mg/dl)"
+              defaultValue={selectedId?selectedData[0].vitalSignals?.bloodGlucose:""}
             />
           </div>}
 
