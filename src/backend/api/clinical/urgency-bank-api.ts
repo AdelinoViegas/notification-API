@@ -712,7 +712,7 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
     //   .map((cid: CID)=> cid.code)
     // : undefined;
 
-    console.log( payload?.CID.split(","));
+    console.log(payload?.CID.split(","), payload.CID);
     
     if(h === 0)
       throw new Error("defina uma altura maior que 0", {cause: "Infinity"});

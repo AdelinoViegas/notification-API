@@ -5,8 +5,10 @@ import Selection, { SelectionOption } from "./ui/selection";
 import debounce from "debounce";
 import { queryCid } from "@/backend/api/storage";
 import { type AxiosError } from "axios";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Button from "./ui/button";
+import { CidResponse } from "@/backend/api/types";
+import FallbackComponent from "./fallback-components";
 
 type Cid = {
   code: string;
@@ -24,11 +26,10 @@ export default function CidInputComponent({ defaultValue }: { defaultValue?: str
     : []
   );
   const [ nameRefs, setNameRefs ] = useState<Cid[]>([]);
+  const [ isLoading, setIsLoading ] = useState(false);
 
   const handlerSearchByReference = debounce((ev: React.ChangeEvent<HTMLInputElement>) => {
     queryCid(ev.target.value).then(data => {
-
-      console.log(data);
 
       if(!(data instanceof Array))
         setResults([]);
@@ -63,21 +64,24 @@ export default function CidInputComponent({ defaultValue }: { defaultValue?: str
     }
   }
 
-  // useEffect(()=>{
-  //   allSavedRefs.forEach(el => {
-  //     queryCid(el).then(data =>{
-  //       tempNamesRefs.current = [ data, ...tempNamesRefs.current ]
-  //     });
-  //   });
+  const resolveAllSavedRefs = useCallback(async()=> {
+    const refs: CidResponse[] = [];
 
-  //   console.log(tempNamesRefs);
-  //   setNameRefs(tempNamesRefs.current);
+    for(const ref of allSavedRefs)
+      refs.push(await queryCid(ref) as CidResponse);
 
-  // }, []);
+    setNameRefs(refs);
+    setIsLoading(false);
+  }, []);
+
+  useEffect(()=> {
+    setIsLoading(true);
+    resolveAllSavedRefs()
+  }, []);
 
   return (
     <div>
-      <input type="hidden" name="CID" value={allSavedRefs} />
+      <input type="hidden" name="CID" value={allSavedRefs.slice(0, -1)} />
 
       <InputField
         textLabel="Nome ou Código CID 10"
@@ -104,6 +108,7 @@ export default function CidInputComponent({ defaultValue }: { defaultValue?: str
       </div>
 
       <div>
+        {isLoading && <FallbackComponent lines={3} />}
         <ul>
           {nameRefs.map(e => (
             <li key={e.code} className="flex gap-x-3 bg-gray-200 p-2 mb-2 rounded">
@@ -112,14 +117,6 @@ export default function CidInputComponent({ defaultValue }: { defaultValue?: str
             </li>
           ))}
         </ul>
-      </div>
-
-      <div className="absolute z-10 bg-black p-3 text-green-500 top-0 right-0 font-bold">
-        <div>
-          <pre>{JSON.stringify(allSavedRefs)}</pre>
-           <pre>{JSON.stringify(nameRefs, null,2)}</pre>
-            {/* <pre>{JSON.stringify({ dv: JSON.parse(defaultValue) }, null,2)}</pre> */}
-        </div>
       </div>
     </div>
   )
