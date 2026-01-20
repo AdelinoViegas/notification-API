@@ -4,13 +4,17 @@ O modulo responsável pela gestão de processos clínicos dentro da plataforma M
 
 ## Instalação
 
-> Este modulo depende do serviço [API Gateway Master](https://github.com/mr0xff/api-gateway-master), é obrigatório configura-lo
-para que o modulo clinico funcione.
+Para a instalação do modulo clinico configurar os serviços abaixo:
+* [Api Gateway Master]() - rodar em Pod
+* [Painel Web Admin](https://github.com/socompser/web-master-admin) - rodar em container
+* **MongoDb** (rodar em container ou configurá-lo em bare metal)
+
+> Atenção: Ajustar a porta do `web-admin` de acordo com a porta que estiver na .env (nesse caso é a porta `8081`)
 
 Clone o repositório e instale as dependências:
 
 ```bash
-git clone https://github.com/mr0xff/master-clinical.git
+git clone https://github.com/socompser/master-clinical.git
 cd master-clinical
 yarn install
 yarn build

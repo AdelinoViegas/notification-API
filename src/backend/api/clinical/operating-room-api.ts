@@ -206,15 +206,15 @@ async function getPatient({ id }: { id: string}){
 
 async function signOperatingRoom(prev: unknown, formData: FormData){
   try{
-    const scheduleId = formData.get("scheduleId") as string;
-    const diagnostic = formData.get("preoperative-diagnosis") as string;
-    const informedConsent = formData.get("Informed-consent") as string;
-    const responsible = formData.get("responsible") as string;
-    const surgicalHistory = formData.get("medicalAndsurgicalHistory") as string;
-    const allergies = formData.get("allergies") as string;
-    const clinicalStatus = formData.get("currentClinicalStatus") as string;
-    const surgicalRisk = formData.get("surgicalRisk") as string;
-    const fastingConfirmed = formData.get("fastingConfirmed") as string;
+    const scheduleId = formData.get("scheduleId");
+    const diagnostic = formData.get("preoperative-diagnosis");
+    const informedConsent = formData.get("Informed-consent");
+    const responsible = formData.get("responsible");
+    const surgicalHistory = formData.get("medicalAndsurgicalHistory");
+    const allergies = formData.get("allergies");
+    const clinicalStatus = formData.get("currentClinicalStatus");
+    const surgicalRisk = formData.get("surgicalRisk");
+    const fastingConfirmed = formData.get("fastingConfirmed");
     const previousMedication = formData.get("previousMedication") as string;
     const surgicalTeam = formData.get("surgicalTeam") as string;
     const designatedRoom = formData.get("designatedRoom") as string;
@@ -230,17 +230,17 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
     const bloodAndEmergencySupplies = formData.get("bloodAndEmergencySupplies") as string;        
     const surgicalTechnique = formData.get("surgicalTechnique") as string;
     const implantsAndProsthesesUsed = formData.get("implantsAndProsthesesUsed") as string;
-    const intraoperativeComplications = formData.get("intraoperativeComplications") as string;
-    const medicationAdministered = formData.get("medicationAdministered") as string;
-    const fluidVolumeAndBloodLoss = formData.get("fluidVolumeAndBloodLoss") as string;
-    const otherProcedure = formData.get("otherProcedure") as string;
-    const checkInTime = formData.get("checkInTime") as string;
-    const vitalSignsData = formData.get("date") as string;
-    const fr = formData.get("fr") as string;
-    const pulse = formData.get("pulse") as string;
-    const spo2 = formData.get("spo2") as string;
-    const ta = formData.get("ta") as string;
-    const t = formData.get("t") as string;
+    const intraoperativeComplications = formData.get("intraoperativeComplications");
+    const medicationAdministered = formData.get("medicationAdministered");
+    const fluidVolumeAndBloodLoss = formData.get("fluidVolumeAndBloodLoss");
+    const otherProcedure = formData.get("otherProcedure");
+    const checkInTime = formData.get("checkInTime");
+    const vitalSignsData = formData.get("date");
+    const fr = Number(formData.get("fr"));
+    const pulse = Number(formData.get("pulse"));
+    const spo2 = Number(formData.get("spo2"));
+    const ta = formData.get("ta"); 
+    const t = Number(formData.get("t")); 
     const motorActivity = Number(formData.get("motorActivity"));
     const respiration = Number(formData.get("respiration"));
     const circulation = Number(formData.get("circulation"));
@@ -313,11 +313,11 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
       checkInTime: checkInTime || anesthetic?.checkInTime as Date,
       vitalSignal:(vitalSignsData && fr && pulse && spo2 && ta && t)?[...anesthetic?.vitalSignal || [],{
         date: vitalSignsData || undefined, 
-        fr: Number(fr),
-        pulse: Number(pulse), 
-        spo2: Number(spo2), 
-        ta: Number(ta), 
-        t: Number(t),
+        fr,
+        pulse, 
+        spo2, 
+        ta, 
+        t,
       }]:anesthetic?.vitalSignal, 
       levelofConsciousness: {
         motorActivity: motorActivity ?? anesthetic?.levelofConsciousness?.motorActivity as number,
@@ -389,7 +389,7 @@ async function getOperatingRoom(scheduleId: string, served = false){
     fr: number,
     pulse: number, 
     spo2: number, 
-    ta: number, 
+    ta: string, 
     t: number,
   }[] = [];
 
@@ -399,7 +399,7 @@ async function getOperatingRoom(scheduleId: string, served = false){
       fr: props.fr as number,
       pulse: props.pulse as number, 
       spo2: props.spo2 as number, 
-      ta: props?.ta as number, 
+      ta: props.ta as string, 
       t: props.t as number,
     });    
   });

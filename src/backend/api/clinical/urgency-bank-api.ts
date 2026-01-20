@@ -803,14 +803,12 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
         description: payload.description || undefined,
       }]:diary?.hydromineralBalance,
     }
-
-    if(!hasPatientUrgencyBank)     
-      await urgencyBankModel.create({ patientId: payload.patientId, anamnesis, clinicalDiary });
-    else
-      await urgencyBankModel.updateOne({ _id: hasPatientUrgencyBank._id },{ anamnesis, clinicalDiary });
     
+    if(hasPatientUrgencyBank)
+      await urgencyBankModel.updateOne({ _id: hasPatientUrgencyBank._id },{ anamnesis, clinicalDiary });
+
     return {
-      message: `Informação ${!hasPatientUrgencyBank?'registrada':'actualizada'} com sucesso!`,
+      message: "Informação actualizada com sucesso!",
       status: true
     }
   }catch(e: unknown){

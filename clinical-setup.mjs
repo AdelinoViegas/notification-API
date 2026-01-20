@@ -2,10 +2,9 @@ import 'dotenv/config';
 // rodar no node v22
 import { createConnection, Schema } from "mongoose";
 
-
 const con = createConnection(process.env.MONGO_URL, {
   dbName: process.env.MONGO_DB_NAME,
-  family: 4,
+  family: process.env.NODE_ENV === "development" ? 4 : undefined,
   appName: "master-clinical-setup"
 });
 

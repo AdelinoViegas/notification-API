@@ -9,16 +9,16 @@ import InputDetails from "@/components/ui/input-details";
 import Accordium from "@/components/ui/accordium";
 import FinishOperatingRoom from "@/components/finish-operating-room";
 import { signOperatingRoom } from "@/backend/api/clinical/operating-room-api";
+import { surgerySchedulingArea } from "@/backend/api/clinical/translator";
+import Selection from "@/components/ui/selection";
 
 export default function PatientDischarge({ 
-  requestingService,
   result,
   patientDischarge, 
   scheduleId,
   operatingRoomId, 
 }: {
   operatingRoomId: string, 
-  requestingService: string,
   result: string,
   scheduleId: string,
   patientDischarge: {
@@ -80,10 +80,10 @@ export default function PatientDischarge({
               defaultValue={result}
             />
 
-            <InputField
-              textLabel="Unidade de Destino"
-              disabled
-              defaultValue={requestingService}
+            <Selection
+              label="Unidade de Destino"
+              options={surgerySchedulingArea}
+              name="requestingService"
             />
           </div>
         </Accordium>

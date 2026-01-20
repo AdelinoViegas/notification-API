@@ -55,7 +55,9 @@ export default async function Page({
           message="Faça duplo click sobre o utente para seguir com o atendimento!" 
         />
 
-        <Link href="/clinical/urgency-bank/waiting"><Button>Utentes em espera</Button></Link>
+        <Link href="/clinical/urgency-bank/waiting">
+          <Button className="mt-0">Pacientes em espera</Button>
+        </Link>
       </div>
       
       <div className="flex justify-between items-center">
