@@ -15,7 +15,7 @@ export default async function Page({
 		{
 			accordiumTitle: "Diário Médico",
 			modalTitle: "Novo Diário Clínico",
-			apiType: "diary",
+			diaryType: "diary",
 			patientId,
 			columns: ["Data-Hora", "Descrição"],
 			dataDiary: { medicineDiary: clinicalDiary.medicinelDiary },
@@ -23,7 +23,7 @@ export default async function Page({
 		{
 			accordiumTitle: "Diário Terapéutico",
 			modalTitle: "Novo Diário Clínico",
-			apiType: "therapeutic",
+			diaryType: "therapeutic",
 			patientId,
 		    columns: ["Data-Hora", "assinatura", "Descrição"],
 			dataDiary: { therapeuticDiary: clinicalDiary.therapeuticDiary}
@@ -31,7 +31,7 @@ export default async function Page({
 		{
 			accordiumTitle: "Diário Tratamento",
 			modalTitle: "Novo Diário Clínico",
-			apiType: "treatment",
+			diaryType: "treatment",
 			patientId,
 		    columns: ["Data-Hora", "assinatura", "Descrição"],
 		    dataDiary: { treatmentDiary: clinicalDiary.treatmentDiary}
@@ -39,7 +39,7 @@ export default async function Page({
 		{
 			accordiumTitle: "Sinais Vitais",
 			modalTitle: "Novo Diário Clínico",
-			apiType: "vital",
+			diaryType: "vital",
 			patientId,
 			columns: ["Data-Hora","Descrição","pM","pm","BPM","pvc","imc","sp02","(°)","IRPM","(kg)","(m)","(mg/dl)"],
 			dataDiary: { vitalSignals: clinicalDiary.vitalSignals}
@@ -47,7 +47,7 @@ export default async function Page({
 		{
 			accordiumTitle: "Anotações Enfermagem",
 			modalTitle: "Novo Diário Clínico",
-			apiType: "annotation",
+			diaryType: "annotation",
 			patientId,
 			columns: ["Data-Hora", "Descrição"],
 			dataDiary: { nursingNotes: clinicalDiary.nursingNotes}
@@ -55,7 +55,7 @@ export default async function Page({
 		{
 			accordiumTitle: "Balanço Hidromineral",
 			modalTitle: "Novo Diário Clínico",
-			apiType: "balance",
+			diaryType: "balance",
 			patientId,
 		    columns: ["Data-Hora","via","Qtd","Bal-Hidromineral", "Descrição"],
 		    dataDiary: { hydromineralBalance: clinicalDiary.hydromineralBalance}
