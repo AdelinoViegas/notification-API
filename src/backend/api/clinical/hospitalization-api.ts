@@ -474,6 +474,7 @@ export async function getCurrentLocation(patientId: string){
 }
 
 export async function movePatientTo(p: unknown, formData: FormData){
+  // remover o utente da cama e enviar pra o serviço de destino 
   try{
     const patientId = formData.get("patientId") as string;
     const to = formData.get("bedId") as string;
