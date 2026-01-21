@@ -308,6 +308,10 @@ const serviceRequestsSchema = new Schema({
   originOfrequest: String,
   userId: Schema.ObjectId,
   kind: Schema.ObjectId,
+  reason: {
+    type: String,
+    required: true
+  },
   pending: {
     type: Boolean,
     default: true

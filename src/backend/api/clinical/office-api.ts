@@ -461,13 +461,15 @@ async function registerRequest(prev: unknown, formData: FormData){
     const kindOfService = formData.get("kind");
     const from = serviceRequestSchema.parse(formData.get("from"));
     const originOfrequest = formData.get("originOfrequest");
+    const reason = formData.get("reason");
 
     await serviceRequestsModel.create({
       patientId,
       from,
       originOfrequest,
       userId: await getUserId(),
-      kind: kindOfService
+      kind: kindOfService,
+      reason
     });
 
     return {

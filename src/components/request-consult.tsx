@@ -8,6 +8,7 @@ import { useParams, useRouter } from "next/navigation";
 import { registerRequest } from "@/backend/api/clinical/office-api";
 import { toast } from "react-toastify";
 import { getServices } from "@/backend/api/clinical/scheduling-api";
+import InputDetails from "./ui/input-details";
 
 type GetServices = Awaited<ReturnType<typeof getServices>>;
 
@@ -50,6 +51,14 @@ export default function RequestConsult(){
             required
             options={consultations} 
           />
+
+          <InputDetails
+            textLabel="Movito"
+            placeholder="Descreva o motivo do pedido..."
+            required
+            name="reason" 
+          />
+
           <Button>Enviar</Button>
         </form>
       </Modal>
