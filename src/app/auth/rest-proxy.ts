@@ -18,8 +18,10 @@ export async function RESTproxy(extToken?: string, set = false){
     const cache = await cookies();
     const token = extToken || cache.get(process.env.COOKIE_AUTH_HEADER as string)?.value;
 
-    if(!token)
-      throw new Error("Impossivel de autenticar!");
+    if(!token){
+      console.error("token não encontrado!");
+      return false
+    }
 
     if(set){
       cache.set({
