@@ -7,15 +7,16 @@ import Button from "@/components/ui/button";
 import InputField from "@/components/ui/input-field";
 import { 
   getInternalServices, 
-  getNursings, 
-  getSections, 
-  getBeds,
+  // getNursings, 
+  // getSections, 
+  // getBeds,
   signInternalService,
   movePatientTo
 } from "@/backend/api/clinical/hospitalization-api";
 
 import { toast } from "react-toastify";
 import Selection, { SelectionOption } from "@/components/ui/selection";
+import InputDetails from "@/components/ui/input-details";
 
 export default function InternalMoviment(){
   const [ state, action ] = useActionState(movePatientTo, { message: "", status: false }); 
@@ -23,11 +24,11 @@ export default function InternalMoviment(){
   const [ modalService, setModalService ] = useState(false);
   
   const [ internalServices, setInternalServices ] = useState<SelectionOption[]>([]);
-  const [ sections, setSections ] = useState<SelectionOption[]>([]);
-  const [ nursings, setNursings ] = useState<SelectionOption[]>([]);
-  const [ beds, setBeds ] = useState<SelectionOption[]>([]);
-  const [ selectedSection, setSelectedSection ] = useState<string>();
-  const [ selectedNursing, setSelectedNursing ] = useState<string>();
+  // const [ sections, setSections ] = useState<SelectionOption[]>([]);
+  // const [ nursings, setNursings ] = useState<SelectionOption[]>([]);
+  // const [ beds, setBeds ] = useState<SelectionOption[]>([]);
+  // const [ selectedSection, setSelectedSection ] = useState<string>();
+  // const [ selectedNursing, setSelectedNursing ] = useState<string>();
 
   const router = useRouter();
   const params = useParams();
@@ -39,11 +40,11 @@ export default function InternalMoviment(){
       else
         toast.error(state.message);
 
-    getSections().then(setSections);
-    getNursings({ sectionId: selectedSection }).then(setNursings);
-    getBeds(selectedNursing).then(e => setBeds(e.beds));
+    // getSections().then(setSections);
+    // getNursings({ sectionId: selectedSection }).then(setNursings);
+    // getBeds(selectedNursing).then(e => setBeds(e.beds));
 
-  }, [state, selectedSection]);
+  }, [state]);
 
   useEffect(()=>{
     if(serviceState.message)
@@ -73,7 +74,14 @@ export default function InternalMoviment(){
           <Button disabled type="button" onClick={()=>setModalService(true)}>Novo</Button>
         </div>
 
-        <Selection
+        <InputDetails
+          textLabel="Movito"
+          placeholder="Descreva o motivo do movimento ..." 
+          name="reason"
+          required
+        />
+
+        {/* <Selection
           label="Ala"
           name="sectionId"
           options={sections} 
@@ -94,9 +102,9 @@ export default function InternalMoviment(){
           name="bedId"
           options={beds} 
           required
-        />
+        /> */}
 
-        <Button>Salvar</Button>
+        <Button disabled>Salvar</Button>
       </form>
 
       <Modal

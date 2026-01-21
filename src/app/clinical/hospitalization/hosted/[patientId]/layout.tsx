@@ -64,7 +64,7 @@ export default async function Layout({
             { path: "prescription", title: "Receituário" },
             { path: "surgery", title: "Cirurgia"},
             { path: "discharge", title: "Título de Alta" },
-            { path: "im", title: "Movimento Interno" }
+            // { path: "im", title: "Movimento Interno" }
           ]}
         />
       </div>
