@@ -99,7 +99,7 @@ export default function CidInputComponent({ defaultValue }: { defaultValue?: str
           <Selection
             label="Referências Cid"
             options={results} 
-            className="grow"
+            className="max-w-[35rem] grow"
             id="ref"
             onChange={e => setSelectedRef(e.target.value)}
           />
