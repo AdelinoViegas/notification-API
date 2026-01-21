@@ -17,9 +17,10 @@ export default async function Layout({
   const { patientId: id } = await params;
   const patient = await getPatient(id); 
   const patientState = await getPatientState(id);
+  const basePath = "/clinical/hospitalization?r=r&p=1"
   
   if(!patient || !patientState)
-    redirect("clinical/hospitalization/hosted");
+    redirect(basePath);
     
   return(
     <div>
@@ -27,13 +28,13 @@ export default async function Layout({
         <MonitorAccess
           patientId={id}
           place="hospitalization"
-          basePathname="/clinical/hospitalization/hosted" 
+          basePathname={basePath}
         />
 
         <UnlockProcessAccess
           patientId={id}
           place="hospitalization"
-          basePathname="/clinical/hospitalization/hosted" 
+          basePathname={basePath}
         />
         <DefineState />
       </div>
