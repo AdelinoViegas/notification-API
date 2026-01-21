@@ -1,16 +1,6 @@
-// import { redirect } from "next/navigation";
-// import clsx from "clsx";
-// import Header from "@/components/header";
 import TabNav from "@/components/tabnav";
 import Card from "@/components/ui/card";
 import { MonitorAccess, UnlockProcessAccess } from "@/components/lock-unlock-monitor-process";
-// import QuickFabShurtcut from "@/components/quick-fab-shurtcut";
-// import { getPatient } from "@/backend/api/clinical/urgency-bank-api";
-// import { getPatient } from "@/backend/api/clinical/api";
-// import RequestConsult from "@/components/request-consult";
-// import Hospitalization from "@/components/hospitalization";
-// import RequestSurgery from "@/components/request-surgery";
-// import InternalMovement from "@/components/internal-movement";
 import DefineState from "@/components/define-state";
 import clsx from "clsx";
 import { getPatient } from "@/backend/api/clinical/api";
@@ -27,23 +17,24 @@ export default async function Layout({
   const { patientId: id } = await params;
   const patient = await getPatient(id); 
   const patientState = await getPatientState(id);
+  const basePath = "/clinical/hospitalization?r=r&p=1"
   
   if(!patient || !patientState)
-    redirect("clinical/hospitalization/hosted");
+    redirect(basePath);
     
   return(
     <div>
       <div className="flex gap-x-2">
         <MonitorAccess
           patientId={id}
-          place="urgency"
-          basePathname="/clinical/hospitalization/hosted" 
+          place="hospitalization"
+          basePathname={basePath}
         />
 
         <UnlockProcessAccess
           patientId={id}
-          place="urgency"
-          basePathname="/clinical/hospitalization/hosted" 
+          place="hospitalization"
+          basePathname={basePath}
         />
         <DefineState />
       </div>
@@ -66,7 +57,6 @@ export default async function Layout({
           baseUrl="/clinical/hospitalization/hosted"
           subPaths={[
             { path: "", title: "Ficha de Cadastro" },
-            // { path: "screening", title: "Ficha de Triagem" },
             { path: "anamnesis", title: "Anamneses" },
             { path: "exam", title: "Exames" },
             { path: "clinical-diary", title: "Diário Clínico" },
@@ -78,14 +68,6 @@ export default async function Layout({
           ]}
         />
       </div>
-
-      {/* <QuickFabShurtcut 
-        visibleComponent={[
-          "request_consult",
-          "request_surgery",
-          "define_state"
-        ]} 
-      /> */}
     </div>
   )
 }
