@@ -714,7 +714,7 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
         symptoms: payload.symptoms || generalClinic?.symptoms,
         diseaseData: payload.diseaseData || generalClinic?.diseaseData,
         complementaryExams: payload.complementaryExams || generalClinic?.complementaryExams,
-        diagnosticHypothesis: payload?.CID.split(","),
+        diagnosticHypothesis: payload?.CID?.split(",") || generalClinic?.diagnosticHypothesis,
         others: payload.others || generalClinic?.others,
         diseasesInFamily: payload.diseasesInFamily || generalClinic?.diseasesInFamily,
         evaluation: payload.evaluation || generalClinic?.evaluation,
@@ -811,9 +811,9 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
       message: "Informação actualizada com sucesso!",
       status: true
     }
-  }catch(e: unknown){
+  }catch(e){
     const err = e as Error;
-
+    console.error(e);
     return {
       message: err.cause?err.message:"Não foi possivel realizar esta operação!",
       status: false,
