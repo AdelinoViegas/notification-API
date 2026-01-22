@@ -39,6 +39,7 @@ export default async function Reception({ page }: {
           filterKey="name"
           label="Filtar por nome"
           placeholder="Buscar pelo nome do utente..."
+          disabled
         />
       </div>
 

@@ -6,7 +6,13 @@ import React, { useEffect, useState } from "react";
 import { getNursings, getInternalServices, getSections } from "@/backend/api/clinical/hospitalization-api";
 type FilterKeys = { [ key: string ] : "_fst" | "_fs" | "_fn"};
 
-export default function Filter({ internalServiceId }: { internalServiceId?: string }){
+export default function Filter({ 
+  internalServiceId,
+  disabled 
+}:{ 
+  internalServiceId?: string;
+  disabled?: boolean; 
+}){
   const search = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
@@ -85,6 +91,7 @@ export default function Filter({ internalServiceId }: { internalServiceId?: stri
       <Selection
         label="Filtrar por Ala"
         id="section"
+        disabled={disabled}
         options={sections} 
         onChange={filterHandler}
       />
@@ -92,6 +99,7 @@ export default function Filter({ internalServiceId }: { internalServiceId?: stri
       <Selection
         label="Filtrar por Enfermaria"
         options={nursings} 
+        disabled={disabled}
         id="nursing"
         onChange={filterHandler}
       />
