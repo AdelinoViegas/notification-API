@@ -57,13 +57,17 @@ export default async function Hospitalized({ page }: {
           message="Faça duplo click sobre o utente para seguir com o atendimento!" 
         />
         <div className="flex gap-x-3 items-top">
-          <Filter internalServiceId={intService?.id} />
+          <Filter
+            disabled 
+            internalServiceId={intService?.id} 
+          />
         
           <Search
             className="flex items-center gap-3"
             filterKey="pfn" // patient fullname
             label="Filtar por nome"
             placeholder="Buscar pelo nome do utente..."
+            disabled
           />
         </div>
       </div>

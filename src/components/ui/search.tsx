@@ -16,13 +16,15 @@ type SearchProps = {
   label: string;
   placeholder: string;
   className?:string;
+  disabled?: boolean;
 }
 
 export default function Search({
   filterKey,
   label,
   placeholder,
-  className
+  className,
+  disabled
 }: SearchProps){
   const searchParams = useSearchParams();
   const search = new URLSearchParams(searchParams);
@@ -54,8 +56,9 @@ export default function Search({
         textLabel={label}
         placeholder={placeholder} 
         onChange={onChangeText}
+        disabled={disabled}
       />
-      <Button onClick={handleClear}>
+      <Button onClick={handleClear} disabled={disabled}>
         <BackspaceIcon className="size-6" />
       </Button>
     </div>

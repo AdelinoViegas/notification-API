@@ -39,7 +39,7 @@ export default async function Nursings({}: {
           <RegisterNursing />
         </div>
 
-        <Filter />
+        <Filter disabled />
       </div>
 
       <Table
