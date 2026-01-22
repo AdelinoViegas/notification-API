@@ -82,6 +82,7 @@ export default function Filter({
       { componentRoute === "n" && 
         <Selection
           label="Filtrar por Serviço"
+          disabled={disabled}
           options={internalServices} 
           id="service"
           onChange={filterHandler}
