@@ -1,9 +1,13 @@
 pipeline {
   agent any
 
+  tools {
+    nodejs "node-18"
+  }
+
   environment {
     NODE_ENV = "production"
-    NEXT_TELEMETRY_DISABLED = "0"
+    NEXT_TELEMETRY_DISABLED = "1"
   }
 
   stages {
