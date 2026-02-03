@@ -1,16 +1,15 @@
-import Header from "@/components/header";
 import Card from "@/components/ui/card";
 import TitleAndSubtitle from "@/components/title-subtitle";
 import { CurrentDataInOffice, UploadExternalExam, VitalSignalsInOffice } from "@/components/forms/office-form";
-import { getConsultResult, getPatient } from "@/backend/api/clinical/office-api";
 import Accordium from "@/components/ui/accordium";
-import { civilState, gender } from "@/backend/api/clinical/translator";
 import FinishConsultation from "@/components/finish-consulation";
 import RequestReschedule from "@/components/request-reschedule";
-import { getScheduleAppointment } from "@/backend/api/clinical/scheduling-api";
 import RequestExams from "@/components/forms/request-exam";
 import ScheduleSugery from "@/components/forms/schedule-surgery";
 import ViewUserFile from "@/components/view-user-file-client";
+import { civilState, gender } from "@/backend/api/clinical/translator";
+import { getScheduleAppointment } from "@/backend/api/clinical/scheduling-api";
+import { getConsultResult, getPatient } from "@/backend/api/clinical/office-api";
 
 export default async function Page({ params }: { params: Promise<{ id: string }>}){
   const { id } = await params; 
