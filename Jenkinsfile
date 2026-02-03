@@ -28,39 +28,6 @@ pipeline {
         sh "yarn test"
       }
     }
-      
-    // stage("Checkout") {
-    //     steps {
-    //         checkout scm
-    //     }
-    // }
-
-    // stage("Install dependencies") {
-    //     steps {
-    //         sh "npm install"
-    //     }
-    // }
-
-    // stage("Lint") {
-    //     steps {
-    //         sh "npm run lint"
-    //     }
-    // }
-
-    // stage("Test") {
-    //     when {
-    //         expression { fileExists("package.json") }
-    //     }
-    //     steps {
-    //         sh "npm test -- --ci || true"
-    //     }
-    // }
-
-    // stage("Build") {
-    //     steps {
-    //         sh "npm run build"
-    //     }
-    // }
   }
 
   post {
