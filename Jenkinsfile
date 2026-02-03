@@ -6,10 +6,6 @@ pipeline {
     NEXT_TELEMETRY_DISABLED = "1"
   }
 
-  tools {
-    nodejs "node-18"
-  }
-
   stages {
     stage("Install project deps") {
       steps {
