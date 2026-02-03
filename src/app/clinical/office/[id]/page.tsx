@@ -1,4 +1,5 @@
 import Card from "@/components/ui/card";
+import Header from "@/components/header";
 import TitleAndSubtitle from "@/components/title-subtitle";
 import { CurrentDataInOffice, UploadExternalExam, VitalSignalsInOffice } from "@/components/forms/office-form";
 import Accordium from "@/components/ui/accordium";
@@ -20,8 +21,11 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
   return(
     <main className="space-y-3">
-      <div className="my-4 text-center py-3 text-white text-lg font-bold uppercase bg-blue-400 rounded-lg">
-          {patient?.personal.fullname as string}
+      <div className="my-4 text-center pt-3 text-white bg-blue-400 rounded-lg">
+        <Header 
+          center 
+          title={patient?.personal.fullname as string}
+        />
       </div>
 
       <div className="overflow-auto h-[80vh] scroll overflow-auto">
