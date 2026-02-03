@@ -1,16 +1,16 @@
-import Header from "@/components/header";
 import Card from "@/components/ui/card";
+import Header from "@/components/header";
 import TitleAndSubtitle from "@/components/title-subtitle";
 import { CurrentDataInOffice, UploadExternalExam, VitalSignalsInOffice } from "@/components/forms/office-form";
-import { getConsultResult, getPatient } from "@/backend/api/clinical/office-api";
 import Accordium from "@/components/ui/accordium";
-import { civilState, gender } from "@/backend/api/clinical/translator";
 import FinishConsultation from "@/components/finish-consulation";
 import RequestReschedule from "@/components/request-reschedule";
-import { getScheduleAppointment } from "@/backend/api/clinical/scheduling-api";
 import RequestExams from "@/components/forms/request-exam";
 import ScheduleSugery from "@/components/forms/schedule-surgery";
 import ViewUserFile from "@/components/view-user-file-client";
+import { civilState, gender } from "@/backend/api/clinical/translator";
+import { getScheduleAppointment } from "@/backend/api/clinical/scheduling-api";
+import { getConsultResult, getPatient } from "@/backend/api/clinical/office-api";
 
 export default async function Page({ params }: { params: Promise<{ id: string }>}){
   const { id } = await params; 
@@ -21,7 +21,6 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
   return(
     <main className="space-y-3">
-
       <div className="my-4 text-center pt-3 text-white bg-blue-400 rounded-lg">
         <Header 
           center 
