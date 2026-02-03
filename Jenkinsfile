@@ -9,6 +9,7 @@ pipeline {
   stages {
     stage("Install project deps") {
       steps {
+        echo "hello world"
         sh "yarn install"
       }
     }
