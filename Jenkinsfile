@@ -1,5 +1,5 @@
 pipeline {
-  agent any
+  agent nodejs
 
   environment {
     NODE_ENV = "production"
