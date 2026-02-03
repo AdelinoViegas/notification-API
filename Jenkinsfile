@@ -3,7 +3,7 @@ pipeline {
 
   environment {
     NODE_ENV = "production"
-    NEXT_TELEMETRY_DISABLED = "1"
+    NEXT_TELEMETRY_DISABLED = "0"
   }
 
   stages {
