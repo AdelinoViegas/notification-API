@@ -13,19 +13,19 @@ pipeline {
   stages {
     stage("Install project deps") {
       steps {
-        sh "yarn install"
+        sh "npm install"
       }
     }
 
     stage("Nextjs building artifacts") {
       steps {
-        sh "yarn build"
+        sh "npm build"
       }
     }
 
     stage("Unit test with jest") {
       steps {
-        sh "yarn test"
+        sh "npm test"
       }
     }
   }
