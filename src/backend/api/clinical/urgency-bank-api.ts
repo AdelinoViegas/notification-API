@@ -779,7 +779,7 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
           jump: Number(payload.jump),
           pvc: Number(payload.pvc),
           imc,
-          sp02: Number(payload.sp02),
+          spO2: Number(payload.spO2),
           temperature: Number(payload.temperature),
           breathing: Number(payload.breathing),
           weight: Number(payload.weight),
@@ -824,11 +824,12 @@ async function signUrgencyBank(prev: unknown, formData:FormData){
 
 async function getPatientUrgencyBank(patientId: string){
   const urgency = await urgencyBankModel.findOne({ patientId, served: false });
-  const medicinelDiary:{date: string, description: string}[] = [];
-  const nursingNotes:{date: string, description: string}[] = [];
-  const therapeuticDiary:{date: string, signature: string, description: string}[] = [];
-  const treatmentDiary:{date: string, signature: string, description: string}[] = [];
+  const medicinelDiary:{_id: string, date: string, description: string}[] = [];
+  const nursingNotes:{_id:string, date: string, description: string}[] = [];
+  const therapeuticDiary:{_id: string, date: string, signature: string, description: string}[] = [];
+  const treatmentDiary:{_id: string, date: string, signature: string, description: string}[] = [];
   const vitalSignals:{
+    _id: string,
     date: string,  
     description: string,
     vitalSignals: {
@@ -837,7 +838,7 @@ async function getPatientUrgencyBank(patientId: string){
       jump: number,
       pvc: number,
       imc: number,
-      sp02: number,
+      spO2: number,
       temperature: number,
       breathing: number,
       weight: number,
@@ -847,6 +848,7 @@ async function getPatientUrgencyBank(patientId: string){
   }[] = [];
 
 const hydromineralBalance: {
+  _id: string,
   date: string,
   siteOfDrugAdministration: string,
   amount: string,
@@ -856,6 +858,7 @@ const hydromineralBalance: {
 
   urgency?.clinicalDiary?.medicalDiary.forEach((value) => {
       medicinelDiary.push({
+        _id: value._id.toString(),
         date: getDataAndHoursFormat(value.date as Date),
         description: value.description as string,
       });    
@@ -863,6 +866,7 @@ const hydromineralBalance: {
 
   urgency?.clinicalDiary?.nursingNotes.forEach((value) => {
       nursingNotes.push({
+        _id: value._id.toString(),
         date: getDataAndHoursFormat(value.date as Date),
         description: value.description as string,
       });    
@@ -870,6 +874,7 @@ const hydromineralBalance: {
 
   urgency?.clinicalDiary?.therapeuticDiary.forEach((value) => {
       therapeuticDiary.push({
+        _id: value._id.toString(),
         date: getDataAndHoursFormat(value.date as Date),
         signature: value.signature as string,
         description: value.description as string,
@@ -878,14 +883,16 @@ const hydromineralBalance: {
 
   urgency?.clinicalDiary?.treatmentDiary.forEach((value) => {
     treatmentDiary.push({
-        date: getDataAndHoursFormat(value.date as Date),
-        signature: value.signature as string,
-        description: value.description as string,
-      });    
+      _id: value._id.toString(),
+      date: getDataAndHoursFormat(value.date as Date),
+      signature: value.signature as string,
+      description: value.description as string,
+    });    
   });
 
   urgency?.clinicalDiary?.vitalSignals.forEach((value) => {
     vitalSignals.push({
+       _id: value._id.toString(),
         date: getDataAndHoursFormat(value.date as Date),
         description: value.description as string,
         vitalSignals: {
@@ -894,7 +901,7 @@ const hydromineralBalance: {
           jump: value.vitalSignals?.jump as number,
           pvc: value.vitalSignals?.pvc as number,
           imc: value.vitalSignals?.imc as number, 
-          sp02: value.vitalSignals?.sp02 as number,
+          spO2: value.vitalSignals?.spO2 as number,
           temperature: value.vitalSignals?.temperature as number,
           breathing: value.vitalSignals?.breathing as number,
           weight: value.vitalSignals?.weight as number,
@@ -906,6 +913,7 @@ const hydromineralBalance: {
   
   urgency?.clinicalDiary?.hydromineralBalance.forEach((value) => {
     hydromineralBalance.push({
+       _id: value._id.toString(),
         date: getDataAndHoursFormat(value.date as Date),
         siteOfDrugAdministration: value.siteOfDrugAdministration as string,
         amount: value.amount as  string,
@@ -1373,6 +1381,123 @@ async function getPatientState(patientId: string){
   }
 }
 
+async function updateClinicalDiary(prev: unknown, formData:FormData){
+  try{
+    const payload:{ [key: string]: string } = {};
+    
+    for(const [key, value] of formData.entries())
+      payload[key] = value as string;
+    
+    const hasPatientUrgencyBank = await urgencyBankModel.findOne({ patientId: payload.patientId });
+    const isVitalSignals = payload.typeClinicalDiary === "vital";
+    const isBalance = payload.typeClinicalDiary === "balance";
+    const w = Number(payload.weight);
+    const h = Number(payload.height);
+    const imc = Number((w/(h*h)).toFixed(2));
+     
+    if(h === 0)
+      throw new Error("defina uma altura maior que 0", {cause: "Infinity"});
+
+    if(!hasPatientUrgencyBank)
+      throw new Error("Dados inexistentes", {cause: "inexistent"})
+
+    const diaryTwoFields: Record<string, string> = {
+      diary: "medicalDiary",
+      annotation: "nursingNotes",
+    };
+
+    const diaryThreeFields: Record<string, string> = {
+      therapeutic: "therapeuticDiary",
+      treatment: "treatmentDiary",
+    };
+
+    const firstDiaries = diaryTwoFields[payload.typeClinicalDiary];
+    const secondDiaries = diaryThreeFields[payload.typeClinicalDiary];
+
+    if (firstDiaries) {
+      await urgencyBankModel.updateOne(
+        { _id: hasPatientUrgencyBank._id },
+        {
+          $set: {
+            [`clinicalDiary.${firstDiaries}.$[entry].date`]: payload.createAt,
+            [`clinicalDiary.${firstDiaries}.$[entry].description`]: payload.description,
+          },
+        },
+        {
+          arrayFilters: [{ "entry._id": payload.diaryId }],
+        }
+      );
+    }else if (secondDiaries) {
+      await urgencyBankModel.updateOne(
+        { _id: hasPatientUrgencyBank._id },
+        {
+          $set: {
+            [`clinicalDiary.${secondDiaries}.$[entry].date`]: payload.createAt,
+            [`clinicalDiary.${secondDiaries}.$[entry].signature`]: payload.signature,
+            [`clinicalDiary.${secondDiaries}.$[entry].description`]: payload.description,
+          },
+        },
+        {
+          arrayFilters: [{ "entry._id": payload.diaryId }],
+        }
+      );
+    }else if (isVitalSignals) {
+      await urgencyBankModel.updateOne(
+        { _id: hasPatientUrgencyBank._id },
+        {
+          $set: {
+            [`clinicalDiary.vitalSignals.$[entry].date`]: payload.createAt,
+            [`clinicalDiary.vitalSignals.$[entry].description`]: payload.description,
+            [`clinicalDiary.vitalSignals.$[entry].vitalSignals.paMax`]: payload.paMax,
+            [`clinicalDiary.vitalSignals.$[entry].vitalSignals.paMin`]: payload.paMin,
+            [`clinicalDiary.vitalSignals.$[entry].vitalSignals.jump`]: payload.jump,
+            [`clinicalDiary.vitalSignals.$[entry].vitalSignals.imc`]: imc,
+            [`clinicalDiary.vitalSignals.$[entry].vitalSignals.temperature`]: payload.temperature,
+            [`clinicalDiary.vitalSignals.$[entry].vitalSignals.breating`]: payload.breathing,
+            [`clinicalDiary.vitalSignals.$[entry].vitalSignals.weight`]: payload.weight,
+            [`clinicalDiary.vitalSignals.$[entry].vitalSignals.height`]: payload.height,
+            [`clinicalDiary.vitalSignals.$[entry].vitalSignals.spO2`]: payload.spO2,
+            [`clinicalDiary.vitalSignals.$[entry].vitalSignals.pvc`]: payload.pvc,
+            [`clinicalDiary.vitalSignals.$[entry].vitalSignals.bloodGlucose`]: payload.bloodGlucose,
+          },
+        },
+        {
+          arrayFilters: [{ "entry._id": payload.diaryId }],
+        }
+      );
+    }else if (isBalance) {
+      await urgencyBankModel.updateOne(
+        { _id: hasPatientUrgencyBank._id },
+        {
+          $set: {
+            [`clinicalDiary.hydromineralBalance.$[entry].date`]: payload.createAt,
+            [`clinicalDiary.hydromineralBalance.$[entry].siteOfDrugAdministration`]: payload.local,
+            [`clinicalDiary.hydromineralBalance.$[entry].amount`]: payload.amount,
+            [`clinicalDiary.hydromineralBalance.$[entry].hidromineralBalance`]: payload.balance,
+            [`clinicalDiary.hydromineralBalance.$[entry].description`]: payload.description,
+          },
+        },
+        {
+          arrayFilters: [{ "entry._id": payload.diaryId }],
+        }
+      );
+    }
+
+    return {
+      message: "Diario clínico actualizado com sucesso!",
+      status: true
+    }
+
+  }catch(e: unknown){
+    const error = e as Error;
+
+    return {
+      message: error.cause?error.message:"Impossivel actualizar",
+      status: false
+    }
+  }
+}
+
 export {
   finishHospitalization,
   getPatients,
@@ -1390,6 +1515,7 @@ export {
   getExternalUnits,
   getExternalUnit,
   updateExternalUnit,
+  updateClinicalDiary,
   signUrgencyBank,
   getPatientUrgencyBank,
   signUrgencyService,

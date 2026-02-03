@@ -43,7 +43,7 @@ export default async function Layout({
         <WaitingState />
       </div>
       
-      <div className={clsx("my-4 text-center py-1",
+      <div className={clsx("my-4 text-center py-2 rounded-lg",
         {"bg-red-500 animate-pulse": patient.screening.priority === "red"},
         {"bg-blue-500": patient.screening.priority === "blue"},
         {"bg-green-500": patient.screening?.priority === "green"},

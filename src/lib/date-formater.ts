@@ -32,10 +32,24 @@ function getDataToDateTimeLocal(date: Date | string){
   return new Date(dateTime.getTime() - dateTime.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
 }
 
+function parseDateTimeLocal(date: string): string {
+  if(!date)
+    return "";
+
+  const [datePart, timePart] = date.split(" ");
+  const [day, month, year] = datePart.split("/").map(Number);
+  const [hours, minutes] = timePart.split(":").map(Number);
+  const dateObj = new Date(year, month - 1, day, hours, minutes);
+  const localDate = new Date(dateObj.getTime() - dateObj.getTimezoneOffset() * 60000);
+  
+  return localDate.toISOString().slice(0, 16);
+}
+
 export {
   getDateInSlashFormat,
   getDateInDashFormat,
   getDataAndHoursFormat,
   getDataToInputLocalTime,
-  getDataToDateTimeLocal
+  getDataToDateTimeLocal,
+  parseDateTimeLocal
 }
