@@ -30,17 +30,6 @@ function  patientRecord({
   group,
   acess
 }: PatientRecord){
-  /*const fonts = {
-    "Roboto-Bold": { data: "/fonts/roboto/Roboto-Bold.ttf" },
-    "Roboto": { data: "/fonts/roboto/Roboto-Regular.ttf", fallback: true },
-    "Roboto-ExtraBold": { data: "/fonts/roboto/Roboto-ExtraBold.ttf" },
-  };
-
-  const templateWithFonts: Template = {
-    ...patientPlug,
-    fonts
-  };*/
-
   try{
     const _group = JSON.parse(group) as GroupT;
 
