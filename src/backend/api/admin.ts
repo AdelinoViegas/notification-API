@@ -37,7 +37,7 @@ export async function getUser(id: string){
 }
 
 // chamadas do usuário
-export async function getUserRoles(){
+async function getUserRoles(){
   clientprivInstance.defaults.headers.common["Authorization"] = `Bearer ${await getUserToken()}`
   const res = await clientprivInstance.get<UserRole[]>("/users/myProfile/roles");
   return res.data;
