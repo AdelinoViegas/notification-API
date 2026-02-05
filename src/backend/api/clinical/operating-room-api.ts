@@ -340,7 +340,7 @@ async function signOperatingRoom(prev: unknown, formData: FormData){
         antibiotics: antibiotics || discharge?.postOperativeIndications?.antibiotics as string,
       }
     }
-
+    
     if(!hasPatientOperatingRoom)     
       await operatingRoomModel.create({ 
         scheduleId, 
@@ -385,6 +385,7 @@ async function getOperatingRoom(scheduleId: string, served = false){
   const imagingResult = await operatingRoomResultModel.findOne({ _id: operatingRoom?.preoperativeEvaluation?.imagingTests?.externalId });
   const schedule = await scheduleSugeryModel.findById({_id: scheduleId}).select({requestingService: 1});
   const vitalSignal:{
+    _id: string,
     date: Date, 
     fr: number,
     pulse: number, 
@@ -395,6 +396,7 @@ async function getOperatingRoom(scheduleId: string, served = false){
 
   operatingRoom?.postAnestheticRecovery?.vitalSignal.forEach((props) => {
     vitalSignal.push({
+      _id: props._id.toString(),
       date: props.date as Date, 
       fr: props.fr as number,
       pulse: props.pulse as number, 
@@ -791,6 +793,54 @@ async function getSurgeriesHistory(id: string){
   }
 }
 
+async function updateVitalSignals(prev: unknown, formData: FormData){
+  try{
+    const scheduleId = formData.get("scheduleId");
+    const vitalSignalId = formData.get("vitalSignalId");
+    const date = formData.get("date");
+    const fr = Number(formData.get("fr"));
+    const pulse = Number(formData.get("pulse"));
+    const spo2 = Number(formData.get("spo2"));
+    const ta = formData.get("ta"); 
+    const t = Number(formData.get("t"));
+    console.log(scheduleId, vitalSignalId, date, fr, pulse, spo2, ta, t);
+    const hasPatientOperatingRoom = await operatingRoomModel.findOne({ scheduleId });
+
+    if(!hasPatientOperatingRoom)
+      throw new Error("Dados do paciente inexistentes!", { cause: "dados não encontrados" });
+
+    if(hasPatientOperatingRoom)
+      await operatingRoomModel.updateOne(
+        { _id: hasPatientOperatingRoom._id },
+        {
+          $set: {
+            [`postAnestheticRecovery.vitalSignal.$[entry].date`]: date,
+            [`postAnestheticRecovery.vitalSignal.$[entry].fr`]: fr,
+            [`postAnestheticRecovery.vitalSignal.$[entry].pulse`]: pulse,
+            [`postAnestheticRecovery.vitalSignal.$[entry].spo2`]: spo2,
+            [`postAnestheticRecovery.vitalSignal.$[entry].ta`]: ta,
+            [`postAnestheticRecovery.vitalSignal.$[entry].t`]: t,
+          },
+        },
+        {
+          arrayFilters: [{ "entry._id": vitalSignalId }],
+        }
+      );
+    
+    return {
+      message: "Sinais vitais atualizados com sucesso!",
+      status: true
+    }
+  }catch(err){
+    const error = err as Error;
+
+    return {
+      message: error.cause ? error.message : "Não foi possivel finalizar!",
+      status: false
+    }
+  }
+}
+
 export {
   getPatients,
   getPatient,
@@ -806,4 +856,5 @@ export {
   registerRequest,
   closeRequest,
   getSurgeriesHistory,
+  updateVitalSignals,
 }
