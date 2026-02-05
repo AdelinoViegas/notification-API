@@ -1,15 +1,15 @@
 "use client";
 
-import { useState } from "react";
-import { getDataAndHoursFormat } from "@/lib/date-formater";
+import { SetStateAction, useState } from "react";
+import { getDataAndHoursFormat, parseDateTimeLocal } from "@/lib/date-formater";
 import Accordium from "@/components/ui/accordium";
 import Modal from "@/components/modal";
 import Button from "@/components/ui/button";
 import Table from "@/components/table";
 import InputField from "@/components/ui/input-field";
-import { BiPlus } from "react-icons/bi";
 
 type vitalSignalProps = {
+    _id?: string,
     date: Date,
     fr: number,
     pulse: number,
@@ -20,17 +20,22 @@ type vitalSignalProps = {
 
 export default function VitalSignalInBlock({
   vitalSignal,
-  scheduleId,
-  action, 
+  action,
+  selectedId,
+  setSelectedId,
+  scheduleId
 }:{ 
   action : (payload: FormData)=> void,
-  scheduleId: string,
   vitalSignal: vitalSignalProps,
+  selectedId?: string,
+  setSelectedId: (value: SetStateAction<string>) => void,
+  scheduleId: string,
 }){
+  const selectedData: vitalSignalProps = [];
   const [ modalState, setModalState ] = useState(false);
   const data: Array<{ id: string; row: string[] }> = [];
 
-  if(vitalSignal)
+  if(vitalSignal){
     vitalSignal.forEach((props, index) => {
       data.push({
         id: String(index),
@@ -44,17 +49,23 @@ export default function VitalSignalInBlock({
         ]
     })});
 
+    selectedData.push(vitalSignal[Number(selectedId)]); 
+  }
+
     return(
     <Accordium className="bg-primary/15 hover:bg-primary/20" title="Sinais Vitais à admissão">
       <Button 
         type="button" 
-        onClick={()=>setModalState(true)}
+        onClick={()=>{
+          setSelectedId("");
+          setModalState(true);
+        }}
       >
-        <BiPlus />
         Novo
       </Button>
  
       <Table
+        dataEdit
         columns={[
           "Data-hora",
           "FC(pulso)",
@@ -65,6 +76,8 @@ export default function VitalSignalInBlock({
           
         ]} 
         rows={data}
+        openModal={setModalState}
+        setParams={setSelectedId}
       />
 
       <Modal
@@ -80,11 +93,19 @@ export default function VitalSignalInBlock({
             defaultValue={scheduleId}
           />
 
+          <input 
+            className="hidden"
+            name="vitalSignalId"
+            defaultValue={selectedData[0]?._id}
+          />
+
           <div className="grid grid-cols-2 gap-x-3">
             <InputField
               type="datetime-local"
               textLabel="Data e hora"
-              name="date" 
+              name="date"
+              defaultValue={selectedId?parseDateTimeLocal(getDataAndHoursFormat(selectedData[0]?.date)):""}
+              required
             />
 
             <InputField
@@ -92,6 +113,7 @@ export default function VitalSignalInBlock({
               textLabel="FC(pulso)"
               name="pulse" 
               placeholder="pulso"
+              defaultValue={selectedId?selectedData[0]?.pulse:""}
               required
             />
 
@@ -100,6 +122,7 @@ export default function VitalSignalInBlock({
               textLabel="FR"
               name="fr" 
               placeholder="fr"
+              defaultValue={selectedId?selectedData[0]?.fr:""}
               required
             />
             
@@ -108,6 +131,7 @@ export default function VitalSignalInBlock({
               textLabel="SpO2"
               name="spo2" 
               placeholder="SpO2"
+              defaultValue={selectedId?selectedData[0]?.spo2:""}
               required 
             />
 
@@ -119,6 +143,7 @@ export default function VitalSignalInBlock({
               pattern="^\d+(?:[.,]\d+)?\/\d+(?:[.,]\d+)?$"
               required 
               placeholder="t/a"
+              defaultValue={selectedId?selectedData[0]?.ta:""}
             />
 
             <InputField
@@ -127,6 +152,7 @@ export default function VitalSignalInBlock({
               name="t" 
               required
               placeholder="tsª"
+              defaultValue={selectedId?selectedData[0]?.t:""}
             />
           </div>
 
