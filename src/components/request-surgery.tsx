@@ -8,6 +8,7 @@ import { useParams, usePathname, useRouter } from "next/navigation";
 import { registerRequest } from "@/backend/api/clinical/office-api";
 import { toast } from "react-toastify";
 import { getServices } from "@/backend/api/clinical/scheduling-api";
+import InputDetails from "./ui/input-details";
 
 export default function RequestSurgery(){
   const [ modalState, setModalState ] = useState(false);
@@ -57,6 +58,14 @@ export default function RequestSurgery(){
             required
             options={surgeries} 
           />
+
+          <InputDetails
+            textLabel="Motivo"
+            placeholder="Descreva o motivo do pedido..."
+            required
+            name="reason" 
+          />
+          
           <Button>Enviar</Button>
         </form>
       </Modal>
