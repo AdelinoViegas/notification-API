@@ -1,16 +1,18 @@
 import { Schema } from "mongoose";
 
+const vitalSignal = new Schema({
+  date: Date,
+  fr: Number,
+  pulse: Number,
+  spo2: Number,
+  ta: String,
+  t: Number,
+});
+
 const postAnestheticRecovery = new Schema({
   checkInTime: Date,
   checkOutTime: Date,
-  vitalSignal: [{
-    date: Date,
-    fr: Number,
-    pulse: Number,
-    spo2: Number,
-    ta: String,
-    t: Number,
-  }],
+  vitalSignal: [vitalSignal],
   levelofConsciousness: {
     motorActivity: Number,
     respiration: Number,

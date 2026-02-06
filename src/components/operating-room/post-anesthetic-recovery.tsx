@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useActionState, useEffect, useState } from "react";
+import { FormEvent, useActionState, useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { getDataToDateTimeLocal } from "@/lib/date-formater";
 import { useRouter } from "next/navigation";
@@ -10,7 +10,14 @@ import InputField from "@/components/ui/input-field";
 import Selection from "@/components/ui/selection";
 import ButtonEdit from "@/components/ui/button-edit";
 import VitalSignalInBlock from "@/components/vital-signals-block";
-import { signOperatingRoom } from "@/backend/api/clinical/operating-room-api";
+import { signOperatingRoom, updateVitalSignals } from "@/backend/api/clinical/operating-room-api";
+import { 
+  activityOptions,
+  circulationOptions,
+  consciousnessOptions,
+  respirationOptions,
+  saturationOptions
+} from "@/backend/api/clinical/translator";
 
 type recovery = {
   postAnestheticRecovery:{
@@ -57,7 +64,14 @@ postAnestheticRecovery:{
 }){
   const values = [motorActivity, respiration, circulation, consciousness, saturation];
   const data = values.map(value => value !== undefined?String(value):undefined);
-  const [state, action] = useActionState(signOperatingRoom, { message:"", status: false });
+  const [selectedId , setSelectedId] = useState("");
+  const actionWrapper = useCallback( async (prevState: unknown, formData: FormData) => {
+    if(selectedId) 
+      return updateVitalSignals(prevState, formData);
+    
+    return signOperatingRoom(prevState, formData);
+  },[selectedId]);
+  const [state, action] = useActionState(actionWrapper, { message:"", status: false });
   const [edit, setEdit] = useState<Record<string, boolean>>({
     dateTime: true,
     medication: true,
@@ -90,36 +104,6 @@ postAnestheticRecovery:{
         setEdit( prev => ({...prev, [value]: !prev[value]}));
   }
 
-  const activityOptions = [
-    {_id:"0", label:"Sem movimentos"},
-    {_id:"1", label:"Movimenta 2 membros"},
-    {_id:"2", label:"Movimenta 4 membros"},
-  ];
-
-  const respirationOptions = [
-    {_id:"0", label:"Apneia"},
-    {_id:"1", label:"Dispneia/respiração superficial"},
-    {_id:"2", label:"Respira profundamente e tosse"},
-  ];
-  
-  const circulationOptions = [
-    {_id:"0", label:"P/A alterada em +50% do valor pré-anestésico"},
-    {_id:"1", label:"P/A dentro de +/-20% a 50% do valor pré-anestésico"},
-    {_id:"2", label:"P/A dentro de +/-20% do valor pré-anestésico"},
-  ];
-  
-  const consciousnessOptions = [
-    {_id:"0", label:"Não responde"},
-    {_id:"1", label:"Acordado e confuso/alucinado"},
-    {_id:"2", label:"Acordado e orientado"},
-  ];
-  
-  const saturationOptions = [
-    {_id:"0", label:"SpO2 < 90% com O2 suplementar"},
-    {_id:"1", label:"Necessita de oxigénio para manter sua SpO2 > 90%"},
-    {_id:"2", label:"Manter SpO2 > 92% em ar ambiente"},
-  ];
-
   return(
     <div className="flex flex-col gap-y-4 py-8">         
       <Accordium title="Horários de entrada">
@@ -129,7 +113,7 @@ postAnestheticRecovery:{
             name="scheduleId"
             defaultValue={scheduleId}
           />
-
+/
           <InputField
             className="w-96"
             textLabel="Hora de entrada"
@@ -149,7 +133,13 @@ postAnestheticRecovery:{
         </form>
       </Accordium>
       
-      <VitalSignalInBlock {...{vitalSignal}} {...{scheduleId}} {...{action}}/>
+      <VitalSignalInBlock
+        {...{scheduleId}} 
+        {...{vitalSignal}} 
+        {...{action}}
+        {...{selectedId}}
+        {...{setSelectedId}}
+      />
 
       <Accordium title="Nível de conciência">
         <form {...{action}} onSubmit={submitUpdate}>

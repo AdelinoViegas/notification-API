@@ -62,7 +62,7 @@ import {
   nursingSchema, 
   sectionSchema 
 } from "@/backend/schemas/hospitalization";
-import { operatingRoomResultSchema, operatingRoomSchema } from "@/backend/schemas/opetating-room";
+import { operatingRoomResultSchema, operatingRoomSchema } from "@/backend/schemas/operating-room";
 
 const clinical = createConnection(process.env.MONGO_URL as string, {
   dbName: process.env.MONGO_DB_NAME,
