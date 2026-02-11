@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useActionState, useEffect, useRef } from "react";
+import { toast } from "react-toastify";
+import Selection, { SelectionOption } from "@/components/ui/selection";
 import Modal from "@/components/modal";
 import Button from "@/components/ui/button";
 import InputField from "@/components/ui/input-field";
@@ -12,9 +14,6 @@ import {
   signNursing 
 } from "@/backend/api/clinical/hospitalization-api";
 
-import { toast } from "react-toastify";
-import Selection, { SelectionOption } from "@/components/ui/selection";
-
 export default function RegisterNursing(){
   const [ state, action ] = useActionState(signNursing, { message: "", status: false }); 
   const [ serviceState, serviceAction ]= useActionState(signInternalService, { message: "", status: false});
@@ -22,13 +21,11 @@ export default function RegisterNursing(){
   const [ modal, setModal ] = useState(false);
   const [ modalService, setModalService ] = useState(false);
   const [ newNursingState, setNewNursingState ] = useState(false);
-  
   const [ internalServices, setInternalServices ] = useState<SelectionOption[]>([]);
   const [ sections, setSections ] = useState<SelectionOption[]>([]);
   const [ nursings, setNursings ] = useState<SelectionOption[]>([]);
   const [ selectedSection, setSelectedSection ] = useState<string>();
   const [ selectedService, setSelectedService ] = useState<string>();
-
   const formRef = useRef<HTMLFormElement>(null);
 
   const reset = ()=>{
