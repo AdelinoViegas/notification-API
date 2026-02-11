@@ -22,6 +22,7 @@ import { inferRegexPattern } from "@/lib/regexp";
 
 export async function getPatients({
   page,
+  name,
   served,
   filterByUserId,
   strictQuery
@@ -31,6 +32,7 @@ export async function getPatients({
   served?: boolean;
   filterByUserId?: boolean;
   strictQuery?: boolean; // busca sem a omissão de undefined
+  name?: string;
 }){
   try{
     const queryParams = strictQuery 
@@ -90,13 +92,15 @@ export async function getPatients({
       });
     }
 
+    const patientData = name?formated.filter((item)=>item.fullname.match(new RegExp(`^${name}`, 'i'))):formated;
+
     return {
-      patients: formated.slice(0, 9),
-      availablePages: formated.length/10,//formated.length < 11 
+      patients: patientData.slice(0, 9),
+      availablePages: patientData.length/10,//formated.length < 11
         // ? 1
         // : formated.length/10,
       currentPage: page,
-      totalItems: formated.length
+      totalItems: patientData.length
     }
   }catch (e){
     console.error(e);

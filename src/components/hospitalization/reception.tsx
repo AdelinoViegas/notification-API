@@ -7,14 +7,18 @@ import Refresh from "@/components/refresh";
 import { getPatients } from "@/backend/api/clinical/hospitalization-api";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
 
-export default async function Reception({ page }: {
-  fullname?: string;
+export default async function Reception({ 
+    patientName,
+    page,
+  }: {
+  patientName?: string;
   page?: number;
 }){
   const patients = await getPatients({ 
     page: page?Number(page):1,
     filterByUserId: true,
-    strictQuery: true
+    strictQuery: true,
+    name: patientName
   });
 
   const rows = formater(patients.patients, {
@@ -39,7 +43,6 @@ export default async function Reception({ page }: {
           filterKey="name"
           label="Filtar por nome"
           placeholder="Buscar pelo nome do utente..."
-          disabled
         />
       </div>
 
