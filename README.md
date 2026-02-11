@@ -5,7 +5,7 @@ O modulo responsável pela gestão de processos clínicos dentro da plataforma M
 ## Instalação
 
 Para a instalação do modulo clinico configurar os serviços abaixo:
-* [Api Gateway Master]() - rodar em Pod
+* [Api Gateway Master](https://github.com/socompser/api-gateway-master) - rodar em Pod
 * [Painel Web Admin](https://github.com/socompser/web-master-admin) - rodar em container
 * **MongoDb** (rodar em container ou configurá-lo em bare metal)
 
