@@ -65,12 +65,13 @@ export async function getPatients({
       const patientState = await patientStateModel.findOne({ patientId: patient.patientId });
       const resolvedPatientState = patientState 
         ? patientStates.find(state => state._id === patientState.stateId)?.label
-        : "Sem estado"
-      const bed = await bedNursingModel.findById({ _id: inHospitalized?.bedId });
-      const nursing = await nursingModel.findById({ _id: bed?.nursingId });
-      const section = await sectionModel.findById({ _id: nursing?.sectionId });
-
+        : "Sem estado";
+        
       if(inHospitalized){
+        const bed = await bedNursingModel.findById({ _id: inHospitalized?.bedId });
+        const nursing = await nursingModel.findById({ _id: bed?.nursingId });
+        const section = await sectionModel.findById({ _id: nursing?.sectionId })
+      
         formated.push({
           id: patient?.patientId?.toString() as string,
           service: serviceSource?.label as string ?? "Desconhecido",
@@ -95,16 +96,20 @@ export async function getPatients({
         fullname: personalData?.fullname as string,
         currentState: resolvedPatientState,
         user: doctor?.fullname as string,
-        sectionId: section?._id.toString() as string,
-        nursingId: nursing?._id.toString() as string
       });
     }
 
-    const patientData = formated.filter((item)=>
-      (!name || item.fullname.toLowerCase().startsWith(name.toLowerCase())) &&
-      (!section || item.sectionId.toLowerCase().startsWith(section.toLowerCase())) &&
-      (!nursing || item.nursingId.toLowerCase().startsWith(nursing.toLowerCase()))
-    );
+    const patientData = formated.filter((item)=>{
+      if(item.sectionId || item.nursingId)
+        return (
+          (!name || item.fullname.toLowerCase().startsWith(name.toLowerCase())) &&
+          (!section || item.sectionId.toLowerCase().startsWith(section.toLowerCase())) &&
+          (!nursing || item.nursingId.toLowerCase().startsWith(nursing.toLowerCase()))
+        );
+      
+      return (!name || item.fullname.toLowerCase().startsWith(name.toLowerCase())) 
+
+     });
 
     return {
       patients: patientData.slice(0, 9),
