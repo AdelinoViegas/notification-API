@@ -22,15 +22,21 @@ import { inferRegexPattern } from "@/lib/regexp";
 
 export async function getPatients({
   page,
+  name,
   served,
   filterByUserId,
-  strictQuery
+  strictQuery,
+  section,
+  nursing
 }: {
   fullname?: string;
   page: number;
   served?: boolean;
   filterByUserId?: boolean;
   strictQuery?: boolean; // busca sem a omissão de undefined
+  name?: string;
+  section?: string;
+  nursing?: string;
 }){
   try{
     const queryParams = strictQuery 
@@ -59,12 +65,13 @@ export async function getPatients({
       const patientState = await patientStateModel.findOne({ patientId: patient.patientId });
       const resolvedPatientState = patientState 
         ? patientStates.find(state => state._id === patientState.stateId)?.label
-        : "Sem estado"
-
+        : "Sem estado";
+        
       if(inHospitalized){
         const bed = await bedNursingModel.findById({ _id: inHospitalized?.bedId });
         const nursing = await nursingModel.findById({ _id: bed?.nursingId });
-
+        const section = await sectionModel.findById({ _id: nursing?.sectionId })
+      
         formated.push({
           id: patient?.patientId?.toString() as string,
           service: serviceSource?.label as string ?? "Desconhecido",
@@ -75,6 +82,8 @@ export async function getPatients({
           processNumber: inHospitalized?.processNumber,
           bed: bed?.bed,
           nursing: nursing?.name,
+          sectionId: section?._id.toString() as string,
+          nursingId: nursing?._id.toString() as string
         });
 
         continue;
@@ -86,17 +95,29 @@ export async function getPatients({
         createdAt: patient?.createdAt as Date,
         fullname: personalData?.fullname as string,
         currentState: resolvedPatientState,
-        user: doctor?.fullname as string
+        user: doctor?.fullname as string,
       });
     }
 
+    const patientData = formated.filter((item)=>{
+      if(item.sectionId || item.nursingId)
+        return (
+          (!name || item.fullname.toLowerCase().startsWith(name.toLowerCase())) &&
+          (!section || item.sectionId.toLowerCase().startsWith(section.toLowerCase())) &&
+          (!nursing || item.nursingId.toLowerCase().startsWith(nursing.toLowerCase()))
+        );
+      
+      return (!name || item.fullname.toLowerCase().startsWith(name.toLowerCase())) 
+
+     });
+
     return {
-      patients: formated.slice(0, 9),
-      availablePages: formated.length/10,//formated.length < 11 
+      patients: patientData.slice(0, 9),
+      availablePages: patientData.length/10,//formated.length < 11
         // ? 1
         // : formated.length/10,
       currentPage: page,
-      totalItems: formated.length
+      totalItems: patientData.length
     }
   }catch (e){
     console.error(e);
@@ -248,7 +269,17 @@ export async function getInternalServices(){
   }
 }
 
-export async function getBeds(nursingId?: string){
+export async function getBeds({
+  service,
+  nursing,
+  section,
+  nursingId 
+}:{
+  service?: string,
+  nursing?: string,
+  section?: string,
+  nursingId?: string,
+}){
   try{
     const beds = await bedNursingModel.find(omitUndefined({ nursingId }));
     const formatedBeds = [];
@@ -272,14 +303,23 @@ export async function getBeds(nursingId?: string){
         bed: bed?.bed as string,
         _id: bed._id.toString(),
         label: bed?.bed as string,
+        sectionId: section._id.toString(),
+        nursingId: nursing._id.toString(),
+        serviceId: internalService._id.toString()
       });
     }
+    
+    const data = formatedBeds.filter((item)=>
+      (!section || item.sectionId.toLowerCase().startsWith(section.toLowerCase())) && 
+      (!service || item.serviceId.toLowerCase().startsWith(service.toLowerCase())) &&
+      (!nursing || item.nursingId.toLowerCase().startsWith(nursing.toLowerCase()))
+    );
 
     return {
-      beds: formatedBeds,
-      availablePages:  Number(formatedBeds.length/10 < 1 ? 1: formatedBeds.length/10),
+      beds: data,
+      availablePages:  Number(data.length/10 < 1 ? 1: data.length/10),
       currentPage: 1,
-      totalItems: formatedBeds.length
+      totalItems: data.length
     }
   }catch (e) {
     console.error(e);
@@ -333,9 +373,9 @@ export async function canAddBedToNursing(id: string){
     const nursing = await nursingModel.findById({ _id: id });
     
     if(!nursing) throw new Error("Cama não alocada!");
-    
-    const beds = (await getBeds(id)).totalItems;
-    
+
+    const beds = (await getBeds({nursingId: id})).totalItems;
+
     if(beds >= nursing.maxBedNumber) throw new Error("Limite de cama atingido!");
     
     return {

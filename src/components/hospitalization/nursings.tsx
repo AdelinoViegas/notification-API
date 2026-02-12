@@ -7,13 +7,18 @@ import RegisterNursing from "./register-nursings";
 import { getBeds } from "@/backend/api/clinical/hospitalization-api";
 import { getDateInSlashFormat } from "@/lib/date-formater";
 
-export default async function Nursings({}: {
-  fullname?: string;
+export default async function Nursings({
+  service,
+  nursing, 
+  section
+}: {
   p?: number;
+  service?: string;
+  nursing?: string;
+  section: string; 
 }){
-  // const { name, page } = await searchParams;
-
-  const beds = await getBeds();
+  
+  const beds = await getBeds({service, nursing, section});
 
   const rows = formater(beds.beds, {
     filterKey: [
@@ -39,7 +44,7 @@ export default async function Nursings({}: {
           <RegisterNursing />
         </div>
 
-        <Filter disabled />
+        <Filter />
       </div>
 
       <Table

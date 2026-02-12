@@ -9,16 +9,25 @@ import { getDataAndHoursFormat } from "@/lib/date-formater";
 import Alert from "@/components/ui/alert";
 import { getMyClinicalProfile } from "@/backend/api/clinical/api";
 
-export default async function Hospitalized({ page }: {
-  pfn?: string;
-  _fn?: string;
+export default async function Hospitalized({
+   page,
+   name, 
+   section,
+   nursing 
+}: {
+  name?: string;
+  section?: string;
+  nursing?: string;
   page?: number;
 }){
   const patients = await getPatients({ 
     page: page?Number(page):1,
     served: true,
     filterByUserId: true,
-    strictQuery: true
+    strictQuery: true,
+    name,
+    section,
+    nursing,
   });
 
   const intService = (await getMyClinicalProfile())?.internalService;
@@ -58,16 +67,14 @@ export default async function Hospitalized({ page }: {
         />
         <div className="flex gap-x-3 items-top">
           <Filter
-            disabled 
             internalServiceId={intService?.id} 
           />
         
           <Search
             className="flex items-center gap-3"
-            filterKey="pfn" // patient fullname
+            filterKey="name" // patient fullname
             label="Filtar por nome"
             placeholder="Buscar pelo nome do utente..."
-            disabled
           />
         </div>
       </div>
@@ -83,6 +90,7 @@ export default async function Hospitalized({ page }: {
           "Médico Assistente"
         ]} 
         rows={rows}
+        rowLength={6}
       />
 
       <Pagination
