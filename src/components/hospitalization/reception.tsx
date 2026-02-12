@@ -8,17 +8,17 @@ import { getPatients } from "@/backend/api/clinical/hospitalization-api";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
 
 export default async function Reception({ 
-  patientName,
+  name,
   page,
 }: {
-  patientName?: string;
+  name?: string;
   page?: number;
 }){
   const patients = await getPatients({ 
     page: page?Number(page):1,
     filterByUserId: true,
     strictQuery: true,
-    name: patientName
+    name,
   });
 
   const rows = formater(patients.patients, {

@@ -25,7 +25,9 @@ export async function getPatients({
   name,
   served,
   filterByUserId,
-  strictQuery
+  strictQuery,
+  section,
+  nursing
 }: {
   fullname?: string;
   page: number;
@@ -33,6 +35,8 @@ export async function getPatients({
   filterByUserId?: boolean;
   strictQuery?: boolean; // busca sem a omissão de undefined
   name?: string;
+  section?: string;
+  nursing?: string;
 }){
   try{
     const queryParams = strictQuery 
@@ -62,11 +66,11 @@ export async function getPatients({
       const resolvedPatientState = patientState 
         ? patientStates.find(state => state._id === patientState.stateId)?.label
         : "Sem estado"
+      const bed = await bedNursingModel.findById({ _id: inHospitalized?.bedId });
+      const nursing = await nursingModel.findById({ _id: bed?.nursingId });
+      const section = await sectionModel.findById({ _id: nursing?.sectionId });
 
       if(inHospitalized){
-        const bed = await bedNursingModel.findById({ _id: inHospitalized?.bedId });
-        const nursing = await nursingModel.findById({ _id: bed?.nursingId });
-
         formated.push({
           id: patient?.patientId?.toString() as string,
           service: serviceSource?.label as string ?? "Desconhecido",
@@ -77,6 +81,8 @@ export async function getPatients({
           processNumber: inHospitalized?.processNumber,
           bed: bed?.bed,
           nursing: nursing?.name,
+          sectionId: section?._id.toString() as string,
+          nursingId: nursing?._id.toString() as string
         });
 
         continue;
@@ -88,11 +94,17 @@ export async function getPatients({
         createdAt: patient?.createdAt as Date,
         fullname: personalData?.fullname as string,
         currentState: resolvedPatientState,
-        user: doctor?.fullname as string
+        user: doctor?.fullname as string,
+        sectionId: section?._id.toString() as string,
+        nursingId: nursing?._id.toString() as string
       });
     }
 
-    const patientData = name?formated.filter((item)=>item.fullname.match(new RegExp(`^${name}`, 'i'))):formated;
+    const patientData = formated.filter((item)=>
+      (!name || item.fullname.toLowerCase().startsWith(name.toLowerCase())) &&
+      (!section || item.sectionId.toLowerCase().startsWith(section.toLowerCase())) &&
+      (!nursing || item.nursingId.toLowerCase().startsWith(nursing.toLowerCase()))
+    );
 
     return {
       patients: patientData.slice(0, 9),
@@ -293,9 +305,9 @@ export async function getBeds({
     }
     
     const data = formatedBeds.filter((item)=>
-      (!section || item.sectionId.startsWith(section)) && 
-      (!service || item.serviceId.startsWith(service)) &&
-      (!nursing || item.nursingId.startsWith(nursing))
+      (!section || item.sectionId.toLowerCase().startsWith(section.toLowerCase())) && 
+      (!service || item.serviceId.toLowerCase().startsWith(service.toLowerCase())) &&
+      (!nursing || item.nursingId.toLowerCase().startsWith(nursing.toLowerCase()))
     );
 
     return {
