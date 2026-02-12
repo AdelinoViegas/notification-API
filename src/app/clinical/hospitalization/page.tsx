@@ -31,8 +31,8 @@ export default async function Page({
           { path: "n", title: "Enfermaria" }
         ]}
       />
-      { route === "r" && <Reception patientName={name}/> }
-      { route === "h" && <Hospitalized /> }
+      { route === "r" && <Reception {...{name}}/> }
+      { route === "h" && <Hospitalized {...{name}} {...{section}} {...{nursing}}/> }
       { route === "n" && <Nursings {...{service}} {...{section}} {...{nursing}}/>}
     </div>
   )
