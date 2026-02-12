@@ -23,7 +23,7 @@ export default function Page(){
     if(state.message)
       if(state.status)
         toast.success(state.message, { 
-          onOpen: () => router.replace("/clinical/urgency-bank")
+          onOpen: () => router.replace("/clinical/hospitalization?r=h")
         });
       else
         toast.error(state.message);
