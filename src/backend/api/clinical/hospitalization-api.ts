@@ -252,7 +252,17 @@ export async function getInternalServices(){
   }
 }
 
-export async function getBeds(nursingId?: string){
+export async function getBeds({
+  service,
+  nursing,
+  section,
+  nursingId 
+}:{
+  service?: string,
+  nursing?: string,
+  section?: string,
+  nursingId?: string,
+}){
   try{
     const beds = await bedNursingModel.find(omitUndefined({ nursingId }));
     const formatedBeds = [];
@@ -276,14 +286,23 @@ export async function getBeds(nursingId?: string){
         bed: bed?.bed as string,
         _id: bed._id.toString(),
         label: bed?.bed as string,
+        sectionId: section._id.toString(),
+        nursingId: nursing._id.toString(),
+        serviceId: internalService._id.toString()
       });
     }
+    
+    const data = formatedBeds.filter((item)=>
+      (!section || item.sectionId.startsWith(section)) && 
+      (!service || item.serviceId.startsWith(service)) &&
+      (!nursing || item.nursingId.startsWith(nursing))
+    );
 
     return {
-      beds: formatedBeds,
-      availablePages:  Number(formatedBeds.length/10 < 1 ? 1: formatedBeds.length/10),
+      beds: data,
+      availablePages:  Number(data.length/10 < 1 ? 1: data.length/10),
       currentPage: 1,
-      totalItems: formatedBeds.length
+      totalItems: data.length
     }
   }catch (e) {
     console.error(e);
@@ -337,9 +356,9 @@ export async function canAddBedToNursing(id: string){
     const nursing = await nursingModel.findById({ _id: id });
     
     if(!nursing) throw new Error("Cama não alocada!");
-    
-    const beds = (await getBeds(id)).totalItems;
-    
+
+    const beds = (await getBeds({nursingId: id})).totalItems;
+
     if(beds >= nursing.maxBedNumber) throw new Error("Limite de cama atingido!");
     
     return {

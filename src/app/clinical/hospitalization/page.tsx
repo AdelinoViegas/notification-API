@@ -5,9 +5,19 @@ import Nursings from "@/components/hospitalization/nursings";
 
 export const dynamic = "force-dynamic";
 
-export default async function Page({ searchParams }:{ searchParams: Promise<{ r: "r" | "h" | "n", name: string }>}){
-  const { r: route, name } = await searchParams;
-  
+export default async function Page({ 
+  searchParams 
+}:{ 
+  searchParams: Promise<{
+    r: "r" | "h" | "n", 
+    name: string,
+    _fst: string;
+    _fs: string;
+    _fn: string; 
+  }>
+}){
+  const { r: route, name, _fst: section , _fs: service, _fn: nursing } = await searchParams;
+
   return(
     <div>
       <TabNav
@@ -23,7 +33,7 @@ export default async function Page({ searchParams }:{ searchParams: Promise<{ r:
       />
       { route === "r" && <Reception patientName={name}/> }
       { route === "h" && <Hospitalized /> }
-      { route === "n" && <Nursings />}
+      { route === "n" && <Nursings {...{service}} {...{section}} {...{nursing}}/>}
     </div>
   )
 }

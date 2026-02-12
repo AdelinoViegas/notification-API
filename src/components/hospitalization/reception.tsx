@@ -8,9 +8,9 @@ import { getPatients } from "@/backend/api/clinical/hospitalization-api";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
 
 export default async function Reception({ 
-    patientName,
-    page,
-  }: {
+  patientName,
+  page,
+}: {
   patientName?: string;
   page?: number;
 }){
