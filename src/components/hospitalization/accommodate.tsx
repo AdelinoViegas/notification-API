@@ -39,7 +39,7 @@ export default function Accommodate({ internalServiceId }: { internalServiceId: 
     })
       .then(setNursings);
 
-    getBeds(selectedNursing).then(e => setBeds(e.beds));
+    getBeds({ nursingId: selectedNursing }).then(e => setBeds(e.beds));
 
   }, [state, selectedSection, selectedNursing]);
 
