@@ -53,11 +53,10 @@ export default function PreoperativeEvaluation({
     if(state.message)
       if(state.status)
         toast.success(state.message, {
-          autoClose: 3500,
-          onClose: ()=> router.refresh(),
+          onClose: ()=> router.refresh()
         });
       else
-        toast.error(state.message, {autoClose: 3500});
+        toast.error(state.message);
   }, [state, router]);
 
   const submitUpdate = (event: FormEvent) => {
@@ -126,10 +125,10 @@ export default function PreoperativeEvaluation({
                 description={preoperativeEvaluation.laboratoryTests.description}
                 {...{patientId}}
                 {...{operatingRoomId}}
-                />
+              />
           </Accordium>
 
-          <Accordium title="Exames imagiológicos">
+          {<Accordium title="Exames imagiológicos">
               <UploadExamBlock
                 value={edit}
                 setValue={setEdit} 
@@ -139,7 +138,7 @@ export default function PreoperativeEvaluation({
                 {...{patientId}}
                 {...{operatingRoomId}}
               />
-          </Accordium>
+          </Accordium>}
       </div>
       
       <form {...{action}} onSubmit={submitUpdate}>
