@@ -91,7 +91,7 @@ export default function CidInputComponent({ defaultValue }: { defaultValue?: str
       <div className="flex gap-x-3">
         <InputField
           textLabel="Nome ou Código CID 10"
-          placeholder="Descreva com precisão a referência da CID 10 ou o código"
+          placeholder="Descreva com precisão"
           onChange={handlerSearchByReference}
         />
 
