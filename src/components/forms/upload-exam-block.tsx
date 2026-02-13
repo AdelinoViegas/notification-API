@@ -9,7 +9,7 @@ import {
   useRef 
 } from "react";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
+import forceRefreshPage from "@/lib/force-refresh";
 import InputField from "@/components/ui/input-field";
 import Tag from "@/components/ui/tag";
 import ButtonEdit from "@/components/ui/button-edit";
@@ -35,17 +35,18 @@ export function UploadExamBlock({
   description: string;
 }){
   const [ state, action ] = useActionState(uploadExternalExamFile, { message: "", status: false });
-  const router = useRouter();
   const MAX_FILE_SIZE = Math.pow(1024, 2) * 10; // 10 mb 
   const formRef = useRef<HTMLFormElement>(null);
-
+  
   useEffect(()=>{
     if(state.message)
       if(state.status)
-        toast.success(state.message, { onOpen: router.refresh });
+        toast.success(state.message, {
+          onClose: ()=> forceRefreshPage()
+        });
       else 
         toast.warn(state.message)
-  }, [state])
+  }, [state]);
 
   const submitUpdate = (event: FormEvent) => {
     const submitter = (event.nativeEvent as SubmitEvent).submitter as HTMLButtonElement;
@@ -109,6 +110,7 @@ export function UploadExamBlock({
           rows={3}
           disabled={!!description && value.description}
           name="description"
+          required
           placeholder="Descreva os sintomas de alergia"
           defaultValue={description}
       />

@@ -12,7 +12,7 @@ export default function UserViewerButton({ driveFile }: { driveFile: Props }){
   }
 
   return(
-    <button onClick={handlerClick} className="flex justify-start gap-x-3 hover:bg-primary/25 items-center ring-2 ring-blue-500/50  my-3 rounded-lg px-3 py-2">
+    <button type="button" onClick={handlerClick} className="flex justify-start gap-x-3 hover:bg-primary/25 items-center ring-2 ring-blue-500/50  my-3 rounded-lg px-3 py-2">
       { driveFile.extension === "pdf" 
         ? <GrDocumentPdf className="text-red-500 size-8" /> 
         : <FaPhotoVideo className="text-green-500 size-8" /> 
