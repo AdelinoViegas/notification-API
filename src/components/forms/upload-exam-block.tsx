@@ -9,13 +9,13 @@ import {
   useRef 
 } from "react";
 import { toast } from "react-toastify";
+import forceRefreshPage from "@/lib/force-refresh";
 import InputField from "@/components/ui/input-field";
 import Tag from "@/components/ui/tag";
 import ButtonEdit from "@/components/ui/button-edit";
 import InputDetails from "@/components/ui/input-details";
 import ViewUserFile from "@/components/view-user-file-client";
 import { uploadExternalExamFile } from "@/backend/api/clinical/operating-room-api";
-import forceRefreshPage from "@/lib/force-refresh";
 
 export function UploadExamBlock({
   value,
@@ -37,7 +37,7 @@ export function UploadExamBlock({
   const [ state, action ] = useActionState(uploadExternalExamFile, { message: "", status: false });
   const MAX_FILE_SIZE = Math.pow(1024, 2) * 10; // 10 mb 
   const formRef = useRef<HTMLFormElement>(null);
-
+  
   useEffect(()=>{
     if(state.message)
       if(state.status)
