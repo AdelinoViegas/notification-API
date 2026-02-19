@@ -1,12 +1,12 @@
 export interface User {
-  _id: string;
+  id: string;
   fullname: string;
   username: string;
   group: { name: string }
 }
 
 export interface UserRole {
-  _id: string;
+  id: string;
   role: {
     name: string;
     path: string;
@@ -14,7 +14,7 @@ export interface UserRole {
 }
 
 export interface MyProfile {
-  _id: string;
+  id: string;
   fullname: string;
   tel: string;
   email: string;
@@ -32,7 +32,7 @@ export interface FileResponse {
 }
 
 export interface DriveFile {
-  _id: string;
+  id: string;
   authorId: string;
   name: string;
 }
