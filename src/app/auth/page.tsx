@@ -10,8 +10,7 @@ export default function Auth(){
   const router = useRouter();
 
   useEffect(()=>{
-    RESTproxy(token, true)
-    .then(()=>router.replace("/wp"))
+    RESTproxy(token, true).then(()=>router.replace("/wp"))
 
   }, [token]);
   return(

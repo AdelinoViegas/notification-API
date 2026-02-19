@@ -48,6 +48,12 @@ export async function logout(){
   return res.data;
 }
 
+export async function validator(token: string){
+  service.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  const res = await service.get("/ath/users/myProfile/status");
+  return res.status === 200;
+}
+
 export async function getGrantedRoles(){
   try{
     const roles = await getUserRoles();
