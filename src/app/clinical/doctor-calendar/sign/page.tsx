@@ -11,7 +11,7 @@ export default async function Page(){
   
   for(const doctor of doctors)
     doctorListFormated.push({
-      _id: doctor._id,
+      _id: doctor.id,
       label: doctor.fullname,
     });
 
