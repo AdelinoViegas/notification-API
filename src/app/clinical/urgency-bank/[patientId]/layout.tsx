@@ -8,6 +8,7 @@ import DefineState from "@/components/define-state";
 import Hospitalization from "@/components/hospitalization";
 import WaitingState from "@/components/waiting-state";
 import ExternalTransfer from "@/components/external-transfer";
+import Header from "@/components/header";
 
 export default async function Layout({ 
   children,
@@ -43,7 +44,7 @@ export default async function Layout({
         <WaitingState />
       </div>
       
-      <div className={clsx("my-4 text-center py-2 rounded-lg",
+      <div className={clsx("my-4 text-center text-white pt-3 rounded-lg",
         {"bg-red-500 animate-pulse": patient.screening.priority === "red"},
         {"bg-blue-500": patient.screening.priority === "blue"},
         {"bg-green-500": patient.screening?.priority === "green"},
@@ -51,8 +52,11 @@ export default async function Layout({
         {"bg-orange-600": patient.screening?.priority === "orange"}
        )}>
 
-        <h2 className="text-xl text-white font-medium">{patient.fullname?.toUpperCase()}</h2>
-			</div>
+        <Header 
+          center 
+          title={patient?.fullname.toUpperCase()}
+        />			
+      </div>
       
       <div className="flex h-[70vh] gap-x-3">
         <Card className="h-full w-full overflow-y-auto">{children}</Card>

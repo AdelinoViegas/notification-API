@@ -7,12 +7,14 @@ import Modal from "@/components/modal";
 import Button from "@/components/ui/button";
 import InputField from "@/components/ui/input-field";
 import { 
+  getAvailableBedsTotal,
   getInternalServices, 
   getNursings, 
   getSections, 
   signInternalService, 
   signNursing 
 } from "@/backend/api/clinical/hospitalization-api";
+import Alert from "../ui/alert";
 
 export default function RegisterNursing(){
   const [ state, action ] = useActionState(signNursing, { message: "", status: false }); 
@@ -26,11 +28,14 @@ export default function RegisterNursing(){
   const [ nursings, setNursings ] = useState<SelectionOption[]>([]);
   const [ selectedSection, setSelectedSection ] = useState<string>();
   const [ selectedService, setSelectedService ] = useState<string>();
+  const [ bedNumber, setBedNumber ] = useState("");
+  const [ availableBeds, setAvailableBeds ] = useState(0);
   const formRef = useRef<HTMLFormElement>(null);
 
   const reset = ()=>{
     setNewSectionState(false);
     setNewNursingState(false);
+    setBedNumber("");
   }
   
   useEffect(()=>{
@@ -43,6 +48,7 @@ export default function RegisterNursing(){
         toast.error(state.message);
 
     getSections().then(setSections);
+    setBedNumber("");
   }, [state]);
 
   useEffect(()=>{
@@ -65,7 +71,12 @@ export default function RegisterNursing(){
 
     getInternalServices().then(setInternalServices);
   }, [serviceState]);
+  
 
+  useEffect(() => {
+    getAvailableBedsTotal(bedNumber).then( res => setAvailableBeds(res));
+  }, [bedNumber]);
+  
   return(
     <div>
       <Button onClick={()=>setModal(true)}>Registrar Enfermaria</Button>
@@ -124,7 +135,7 @@ export default function RegisterNursing(){
                 textLabel="Nº Maximo de camas"
                 type="number"
                 name="maxBedNumber" 
-                placeholder="Quantidade de cama suportados por quartos"
+                placeholder="Nº de camas"
                 required
               />
             </div>
@@ -134,7 +145,8 @@ export default function RegisterNursing(){
             <Selection
               label="Enfermaria"
               name="nursingId"
-              options={nursings} 
+              options={nursings}
+              onChange={(e) => {setBedNumber(e.target.value)}} 
               required
               className="grow"
             />
@@ -161,11 +173,21 @@ export default function RegisterNursing(){
               />
             </div>
           </>}
+           
+          <div className="min-w-full">
+            { bedNumber && 
+              <Alert
+                type="warn"
+                message={`Vagas disponiveis na efermaria: ${availableBeds} camas`} 
+              />
+            }
+          </div>
 
           <InputField
-            textLabel="Nº da Cama"
+            textLabel="Nº da cama"
+            type="number"
             name="bed" 
-            placeholder="Nº da cama"
+            placeholder="Digite o da cama"
             required
           />
 
