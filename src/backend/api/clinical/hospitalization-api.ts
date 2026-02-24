@@ -140,7 +140,7 @@ export async function signNursing(p: unknown, formData: FormData){
     let nursingId = formData.get("nursingId") as string;
     const nursingName = formData.get("nursingName") as string;
     const bedNumber = formData.get("bed") as string;
-
+    
     if(sectionName && nursingName){
       await throwValidatePattern({ value: nursingName, to: "nursing" });
       const section = await sectionModel.create({ name: sectionName });
@@ -170,7 +170,7 @@ export async function signNursing(p: unknown, formData: FormData){
     const allocated = await canAddBedToNursing(nursingId);
 
     if(!allocated.state) throw new Error(allocated?.message, { cause: 403 });
-    
+
     await throwValidatePattern({ value: bedNumber, to: "bed" });
 
     await bedNursingModel.create({
@@ -266,6 +266,50 @@ export async function getInternalServices(){
   }catch (e) {
     console.error(e);
     return [];
+  }
+}
+export async function getAvailableBeds(nursingId: string){
+  try{
+    const availableBeds = [];
+
+    if(nursingId){
+      const beds = await bedNursingModel.find({ nursingId });
+      
+      for(const bed of beds){
+        const hospitalized = await inHospitalizeModel.findOne({ bedId: bed._id, served: false });
+
+        if(!hospitalized){
+          availableBeds.push({
+            _id: bed._id.toString(),
+            label: bed.bed as string
+          })
+        }
+      }
+
+      return availableBeds;
+    }
+    
+    return []
+  }catch (error: unknown) {
+    console.log(error);
+    return []
+  }
+}
+
+export async function getAvailableBedsTotal(nursingId: string){
+  try{
+    if(nursingId){
+      const nursing = await nursingModel.findById({ _id: nursingId }).select({maxBedNumber: 1});
+      const beds = await bedNursingModel.find({ nursingId });
+      
+      if(nursing)
+        return nursing.maxBedNumber - beds.length;
+    }
+    
+   return 0;
+  }catch (error: unknown) {
+    console.log(error);
+    return 0;
   }
 }
 
@@ -458,6 +502,10 @@ export async function signToHospitalize(p: unknown, formData: FormData){
   try{
     const patientId = formData.get("patientId");
     const bedId = formData.get("bedId");
+    const exists = await inHospitalizeModel.findOne({ bedId });
+
+    if(exists) 
+      throw new Error("Cama já oucupada por um paciente!, escolha outra", { cause: "occupied" });
 
     await inHospitalizeModel.create({
       patientId,
@@ -470,11 +518,11 @@ export async function signToHospitalize(p: unknown, formData: FormData){
       message: "Registrado com sucesso!",
       status: true
     }
-  }catch(e) {
-    console.error(e);
+  }catch(err: unknown) {
+    const error = err as Error;
 
     return {
-      message: "Não foi possivel registrar!",
+      message: error.cause?error.message:"Não foi possivel registrar!",
       status: false
     }
   }
