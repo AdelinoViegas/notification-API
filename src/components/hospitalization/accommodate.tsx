@@ -6,8 +6,8 @@ import Button from "@/components/ui/button";
 import { 
   getNursings, 
   getSections, 
-  getBeds,
-  signToHospitalize
+  signToHospitalize,
+  getAvailableBeds
 } from "@/backend/api/clinical/hospitalization-api";
 import { toast } from "react-toastify";
 import Selection, { SelectionOption } from "@/components/ui/selection";
@@ -18,7 +18,7 @@ export default function Accommodate({ internalServiceId }: { internalServiceId: 
   const [ nursings, setNursings ] = useState<SelectionOption[]>([]);
   const [ beds, setBeds ] = useState<SelectionOption[]>([]);
   const [ selectedSection, setSelectedSection ] = useState<string>();
-  const [ selectedNursing, setSelectedNursing ] = useState<string>();
+  const [ selectedNursing, setSelectedNursing ] = useState("");
   const router = useRouter();
   const params = useParams();
 
@@ -39,7 +39,7 @@ export default function Accommodate({ internalServiceId }: { internalServiceId: 
     })
       .then(setNursings);
 
-    getBeds({ nursingId: selectedNursing }).then(e => setBeds(e.beds));
+    getAvailableBeds(selectedNursing).then(setBeds);
 
   }, [state, selectedSection, selectedNursing]);
 
