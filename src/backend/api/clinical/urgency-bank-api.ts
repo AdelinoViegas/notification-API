@@ -1243,6 +1243,10 @@ async function applyDischarge(p:unknown, formdata:FormData){
     const patientId = formdata.get("patientId") as string;
     const userMakedAt = formdata.get("makedAt");
     const userId = await getUserId();
+    const recoveredPatient = await patientStateModel.findOne({ patientId , stateId: "recovered" });
+
+    if(!recoveredPatient)
+      throw new Error("defina o estado do paciente para recuperado", { cause: "recovered" });
 
     await triedModel.updateOne({
       userId,
@@ -1267,11 +1271,11 @@ async function applyDischarge(p:unknown, formdata:FormData){
       message: "Alta registrada com sucesso!",
       status: true
     }
-  }catch (e){
-    console.error("urgency:", e);
-    
+  }catch (err: unknown){
+    const error = err as Error;
+
     return {
-      message: "Alta registrada com sucesso!",
+      message: error.cause ? error.message : "Não foi possivel finalizar!",
       status: false
     }
   }
