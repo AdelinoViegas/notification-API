@@ -124,7 +124,7 @@ export default function RegisterNursing(){
                 textLabel="Nº Maximo de camas"
                 type="number"
                 name="maxBedNumber" 
-                placeholder="Quantidade de cama suportados por quartos"
+                placeholder="Nª de camas"
                 required
               />
             </div>
