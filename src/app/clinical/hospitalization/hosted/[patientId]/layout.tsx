@@ -6,6 +6,7 @@ import clsx from "clsx";
 import { getPatient } from "@/backend/api/clinical/api";
 import { redirect } from "next/navigation";
 import { getPatientState } from "@/backend/api/clinical/urgency-bank-api";
+import Header from "@/components/header";
 
 export default async function Layout({ 
   children,
@@ -39,14 +40,15 @@ export default async function Layout({
         <DefineState />
       </div>
 
-      <div className={clsx(
-        "text-center py-1 mt-2 text-white",
-        patientState.color.tw.bg,
-        { "animate-pulse": ["critica", "serious"].includes(patientState._id) }
-      )}>
-        <h2 className="text-xl font-medium">{patient.personal.fullname.toUpperCase()}</h2>
+      <div className={clsx("my-4 text-center pt-3 text-white bg-blue-400 rounded-lg",
+          patientState.color.tw.bg,
+          {"animate-pulse": ["critica", "serious"].includes(patientState._id)})}>
+        <Header 
+          center 
+          title={patient?.personal.fullname.toUpperCase()}
+        />
       </div>
-
+      
       <div className="flex h-[70vh] gap-x-3 mt-3">
         <Card className="h-full w-full overflow-y-auto">{children}</Card>
        
