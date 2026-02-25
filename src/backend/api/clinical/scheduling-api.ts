@@ -673,7 +673,7 @@ async function getScheduleAppointment(scheduleId:string){
     age: calculateAge(patient?.birthDate as Date) as string,
     gender: patient?.gender as string,
     doctor: doctor.fullname as string,
-    doctorId: doctor._id as string,
+    doctorId: doctor.id as string,
     responsable: user.fullname as string,
     consult: {
       name: consult?.name as string,
@@ -718,7 +718,7 @@ async function getScheduleAppointments({
     for(const item of schedules){
       const patient = await patientModel.findById({_id: item.patientId }).select({ fullname: 1 });
       const doctor = await getUser(item.doctorId?.toString() as string);
-      const doctorCalendar = await findDoctorCalendar({doctorId: doctor._id, toSchedule: true});
+      const doctorCalendar = await findDoctorCalendar({doctorId: doctor.id, toSchedule: true});
       const doctorRoom = doctorCalendar.find(props => props.day.toISOString().split('T')[0] === item.doctorDay?.toISOString().split('T')[0]);
       
       if(!doctorRoom)
@@ -1140,7 +1140,7 @@ async function getScheduleSugery(scheduleId: string){
     age: calculateAge(patient?.birthDate as Date),
     gender: patient?.gender as string,
     doctor: doctor.fullname as string,
-    doctorId: doctor._id as string,
+    doctorId: doctor.id as string,
     sugery: {
       type: sugeryType?.name as string,
       price: sugeryType?.price as number,

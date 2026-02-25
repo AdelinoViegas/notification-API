@@ -67,11 +67,10 @@ async function getUsers(){
   const clinicalUsers = [];
 
   for (const user of users){
-    const clinicalUser = await userModel.findOne({ userId: user._id });
+    const clinicalUser = await userModel.findOne({ userId: user.id });
     const specialty = await specialtyModel.findOne({ _id: clinicalUser?.specialtyId });
 
     clinicalUsers.push({
-      id: user._id,
       createdAt: new Date(),
       category: userRoles.get(clinicalUser?.categoryId as string)?.label ?? "Indefinido",
       categoryId: clinicalUser?.categoryId as string,
@@ -92,7 +91,7 @@ async function getDoctors(){
   for(const doctor of users){
     if(doctor.categoryId === "doctor")
       doctors.push({
-        _id: doctor._id.toString(), 
+        _id: doctor.id.toString(), 
         label: doctor.fullname,
         createdAt: doctor.createdAt,
         category: doctor.category,

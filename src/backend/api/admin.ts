@@ -10,17 +10,13 @@ import type {
   DefaultResponse
 } from "@/backend/api/types";
 
-const privInstance = axios.create({ 
-  baseURL: `${process.env.API_URL}/ath`
-});
+const systemService = axios.create({ baseURL: `${process.env.API_URL}/ath` });
 
-const clientprivInstance = axios.create({ 
-  baseURL: `${process.env.API_URL}/ath`
-});
+const service = axios.create({ baseURL: `${process.env.API_URL}/ath`});
 
 export async function getUsers(): Promise<User[]>{
-  privInstance.defaults.headers.common.Authorization = `Bearer ${await getServiceToken()}`;
-  const res = await privInstance.get("/users", {
+  systemService.defaults.headers.common.Authorization = `Bearer ${await getServiceToken()}`;
+  const res = await systemService.get("/users", {
     params: { g: "clinico" }
   });
 
@@ -28,31 +24,34 @@ export async function getUsers(): Promise<User[]>{
 }
 
 export async function getUser(id: string){
-  privInstance.defaults.headers.common.Authorization = `Bearer ${await getServiceToken()}`;
-  const res = await privInstance.get<User>("/users/user", {
-    params: { id }
-  });
-
+  systemService.defaults.headers.common.Authorization = `Bearer ${await getServiceToken()}`;
+  const res = await systemService.get<User>(`/users/${id}`);
   return res.data;
 }
 
 // chamadas do usuário
 async function getUserRoles(){
-  clientprivInstance.defaults.headers.common["Authorization"] = `Bearer ${await getUserToken()}`
-  const res = await clientprivInstance.get<UserRole[]>("/users/myProfile/roles");
+  service.defaults.headers.common["Authorization"] = `Bearer ${await getUserToken()}`
+  const res = await service.get<UserRole[]>("/me/roles");
   return res.data;
 }
 
 export async function getMyProfile(){
-  clientprivInstance.defaults.headers.common["Authorization"] = `Bearer ${await getUserToken()}`
-  const res = await clientprivInstance.get<MyProfile>("/users/myProfile");
+  service.defaults.headers.common["Authorization"] = `Bearer ${await getUserToken()}`
+  const res = await service.get<MyProfile>("/me");
   return res.data;
 }
 
 export async function logout(){
-  clientprivInstance.defaults.headers.common["Authorization"] = `Bearer ${await getUserToken()}`
-  const res = await clientprivInstance.delete<DefaultResponse>("/auth/logout");
+  service.defaults.headers.common["Authorization"] = `Bearer ${await getUserToken()}`
+  const res = await service.delete<DefaultResponse>("/auth/logout");
   return res.data;
+}
+
+export async function validator(token: string){
+  service.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  const res = await service.get("/ath/users/myProfile/status");
+  return res.status === 200;
 }
 
 export async function getGrantedRoles(){

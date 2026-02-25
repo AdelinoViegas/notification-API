@@ -1,17 +1,7 @@
 "use server";
 
-import axios from "axios";
 import { cookies } from "next/headers";
-
-const instance = axios.create({ 
-  baseURL: process.env.API_URL
-});
-
-async function userState(token: string){
-  instance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-  const res = await instance.get("/ath/users/myProfile/status");
-  return res.status === 200;
-}
+import { validator } from "@/backend/api/admin";
 
 export async function RESTproxy(extToken?: string, set = false){
   try{
@@ -31,9 +21,10 @@ export async function RESTproxy(extToken?: string, set = false){
       });
     }
 
-    return await userState(token);
+    return await validator(token);
   }catch (e) {
-    console.error(e);
+    const err = e as Error;
+    console.error("by-middleware: ", err.message);
     return false;
   }
 }
