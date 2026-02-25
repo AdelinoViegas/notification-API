@@ -1,18 +1,14 @@
 import Image from "next/image";
-import { getUserId } from "@/lib/web-token";
 import WorkplaceFrom from "@/components/forms/workplace-form";
 import { getGrantedUnitAccess } from "@/backend/api/clinical/urgency-bank-api";
 import Carousel from "@/components/carousel";
-import { getUser } from "@/backend/api/admin";
+import { getMyProfile } from "@/backend/api/admin";
 
 export const dynamic = "force-dynamic";
 
 export default async function Page(){
-  const id = await getUserId();
-  const [ units, user ] = await Promise.all([
-    getGrantedUnitAccess(id), 
-    getUser(id)
-  ]);
+  const profile = await getMyProfile();
+  const units = await getGrantedUnitAccess(profile.id);
  
   return(
     <main className="flex bg-white h-[100%] flex-col-reverse lg:flex-row gap-3 items-center">
@@ -34,7 +30,7 @@ export default async function Page(){
             className="size-16"
           />
           <p>Seja Bem-vindo(a)</p>
-          <p className="font-bold">{user?.fullname}</p>
+          <p className="font-bold">{profile.fullname}</p>
           <p>A sua zona de trabalho</p>
           {units?.length > 1 && <p>Selecione a sua área de trabalho</p>}
 

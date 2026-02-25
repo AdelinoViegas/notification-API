@@ -7,10 +7,8 @@ export interface User {
 
 export interface UserRole {
   id: string;
-  role: {
-    name: string;
-    path: string;
-  }
+  name: string;
+  resource: string;
 }
 
 export interface MyProfile {

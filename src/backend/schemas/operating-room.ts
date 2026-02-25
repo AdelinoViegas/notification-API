@@ -27,7 +27,7 @@ const postAnestheticRecovery = new Schema({
 
 const operatingRoomSchema = new Schema({
   scheduleId: Schema.ObjectId,
-  userId: Schema.ObjectId,
+  userId: String,
   patientIdentification: {
     preoperativeDiagnosis: String,
     informedConsent: String,
@@ -105,7 +105,7 @@ const operatingRoomSchema = new Schema({
   },
   archiving: {
     reason: String,
-    userId: Schema.ObjectId,
+    userId: String,
   },
 }, {
   collection: "patient_operating_room",
@@ -116,7 +116,7 @@ const operatingRoomResultSchema = new Schema({
   patientId: Schema.ObjectId,
   operatingRoomId: Schema.ObjectId,
   storageId: String,
-  userId: Schema.ObjectId,
+  userId: String,
 }, {
   collection: "operating_room_external_results",
   timestamps: true,

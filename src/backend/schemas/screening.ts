@@ -2,7 +2,7 @@ import { Schema } from "mongoose";
 
 const screeningSchema = new Schema({
   patientId: Schema.ObjectId,
-  userId: Schema.ObjectId,
+  userId: String,
   adviceId: Schema.ObjectId,
   reason: {
     type: String,
@@ -83,7 +83,7 @@ const screeningSchema = new Schema({
 const triedSchema = new Schema({
   srcId: Schema.ObjectId,
   patientId: Schema.ObjectId,
-  userId: Schema.ObjectId,
+  userId: String,
   serviceId: Schema.ObjectId,
   reasonChangingServices: String, 
   served: {

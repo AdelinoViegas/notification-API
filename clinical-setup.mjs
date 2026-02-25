@@ -27,14 +27,14 @@ const unitSchema = new Schema({
   wing: String,
   nursing: String,
   bed: Number,
-  userId: Schema.ObjectId,
+  userId: String,
 }, {
   collection: "phisical_unit",
   timestamps: true,
 });
 
 const workplaceSchema = new Schema({
-  userId: Schema.ObjectId,
+  userId: String,
   workplaceId: Schema.ObjectId,
   actor: Schema.ObjectId, 
 }, {
