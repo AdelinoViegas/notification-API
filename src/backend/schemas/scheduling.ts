@@ -91,7 +91,7 @@ const scheduleExamSchema = new Schema({
     default: false,
   },
   detail: String,
-  userId: Schema.ObjectId,
+  userId: String,
 }, {
   collection: "schedule_patient_exam",
   timestamps: true,
@@ -100,7 +100,7 @@ const scheduleExamSchema = new Schema({
 const scheduleAppointmentSchema = new Schema({
   patientId: Schema.ObjectId,
   doctorId: Schema.ObjectId,
-  userId: Schema.ObjectId,
+  userId: String,
   doctorTime: String,
   consultId: Schema.ObjectId,
   doctorDay: Date,
@@ -134,7 +134,7 @@ const scheduleAppointmentSchema = new Schema({
   },
   archiving: {
     reason: String,
-    userId: Schema.ObjectId,
+    userId: String,
   },
   doctorReschedule: {
     type: Boolean,
@@ -149,7 +149,7 @@ const scheduleAppointmentSchema = new Schema({
 const examResultSchema = new Schema({
   scheduleId: Schema.ObjectId,
   detail: String,
-  userId: Schema.ObjectId,
+  userId: String,
 }, {
   collection: "schedule_exam_result",
   timestamps: true,
@@ -162,7 +162,7 @@ const examCancelSchema = new Schema({
     type: String,
     required: true,
   },
-  userId: Schema.ObjectId,
+  userId: String,
 }, {
   collection: "schedule_exam_cancel",
   timestamps: true,
@@ -174,7 +174,7 @@ const appointmentCancelSchema = new Schema({
     type: String,
     required: true,
   },
-  userId: Schema.ObjectId,
+  userId: String,
 }, {
   collection: "schedule_appointment_cancel",
   timestamps: true,
@@ -194,7 +194,7 @@ const doctorCalendarSchema = new Schema({
     }
   ],
   maxSchedule: Number,
-  userId: Schema.ObjectId,
+  userId: String,
   signatureDateTo: {
     type: String,
     unique: true,
@@ -214,9 +214,9 @@ const officeSchema = new Schema<ConsultResult>({
   },
   archiving: {
     reason: String,
-    userId: Schema.ObjectId,
+    userId: String,
   },
-  userId: Schema.ObjectId,
+  userId: String,
   results: {
     vitalSignal: {
       paMax: Number,
@@ -291,7 +291,7 @@ const scheduleSugerySchema = new Schema({
   },
   archiving: {
     reason: String,
-    userId: Schema.ObjectId,
+    userId: String,
   }
 }, {
   collection: "schedule_sugery",
@@ -306,7 +306,7 @@ const serviceRequestsSchema = new Schema({
     required: true
   },
   originOfrequest: String,
-  userId: Schema.ObjectId,
+  userId: String,
   kind: Schema.ObjectId,
   reason: {
     type: String,

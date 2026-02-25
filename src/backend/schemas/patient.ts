@@ -22,7 +22,7 @@ const patientSchema = new Schema({
     type: Boolean,
     default: false
   },
-  userId: Schema.ObjectId,
+  userId: String,
   used: Boolean
 }, {
   timestamps: true,
@@ -32,7 +32,7 @@ export const externalTransferSchema = new Schema({
   patientId: Schema.ObjectId,
   userCreatedAt: Date,
   unitId: Schema.ObjectId,
-  userId: Schema.ObjectId,
+  userId: String,
   reason: {
     type: String,
     required: true
@@ -99,7 +99,7 @@ const accessTypeSchema = new Schema({
 
 const processStateSchema = new Schema({
   patientId: Schema.ObjectId,
-  userId: Schema.ObjectId,
+  userId: String,
   location: {
     type: String,
     required: true,
@@ -163,7 +163,7 @@ const patientExitSchema = new Schema({
     required: true,
     unique: true
   },
-  userId: Schema.ObjectId,
+  userId: String,
   userEventAt: {
     type: Date,
     default: new Date

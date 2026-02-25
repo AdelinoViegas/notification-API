@@ -196,7 +196,7 @@ const urgencyService = new Schema({
     required: true,
     trim: true,
   },
-  userId: Schema.ObjectId,
+  userId: String,
   isActive: {
     type: Boolean,
     default: true
@@ -208,7 +208,7 @@ const urgencyService = new Schema({
 
 const patientHospitalizedSchema = new Schema({
   urgencyId: Schema.ObjectId,
-  userId: Schema.ObjectId,
+  userId: String,
   description: String,
   donedAt: Date,
   patientState: String,
@@ -219,7 +219,7 @@ const patientHospitalizedSchema = new Schema({
 });
 
 const prescriptionSchema = new Schema<Prescription>({
-  userId: Schema.ObjectId,
+  userId: String,
   description: String,
   makedAt: Date,
   urgencyId: Schema.ObjectId,
@@ -229,7 +229,7 @@ const prescriptionSchema = new Schema<Prescription>({
 });
 
 const surgerySchema = new Schema({
-  userId: Schema.ObjectId,
+  userId: String,
   description: String,
   patientId: Schema.ObjectId,
   resultId: Schema.ObjectId, // associar o resultado da cirurgia com este documento

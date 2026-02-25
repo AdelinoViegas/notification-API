@@ -5,7 +5,7 @@ export const hospitalizationSchema = new Schema({
   patientId: Schema.ObjectId,
   toInternalServiceId: Schema.ObjectId,
   triedId: Schema.ObjectId,
-  userId: Schema.ObjectId,
+  userId: String,
   served: {
     type: Boolean,
     default: false
@@ -73,7 +73,7 @@ export const inHospitalizeSchema = new Schema({
     type: Boolean,
     default: false
   },
-  userId: Schema.ObjectId
+  userId: String
 }, {
   timestamps: true
 });

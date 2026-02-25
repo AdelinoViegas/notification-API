@@ -3,7 +3,7 @@ import type { ClinicalUser } from "./types";
 
 export const userSchema = new Schema<ClinicalUser>({
   userId: {
-    type: Schema.ObjectId,
+    type: String,
     unique: true,
   },
   orderNumber: Number,
@@ -23,7 +23,7 @@ export const userSchema = new Schema<ClinicalUser>({
 
 export const currentLocationSchema = new Schema({
   locationId: Schema.ObjectId,
-  userId: Schema.ObjectId,
+  userId: String,
   isActive: {
     type: Boolean,
     default: true,

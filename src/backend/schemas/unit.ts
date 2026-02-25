@@ -25,14 +25,14 @@ const unitSchema = new Schema({
   wing: String,
   nursing: String,
   bed: Number,
-  userId: Schema.ObjectId,
+  userId: String,
 }, {
   collection: "phisical_unit",
   timestamps: true,
 });
 
 const workplaceSchema = new Schema({
-  userId: Schema.ObjectId,
+  userId: String,
   workplaceId: Schema.ObjectId,
   actor: Schema.ObjectId, 
 }, {
@@ -50,7 +50,7 @@ const externalUnitSchema = new Schema({
   street: String,
   municipality: String,
   province: String,
-  userId: Schema.ObjectId,
+  userId: String,
 }, {
   collection: 'external_units',
   timestamps: true,
@@ -77,9 +77,9 @@ const scheduleServiceSchema = new Schema({
   },
   archiving: {
     reason: String,
-    userId: Schema.ObjectId,
+    userId: String,
   },
-  userId: Schema.ObjectId,
+  userId: String,
   Type: { 
     type: String,
     enum: UNIT_TYPES
@@ -101,13 +101,13 @@ const serviceResultSchema = new Schema({
       enum: ["laboratory", "imaginig"],
       required: true
     },
-    userId: Schema.ObjectId,
+    userId: String,
     createdAt: {
       type: Date,
       default: new Date()
     }
   }],
-  userId: Schema.ObjectId,
+  userId: String,
   isFinished: {
     type: Boolean,
     default: false
@@ -125,7 +125,7 @@ const externalResultSchema = new Schema({
   patientId: Schema.ObjectId,
   officeId: Schema.ObjectId,
   storageId: String,
-  userId: Schema.ObjectId,
+  userId: String,
 }, {
   collection: "office_external_results",
   timestamps: true,
@@ -136,7 +136,7 @@ const internalExamResultSchema = new Schema({
   description: String,
   storageId: String, // id do arquivo da api,
   examId: Schema.ObjectId,
-  userId: Schema.ObjectId
+  userId: String
 }, {
   timestamps: true
 });

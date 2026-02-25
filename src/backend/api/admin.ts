@@ -50,9 +50,13 @@ export async function logout(){
 
 export async function validator(token: string){
   service.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-  const res = await service.get("/ath/users/myProfile/status");
+  const res = await service.get("/ath/validate");
   return res.status === 200;
 }
+
+// export async function rbacValidator(resource: string){
+
+// }
 
 export async function getGrantedRoles(){
   try{
@@ -61,9 +65,9 @@ export async function getGrantedRoles(){
 
     for (const role of roles){
       for (const route of clinicalRoutes){
-        if(route.route === role.role.path)
+        if(route.route === role.resource)
           navLinks.push({
-            label: role.role.name, // vem da api admin
+            label: role.name, // vem da api admin
             href: route.href,
             route: route.route
           });

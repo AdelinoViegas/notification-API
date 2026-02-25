@@ -1,7 +1,7 @@
 import type { Document, Types } from "mongoose";
 
 export interface ClinicalUser extends Document {
-  userId: Types.ObjectId;
+  userId: string;
   orderNumber: number;
   serviceId: Types.ObjectId;
   specialtyId: Types.ObjectId;
@@ -11,7 +11,7 @@ export interface ClinicalUser extends Document {
 }
 
 export interface Prescription extends Document {
-  userId: Types.ObjectId;
+  userId: string;
   description: string;
   makedAt: Date;
   urgencyId: Types.ObjectId;
@@ -52,7 +52,7 @@ export interface ConsultResult extends Document {
   scheduleId: Types.ObjectId;
   served: boolean;
   archiving: boolean;
-  userId: Types.ObjectId;
+  userId: string;
   results: ConsultResults;
   externalId: Types.ObjectId;
 }
