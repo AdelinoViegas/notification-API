@@ -50,7 +50,7 @@ export async function logout(){
 
 export async function validator(token: string){
   service.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-  const res = await service.get("/ath/validate");
+  const res = await service.get("/validate");
   return res.status === 200;
 }
 
