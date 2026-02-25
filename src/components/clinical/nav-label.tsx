@@ -1,8 +1,8 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { getMyClinicalProfile } from "@/backend/api/clinical/api";
-import { useEffect, useState } from "react";
 
 type RouteMap = Map<string, { 
   href: string; 
@@ -22,7 +22,6 @@ export default function NavLabel({ routes }: { routes: RouteMap }){
   const directory = pathname.split("/").slice(0, 3);
 
   useEffect(()=>{
-
     TYPE_SERVICES.forEach(ev => {
       if(directory.includes(ev)){
         getMyClinicalProfile().then(e => {
@@ -34,7 +33,6 @@ export default function NavLabel({ routes }: { routes: RouteMap }){
       }else 
         setService(undefined);
     });
-
   }, [pathname]);
   
   return(

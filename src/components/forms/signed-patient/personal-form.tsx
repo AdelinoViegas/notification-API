@@ -5,19 +5,19 @@ import {
   useState, 
   useActionState,
 } from "react";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+
 import Selection from "@/components/ui/selection";
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
+
 import type { Patient } from "@/backend/api/clinical/types";
 import { updatePersonalInfo } from "@/backend/api/clinical/api";
-import { toast } from "react-toastify";
-
 import { 
   civilState as civilStateValues, 
   gender as genderValues
 } from "@/backend/api/clinical/translator";
-import { useRouter } from "next/navigation";
-import forceRefreshPage from "@/lib/force-refresh";
 
 type Personal = { id: string } & Patient;
 
@@ -35,8 +35,15 @@ export default function PersonalInfoForm({
   const [ state, action ] = useActionState(updatePersonalInfo, { message: "", status: false });
   const router = useRouter();
   const [ isEdit, setIsEdit ] = useState(false);
+  const [ civilStatus, setCivilStatus ] = useState(civilState);
+  const [ _gender, setGender ] = useState(gender);
   const disableEdit = ()=>setIsEdit(false);
-
+  
+  useEffect( ()=> {
+    setCivilStatus(civilState);
+    setGender(gender);
+  }, [civilState, gender]);
+  
   useEffect(()=>{
     if(state.message){
       if(state.status)
@@ -44,8 +51,7 @@ export default function PersonalInfoForm({
           onOpen: ()=>{
             router.refresh();
             disableEdit();
-          },
-          onClose: forceRefreshPage
+          }        
         });
       else
         toast.error(state.message);
@@ -86,21 +92,23 @@ export default function PersonalInfoForm({
         />
         
         <Selection
+          key={civilStatus}
           options={civilStateValues}
           label="Estado Civil"
           name="civilState"
           disabled={!isEdit}
           required
-          defaultValue={civilState}
+          defaultValue={civilStatus}
         />
         
         <Selection
+          key={_gender}
           options={genderValues}
           label="Gênero" 
           name="gender"
           required
           disabled={!isEdit}
-          defaultValue={gender}
+          defaultValue={_gender}
         />
         
         <InputField

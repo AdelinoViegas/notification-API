@@ -13,7 +13,7 @@ import Button from "@/components/ui/button";
 import { signExternalUnit } from "@/backend/api/clinical/urgency-bank-api";
 import { toast } from "react-toastify";
 
-export default function ExternalUnitForm(){
+export default function ExternalUnitForm({ isEdit }: { isEdit?: boolean }) {
   const [ state, action ] = useActionState(signExternalUnit, { message: "", status: false });
   const [ modalState, setModalState ] = useState(false);
   const closeModal = ()=> setModalState(false);
@@ -37,7 +37,8 @@ export default function ExternalUnitForm(){
 
   return(
     <div>
-      <Button 
+      <Button
+        disabled={isEdit} 
         type="button" 
         onClick={openModal} 
         className="flex gap-x-2"

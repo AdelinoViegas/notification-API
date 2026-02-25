@@ -5,23 +5,24 @@ import {
   useState,
   useActionState
 } from "react";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+
 import Selection from "@/components/ui/selection";
 import Button from "@/components/ui/button";
-import { updatePatientGroup } from "@/backend/api/clinical/api";
 import { 
   AssuredInputs,
   EmployeeInputs,
   EnterpriseInputs 
 } from "@/components/forms/signed-patient/groups/inputs";
+
 import { patientGroup as UserGroup } from "@/backend/api/clinical/translator";
 import type { 
   Enterprise,
   Assured,
   Employee
  } from "@/backend/api/clinical/types";
-import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
-import forceRefreshPage from "@/lib/force-refresh";
+import { updatePatientGroup } from "@/backend/api/clinical/api";
 
 type AccessType = {
   id: string;
@@ -37,7 +38,7 @@ export default function GroupForm({
   const [ state, action ] = useActionState(updatePatientGroup, { message: "", status: false })
   const [ inputs, setInputs ] = useState(type);
   const [ isEdit, setIsEdit ] = useState(false);
-
+  const [ groupType, setGroupType ] = useState(type);
   const parsedGroup = jsonGroup?JSON.parse(jsonGroup):undefined;
   const assuredGroup = parsedGroup as Assured;
   const enterpriseGroup = parsedGroup as Enterprise;
@@ -45,6 +46,10 @@ export default function GroupForm({
   const disableEdit = ()=>setIsEdit(false);
   const router = useRouter();
   
+  useEffect(() => {
+    setGroupType(type);
+  }, [type]);
+
   useEffect(()=>{
     if(state.message){
       if(state.status)
@@ -52,8 +57,7 @@ export default function GroupForm({
           onOpen: ()=>{
             router.refresh();
             disableEdit();
-          },
-          onClose: forceRefreshPage
+          }
         });
       else
         toast.error(state.message);
@@ -69,13 +73,14 @@ export default function GroupForm({
       />
       <div className="w-96">
         <Selection
+          key={groupType}
           name="group"
           label="Escolha o grupo de utentes"
           options={UserGroup}
           required
           onChange={(item)=>setInputs(item.target.value)}
           disabled={!isEdit}
-          defaultValue={type}
+          defaultValue={groupType}
         />
       </div>
 

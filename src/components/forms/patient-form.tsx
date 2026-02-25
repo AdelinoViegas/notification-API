@@ -1,13 +1,15 @@
 import { redirect } from "next/navigation";
+
 import PersonalInfoForm from "@/components/forms/signed-patient/personal-form";
 import Accordium from "@/components/ui/accordium";
 import DemographicInfoForm from "@/components/forms/signed-patient/demography-form";
 import ResponsiblesForm from "@/components/forms/signed-patient/responsibles-form";
 import GroupForm from "@/components/forms/signed-patient/group-form";
 import AccessForm from "@/components/forms/signed-patient/access-form";
+import PDFButton, { PatientRecord } from "@/components/pdf-button";
+
 import { getPatient } from "@/backend/api/clinical/api";
 import type { Responsable } from "@/backend/api/clinical/types";
-import PDFButton, { PatientRecord } from "@/components/pdf-button";
 import { getExternalUnits } from "@/backend/api/clinical/urgency-bank-api";
 import { civilState, kinshipDegree } from "@/backend/api/clinical/translator";
 

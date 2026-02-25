@@ -5,14 +5,15 @@ import {
   useState,
   useActionState,
 } from "react";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
+import Selection from "@/components/ui/selection";
+
 import type { Demography } from "@/backend/api/clinical/types";
 import { updateDemography } from "@/backend/api/clinical/api";
-import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
-import forceRefreshPage from "@/lib/force-refresh";
-import Selection from "@/components/ui/selection";
 import { AngolaProvices } from "@/backend/api/clinical/translator";
 
 type InfoProps = {
@@ -33,8 +34,14 @@ export default function DemographicInfoForm({
   const [ isEdit, setIsEdit ] = useState(false);
   const [ isExternal, setIsExternal ] = useState(false);
   const [ _naturality, setNaturality ] = useState(naturality);
-
+  /*const [ _nationality, setNationality ] = useState(nationality);*/
+  const [ _province, setProvince ] = useState(province);
   const disableEdit = ()=>setIsEdit(false);
+
+  useEffect(() => {
+    //setNationality(_nationality);
+    setProvince(province);
+  }, [province]);
 
   useEffect(()=>{
     if(state.message){
@@ -43,8 +50,7 @@ export default function DemographicInfoForm({
           onOpen: ()=>{
             router.refresh();
             disableEdit();
-          },
-          onClose: forceRefreshPage
+          }
         });
       else
         toast.error(state.message);
@@ -111,11 +117,12 @@ export default function DemographicInfoForm({
 
         { !isExternal &&
           <Selection
+            key={_province}
             label="Província"
             options={AngolaProvices}
             name="province"
             required
-            defaultValue={province}
+            defaultValue={_province}
             disabled={!isEdit}
           />
         }

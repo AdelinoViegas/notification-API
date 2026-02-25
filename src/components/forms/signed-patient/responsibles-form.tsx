@@ -5,16 +5,16 @@ import {
   useState,
   useActionState, 
 } from "react";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+
 import InputField from "@/components/ui/input-field";
 import Selection from "@/components/ui/selection";
 import Button from "@/components/ui/button";
-import { kinshipDegree } from "@/backend/api/clinical/translator";
-import type { Responsable } from "@/backend/api/clinical/types";
-import { updateResposible } from "@/backend/api/clinical/api";
-import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
-import forceRefreshPage from "@/lib/force-refresh";
 
+import type { Responsable } from "@/backend/api/clinical/types";
+import { kinshipDegree } from "@/backend/api/clinical/translator";
+import { updateResposible } from "@/backend/api/clinical/api";
 
 type InfoProps = {
   id: string;
@@ -30,7 +30,14 @@ export default function ResposiblesForm({
   const [ state, action ] = useActionState(updateResposible, { message: "", status: false })
   const router = useRouter();
   const [ isEdit, setIsEdit ] = useState(false);
+  const [ _firstKinship, setFirstKinship ] = useState(first.kinship);
+  const [ _secondKinship, setSecondKinship ] = useState(second?.kinship);
   const disableEdit = ()=>setIsEdit(false);
+  
+  useEffect( () => {
+    setFirstKinship(first.kinship);
+    setSecondKinship(second?.kinship);
+  }, [first.kinship, second?.kinship]);
 
   useEffect(()=>{
     if(state.message){
@@ -39,8 +46,7 @@ export default function ResposiblesForm({
           onOpen: ()=>{
             router.refresh();
             disableEdit();
-          },
-          onClose: forceRefreshPage
+          }
         });
       else
         toast.error(state.message);
@@ -66,12 +72,13 @@ export default function ResposiblesForm({
         />
 
         <Selection
+          key={_firstKinship}
           options={kinshipDegree}
           label="Grau de Parentesco"
           name="kinship"
           required
           disabled={!isEdit}
-          defaultValue={first.kinship}
+          defaultValue={_firstKinship}
         />
         
         <InputField
@@ -94,11 +101,12 @@ export default function ResposiblesForm({
         />
 
         <Selection
+          key={_secondKinship}
           options={kinshipDegree}
           label="Grau de Parentesco (opcional)"
           name="kinship1"
           disabled={!isEdit}
-          defaultValue={second?.kinship}
+          defaultValue={_secondKinship}
         />
 
         <InputField
