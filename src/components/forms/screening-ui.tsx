@@ -128,9 +128,16 @@ export default function ScreeningUI({
 }){
   const [ state, action ] = useActionState(insertScreening, initialState);
   const [ editable, setEditable ] = useState(false);
+  const [ _priority, setPriority ] = useState(priority);
   const [ screeningData, setScreeningData ] = useState<Screening>();
   const router = useRouter();
   const pathname = usePathname();
+
+  useEffect(() =>{
+    if(screeningData){
+      setPriority(screeningData.priority);
+    }
+  }, [priority]);
 
   useEffect(()=>{
     if(state.message){
@@ -152,7 +159,7 @@ export default function ScreeningUI({
     .then(data => {
       setScreeningData(data as Screening);
     })
-  }, [state, patientId, pathname, router]);
+  }, [state, patientId, pathname]);
 
   return(
     <div>
@@ -295,11 +302,12 @@ export default function ScreeningUI({
           <>
            <div className="w-96">
               <Selection
+                key={_priority}
                 options={priorityToComponent}
                 label="Prioridade"
                 name="priority"
                 required
-                defaultValue={priority}
+                defaultValue={_priority}
                 disabled={!editable}
               />
             </div>
