@@ -2,7 +2,8 @@ export interface User {
   id: string;
   fullname: string;
   username: string;
-  group: { name: string }
+  group: { name: string },
+  createdAt: Date;
 }
 
 export interface UserRole {

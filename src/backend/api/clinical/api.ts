@@ -71,14 +71,15 @@ async function getUsers(){
     const specialty = await specialtyModel.findOne({ _id: clinicalUser?.specialtyId });
 
     clinicalUsers.push({
-      createdAt: new Date(),
+      id: user.id,
+      fullname: user.fullname,
+      createdAt: user.createdAt,
       category: userRoles.get(clinicalUser?.categoryId as string)?.label ?? "Indefinido",
       categoryId: clinicalUser?.categoryId as string,
       role: specialty?.name as string ?? "Indefinido",
       roleId: clinicalUser?.specialtyId?.toString() as string,
       workplaces: 0,
-      ...user
-    })
+    });
   }
 
   return clinicalUsers;
