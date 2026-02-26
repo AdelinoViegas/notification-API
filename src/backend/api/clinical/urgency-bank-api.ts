@@ -415,8 +415,9 @@ async function signDoctorCalender(prev: unknown, formData: FormData){
       message: "Calendário/Escala dos médicos registrado com sucesso!",
       status: true,
     }
-  }catch(e: unknown){
+  }catch(e){
     const err = e as Error & { code: number };
+    console.log(err);
 
     return {
       message: err.cause?err.message:err.code?

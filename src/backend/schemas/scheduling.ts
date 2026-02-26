@@ -99,7 +99,7 @@ const scheduleExamSchema = new Schema({
 
 const scheduleAppointmentSchema = new Schema({
   patientId: Schema.ObjectId,
-  doctorId: Schema.ObjectId,
+  doctorId: String,
   userId: String,
   doctorTime: String,
   consultId: Schema.ObjectId,
@@ -185,7 +185,7 @@ const doctorCalendarSchema = new Schema({
   month: Number,
   doctors: [
     {
-      doctorId: Schema.ObjectId,
+      doctorId: String,
       initialTime: String,
       finalTime: String,
       room: String,
@@ -255,7 +255,7 @@ const officeSchema = new Schema<ConsultResult>({
 
 const scheduleSugerySchema = new Schema({
   patientId: Schema.ObjectId,
-  doctorId: Schema.ObjectId,
+  doctorId: String,
   sugeryType: Schema.ObjectId,
   sugeryDate: Date,
   sugeryTime: String,

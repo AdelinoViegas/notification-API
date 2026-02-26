@@ -97,7 +97,7 @@ const triedSchema = new Schema({
 
 const patientWaitingSchema = new Schema({
   id: Schema.ObjectId,
-  doctorId: Schema.ObjectId
+  doctorId: String
 });
 
 export {
