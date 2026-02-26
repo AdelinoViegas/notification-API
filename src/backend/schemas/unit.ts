@@ -34,7 +34,7 @@ const unitSchema = new Schema({
 const workplaceSchema = new Schema({
   userId: String,
   workplaceId: Schema.ObjectId,
-  actor: Schema.ObjectId, 
+  actor: String, 
 }, {
   collection: 'user_workplace_access',
   timestamps: true,

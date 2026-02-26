@@ -527,7 +527,8 @@ async function addUserWorkplace(prev: unknown, formData: FormData){
     }
   }catch(e){
     const err = e as Error;
-
+    console.log(err);
+    
     return { 
       message: err.cause ? err.message: "impossivel",
       status: false
