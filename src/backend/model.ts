@@ -70,7 +70,7 @@ const clinical = createConnection(process.env.MONGO_URL as string, {
   appName: "master-clinical"
 });
 
-const userModel = clinical.model('User', userSchema);
+const userModel = clinical.model("User", userSchema);
 const currentLocationModel = clinical.model("CurrentLocation", currentLocationSchema);
 // patient
 const patientModel = clinical.model('Patient', patientSchema);
