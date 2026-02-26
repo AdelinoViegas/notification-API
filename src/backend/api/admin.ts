@@ -43,8 +43,15 @@ export async function getMyProfile(){
 }
 
 export async function logout(){
-  service.defaults.headers.common["Authorization"] = `Bearer ${await getUserToken()}`
-  const res = await service.post<DefaultResponse>("/auth/logout");
+  service.defaults.headers.common["Authorization"] = `Bearer ${await getUserToken()}`;
+
+  const bearer = await getUserToken();
+
+  const res = await service.post<DefaultResponse>("/auth/logout", {}, {
+    headers: {
+      Authorization: "Bearer ".concat(bearer as string)
+    }
+  });
   return res.data;
 }
 
