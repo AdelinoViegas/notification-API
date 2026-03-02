@@ -26,7 +26,7 @@ const serviceSchema = new Schema({
   },
 });
 
-serviceSchema.index({ name: 1, code: 1, kind: 1 }, { unique: true });
+serviceSchema.index({ name: 1, kind: 1 }, { unique: true });
 
 const examGroupSchema = new Schema({
   name: {
