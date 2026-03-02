@@ -122,12 +122,16 @@ const kinshipDegree:SelectionOption[] = [
 		label:"Avó",
 	},
   {
+    _id:"grandchild",
+    label:"Neto(a)",
+  },
+  {
     _id:"neighbors",
-    label:"Vizinhos/as",
+    label:"Vizinho(a)",
   },
   {
     _id:"friends",
-    label:"Amigos/as",
+    label:"Amigo(a)",
   }
 ];
 
