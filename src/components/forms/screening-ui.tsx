@@ -134,9 +134,8 @@ export default function ScreeningUI({
   const pathname = usePathname();
 
   useEffect(() =>{
-    if(screeningData){
-      setPriority(screeningData.priority);
-    }
+    if(screeningData) 
+      setPriority(screeningData.priority)
   }, [priority]);
 
   useEffect(()=>{
@@ -156,10 +155,13 @@ export default function ScreeningUI({
       patientId, 
       isServed: pathname.includes("urgency-bank") 
     })
-    .then(data => {
-      setScreeningData(data as Screening);
-    })
+    .then(data => setScreeningData(data as Screening));
+
   }, [state, patientId, pathname]);
+
+  useEffect(()=> {
+    return () => setEditable(false)
+  }, [ui]);
 
   return(
     <div>
