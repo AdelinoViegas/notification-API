@@ -20,6 +20,8 @@ export default function ViewUserFile({ id }:{ id: string }){
       toast.warn("Não foi possivel carregar os arquivos, tente mais tarde!");
       setFinalState(true);
     });
+
+    console.log(baseUrl);
   }, []);
 
   return(

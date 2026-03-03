@@ -1,6 +1,6 @@
 "use server";
 
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import type { 
   CidResponse, 
   DefaultResponse, 
@@ -18,11 +18,17 @@ const instance = axios.create({
 });
 
 export async function upload(params: unknown, authorId: string){
-  const res = await instance.post<FileResponse>("/uploads", params, {
-    headers: { authorId }
-  });
+  try{
+    const res = await instance.post<FileResponse>("/uploads", params, {
+      headers: { authorId }
+    });
 
-  return res.data;
+    return res.data;
+  }catch (e) {
+    const err = (e as AxiosError).response?.data as Error;
+
+    throw new Error(err.message);
+  }
 }
 
 export async function getAllFiles(){
