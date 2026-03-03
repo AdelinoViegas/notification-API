@@ -38,7 +38,7 @@ export default function ViewUserFile({ id }:{ id: string }){
       }
 
       { (!file && finalState) &&
-        <div className="inline-flex px-3 py-2 rounded animate-pulse bg-orange-300 text-orange-950">
+        <div className="inline-flex px-3 py-2 rounded animate-pulse bg-orange-300 text-orange-950 mt-3">
           { true && "Serviço de arquivos indisponivel..."}
         </div>
       }
