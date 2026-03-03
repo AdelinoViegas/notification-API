@@ -229,6 +229,7 @@ async function registerExamResult(prev:unknown, formData:FormData){
 
     if(examFile.size){
       const storage = await upload(formData, await getUserId());
+
       const data = await internalExamResultModel.findOneAndUpdate({ serviceId, examId }, { storageId: storage.id });
 
       if(!data)
@@ -257,7 +258,7 @@ async function registerExamResult(prev:unknown, formData:FormData){
     }
   }catch (e){
     const err = e as CustonAxiosError;
-    console.log(err);
+    console.error("error: ", err.message);
 
     return {
       message: err.cause 
