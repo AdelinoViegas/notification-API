@@ -17,11 +17,10 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   const patient = await getPatient(id);
   const consultResult = await getConsultResult(id);
   const { detail } = await getScheduleAppointment(patient?.scheduleAppointmentId as string);
-  // const results = await getPatientScheduledServices({ patientId: patient.personal._id });
 
   return(
     <main className="space-y-3">
-      <div className="my-4 text-center pt-3 text-white bg-blue-400 rounded-lg">
+      <div className="my-4 text-center pt-3 bg-gray-300 rounded-lg">
         <Header 
           center 
           title={patient?.personal.fullname as string}

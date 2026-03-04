@@ -47,7 +47,7 @@ export default function ExternalTransfer({ id }: { id?: string }){
       </div>
 
       <Modal 
-        title="Transferencia Externa"
+        title="Transferência Externa"
         open={modalstate}
         onClose={closeModal}
         asWindow
@@ -70,8 +70,8 @@ export default function ExternalTransfer({ id }: { id?: string }){
             </div>
 
             <InputDetails
-              textLabel="Movito"
-              placeholder="Descreva o motivo da transferencia ..."
+              textLabel="Motivo"
+              placeholder="Descreva o motivo da transferência ..."
               name="reason"
               required
             />
