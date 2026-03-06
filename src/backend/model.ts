@@ -63,74 +63,78 @@ import {
   sectionSchema 
 } from "@/backend/schemas/hospitalization";
 import { operatingRoomResultSchema, operatingRoomSchema } from "@/backend/schemas/operating-room";
+import dbConfigure from "./db.config";
 
-const clinical = createConnection(process.env.MONGO_URL as string, {
-  dbName: process.env.MONGO_DB_NAME,
-  family: process.env.NODE_ENV === "development" ? 4 : undefined,
-  appName: "master-clinical"
+const db = createConnection(process.env.MONGO_URL as string, {
+  family: process.env.NODE_ENV === "development" 
+    ? 4 
+    : undefined,
+  appName: "app-master-clinical"
 });
 
-const userModel = clinical.model("User", userSchema);
-const currentLocationModel = clinical.model("CurrentLocation", currentLocationSchema);
+db.on("connected", async ()=> await dbConfigure());
+
+const userModel = db.model("User", userSchema);
+const currentLocationModel = db.model("CurrentLocation", currentLocationSchema);
 // patient
-const patientModel = clinical.model('Patient', patientSchema);
-const demographyModel = clinical.model('Demography', demographySchema);
-const responsibleModel = clinical.model('Responsible', responsibleSchema);
-const groupModel = clinical.model('PatientGroup', groupSchema);
-const accessTypeModel = clinical.model('AcessType', accessTypeSchema);
-const screeningModel = clinical.model('Screening', screeningSchema);
-const processStateModel = clinical.model("ProcessState", processStateSchema);
-const patientSyncModel = clinical.model("PatientSyncs", patientSyncSchema);
-const triedModel = clinical.model("Tried", triedSchema);
-const patientWaitingModel = clinical.model("PatientWaiting", patientWaitingSchema);
-const patientStateModel = clinical.model("PatientState", patientStateSchema);
-const patientExitModel = clinical.model("PatientExit", patientExitSchema);
-export const externalTransferModel = clinical.model("ExternalTransfer", externalTransferSchema);
+const patientModel = db.model('Patient', patientSchema);
+const demographyModel = db.model('Demography', demographySchema);
+const responsibleModel = db.model('Responsible', responsibleSchema);
+const groupModel = db.model('PatientGroup', groupSchema);
+const accessTypeModel = db.model('AcessType', accessTypeSchema);
+const screeningModel = db.model('Screening', screeningSchema);
+const processStateModel = db.model("ProcessState", processStateSchema);
+const patientSyncModel = db.model("PatientSyncs", patientSyncSchema);
+const triedModel = db.model("Tried", triedSchema);
+const patientWaitingModel = db.model("PatientWaiting", patientWaitingSchema);
+const patientStateModel = db.model("PatientState", patientStateSchema);
+const patientExitModel = db.model("PatientExit", patientExitSchema);
+export const externalTransferModel = db.model("ExternalTransfer", externalTransferSchema);
 
 //agendamentos (schedulings)
 
-const serviceModel = clinical.model("Service", serviceSchema);
-const examGroupModel = clinical.model("ExamGroup", examGroupSchema);
-const examCategoryModel = clinical.model('ExamCategory', examCategorySchema);
-const examClassificationModel = clinical.model('ExamClassification', examClassificationSchema);
-const scheduleExamModel = clinical.model("ScheduleExam", scheduleExamSchema);
-const unitModel = clinical.model("Unit", unitSchema);
-const examResultModel = clinical.model("ExameResult", examResultSchema)
-const examCancelModel = clinical.model("ExamCancel", examCancelSchema);
-const appointmentCancelModel = clinical.model("AppointmentCancel", appointmentCancelSchema);
-const workplaceModel = clinical.model("WorkPlace", workplaceSchema);
-const doctorCalendarModel = clinical.model("DoctorCalendar", doctorCalendarSchema);
-const scheduleAppointmentModel = clinical.model("ScheduleAppointment", scheduleAppointmentSchema);
-const specialtyModel = clinical.model("Expeciality",specialtyStateSchema);
-const externalUnitModel = clinical.model('ExternalUnit', externalUnitSchema);
-const officeModel = clinical.model('Office', officeSchema);
-const scheduleServiceModel = clinical.model("Services", scheduleServiceSchema);
-const serviceResultModel = clinical.model("ServiceResult", serviceResultSchema);
-const externalResultsModel = clinical.model('ExternalResults', externalResultSchema);
-const internalExamResultModel = clinical.model("InternalExamResult", internalExamResultSchema);
-const scheduleSugeryModel = clinical.model("ScheduleSugery", scheduleSugerySchema);
+const serviceModel = db.model("Service", serviceSchema);
+const examGroupModel = db.model("ExamGroup", examGroupSchema);
+const examCategoryModel = db.model('ExamCategory', examCategorySchema);
+const examClassificationModel = db.model('ExamClassification', examClassificationSchema);
+const scheduleExamModel = db.model("ScheduleExam", scheduleExamSchema);
+const unitModel = db.model("Unit", unitSchema);
+const examResultModel = db.model("ExameResult", examResultSchema)
+const examCancelModel = db.model("ExamCancel", examCancelSchema);
+const appointmentCancelModel = db.model("AppointmentCancel", appointmentCancelSchema);
+const workplaceModel = db.model("WorkPlace", workplaceSchema);
+const doctorCalendarModel = db.model("DoctorCalendar", doctorCalendarSchema);
+const scheduleAppointmentModel = db.model("ScheduleAppointment", scheduleAppointmentSchema);
+const specialtyModel = db.model("Expeciality",specialtyStateSchema);
+const externalUnitModel = db.model('ExternalUnit', externalUnitSchema);
+const officeModel = db.model('Office', officeSchema);
+const scheduleServiceModel = db.model("Services", scheduleServiceSchema);
+const serviceResultModel = db.model("ServiceResult", serviceResultSchema);
+const externalResultsModel = db.model('ExternalResults', externalResultSchema);
+const internalExamResultModel = db.model("InternalExamResult", internalExamResultSchema);
+const scheduleSugeryModel = db.model("ScheduleSugery", scheduleSugerySchema);
 
 // banco de urgencia
-const urgencyBankModel = clinical.model("UrgencyBank", urgencyBankSchema);
-const urgencyServiceModel = clinical.model('UrgencyService', urgencyService);
-const patientHospitalizedModel = clinical.model("PatientHospitalized", patientHospitalizedSchema);
-const prescriptionModel = clinical.model("Prescription", prescriptionSchema);
-const surgeryModel = clinical.model("Surgery", surgerySchema);
+const urgencyBankModel = db.model("UrgencyBank", urgencyBankSchema);
+const urgencyServiceModel = db.model('UrgencyService', urgencyService);
+const patientHospitalizedModel = db.model("PatientHospitalized", patientHospitalizedSchema);
+const prescriptionModel = db.model("Prescription", prescriptionSchema);
+const surgeryModel = db.model("Surgery", surgerySchema);
 
 //operating room
-const operatingRoomModel = clinical.model("patietOperatingRoom", operatingRoomSchema);
-const operatingRoomResultModel = clinical.model("operatingRoomExternal", operatingRoomResultSchema);
+const operatingRoomModel = db.model("patietOperatingRoom", operatingRoomSchema);
+const operatingRoomResultModel = db.model("operatingRoomExternal", operatingRoomResultSchema);
 
 //internamento
-const bedNursingModel = clinical.model("bedNursing", bedNursingSchema);
-const nursingModel = clinical.model("Nursing", nursingSchema);
-const sectionModel = clinical.model("Section", sectionSchema);
-const internalServiceModel = clinical.model("InternalService", internalServiceSchema);
-const hospitalizationModel = clinical.model("Hospitalization", hospitalizationSchema);
-const inHospitalizeModel = clinical.model("inHospitalize", inHospitalizeSchema);
-const internalMovimentModel = clinical.model("InternalMoviments", internalMovimentsSchema);
-const serviceRequestsModel = clinical.model("ServiceRequest", serviceRequestsSchema);
-const namePatternsModel = clinical.model("NamePattern", namePatternsSchema);
+const bedNursingModel = db.model("bedNursing", bedNursingSchema);
+const nursingModel = db.model("Nursing", nursingSchema);
+const sectionModel = db.model("Section", sectionSchema);
+const internalServiceModel = db.model("InternalService", internalServiceSchema);
+const hospitalizationModel = db.model("Hospitalization", hospitalizationSchema);
+const inHospitalizeModel = db.model("inHospitalize", inHospitalizeSchema);
+const internalMovimentModel = db.model("InternalMoviments", internalMovimentsSchema);
+const serviceRequestsModel = db.model("ServiceRequest", serviceRequestsSchema);
+const namePatternsModel = db.model("NamePattern", namePatternsSchema);
 
 export { namePatternsModel }
 

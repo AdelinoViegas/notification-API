@@ -1088,7 +1088,7 @@ async function finishHospitalization(prev: unknown, formData: FormData){
     });
 
     await syncPatientRegister(patientId);
-    await closePatientProcess(tried?.patientId?.toString() as string, "urgency")
+    await closePatientProcess(tried?.patientId?.toString() as string, "urgency");
 
     return {
       message: "Patiente internado com sucesso!",
@@ -1096,7 +1096,7 @@ async function finishHospitalization(prev: unknown, formData: FormData){
     }
   }catch (e) {
     const err = e as Error;
-    console.log(err);
+    console.error(err);
 
     return {
       message: err.cause ? err.message : "Não foi possivel finalizar!",

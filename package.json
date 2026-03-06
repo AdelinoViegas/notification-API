@@ -3,11 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "yarn setup && next dev --turbopack",
+    "dev": "next dev --turbopack",
     "build": "next build",
-    "start": "yarn setup && next start",
+    "start": "next start",
     "lint": "next lint",
-    "setup": "node clinical-setup.mjs",
     "review": "yarn knip",
     "test": "jest"
   },

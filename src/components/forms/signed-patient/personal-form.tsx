@@ -92,7 +92,6 @@ export default function PersonalInfoForm({
         />
         
         <Selection
-          key={civilStatus}
           options={civilStateValues}
           label="Estado Civil"
           name="civilState"
@@ -102,7 +101,6 @@ export default function PersonalInfoForm({
         />
         
         <Selection
-          key={_gender}
           options={genderValues}
           label="Gênero" 
           name="gender"
