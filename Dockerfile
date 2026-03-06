@@ -25,7 +25,6 @@ COPY --from=builder /app/public public
 COPY --from=builder /app/node_modules node_modules
 COPY --from=builder /app/next.config.ts .
 # REMOVIDO: COPY --from=builder /app/.env .  <-- ISSO ESTAVA QUEBRANDO TUDO
-COPY --from=builder /app/clinical-setup.mjs .
 
 EXPOSE 3000
 
