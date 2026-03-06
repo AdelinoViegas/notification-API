@@ -3,7 +3,8 @@
 import { 
   HTMLInputTypeAttribute, 
   useActionState, 
-  useEffect
+  useEffect,
+  useState
 } from "react";
 import { useRouter } from "next/navigation";
 import Accordium from "@/components/ui/accordium";
@@ -74,15 +75,47 @@ function Component({
   initialState
 }: InternalComponent){
   const [ state, action ] = useActionState(apiFn?apiFn:FallbackFn, initialState);
+  const [ editable, setEditable ] = useState(false);
   const router = useRouter();
+  const childrenTransformed: Children[] = childrens.map(elem => {
+    const elements = elem.elements.map(e => ({
+      ...e,
+      props: { 
+        ...e.props,
+        disabled: !editable 
+      }
+    }));
+    
+    const separatedElements = elem.separatedElements?.map (elem => {
+      const elements = elem.elements.map(e => ({
+        ...e,
+        props: {
+          ...e.props,
+          disabled: !editable
+        }
+      }))
+
+      return {
+        ...elem,
+        elements
+      }
+    });
+
+    return {
+      className: elem.className,
+      elements,
+      separatedElements
+    }
+  });
   
   useEffect(()=>{
     if(state?.message){
-      if(state.status)
+      if(state.status) {
+        router.refresh();
         toast.success(state.message, {
-          onClose: router.refresh
+          onOpen: ()=> setEditable(false)
         });
-      else 
+      }else 
         if(state?.isWarn)
           toast.warn(state.message);
         else
@@ -100,7 +133,7 @@ function Component({
         />
 
         <div className={className}>
-          {childrens.map((item, i)=>(
+          {childrenTransformed.map((item, i)=>(
             <div key={i} className={item.className}>
               <RenderUIElement items={item.elements} />
 
@@ -116,7 +149,16 @@ function Component({
           ))}
         </div>
 
-        <Button>Salvar</Button>
+        <div className="flex gap-x-3">
+          <Button
+            type="button" 
+            cancel={editable}
+            onClick={()=> setEditable(!editable)}
+            >{ editable ? "Cancelar" : "Editar" }
+          </Button>
+          
+          {editable && <Button>Salvar</Button>}
+        </div>
       </form>
     </Accordium>
   );
