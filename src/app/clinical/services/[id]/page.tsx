@@ -7,7 +7,7 @@ export default async function Page({ params }:{ params: Promise<{ id: string }>}
   const { id } = await params;
   const service = await getService(id);
   const group = await getCCGs("group");
-  const categories = await getCCGs("category");
+  const categories = await getCCGs("category", service?.kind as "exam" | "consultation" | "surgery");
   const classifications = await getCCGs("classification");
   const specialties = await getSpecialties();
 

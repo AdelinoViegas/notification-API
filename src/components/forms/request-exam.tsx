@@ -94,7 +94,7 @@ export default function RequestExams({
 
   useEffect(()=>{
     const loadData = async ()=>{
-      const ccgs = await getCCGs('category') as SelectionOption[];
+      const ccgs = await getCCGs('category', 'exam') as SelectionOption[];
       const exams = await getServices({ kind: "exam" }) as SelectionOption[];
       setExamCache(exams);
       setExams(exams);

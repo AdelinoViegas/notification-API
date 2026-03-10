@@ -41,12 +41,18 @@ const examGroupSchema = new Schema({
 const examCategorySchema = new Schema({
   name: {
     type: String,
-    unique: true,
     required: true,
   },
+  kind: {
+    type: String,
+    enum: ["surgery", "consultation", "exam"],
+    default: "exam"
+  }
 }, {
   collection: "exam_category"
 });
+
+examCategorySchema.index({ name: 1, kind: 1 }, { unique: true });
 
 const examClassificationSchema = new Schema({
   name: {

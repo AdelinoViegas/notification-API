@@ -39,6 +39,7 @@ export default function RegisterService(){
   const toggleClassification = ()=>setClassificationState(!classificationState);
 
   const [ specialtyState, setSpecialtyState ] = useState(false);
+  const [ selectedServiceKind, setSelectedServiceKind ] = useState<"exam" | "consultation" | "surgery">("exam");
 
   const [ groups, setGroups ] = useState<SelectionOption[]>([]);
   const [ categories, setCategories ] = useState<SelectionOption[]>([]);
@@ -48,7 +49,7 @@ export default function RegisterService(){
   const signFormRef = useRef<HTMLFormElement>(null);
 
   const handleSelect = useCallback(async ()=>{
-    const categories = await getCCGs("category") as SelectionOption[];
+    const categories = await getCCGs("category", selectedServiceKind) as SelectionOption[];
     const groups = await getCCGs("group") as SelectionOption[];
     const classifications = await getCCGs("classification") as SelectionOption[];
     const specialties = await getSpecialties() as SelectionOption[];
@@ -57,7 +58,7 @@ export default function RegisterService(){
     setCategories(categories);
     setClassifications(classifications);
     setSpecialties(specialties);
-  }, []);
+  }, [selectedServiceKind]);
 
   useEffect(()=>{
     if(state.message)
@@ -118,7 +119,11 @@ export default function RegisterService(){
             label="Tipo de Serviço"
             name="kindOfService"
             className="grow"
-            onChange={e => setSpecialtyState(e.target.value === "consultation" ? true:false)}
+            onChange={e => {
+              const kind = e.target.value as "exam" | "consultation" | "surgery";
+              setSelectedServiceKind(kind);
+              setSpecialtyState(kind === "consultation" ? true:false);
+            }}
             required
           />
 
@@ -238,6 +243,7 @@ export default function RegisterService(){
         onClose={toggleCategory}>
         <form action={ccgAction}>
           <input type="hidden" name="type" value="category" />
+          <input type="hidden" name="kind" value={selectedServiceKind} />
           <InputField
             textLabel="Nome da Categoria" 
             placeholder="Descrição da categoria do exame"

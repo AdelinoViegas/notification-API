@@ -177,11 +177,12 @@ async function signCCG(prev: unknown, formData: FormData){
   try{
     const name = formData.get("name");
     const type = formData.get("type") as CCGTypes;
+    const kind = (formData.get("kind") || "exam") as "exam" | "consultation" | "surgery";
     let message = "";
 
     switch(type){
       case "category": {
-        const category = new examCategoryModel({ name });
+        const category = new examCategoryModel({ name, kind });
         await category.save();
         message = "Categoria registrada com sucesso!";
         break;
@@ -235,12 +236,15 @@ async function updateCCG(formData: FormData){
   }finally{}
 }
 
-async function getCCGs(type: CCGTypes){
+async function getCCGs(type: CCGTypes, kind?: "exam" | "consultation" | "surgery"){
   const formated = [];
-  let ccgs;
+  let ccgs: any[] = [];
   switch(type){
     case "category":
-      ccgs = await examCategoryModel.find();
+      if(kind)
+        ccgs = await examCategoryModel.find({ kind });
+      else
+        ccgs = await examCategoryModel.find();
       break;
     case "classification":
       ccgs = await examClassificationModel.find();
