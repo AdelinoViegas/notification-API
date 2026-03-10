@@ -7,6 +7,7 @@ import { getPatient } from "@/backend/api/clinical/api";
 import { redirect } from "next/navigation";
 import { getPatientState } from "@/backend/api/clinical/urgency-bank-api";
 import Header from "@/components/header";
+import InternalMoviment from "@/components/hospitalization/internal-moviment";
 
 export default async function Layout({ 
   children,
@@ -38,6 +39,7 @@ export default async function Layout({
           basePathname={basePath}
         />
         <DefineState />
+        <InternalMoviment />
       </div>
 
       <div className={clsx("my-4 text-center pt-3 text-white bg-blue-400 rounded-lg",

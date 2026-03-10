@@ -7,9 +7,6 @@ import Button from "@/components/ui/button";
 import InputField from "@/components/ui/input-field";
 import { 
   getInternalServices, 
-  // getNursings, 
-  // getSections, 
-  // getBeds,
   signInternalService,
   movePatientTo
 } from "@/backend/api/clinical/hospitalization-api";
@@ -18,17 +15,11 @@ import { toast } from "react-toastify";
 import Selection, { SelectionOption } from "@/components/ui/selection";
 import InputDetails from "@/components/ui/input-details";
 
-export default function InternalMoviment(){
+function InternalMovimentForm(){
   const [ state, action ] = useActionState(movePatientTo, { message: "", status: false }); 
   const [ serviceState, serviceAction ]= useActionState(signInternalService, { message: "", status: false});
   const [ modalService, setModalService ] = useState(false);
-  
   const [ internalServices, setInternalServices ] = useState<SelectionOption[]>([]);
-  // const [ sections, setSections ] = useState<SelectionOption[]>([]);
-  // const [ nursings, setNursings ] = useState<SelectionOption[]>([]);
-  // const [ beds, setBeds ] = useState<SelectionOption[]>([]);
-  // const [ selectedSection, setSelectedSection ] = useState<string>();
-  // const [ selectedNursing, setSelectedNursing ] = useState<string>();
 
   const router = useRouter();
   const params = useParams();
@@ -39,10 +30,6 @@ export default function InternalMoviment(){
         toast.success(state.message, { onOpen: router.refresh });
       else
         toast.error(state.message);
-
-    // getSections().then(setSections);
-    // getNursings({ sectionId: selectedSection }).then(setNursings);
-    // getBeds(selectedNursing).then(e => setBeds(e.beds));
 
   }, [state]);
 
@@ -81,29 +68,6 @@ export default function InternalMoviment(){
           required
         />
 
-        {/* <Selection
-          label="Ala"
-          name="sectionId"
-          options={sections} 
-          onChange={e => setSelectedSection(e.target.value)}
-          required
-        />
-
-        <Selection
-          label="Enfermaria"
-          name="nursingId"
-          options={nursings} 
-          onChange={e => setSelectedNursing(e.target.value)}
-          required
-        />
-
-        <Selection
-          label="Nº da Cama"
-          name="bedId"
-          options={beds} 
-          required
-        /> */}
-
         <Button disabled>Salvar</Button>
       </form>
 
@@ -123,5 +87,21 @@ export default function InternalMoviment(){
         </form>
       </Modal>
     </div>
+  )
+}
+
+export default function InternalMoviment(){
+  const [ modalState, setModalState ] = useState(false);
+  return(
+    <>
+      <Button onClick={()=>setModalState(true)}>Movimentar</Button>
+      <Modal
+        title="Novo serviço de Internamento"
+        open={modalState}
+        onClose={()=>setModalState(false)}
+      >
+        <InternalMovimentForm />
+      </Modal>
+    </>
   )
 }
