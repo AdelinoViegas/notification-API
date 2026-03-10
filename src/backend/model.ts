@@ -7,7 +7,7 @@ import {
   examGroupSchema,
   scheduleExamSchema,
   examResultSchema,
-  examCategorySchema,
+  serviceCategorySchema,
   examClassificationSchema,
   examCancelSchema,
   doctorCalendarSchema,
@@ -95,7 +95,7 @@ export const externalTransferModel = db.model("ExternalTransfer", externalTransf
 
 const serviceModel = db.model("Service", serviceSchema);
 const examGroupModel = db.model("ExamGroup", examGroupSchema);
-const examCategoryModel = db.model('ExamCategory', examCategorySchema);
+const serviceCategoryModel = db.model('ExamCategory', serviceCategorySchema);
 const examClassificationModel = db.model('ExamClassification', examClassificationSchema);
 const scheduleExamModel = db.model("ScheduleExam", scheduleExamSchema);
 const unitModel = db.model("Unit", unitSchema);
@@ -156,7 +156,7 @@ export {
   scheduleExamModel,
   examResultModel,
   examClassificationModel,
-  examCategoryModel,
+  serviceCategoryModel,
   examCancelModel,
   workplaceModel,
   doctorCalendarModel,
