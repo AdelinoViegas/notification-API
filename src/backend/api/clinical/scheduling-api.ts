@@ -15,7 +15,7 @@ import {
   patientModel,
   unitModel,
   examResultModel,
-  examCategoryModel,
+  serviceCategoryModel,
   examClassificationModel,
   examCancelModel,
   doctorCalendarModel,
@@ -129,7 +129,7 @@ export async function getServices({
   for(const service of services){
     const [ group, category, classification ] = await Promise.all([
       examGroupModel.findById({ _id: service.groupId }).select({ name: 1 }),
-      examCategoryModel.findById({ _id: service.categoryId }).select({ name: 1 }),
+      serviceCategoryModel.findById({ _id: service.categoryId }).select({ name: 1 }),
       examClassificationModel.findById({ _id: service.classificationId }).select({ name: 1 })
     ]);
 
@@ -182,7 +182,7 @@ async function signCCG(prev: unknown, formData: FormData){
 
     switch(type){
       case "category": {
-        const category = new examCategoryModel({ name, kind });
+        const category = new serviceCategoryModel({ name, kind });
         await category.save();
         message = "Categoria registrada com sucesso!";
         break;
@@ -229,7 +229,7 @@ async function updateCCG(formData: FormData){
     const itemId = formData.get("id");
     const name = formData.get("name");
 
-    await examCategoryModel.updateOne({_id: itemId}, { name });
+    await serviceCategoryModel.updateOne({_id: itemId}, { name });
     await examClassificationModel.updateOne({_id: itemId}, { name });
     await examGroupModel.updateOne({_id: itemId}, { name });
     redirect("/clinical/services");
@@ -238,13 +238,13 @@ async function updateCCG(formData: FormData){
 
 async function getCCGs(type: CCGTypes, kind?: "exam" | "consultation" | "surgery"){
   const formated = [];
-  let ccgs: any[] = [];
+  let ccgs: unknown[] = [];
   switch(type){
     case "category":
       if(kind)
-        ccgs = await examCategoryModel.find({ kind });
+        ccgs = await serviceCategoryModel.find({ kind });
       else
-        ccgs = await examCategoryModel.find();
+        ccgs = await serviceCategoryModel.find();
       break;
     case "classification":
       ccgs = await examClassificationModel.find();
@@ -253,13 +253,15 @@ async function getCCGs(type: CCGTypes, kind?: "exam" | "consultation" | "surgery
       ccgs = await examGroupModel.find();
   }
 
-  for(const item of ccgs)
+  for(const item of ccgs) {
+    const document = item as { _id: { toString(): string }; name: string };
     formated.push({
-      _id: item._id.toString(),
-      id: item._id.toString(),
-      name: item.name as string,
-      label: item.name as string,
+      _id: document._id.toString(),
+      id: document._id.toString(),
+      name: document.name as string,
+      label: document.name as string,
     });
+  }
   
   return formated;
 }
@@ -267,7 +269,7 @@ async function getCCGs(type: CCGTypes, kind?: "exam" | "consultation" | "surgery
 async function getCCG({ type, id }:{ type?: CCGTypes, id: string }){
   switch(type){
     case "category": {
-      const category = await examCategoryModel.findById({ _id: id });
+      const category = await serviceCategoryModel.findById({ _id: id });
       return {
         _id: category?._id.toString() as string,
         name: category?.name as string,
@@ -289,7 +291,7 @@ async function getCCG({ type, id }:{ type?: CCGTypes, id: string }){
     }
 
     default: {
-      const category = await examCategoryModel.findById({ _id: id });
+      const category = await serviceCategoryModel.findById({ _id: id });
       const classi = await examClassificationModel.findById({ _id: id });
       const group = await examGroupModel.findById({ _id: id });
       

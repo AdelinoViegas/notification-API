@@ -38,7 +38,7 @@ const examGroupSchema = new Schema({
   collection: "exam_group"
 });
 
-const examCategorySchema = new Schema({
+const serviceCategorySchema = new Schema({
   name: {
     type: String,
     required: true,
@@ -46,13 +46,13 @@ const examCategorySchema = new Schema({
   kind: {
     type: String,
     enum: ["surgery", "consultation", "exam"],
-    default: "exam"
+    required: true
   }
 }, {
   collection: "exam_category"
 });
 
-examCategorySchema.index({ name: 1, kind: 1 }, { unique: true });
+serviceCategorySchema.index({ name: 1, kind: 1 }, { unique: true });
 
 const examClassificationSchema = new Schema({
   name: {
@@ -338,7 +338,7 @@ export{
   examGroupSchema,
   scheduleExamSchema,
   examResultSchema,
-  examCategorySchema,
+  serviceCategorySchema,
   examClassificationSchema,
   examCancelSchema,
   appointmentCancelSchema,
