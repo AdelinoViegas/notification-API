@@ -133,11 +133,6 @@ export default function ScreeningUI({
   const router = useRouter();
   const pathname = usePathname();
 
-  useEffect(() =>{
-    if(screeningData) 
-      setPriority(screeningData.priority)
-  }, [priority]);
-
   useEffect(()=>{
     if(state.message){
       if(state.status)
@@ -304,13 +299,13 @@ export default function ScreeningUI({
           <>
            <div className="w-96">
               <Selection
-                key={_priority}
                 options={priorityToComponent}
                 label="Prioridade"
                 name="priority"
                 required
-                defaultValue={_priority}
+                value={_priority}
                 disabled={!editable}
+                onChange={(e)=>setPriority(e.target.value)}
               />
             </div>
           </>
