@@ -74,21 +74,31 @@ async function sendPatientToOffice(prev: unknown, formData: FormData){
     const appointment = await scheduleAppointmentModel.findById({_id: scheduleId });
     const service = await serviceModel.findById({_id: appointment?.consultId}).select({price: 1});
     const scheduleInOffice = await officeModel.find({ served: false });
-    
+        
+    if(!!service?.price && appointment?.payment?.status !== "confirmed")
+      throw new Error('A consulta não está validada!', { cause: "not_confirmed" });
+
     if(scheduleInOffice.length){
       for(const scheduleOffice of scheduleInOffice){
         const officeAppointment = await scheduleAppointmentModel.findOne({ _id: scheduleOffice.scheduleId });
+
+        if(officeAppointment?.doctorReschedule){
+          await Promise.all([
+            officeModel.updateOne({ _id: scheduleOffice._id }, { deleted: false }),
+            scheduleAppointmentModel.updateOne({ _id: officeAppointment?._id }, { served: true, doctorReschedule: false })
+          ]);
+
+          return {
+            message: "Utente enviado ao consultório!",
+            status: true,
+          }
+        }
+
         if(appointment?.patientId?.toString() === officeAppointment?.patientId?.toString())
-          throw new Error('Este utente já está no consultório do Médico!', { cause: "already" });   
+          throw new Error('Este utente já está no consultório do Médico!', { cause: "already" });    
       }
     }
 
-    if(!!service?.price && appointment?.payment?.status !== "confirmed")
-      throw new Error('A consulta não está validada!', { cause: "not_confirmed" });
-    
-    if(appointment?.doctorReschedule)
-      throw new Error('O Médico solicitou o reagendamento deste utente!', { cause: "doctor_reschedule" });
-    
     await officeModel.create({
       scheduleId,
       userId: await getUserId(),
@@ -122,7 +132,7 @@ async function getPatients({
   inAppointment?: boolean;
 }){
   try{
-    const appointments = await officeModel.find({ served: served ?? false });
+    const appointments = await officeModel.find({ served: served ?? false, deleted: false });
     const formated = [];
 
     for(const appointment of appointments){
@@ -319,10 +329,11 @@ async function finishConsultation(prev: unknown, formData: FormData){
 
 async function requestReschedule(prev: unknown, formData: FormData){
   try{
-    const officeId = formData.get("officeId");
+    const officeId = formData.get("officeId");     
+    
     const patientInOffice = await officeModel.findOneAndUpdate({_id: officeId }, {
       deleted: true
-    });
+    })
     
     await scheduleAppointmentModel.updateOne({_id: patientInOffice?.scheduleId }, {
       served: false,
