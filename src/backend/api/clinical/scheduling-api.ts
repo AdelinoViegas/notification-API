@@ -785,7 +785,7 @@ async function rescheduleAppointment(prev: unknown, formData: FormData){
         doctorTime, 
         userId: await getUserId(),
         canceled: isArchived?false:true, 
-        doctorReschedule: false,
+        doctorReschedule: !!existingAppointment?.doctorReschedule,
       });
     }else{
       const result = await getNumberDoctorAppointment({ doctorId, day: doctorDay });
@@ -810,7 +810,7 @@ async function rescheduleAppointment(prev: unknown, formData: FormData){
         doctorTime,
         canceled: isArchived?false:true,
         userId: await getUserId(),
-        doctorReschedule: false,
+        doctorReschedule: !!existingAppointment?.doctorReschedule,
       });
     }
 
