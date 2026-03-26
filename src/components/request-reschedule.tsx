@@ -21,7 +21,7 @@ export default function RequestReschedule(){
   const formRef = useRef<HTMLFormElement>(null);
   const [ modalState, setModalState ] = useState(false);
   const router = useRouter();
-  const params:{ officeId: string } = useParams();
+  const params:{ id: string } = useParams();
 
   const closeModal = ()=> setModalState(false);
   const handleConfirm = ()=>{
@@ -44,7 +44,7 @@ export default function RequestReschedule(){
 
   return(
     <form {...{action}} ref={formRef} className="my-3">
-      <input type="hidden" name="officeId" value={params.officeId} />
+      <input type="hidden" name="officeId" value={params.id} />
       <Button
         className='bg-orange-500 flex items-center gap-3'
         onClick={()=>setModalState(true)} 

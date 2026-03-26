@@ -218,6 +218,10 @@ const officeSchema = new Schema<ConsultResult>({
     type: Boolean,
     default: false,
   },
+  deleted: { 
+    type: Boolean, 
+    default: false 
+  },
   archiving: {
     reason: String,
     userId: String,
