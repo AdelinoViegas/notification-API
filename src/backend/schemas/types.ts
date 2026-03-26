@@ -51,6 +51,7 @@ export interface ConsultResults {
 export interface ConsultResult extends Document {
   scheduleId: Types.ObjectId;
   served: boolean;
+  deleted: boolean;
   archiving: boolean;
   userId: string;
   results: ConsultResults;
