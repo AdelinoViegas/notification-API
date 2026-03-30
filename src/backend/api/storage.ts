@@ -11,7 +11,7 @@ import type {
 import { getServiceToken } from "@/lib/web-token";
 
 const instance = axios.create({ 
-  baseURL: process.env.API_URL+"/st",
+  baseURL: process.env.API_URL+"/st/v1",
   headers: {
     Authorization: `Bearer ${getServiceToken()}`
   }

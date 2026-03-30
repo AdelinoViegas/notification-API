@@ -10,9 +10,9 @@ import type {
   DefaultResponse
 } from "@/backend/api/types";
 
-const systemService = axios.create({ baseURL: `${process.env.API_URL}/ath` });
+const systemService = axios.create({ baseURL: `${process.env.API_URL}/ath/v2` });
 
-const service = axios.create({ baseURL: `${process.env.API_URL}/ath`});
+const service = axios.create({ baseURL: `${process.env.API_URL}/ath/v2`});
 
 export async function getUsers(): Promise<User[]>{
   systemService.defaults.headers.common.Authorization = `Bearer ${await getServiceToken()}`;
@@ -60,10 +60,6 @@ export async function validator(token: string){
   const res = await service.get("/validate");
   return res.status === 200;
 }
-
-// export async function rbacValidator(resource: string){
-
-// }
 
 export async function getGrantedRoles(){
   try{
