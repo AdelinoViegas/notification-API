@@ -1,7 +1,10 @@
 {
-  "name": "erp-web-master",
-  "version": "0.1.0",
+  "name": "erp-clinical-service",
+  "description": "Serviço clínico do Master ERP",
+  "version": "1.0.0",
   "private": true,
+  "author": "socompser",
+  "license": "UNLICENSED",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
