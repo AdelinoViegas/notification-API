@@ -5,8 +5,8 @@ O modulo responsável pela gestão de processos clínicos dentro da plataforma M
 ## Instalação
 
 Para a instalação do modulo clinico configurar os serviços abaixo:
-* [Api Gateway Master](https://github.com/socompser/api-gateway-master) - rodar em Pod
-* [Painel Web Admin](https://github.com/socompser/web-master-admin) - rodar em container
+* [Api Gateway Master](https://github.com/socompser/erp-api-gateway) - rodar em Pod
+* [Painel Web Admin](https://github.com/socompser/erp-admin-web) - rodar em container
 * **MongoDb** (rodar em container ou configurá-lo em bare metal)
 
 > Atenção: Ajustar a porta do `web-admin` de acordo com a porta que estiver na .env (nesse caso é a porta `8081`)
@@ -14,11 +14,11 @@ Para a instalação do modulo clinico configurar os serviços abaixo:
 Clone o repositório e instale as dependências:
 
 ```bash
-git clone https://github.com/socompser/master-clinical.git
-cd master-clinical
+git clone https://github.com/socompser/erp-clinical-service.git
+cd erp-clinical-service
 yarn install
 yarn build
-yarn setup # para configurar o banco de dados do serviço clínico
+yarn setup
 yarn start
 ```
 
