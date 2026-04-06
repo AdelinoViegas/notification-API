@@ -13,6 +13,9 @@ RUN yarn build
 
 FROM node:22-alpine
 
+ENV COOKIE_AUTH_HEADER="auth_token" 
+ENV NEXT_TELEMETRY_DISABLED=1
+
 RUN apk add --no-cache alpine-conf && \
   setup-timezone -z Africa/Luanda
 
