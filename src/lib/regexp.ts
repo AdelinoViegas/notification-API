@@ -24,7 +24,11 @@ export function inferRegexPattern(str: string): string {
       count++;
     } else {
       if (last !== null) {
-        result.push(count > 1 ? `${last}{${count}}` : last);
+        if (last === "[0-9]") {
+          result.push(`${last}+`);
+        } else {
+          result.push(count > 1 ? `${last}{${count}}` : last);
+        }
       }
       last = token;
       count = 1;
@@ -33,8 +37,12 @@ export function inferRegexPattern(str: string): string {
 
   // adiciona o último bloco
   if (last !== null) {
-    result.push(count > 1 ? `${last}{${count}}` : last);
+    if (last === "[0-9]") {
+      result.push(`${last}+`);
+    } else {
+      result.push(count > 1 ? `${last}{${count}}` : last);
+    }
   }
 
-  return result.join("");
+  return `^${result.join("")}$`;
 }

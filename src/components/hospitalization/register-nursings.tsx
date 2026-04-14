@@ -37,6 +37,13 @@ export default function RegisterNursing(){
     setNewNursingState(false);
     setBedNumber("");
   }
+
+  useEffect(()=>{
+    if(!modal) return;
+    getInternalServices().then(setInternalServices);
+    getSections().then(setSections);
+    getNursings({}).then(setNursings);
+  }, [modal]);
   
   useEffect(()=>{
     if(state.message)
