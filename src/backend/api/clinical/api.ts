@@ -2,6 +2,9 @@
 
 import { getUserId } from "@/lib/web-token";
 import { validatePatientDoc } from "@/lib/regexp";
+import { calculateAge } from "@/lib/calculate-age";
+import { omitUndefined } from "mongoose";
+import { closePatientInUrgency } from "./urgency-bank-api";
 import { closePatientProcess, getSyncedHistories, syncPatientRegister } from "./process-control";
 import {
   Responsable,
@@ -35,9 +38,8 @@ import {
   getUsers as RESTgetUsers,
   getUser as RESTgetUser 
 } from "@/backend/api/admin";
-import { omitUndefined } from "mongoose";
-import { calculateAge } from "@/lib/calculate-age";
-import { closePatientInUrgency } from "./urgency-bank-api";
+import { db } from "@/backend/model";
+
 
 type ChoosedGroup = Assured | Employee | Enterprise | undefined;
 
@@ -201,6 +203,8 @@ async function registerUser(prev: unknown, formData: FormData){
 
 async function signPatient(prev: unknown, formData: FormData){
   try{
+    const userId = await getUserId();
+
     // personal info 
     const patientName = formData.get("patientName") as string;
     const patientBirthDate = formData.get("patientBirthDate") as string;
@@ -209,18 +213,6 @@ async function signPatient(prev: unknown, formData: FormData){
     const patientTel = formData.get("patientTel") as string;
     const patientDocument = formData.get("patientDocument") as string;
     const language = formData.get("language") as string;
-    
-    const patient = new patientModel({
-      fullname: patientName,
-      registerNumber: Date.now(),
-      birthDate: patientBirthDate,
-      civilState,
-      gender,
-      tel: patientTel,
-      documentation: patientDocument,
-      lang: language,
-      userId: await getUserId()
-    });
 
     // locations info
     const nationality = formData.get("nationality") as string;
@@ -230,16 +222,6 @@ async function signPatient(prev: unknown, formData: FormData){
     const street = formData.get("street") as string; 
     const homeNumber = formData.get("homeNumber") as string;
     
-    const locationDb = new demographyModel({
-      patientId: patient._id,
-      nationality,
-      naturality,
-      province,
-      actualLocation,
-      street,
-      homeNumber,
-    });
-
     //responsibles
     const responsibles:Responsable[] = [];
 
@@ -256,83 +238,88 @@ async function signPatient(prev: unknown, formData: FormData){
         });
     };
 
-    const responsiblesDb = new responsibleModel({
-      patientId: patient._id,
-      responsibles: responsibles,
-    });
-
     // patient group
-    const group = formData.get("patientGroup") as string;
     let choosedGroup: ChoosedGroup;
-
-    if(group === "assured"){
-      const name = formData.get("nameInsuranceCompany") as string;
-      const apolice = Number(formData.get("apoliceNumber"));
-      const tel = formData.get("assuredTel") as string;
-      const detail = formData.get("asuredDetails") as string;
-
-      choosedGroup = {
-        name,
-        apolice,
-        tel,
-        detail
-      };
-    }else if(group === "enterprise"){
-      const name  = formData.get("enterpriseName") as string;
-      const passNumber = formData.get("passNumber") as string;
-      const role = formData.get("enterpriseFunction") as string;
-
-      choosedGroup = {
-        name,
-        passNumber,
-        role,
-      };
-    }else if(group === "employee"){
-      const passNumber  = formData.get("passNumber") as string;
-      const role = formData.get("employeeFunction") as string;
-      const workArea = formData.get("serviceArea") as string;
-      
-      choosedGroup = {
-        passNumber,
-        role,
-        workArea,
-      };
-    }
-
-    const groupDb = new groupModel({
-      patientId: patient._id,
-      type: group,
-      group: choosedGroup
-    });
+    const group = formData.get("patientGroup") as string;
+    const assuredName = formData.get("nameInsuranceCompany") as string;
+    const apolice = Number(formData.get("apoliceNumber"));
+    const tel = formData.get("assuredTel") as string;
+    const detail = formData.get("asuredDetails") as string;
+    const companyName  = formData.get("enterpriseName") as string;
+    const companyPassNumber = formData.get("enterprisePassNumber") as string;
+    const roleCompany = formData.get("enterpriseFunction") as string;        
+    const employeePassNumber  = formData.get("employeePassNumber") as string;
+    const roleEmployee = formData.get("employeeFunction") as string;
+    const workArea = formData.get("serviceArea") as string;
 
     // access type
+    let externalUnitId:string;
     const accessType = formData.get("accessType");
-    let externalUnitId;
 
-    if(accessType === "transferred")     
-      externalUnitId = formData.get("externalUnitId");
+    await db.transaction(async (session) => {
+      const [ patient ] = await patientModel.create([{
+        fullname: patientName,
+        registerNumber: Date.now(),
+        birthDate: patientBirthDate,
+        civilState,
+        gender,
+        tel: patientTel,
+        documentation: patientDocument,
+        lang: language,
+        userId
+      }], {session});
+      
+      await demographyModel.create([{
+        patientId: patient._id,
+        nationality,
+        naturality,
+        province,
+        actualLocation,
+        street,
+        homeNumber,
+      }], {session});
 
-    const accessTypeDb = new accessTypeModel({
-      patientId: patient._id,
-      type: accessType,
-      externalUnitId,
+      await responsibleModel.create([{
+        patientId: patient._id,
+        responsibles: responsibles,
+      }], {session});
+
+      if(group === "assured"){
+        choosedGroup = {
+          name:assuredName,
+          apolice,
+          tel,
+          detail
+        };
+      }else if(group === "enterprise"){
+        choosedGroup = {
+          name: companyName,
+          passNumber: companyPassNumber,
+          role: roleCompany,
+        };
+      }else if(group === "employee"){        
+        choosedGroup = {
+          passNumber: employeePassNumber,
+          role: roleEmployee,
+          workArea,
+        };
+      }
+
+      await groupModel.create([{
+        patientId: patient._id,
+        type: group,
+        group: choosedGroup
+      }], {session});
+
+      if(accessType === "transferred")     
+        externalUnitId = formData.get("externalUnitId") as string;
+
+      await accessTypeModel.create([{
+        patientId: patient._id,
+        type: accessType,
+        externalUnitId,
+      }], {session});
     });
-
-    await Promise.all([
-      patient.validate(),
-      locationDb.validate(),
-      groupDb.validate(),
-      responsiblesDb.validate(),
-      accessTypeDb.validate()
-    ]);
-    
-    await Promise.all([
-      patient.save(),
-      locationDb.save(),
-      groupDb.save(),
-      responsiblesDb.save(),
-      accessTypeDb.save()
-    ]);
 
     return {
       message: "Utente resgistrado com sucesso!",

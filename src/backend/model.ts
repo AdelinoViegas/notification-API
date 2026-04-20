@@ -65,7 +65,7 @@ import {
 import { operatingRoomResultSchema, operatingRoomSchema } from "@/backend/schemas/operating-room";
 import dbConfigure from "./db.config";
 
-const db = createConnection(process.env.MONGO_URL as string, {
+export const db = createConnection(process.env.MONGO_URL as string, {
   family: process.env.NODE_ENV === "development" 
     ? 4 
     : undefined,

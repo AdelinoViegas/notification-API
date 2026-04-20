@@ -12,7 +12,7 @@ export default function Enterprise(){
       />
       
       <InputField
-        name="passNumber"
+        name="enterprisePassNumber"
         textLabel="Nº de passe"
         maxLength={9}
         placeholder="Nº de Indentificação na empresa"

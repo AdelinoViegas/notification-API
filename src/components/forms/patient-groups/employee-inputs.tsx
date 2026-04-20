@@ -5,7 +5,7 @@ export default function Employee(){
   return(
     <div className="grid md:grid-cols-2 large:grid-cols-3 gap-3">
       <InputField
-        name="passNumber"
+        name="employeePassNumber"
         textLabel="Nª de passe"
         placeholder="Digite o número de passe"
       />
