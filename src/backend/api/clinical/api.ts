@@ -336,12 +336,12 @@ async function signPatient(prev: unknown, formData: FormData){
         responsiblesDb.save({session}),
         accessTypeDb.save({session})
       ]);
-
-      return {
-        message: "Utente resgistrado com sucesso!",
-        status: true,
-      };
     });
+
+    return {
+      message: "Utente resgistrado com sucesso!",
+      status: true,
+    };
   }catch(e: unknown){
     const err = e as Error & { code: number };
     console.log(err.message);
