@@ -203,17 +203,61 @@ async function registerUser(prev: unknown, formData: FormData){
 
 async function signPatient(prev: unknown, formData: FormData){
   try{
-    await db.transaction(async (session) => {
-      // personal info 
-      const patientName = formData.get("patientName") as string;
-      const patientBirthDate = formData.get("patientBirthDate") as string;
-      const civilState = formData.get("civilState") as string;
-      const gender = formData.get("gender") as string;
-      const patientTel = formData.get("patientTel") as string;
-      const patientDocument = formData.get("patientDocument") as string;
-      const language = formData.get("language") as string;
+    const userId = await getUserId();
+
+    // personal info 
+    const patientName = formData.get("patientName") as string;
+    const patientBirthDate = formData.get("patientBirthDate") as string;
+    const civilState = formData.get("civilState") as string;
+    const gender = formData.get("gender") as string;
+    const patientTel = formData.get("patientTel") as string;
+    const patientDocument = formData.get("patientDocument") as string;
+    const language = formData.get("language") as string;
+
+    // locations info
+    const nationality = formData.get("nationality") as string;
+    const naturality = formData.get("naturality") as string;
+    const province = formData.get("province") as string;
+    const actualLocation = formData.get("actualLocation") as string;
+    const street = formData.get("street") as string; 
+    const homeNumber = formData.get("homeNumber") as string;
+    
+    //responsibles
+    const responsibles:Responsable[] = [];
+
+    for(let i = 0; i < 2; i++){
+      const fullname = formData.get(`responsibleName${i == 0 ?'':i}`) as string;
+      const kinship = formData.get(`kinship${i == 0 ?'':i}`) as string;
+      const tel = formData.get(`responsibleTel${i == 0 ?'':i}`) as string;
       
-      const patient = new patientModel({
+      if(fullname && kinship && tel)
+        responsibles.push({
+          name: fullname,
+          kinship,
+          tel,
+        });
+    };
+
+    // patient group
+    let choosedGroup: ChoosedGroup;
+    const group = formData.get("patientGroup") as string;
+    const assuredName = formData.get("nameInsuranceCompany") as string;
+    const apolice = Number(formData.get("apoliceNumber"));
+    const tel = formData.get("assuredTel") as string;
+    const detail = formData.get("asuredDetails") as string;
+    const companyName  = formData.get("enterpriseName") as string;
+    const companyPassNumber = formData.get("enterprisePassNumber") as string;
+    const roleCompany = formData.get("enterpriseFunction") as string;        
+    const employeePassNumber  = formData.get("employeePassNumber") as string;
+    const roleEmployee = formData.get("employeeFunction") as string;
+    const workArea = formData.get("serviceArea") as string;
+
+    // access type
+    let externalUnitId:string;
+    const accessType = formData.get("accessType");
+
+    await db.transaction(async (session) => {
+      const [ patient ] = await patientModel.create([{
         fullname: patientName,
         registerNumber: Date.now(),
         birthDate: patientBirthDate,
@@ -222,18 +266,10 @@ async function signPatient(prev: unknown, formData: FormData){
         tel: patientTel,
         documentation: patientDocument,
         lang: language,
-        userId: await getUserId()
-      });
-
-      // locations info
-      const nationality = formData.get("nationality") as string;
-      const naturality = formData.get("naturality") as string;
-      const province = formData.get("province") as string;
-      const actualLocation = formData.get("actualLocation") as string;
-      const street = formData.get("street") as string; 
-      const homeNumber = formData.get("homeNumber") as string;
+        userId
+      }], {session});
       
-      const locationDb = new demographyModel({
+      await demographyModel.create([{
         patientId: patient._id,
         nationality,
         naturality,
@@ -241,101 +277,48 @@ async function signPatient(prev: unknown, formData: FormData){
         actualLocation,
         street,
         homeNumber,
-      });
+      }], {session});
 
-      //responsibles
-      const responsibles:Responsable[] = [];
-
-      for(let i = 0; i < 2; i++){
-        const fullname = formData.get(`responsibleName${i == 0 ?'':i}`) as string;
-        const kinship = formData.get(`kinship${i == 0 ?'':i}`) as string;
-        const tel = formData.get(`responsibleTel${i == 0 ?'':i}`) as string;
-        
-        if(fullname && kinship && tel)
-          responsibles.push({
-            name: fullname,
-            kinship,
-            tel,
-          });
-      };
-
-      const responsiblesDb = new responsibleModel({
+      await responsibleModel.create([{
         patientId: patient._id,
         responsibles: responsibles,
-      });
-
-      // patient group
-      const group = formData.get("patientGroup") as string;
-      let choosedGroup: ChoosedGroup;
+      }], {session});
 
       if(group === "assured"){
-        const name = formData.get("nameInsuranceCompany") as string;
-        const apolice = Number(formData.get("apoliceNumber"));
-        const tel = formData.get("assuredTel") as string;
-        const detail = formData.get("asuredDetails") as string;
-
         choosedGroup = {
-          name,
+          name:assuredName,
           apolice,
           tel,
           detail
         };
       }else if(group === "enterprise"){
-        const name  = formData.get("enterpriseName") as string;
-        const passNumber = formData.get("passNumber") as string;
-        const role = formData.get("enterpriseFunction") as string;
-
         choosedGroup = {
-          name,
-          passNumber,
-          role,
+          name: companyName,
+          passNumber: companyPassNumber,
+          role: roleCompany,
         };
-      }else if(group === "employee"){
-        const passNumber  = formData.get("passNumber") as string;
-        const role = formData.get("employeeFunction") as string;
-        const workArea = formData.get("serviceArea") as string;
-        
+      }else if(group === "employee"){        
         choosedGroup = {
-          passNumber,
-          role,
+          passNumber: employeePassNumber,
+          role: roleEmployee,
           workArea,
         };
       }
 
-      const groupDb = new groupModel({
+      await groupModel.create([{
         patientId: patient._id,
         type: group,
         group: choosedGroup
-      });
-
-      // access type
-      const accessType = formData.get("accessType");
-      let externalUnitId;
+      }], {session});
 
       if(accessType === "transferred")     
-        externalUnitId = formData.get("externalUnitId");
+        externalUnitId = formData.get("externalUnitId") as string;
 
-      const accessTypeDb = new accessTypeModel({
+      await accessTypeModel.create([{
         patientId: patient._id,
         type: accessType,
         externalUnitId,
-      });
-
-      await Promise.all([
-        patient.validate(),
-        locationDb.validate(),
-        groupDb.validate(),
-        responsiblesDb.validate(),
-        accessTypeDb.validate()
-      ]);
-      
-      await Promise.all([
-        patient.save({session}),
-        locationDb.save({session}),
-        groupDb.save({session}),
-        responsiblesDb.save({session}),
-        accessTypeDb.save({session})
-      ]);
+      }], {session});
     });
 
     return {
