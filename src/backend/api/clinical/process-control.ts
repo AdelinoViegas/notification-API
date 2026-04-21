@@ -5,6 +5,7 @@ import { patientModel, processStateModel,demographyModel, responsibleModel, grou
 import { getFirstAndLastName } from "@/components/userbar";
 import { getUser } from "@/backend/api/admin";
 import { Types } from "mongoose";
+import { ClientSession } from "mongoose";
 
 type WorkLocation = "screening" | "urgency" | "laboratory" | "imaging" | string ;
 
@@ -51,7 +52,7 @@ export async function openPatientProcess(patientId: string, location: WorkLocati
   }
 }
 
-export async function closePatientProcess(patientId: string, location: WorkLocation){
+export async function closePatientProcess(patientId: string, location: WorkLocation, session?: ClientSession){
   try{
     await processStateModel.updateOne({ 
       patientId, 
@@ -59,7 +60,7 @@ export async function closePatientProcess(patientId: string, location: WorkLocat
       userId: await getUserId(), 
     }, { 
       isInUse: false 
-    });
+    }, { session });
    
     return {
       message:"Utente libertado com sucesso!",
