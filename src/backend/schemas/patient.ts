@@ -114,6 +114,8 @@ const processStateSchema = new Schema({
   collection: "patient_process_access"
 });
 
+processStateSchema.index({ patientId: 1, location: 1 }, { unique: true });
+
 const specialtyStateSchema = new Schema({
   name:{
     type: String,
