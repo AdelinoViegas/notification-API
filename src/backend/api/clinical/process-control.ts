@@ -10,39 +10,49 @@ type WorkLocation = "screening" | "urgency" | "laboratory" | "imaging" | string 
 
 export async function openPatientProcess(patientId: string, location: WorkLocation){
   try{
-    const existProcess = await processStateModel.findOne({
-      patientId, 
-      location,  
-    });
-     
-    if(!existProcess){
-      await processStateModel.create({
+    const currentUserId = await getUserId();
+
+    await processStateModel.findOneAndUpdate({
+      patientId,
+      location,
+      $or: [
+        { isInUse: false },
+        { userId: currentUserId },
+      ]
+    }, {
+      $set: {
+        isInUse: true,
+        userId: currentUserId,
+      },
+      $setOnInsert: {
         patientId,
-        userId: await getUserId(),
         location,
-        isInUse: true,
-      });
-
-      return {
-        message: "Processo aberto com sucesso!",
-        status: true,
       }
-    }
+    }, {
+      new: true,
+      upsert: true,
+      rawResult: true,
+    });
 
-    if(!existProcess?.isInUse){
-      await processStateModel.updateOne({ patientId, location }, {
-        isInUse: true,
-        userId: await getUserId(),
-      });
-    } 
-
-    if(existProcess?.isInUse && existProcess.userId?.toString() !== await getUserId()){      
-      const { fullname } = await getUser(existProcess.userId?.toString() as string);
-      throw new Error(`Processo ocupado pelo Sr(a).${getFirstAndLastName(fullname as string)}!`, { cause: "busy" });
-    } 
-    
+    return {
+      message: "Processo aberto com sucesso!",
+      status: true,
+    };
   }catch(e: unknown){
     const err = e as Error;
+
+    if((e as { code?: number })?.code === 11000){
+      const currentUserId = await getUserId();
+      const currentProcess = await processStateModel.findOne({ patientId, location });
+
+      if(currentProcess?.isInUse && currentProcess.userId?.toString() !== currentUserId){
+        const { fullname } = await getUser(currentProcess.userId?.toString() as string);
+        return {
+          message: `Processo ocupado pelo Sr(a).${getFirstAndLastName(fullname as string)}!`,
+          status: false
+        }
+      }
+    }
 
     return {
       message: err?.cause === "busy"?err.message:"Operação impossivel!",
