@@ -923,7 +923,7 @@ async function finishScreening(prev: unknown, formData: FormData){
     if(patientExistInUrgency)
       throw new Error("Este utente já se encontra no serviço de urgência!", { cause: "in_process"});
     
-    await db.transaction( async (session) => { 
+    await db.transaction(async (session) => { 
       await screeningModel.updateOne({ _id: scrPatient._id }, { 
         served: true,
         userId 
