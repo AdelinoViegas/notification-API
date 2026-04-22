@@ -124,7 +124,13 @@ export async function syncPatientRegister(id: string, session?: ClientSession){
 
 export async function syncPatientHistories(pastId: string, newId: string, session?: ClientSession){
   try{
-    const histories = await patientSyncModel.findOne({ id: pastId }).session(session || null);
+    let query = patientSyncModel.findOne({ id: pastId });
+
+    if (session && query) 
+      query = query.session(session);
+
+    //Executa a query uma única vez
+    const histories = await query;
 
     if(!histories){
       await patientSyncModel.create([{
