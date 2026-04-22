@@ -20,7 +20,7 @@ export async function openPatientProcess(patientId: string, location: WorkLocati
         patientId,
         userId: await getUserId(),
         location,
-        isInUse: true,
+        isInUse: true, 
       });
 
       return {
