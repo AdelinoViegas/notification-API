@@ -136,7 +136,7 @@ const internalMovimentModel = db.model("InternalMoviments", internalMovimentsSch
 const serviceRequestsModel = db.model("ServiceRequest", serviceRequestsSchema);
 const namePatternsModel = db.model("NamePattern", namePatternsSchema);
 
-export { namePatternsModel, db }
+export { namePatternsModel }
 
 export {
   userModel,
