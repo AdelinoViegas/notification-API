@@ -894,6 +894,7 @@ async function insertScreening(prev: unknown, formData: FormData){
 
 async function finishScreening(prev: unknown, formData: FormData){
   try{
+    const userId = await getUserId();
     const patientId = formData.get('patientId') as string;
     const serviceId = formData.get('serviceId');
 
@@ -921,25 +922,27 @@ async function finishScreening(prev: unknown, formData: FormData){
 
     if(patientExistInUrgency)
       throw new Error("Este utente já se encontra no serviço de urgência!", { cause: "in_process"});
-
-    await screeningModel.updateOne({ _id: scrPatient._id }, { 
-      served: true,
-      userId: await getUserId() 
-    });
-
-    const tried = await triedModel.create({
-      srcId: scrPatient?._id,
-      patientId,
-      userId: await getUserId(),
-      serviceId
-    });
-
-    await urgencyBankModel.create({
-      triedId: tried?._id,
-      patientId
-    })
     
-    await closePatientProcess(patientId, "screening");
+    await db.transaction(async (session) => { 
+      await screeningModel.updateOne({ _id: scrPatient._id }, { 
+        served: true,
+        userId 
+      }, { session });
+
+      const [ tried ] = await triedModel.create([{
+        srcId: scrPatient?._id,
+        patientId,
+        userId,
+        serviceId
+      }], { session });
+
+      await urgencyBankModel.create([{
+        triedId: tried._id,
+        patientId
+      }], { session });
+      
+      await closePatientProcess(patientId, "screening", session);
+    });
 
     return {
       message: "Utente triado com sucesso!",
