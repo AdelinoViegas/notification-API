@@ -9,7 +9,7 @@ import {
   externalResultsModel,
   serviceRequestsModel,
 } from "@/backend/model";
-import { officeModel } from "@/backend/model";
+import { officeModel, db } from "@/backend/model";
 import { getUserId } from "@/lib/web-token";
 import { findDoctorCalendar } from "@/backend/api/clinical/scheduling-api";
 import { getDateInSlashFormat } from "@/lib/date-formater";
@@ -83,10 +83,10 @@ async function sendPatientToOffice(prev: unknown, formData: FormData){
         const officeAppointment = await scheduleAppointmentModel.findOne({ _id: scheduleOffice.scheduleId });
 
         if(officeAppointment?.doctorReschedule){
-          await Promise.all([
-            officeModel.updateOne({ _id: scheduleOffice._id }, { deleted: false }),
-            scheduleAppointmentModel.updateOne({ _id: officeAppointment?._id }, { served: true, doctorReschedule: false })
-          ]);
+          await db.transaction(async (session) => {
+            await officeModel.updateOne({ _id: scheduleOffice._id }, { deleted: false }, { session });
+            await scheduleAppointmentModel.updateOne({ _id: officeAppointment?._id }, { served: true, doctorReschedule: false }, { session });
+          });
 
           return {
             message: "Utente enviado ao consultório!",
@@ -99,12 +99,16 @@ async function sendPatientToOffice(prev: unknown, formData: FormData){
       }
     }
 
-    await officeModel.create({
-      scheduleId,
-      userId: await getUserId(),
-    });
+    const userId = await getUserId();
 
-    await scheduleAppointmentModel.updateOne({_id: scheduleId}, { served: true });
+    await db.transaction(async (session) => {
+      await officeModel.create([{
+        scheduleId,
+        userId,
+      }], { session });
+
+      await scheduleAppointmentModel.updateOne({ _id: scheduleId }, { served: true }, { session });
+    });
 
     return {
       message: "Utente enviado ao consultório!",
