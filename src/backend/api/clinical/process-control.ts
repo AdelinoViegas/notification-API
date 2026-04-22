@@ -68,49 +68,53 @@ export async function closePatientProcess(patientId: string, location: WorkLocat
       message:"Utente libertado com sucesso!",
       status: true,
     }
-  }catch {
-    return {
-      message: "Operação impossivel!",
-      status: false
-    }
+  }catch (e) {
+    console.error("Erro ao fechar processo:", e);
+    
+    throw new Error("Falha ao fechar o processo do paciente.");
   }
 }
 
 export async function syncPatientRegister(id: string, session?: ClientSession){
   try{
-    const oldPatient = await patientModel.findById({ _id: id });
-    const transformedOldPatient = JSON.parse(JSON.stringify(oldPatient));
-    const patient = new patientModel(transformedOldPatient);
-    patient._id = new Types.ObjectId();
-    await patient.save({ session });
-    await patientModel.updateOne({ _id: oldPatient?._id }, { used: true, served: true }, { session });
+    const oldPatient = await patientModel.findById({ _id: id }).session(session || null).lean();
+    
+    if(!oldPatient)
+      throw new Error("Paciente inexistente!");
+
+    const { _id, ...patientData } = oldPatient;
+    const [ patient ] = await patientModel.create([ {...patientData} ], { session });
+
+    await patientModel.updateOne({
+      _id: oldPatient._id
+    }, { used: true, served: true }, { session});
 
     await syncPatientHistories(id, patient._id.toString(), session);
-    
-    const oldDemography = await demographyModel.findOne({ patientId: oldPatient?._id });
-    const demography = new demographyModel(JSON.parse(JSON.stringify(oldDemography)));
-    demography._id = new Types.ObjectId();
-    demography.patientId = patient._id
 
-    const oldResponsible = await responsibleModel.findOne({ patientId: oldPatient?._id });
-    const responsible = new responsibleModel(JSON.parse(JSON.stringify(oldResponsible)));
-    responsible._id = new Types.ObjectId();
-    responsible.patientId = patient._id.toString();
-    
-    const oldGroup = await groupModel.findOne({ patientId: oldPatient?._id });
-    const group = new groupModel(JSON.parse(JSON.stringify(oldGroup)));
-    group._id = new Types.ObjectId();
-    group.patientId = patient._id.toString();
-    
-    const oldAccessType = await accessTypeModel.findOne({ patientId: oldPatient?._id });
-    const accessType = new accessTypeModel(JSON.parse(JSON.stringify(oldAccessType)));
-    accessType._id = new Types.ObjectId();
-    accessType.patientId = patient._id;
+    const oldDemography = await demographyModel.findOne({ patientId: oldPatient?._id }).session(session || null).lean();
+    if(oldDemography){
+      const { _id, ...data } = oldDemography;
+      await demographyModel.create([{...data, patientId: patient._id.toString() } ], { session });
+    }
 
-    await responsible.save({ session });
-    await demography.save({ session });
-    await group.save({ session });
-    await accessType.save({ session });
+    const oldResponsible = await responsibleModel.findOne({ patientId: oldPatient?._id }).session(session || null).lean();
+    if(oldResponsible){
+      const { _id, ...data } = oldResponsible;
+      await responsibleModel.create([{...data, patientId: patient._id.toString() } ], { session });
+    }
+
+    const oldGroup = await groupModel.findOne({ patientId: oldPatient?._id }).session(session || null).lean();
+    if(oldGroup){
+      const { _id, ...data } = oldGroup;
+      await groupModel.create([{_id: undefined, ...data, patientId: patient._id.toString() } ], { session });
+    }
+
+    const oldAccessType = await accessTypeModel.findOne({ patientId: oldPatient?._id }).session(session || null).lean();
+    if(oldAccessType){
+      const { _id, ...data } = oldAccessType;
+      await accessTypeModel.create([{_id: undefined, ...data, patientId: patient._id.toString() } ], { session });
+    }
+
     console.log("dados do utente sincronizado!");
   }catch (e){
     console.error(e);
@@ -120,7 +124,7 @@ export async function syncPatientRegister(id: string, session?: ClientSession){
 
 export async function syncPatientHistories(pastId: string, newId: string, session?: ClientSession){
   try{
-    const histories = await patientSyncModel.findOne({ id: pastId });
+    const histories = await patientSyncModel.findOne({ id: pastId }).session(session || null);
 
     if(!histories){
       await patientSyncModel.create([{
@@ -137,11 +141,11 @@ export async function syncPatientHistories(pastId: string, newId: string, sessio
       id: newId,
       secondaries: currentList
     }, { session });
-    
+
     return true;
   }catch (e) {
     console.log(e);
-    return false;
+    throw new Error("Falha na sincronização!");
   }
 }
 
