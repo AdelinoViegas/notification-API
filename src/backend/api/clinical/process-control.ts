@@ -4,8 +4,10 @@ import { getUserId } from "@/lib/web-token";
 import { patientModel, processStateModel,demographyModel, responsibleModel, groupModel, accessTypeModel, patientSyncModel } from "@/backend/model";
 import { getFirstAndLastName } from "@/components/userbar";
 import { getUser } from "@/backend/api/admin";
-import { Types } from "mongoose";
-import { ClientSession } from "mongoose";
+
+import { Types} from "mongoose";
+import { ClientSession } from "mongodb";
+
 
 type WorkLocation = "screening" | "urgency" | "laboratory" | "imaging" | string ;
 
@@ -21,7 +23,7 @@ export async function openPatientProcess(patientId: string, location: WorkLocati
         patientId,
         userId: await getUserId(),
         location,
-        isInUse: true,
+        isInUse: true, 
       });
 
       return {
@@ -74,16 +76,16 @@ export async function closePatientProcess(patientId: string, location: WorkLocat
   }
 }
 
-export async function syncPatientRegister(id: string){
+export async function syncPatientRegister(id: string, session?: ClientSession){
   try{
     const oldPatient = await patientModel.findById({ _id: id });
     const transformedOldPatient = JSON.parse(JSON.stringify(oldPatient));
     const patient = new patientModel(transformedOldPatient);
     patient._id = new Types.ObjectId();
-    await patient.save();
-    await patientModel.updateOne({ _id: oldPatient?._id }, { used: true, served: true });
+    await patient.save({ session });
+    await patientModel.updateOne({ _id: oldPatient?._id }, { used: true, served: true }, { session });
 
-    await syncPatientHistories(id, patient._id.toString());
+    await syncPatientHistories(id, patient._id.toString(), session);
     
     const oldDemography = await demographyModel.findOne({ patientId: oldPatient?._id });
     const demography = new demographyModel(JSON.parse(JSON.stringify(oldDemography)));
@@ -105,10 +107,10 @@ export async function syncPatientRegister(id: string){
     accessType._id = new Types.ObjectId();
     accessType.patientId = patient._id;
 
-    await responsible.save();
-    await demography.save();
-    await group.save();
-    await accessType.save();
+    await responsible.save({ session });
+    await demography.save({ session });
+    await group.save({ session });
+    await accessType.save({ session });
     console.log("dados do utente sincronizado!");
   }catch (e){
     console.error(e);
@@ -116,15 +118,15 @@ export async function syncPatientRegister(id: string){
   }
 }
 
-export async function syncPatientHistories(pastId: string, newId: string){
+export async function syncPatientHistories(pastId: string, newId: string, session?: ClientSession){
   try{
     const histories = await patientSyncModel.findOne({ id: pastId });
 
     if(!histories){
-      await patientSyncModel.create({
+      await patientSyncModel.create([{
         id: newId,
         secondaries: [ pastId ]
-      });
+      }], { session });
       return true; 
     }
 
@@ -134,7 +136,7 @@ export async function syncPatientHistories(pastId: string, newId: string){
     await patientSyncModel.updateOne({ id: pastId }, {
       id: newId,
       secondaries: currentList
-    });
+    }, { session });
     
     return true;
   }catch (e) {

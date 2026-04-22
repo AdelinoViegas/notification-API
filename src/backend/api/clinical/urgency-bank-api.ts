@@ -41,6 +41,7 @@ import { getPatient as mainPatient } from "@/backend/api/clinical/api";
 import { closePatientProcess, getSyncedHistories, syncPatientRegister } from "@/backend/api/clinical/process-control";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
 import { omitUndefined } from "mongoose";
+import { db } from "@/backend/model";
 
 type UnitType = "workplace" | "internment" | "laboratory" | "imaging";
 
@@ -1067,28 +1068,37 @@ async function finishHospitalization(prev: unknown, formData: FormData){
     //     throw new Error("Paciente ja está no internamento!", { cause: "exist" });
 
     const urgency = await urgencyBankModel.findById({ _id: urgencyId });
-    const tried = await triedModel.findOneAndUpdate({ _id: urgency?.triedId }, { served: true });
-    await urgencyBankModel.updateOne({ _id: urgencyId }, { served: true });
+    const userId = await getUserId();
 
-    const hospitalized = await hospitalizationModel.create({
-      fromServiceId: tried?.serviceId,
-      toInternalServiceId: internalServiceId,
-      userId: await getUserId(),
-      triedId: urgency?.triedId,
-      patientId
+    await db.transaction(async (session) => {
+      const tried = await triedModel.findOneAndUpdate(
+        { _id: urgency?.triedId },
+        { served: true },
+        { session }
+      );
+
+      await urgencyBankModel.updateOne({ _id: urgencyId }, { served: true }, { session });
+
+      const [ hospitalized ] = await hospitalizationModel.create([{
+        fromServiceId: tried?.serviceId,
+        toInternalServiceId: internalServiceId,
+        userId,
+        triedId: urgency?.triedId,
+        patientId
+      }], { session });
+
+      await patientHospitalizedModel.create([{
+        hospitalizedId: hospitalized._id,
+        urgencyId: urgency?._id,
+        userId,
+        description,
+        donedAt,
+        currentState
+      }], { session });
+
+      await syncPatientRegister(patientId, session);
+      await closePatientProcess(patientId, "urgency", session);
     });
-
-    await patientHospitalizedModel.create({
-      hospitalizedId: hospitalized._id,
-      urgencyId: urgency?._id,
-      userId: await getUserId(),
-      description,
-      donedAt,
-      currentState
-    });
-
-    await syncPatientRegister(patientId);
-    await closePatientProcess(tried?.patientId?.toString() as string, "urgency");
 
     return {
       message: "Patiente internado com sucesso!",

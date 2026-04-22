@@ -7,7 +7,8 @@ import {
   patientModel,
   unitModel,
   serviceResultModel,
-  internalExamResultModel
+  internalExamResultModel,
+  db,
 } from "@/backend/model";
 import { getUserId } from "@/lib/web-token";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
@@ -83,24 +84,19 @@ async function sendPatientToUnit(prev: unknown, formData: FormData){
     if(totalPrice){
       if(scheduleService?.payment?.status === "pending")
         throw new Error("Valida o pagamento do serviço!", { cause: "no_payment"});
-      
-      await scheduleServiceModel.create({
-        scheduleId,
-        userId: await getUserId(),
-        Type: typeUnit?.unitTypeId
-      });
-
-      await scheduleExamModel.updateOne({ _id: scheduleId }, { served: true });
-    }else {
-
-      await scheduleServiceModel.create({
-        scheduleId,
-        userId: await getUserId(),
-        Type: typeUnit?.unitTypeId
-      });
-
-      await scheduleExamModel.updateOne({ _id: scheduleId }, { served: true });
     }
+
+    const userId = await getUserId();
+
+    await db.transaction(async (session) => {
+      await scheduleServiceModel.create([{
+        scheduleId,
+        userId,
+        Type: typeUnit?.unitTypeId
+      }], { session });
+
+      await scheduleExamModel.updateOne({ _id: scheduleId }, { served: true }, { session });
+    });
    
     return {
       message: "Enviado para o laboratorio/imagiologia com sucesso!",

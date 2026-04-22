@@ -12,6 +12,7 @@ import {
   processStateModel,
   operatingRoomResultModel,
   serviceRequestsModel,
+  db,
 } from "@/backend/model";
 import { getUser } from "@/backend/api/clinical/api";
 import { CustonAxiosError } from "@/backend/api/types";
@@ -86,13 +87,17 @@ async function sendPatientToOperatingRoom(prev: unknown, formData: FormData){
 
     if(!!service?.price && sugery?.payment?.status !== "confirmed")
       throw new Error('A cirurgia não está validada!', { cause: "not_confirmed" });
-    
-    await operatingRoomModel.create({
-      scheduleId,
-      userId: await getUserId(),
-    });
 
-    await scheduleSugeryModel.updateOne({_id: scheduleId}, { served: true });
+    const userId = await getUserId();
+
+    await db.transaction(async (session) => {
+      await operatingRoomModel.create([{
+        scheduleId,
+        userId,
+      }], { session });
+
+      await scheduleSugeryModel.updateOne({ _id: scheduleId }, { served: true }, { session });
+    });
 
     return {
       message: "Utente enviado ao Bloco Operatório!",
