@@ -4,7 +4,8 @@ import { getUserId } from "@/lib/web-token";
 import { patientModel, processStateModel,demographyModel, responsibleModel, groupModel, accessTypeModel, patientSyncModel } from "@/backend/model";
 import { getFirstAndLastName } from "@/components/userbar";
 import { getUser } from "@/backend/api/admin";
-import { Types, ClientSession } from "mongoose";
+import { Types} from "mongoose";
+import { ClientSession } from "mongodb";
 
 type WorkLocation = "screening" | "urgency" | "laboratory" | "imaging" | string ;
 
