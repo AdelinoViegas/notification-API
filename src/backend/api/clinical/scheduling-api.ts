@@ -26,6 +26,7 @@ import {
   scheduleSugeryModel,
   internalExamResultModel,
   serviceModel,
+  db,
 } from "@/backend/model";
 import { getUser } from "@/backend/api/clinical/api";
 import { getSyncedHistories, syncPatientRegister } from "./process-control";
@@ -329,25 +330,29 @@ async function schedulePatientExam(prev: unknown, formData: FormData){
     if(!exams.length)
       throw new Error("Escolha os exames desejado!", { cause: "empty" });
 
-    await scheduleExamModel.create({
-      patientId,
-      laboratoryId,
-      dateTime: dateTime?dateTime:new Date(),
-      exams,
-      detail,
-      userId: await getUserId()
-    });
-    
-    if(!!isScheduleInScreening){
-      await screeningModel.updateOne({ _id: scrPatient?._id }, { 
-        served: true,
-        userId: await getUserId() 
-      });
+    const userId = await getUserId();
 
-      await syncPatientRegister(patientId);
-    }
-      
-    await patientModel.updateOne({ _id: patientId }, { served: true });
+    await db.transaction(async (session) => {
+      await scheduleExamModel.create([{
+        patientId,
+        laboratoryId,
+        dateTime: dateTime ? dateTime : new Date(),
+        exams,
+        detail,
+        userId
+      }], { session });
+
+      if(!!isScheduleInScreening){
+        await screeningModel.updateOne({ _id: scrPatient?._id }, {
+          served: true,
+          userId
+        }, { session });
+
+        await syncPatientRegister(patientId, session);
+      }
+
+      await patientModel.updateOne({ _id: patientId }, { served: true }, { session });
+    });
     
     return {
       message: "Solicitação enviada!",
