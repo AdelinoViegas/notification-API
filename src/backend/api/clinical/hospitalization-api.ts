@@ -8,11 +8,11 @@ import {
   internalServiceModel, 
   namePatternsModel, 
   nursingModel, 
-  // patientHospitalizedModel, 
   patientModel, 
   patientStateModel, 
   sectionModel, 
-  urgencyServiceModel 
+  urgencyServiceModel,
+  db,
 } from "@/backend/model";
 import { omitUndefined } from "mongoose";
 import { getUser } from "@/backend/api/clinical/api";
@@ -578,15 +578,17 @@ export async function movePatientTo(p: unknown, formData: FormData){
     if(to === direction.ids.bed)
       throw new Error("Mova o utente para um lugar diferente", { cause: "same"});
 
-    await Promise.all([
-      inHospitalizeModel.updateOne({ _id: direction.id }, { bedId: toBed.bed.id }),
-      internalMovimentModel.create({
+    const userId = await getUserId();
+
+    await db.transaction(async (session) => {
+      await inHospitalizeModel.updateOne({ _id: direction.id }, { bedId: toBed.bed.id }, { session });
+      await internalMovimentModel.create([{
         patientId,
-        by: await getUserId(),
+        by: userId,
         from: direction.ids.bed,
         to
-      })
-    ]); // transação do movimento
+      }], { session });
+    }); // transação do movimento
 
     return {
       message: "Movido com sucesso!",
