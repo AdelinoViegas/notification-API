@@ -12,7 +12,8 @@ import {
   patientModel, 
   patientStateModel, 
   sectionModel, 
-  urgencyServiceModel 
+  urgencyServiceModel,
+  db,
 } from "@/backend/model";
 import { omitUndefined } from "mongoose";
 import { getUser } from "@/backend/api/clinical/api";
@@ -507,12 +508,14 @@ export async function signToHospitalize(p: unknown, formData: FormData){
     if(exists) 
       throw new Error("Cama já oucupada por um paciente!, escolha outra", { cause: "occupied" });
 
-    await inHospitalizeModel.create({
-      patientId,
-      bedId
-    });
+    await db.transaction(async (session) => {
+      await inHospitalizeModel.create([{
+        patientId,
+        bedId
+      }], { session });
 
-    await hospitalizationModel.updateOne({ patientId }, { served: true });
+      await hospitalizationModel.updateOne({ patientId }, { served: true }, { session });
+    });
 
     return {
       message: "Registrado com sucesso!",
