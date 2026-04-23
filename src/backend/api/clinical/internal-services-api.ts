@@ -196,14 +196,17 @@ async function getScheduledExams(id: string){
 async function finishScheduledExam(prev: unknown, formData: FormData){
   try{
     const serviceId = formData.get("serviceId") as string;
-    const scheduled = await scheduleServiceModel.findOneAndUpdate({ _id: serviceId }, { served: true });
     const patient = await getPatient(serviceId);
 
-    if(patient?.id && scheduled?.Type){
-      await closePatientProcess(patient.id, scheduled?.Type as string);
-      await syncPatientRegister(patient.id);
-    }
-      
+    await db.transaction(async (session) => {
+      const scheduled = await scheduleServiceModel.findOneAndUpdate({ _id: serviceId }, { served: true }, { session });
+
+      if(patient?.id && scheduled?.Type){
+        await closePatientProcess(patient.id, scheduled.Type as string, session);
+        await syncPatientRegister(patient.id, session);
+      }
+    });
+
     return {
       message: "Exame concluido!",
       status: true
