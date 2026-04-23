@@ -18,6 +18,7 @@ import { getUser } from "@/backend/api/clinical/api";
 import { CustonAxiosError } from "@/backend/api/types";
 import { upload } from "@/backend/api/storage";
 import { ServiceRequest, serviceRequestSchema } from "../type-schema";
+import { ClientSession } from "mongoose";
 import { getPatientIds } from "./process-control";
 import { getDateInSlashFormat } from "@/lib/date-formater";
 
@@ -748,10 +749,10 @@ async function registerRequest(prev: unknown, formData: FormData){
   }
 }
 
-async function closeRequest(id: string){
+async function closeRequest(id: string, session?: ClientSession){
   try{
     // await serviceRequestsModel.deleteOne({ _id: id });
-    await serviceRequestsModel.updateOne({ _id: id }, { pending: false });
+    await serviceRequestsModel.updateOne({ _id: id }, { pending: false }, { session });
     return true;
   }catch(e){
     console.error(e);

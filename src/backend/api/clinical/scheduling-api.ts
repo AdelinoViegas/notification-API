@@ -1040,23 +1040,25 @@ async function scheduleSugery(prev: unknown, formData: FormData){
     const bed = formData.get("bed") as string;
     const requestId = formData.get("requestId") as string;
     
-    if(requestingService === "patient") 
-      await patientModel.updateOne({ _id: patientId }, { served: true });
+    await db.transaction(async (session) => {
+      if(requestingService === "patient") 
+        await patientModel.updateOne({ _id: patientId }, { served: true }, { session });
 
-    const sugery = new scheduleSugeryModel({
-      patientId,
-      doctorId,
-      sugeryType,
-      description,
-      requestingService,
-      infirmary,
-      bed,
+      const sugery = new scheduleSugeryModel({
+        patientId,
+        doctorId,
+        sugeryType,
+        description,
+        requestingService,
+        infirmary,
+        bed,
+      });
+
+      await sugery.save({ session });
+
+      if(requestId)
+        await closeRequest(requestId, session);
     });
-
-    await sugery.save();
-
-    if(requestId)
-      await closeRequest(requestId);
     
     return {
       message: "Cirurgia agendada com sucesso!",
