@@ -1110,15 +1110,15 @@ async function finishHospitalization(prev: unknown, formData: FormData){
   }
 }
 
-export async function closePatientInUrgency(patientId: string){
+export async function closePatientInUrgency(patientId: string, session?: ClientSession){
   try{
     const urgencyId = (await getPatientUrgencyBank(patientId))?.id;
     const urgency = await urgencyBankModel.findById({ _id: urgencyId });
 
     await Promise.all([
-      triedModel.updateOne({ _id: urgency?.triedId }, { served: true }),
-      urgencyBankModel.updateOne({ _id: urgencyId }, { served: true }),
-      closePatientProcess(patientId, "urgency")
+      triedModel.updateOne({ _id: urgency?.triedId }, { served: true }, { session }),
+      urgencyBankModel.updateOne({ _id: urgencyId }, { served: true }, { session }),
+      closePatientProcess(patientId, "urgency", session)
     ]);
     
     return true;

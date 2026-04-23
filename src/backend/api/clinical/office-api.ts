@@ -311,11 +311,14 @@ async function finishConsultation(prev: unknown, formData: FormData){
 
     patientConsult.served = true
 
-    await officeModel.updateOne({ _id: patientConsult._id }, patientConsult);
     const scheduleAppointment = await scheduleAppointmentModel.findById({ _id: patientConsult.scheduleId }).select({ patientId: 1 });
-    
-    if(scheduleAppointment?.patientId)
-      await syncPatientRegister(scheduleAppointment.patientId.toString());
+
+    await db.transaction(async (session) => {
+      await officeModel.updateOne({ _id: patientConsult._id }, patientConsult, { session });
+
+      if(scheduleAppointment?.patientId)
+        await syncPatientRegister(scheduleAppointment.patientId.toString(), session);
+    });
     
     return {
       message: 'Consulta concluída com sucesso!',

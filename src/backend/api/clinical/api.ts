@@ -1030,22 +1030,25 @@ export async function externalTransfer(prev: unknown, formData: FormData){
     const externalUnitId = formData.get("unitId");
     const reason = formData.get("reason");
     const createdAt = formData.get("date");
+    const userId = await getUserId();
 
-    await externalTransferModel.create({
-      patientId: id,
-      unitId: externalUnitId,
-      userId: await getUserId(),
-      userCreatedAt: createdAt,
-      reason
+    await db.transaction(async (session) => {
+      await externalTransferModel.create([{
+        patientId: id,
+        unitId: externalUnitId,
+        userId,
+        userCreatedAt: createdAt,
+        reason
+      }], { session });
+
+      await syncPatientRegister(id, session);
+      const newId = (await getSyncedHistories(id, session))?.id?.toString() as string;
+
+      await Promise.all([
+        closePatientInUrgency(id, session),
+        patientModel.updateOne({ _id: newId }, { transfered: true }, { session })
+      ]);
     });
-
-    await syncPatientRegister(id);
-    const newId = (await getSyncedHistories(id))?.id?.toString() as string;
-
-    await Promise.all([
-      closePatientInUrgency(id),
-      patientModel.updateOne({ _id: newId }, { transfered: true })
-    ]);
     
     return {
       message: "Transferido com sucesso!",
