@@ -1,6 +1,6 @@
 "use server";
 
-import { omitUndefined } from "mongoose";
+import { ClientSession, omitUndefined } from "mongoose";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
 import { getUserId } from "@/lib/web-token";
 import { orderByPriority } from "@/lib/filters";
