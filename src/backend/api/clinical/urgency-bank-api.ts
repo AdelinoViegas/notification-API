@@ -1,5 +1,7 @@
 "use server";
 
+import { ClientSession, omitUndefined } from "mongoose";
+import { getDataAndHoursFormat } from "@/lib/date-formater";
 import { getUserId } from "@/lib/web-token";
 import { orderByPriority } from "@/lib/filters";
 import { 
@@ -29,7 +31,7 @@ import {
   patientGroup as patientGroups,
   patientStates, 
 } from "@/backend/api/clinical/translator"; 
-
+import { db } from "@/backend/model";
 import { 
   priorityToComponent,
   unitTypes,
@@ -39,9 +41,6 @@ import { getUser } from "@/backend/api/clinical/api";
 import { DoctorCalendar } from "@/backend/api/clinical/types";
 import { getPatient as mainPatient } from "@/backend/api/clinical/api";
 import { closePatientProcess, getSyncedHistories, syncPatientRegister } from "@/backend/api/clinical/process-control";
-import { getDataAndHoursFormat } from "@/lib/date-formater";
-import { omitUndefined, ClientSession } from "mongoose";
-import { db } from "@/backend/model";
 
 type UnitType = "workplace" | "internment" | "laboratory" | "imaging";
 
@@ -1041,6 +1040,7 @@ async function getUrgencyService(serviceId: string){
 
 async function finishHospitalization(prev: unknown, formData: FormData){
   try{
+    const userId = await getUserId();
     const description = formData.get("description");
     const donedAt = formData.get("donedAt") as string;
     const currentState = formData.get("currentState") as string;
@@ -1058,34 +1058,29 @@ async function finishHospitalization(prev: unknown, formData: FormData){
     const urgencyId = (await getPatientUrgencyBank(patientId))?.id;
     const patient = await getSyncedHistories(patientId);
     const lastPatientId = patient?.secondaries.pop();
-    const hospitalizedPatient = await hospitalizationModel.findOne({ patientId: lastPatientId });
-    
-    if(hospitalizedPatient)
-      throw new Error("Este utente ja se encontra no internamento!");
-
-    // if(typeof hospitalizedPatient?.served === "boolean")
-    //   if(!hospitalizedPatient.served)
-    //     throw new Error("Paciente ja está no internamento!", { cause: "exist" });
-
     const urgency = await urgencyBankModel.findById({ _id: urgencyId });
-    const userId = await getUserId();
+    
+    await db.transaction(async (session) =>{
+      const hospitalizedPatient = await hospitalizationModel.findOne({ patientId: lastPatientId }).session(session);
+      const tried = await triedModel.findOneAndUpdate({ _id: urgency?.triedId }, { served: true }, { session, new: true });
 
-    await db.transaction(async (session) => {
-      const tried = await triedModel.findOneAndUpdate(
-        { _id: urgency?.triedId },
-        { served: true },
-        { session }
-      );
+      if(hospitalizedPatient)
+        throw new Error("Este utente ja se encontra no internamento!");
 
-      await urgencyBankModel.updateOne({ _id: urgencyId }, { served: true }, { session });
+      if(!tried)
+        throw new Error("Este utente não foi encontrado na triagem!");
+
+      await urgencyBankModel.updateOne({ 
+        _id: urgencyId 
+      }, { served: true }, { session });
 
       const [ hospitalized ] = await hospitalizationModel.create([{
-        fromServiceId: tried?.serviceId,
+        fromServiceId: tried.serviceId,
         toInternalServiceId: internalServiceId,
         userId,
         triedId: urgency?.triedId,
         patientId
-      }], { session });
+      }], {session});
 
       await patientHospitalizedModel.create([{
         hospitalizedId: hospitalized._id,
@@ -1097,9 +1092,9 @@ async function finishHospitalization(prev: unknown, formData: FormData){
       }], { session });
 
       await syncPatientRegister(patientId, session);
-      await closePatientProcess(patientId, "urgency", session);
+      await closePatientProcess(tried.patientId?.toString() as string, "urgency", session);
     });
-
+    
     return {
       message: "Patiente internado com sucesso!",
       status: true
