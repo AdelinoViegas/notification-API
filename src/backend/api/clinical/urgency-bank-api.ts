@@ -40,7 +40,7 @@ import { DoctorCalendar } from "@/backend/api/clinical/types";
 import { getPatient as mainPatient } from "@/backend/api/clinical/api";
 import { closePatientProcess, getSyncedHistories, syncPatientRegister } from "@/backend/api/clinical/process-control";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
-import { omitUndefined } from "mongoose";
+import { omitUndefined, ClientSession } from "mongoose";
 import { db } from "@/backend/model";
 
 type UnitType = "workplace" | "internment" | "laboratory" | "imaging";
@@ -1115,15 +1115,15 @@ async function finishHospitalization(prev: unknown, formData: FormData){
   }
 }
 
-export async function closePatientInUrgency(patientId: string){
+export async function closePatientInUrgency(patientId: string, session?: ClientSession){
   try{
     const urgencyId = (await getPatientUrgencyBank(patientId))?.id;
     const urgency = await urgencyBankModel.findById({ _id: urgencyId });
 
     await Promise.all([
-      triedModel.updateOne({ _id: urgency?.triedId }, { served: true }),
-      urgencyBankModel.updateOne({ _id: urgencyId }, { served: true }),
-      closePatientProcess(patientId, "urgency")
+      triedModel.updateOne({ _id: urgency?.triedId }, { served: true }, { session }),
+      urgencyBankModel.updateOne({ _id: urgencyId }, { served: true }, { session }),
+      closePatientProcess(patientId, "urgency", session)
     ]);
     
     return true;
