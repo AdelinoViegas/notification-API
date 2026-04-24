@@ -1254,23 +1254,25 @@ async function applyDischarge(p:unknown, formdata:FormData){
     if(!recoveredPatient)
       throw new Error("defina o estado do paciente para recuperado", { cause: "recovered" });
 
-    await triedModel.updateOne({
-      userId,
-      patientId,
-      served: false
-    }, {
-      served: true
-    });
+    await db.transaction(async (session) => {
+      await triedModel.updateOne({
+        userId,
+        patientId,
+        served: false
+      }, {
+        served: true
+      }, { session });
 
-    await closePatientProcess(patientId, "urgency");
-    await syncPatientRegister(patientId);
-    const id = (await getSyncedHistories(patientId))?.id as string;
+      await closePatientProcess(patientId, "urgency", session);
+      await syncPatientRegister(patientId, session);
+      const id = (await getSyncedHistories(patientId, session))?.id as string;
 
-    await patientExitModel.create({
-      patientId: id,
-      userId,
-      userEventAt: userMakedAt,
-      where: "high"
+      await patientExitModel.create([{
+        patientId: id,
+        userId,
+        userEventAt: userMakedAt,
+        where: "high"
+      }], { session });
     });
 
     return {
@@ -1320,8 +1322,10 @@ async function movementInUrgencyBank(prev: unknown, formData: FormData){
     if(serviceId === service?.serviceId?.toString())
       throw new Error("Escolha um serviço diferente do actual", {cause: "currentService"});
 
-    await processStateModel.updateOne({ patientId, location: "urgency" }, { isInUse: false });
-    await triedModel.updateOne({ patientId, served: false }, { serviceId, reasonChangingServices });
+    await db.transaction(async (session) => {
+      await processStateModel.updateOne({ patientId, location: "urgency" }, { isInUse: false }, { session });
+      await triedModel.updateOne({ patientId, served: false }, { serviceId, reasonChangingServices }, { session });
+    });
 
     return {
       message: "Serviço alterado com sucesso!",
