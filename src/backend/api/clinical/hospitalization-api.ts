@@ -133,50 +133,52 @@ export async function getPatients({
 
 export async function signNursing(p: unknown, formData: FormData){
   try{
+    let nursingId = formData.get("nursingId") as string;
     const hospitalizationServiceId = formData.get("serviceId");
     const sectionId = formData.get("sectionId") as string;
     const sectionName = formData.get("sectionName") as string;
     const maxBedNumber = formData.get("maxBedNumber");
-    let nursingId = formData.get("nursingId") as string;
     const nursingName = formData.get("nursingName") as string;
     const bedNumber = formData.get("bed") as string;
-    
-    if(sectionName && nursingName){
-      await throwValidatePattern({ value: nursingName, to: "nursing" });
-      const section = await sectionModel.create({ name: sectionName });
 
-      const nursing = await nursingModel.create({
-        sectionId: section._id,
-        name: nursingName,
-        maxBedNumber,
-        internalServiceId: hospitalizationServiceId
-      });
-
-      nursingId = nursing._id.toString();
-    }else
-      if(nursingName){
-        await throwValidatePattern({ value: nursingName, to: "nursing" });
+    db.transaction(async (session) => {
+      if(sectionName && nursingName){
+        await throwValidatePattern({ value: nursingName, to: "nursing"});
+        const [ section ] = await sectionModel.create([{ name: sectionName }], { session});
         
-        const nursing = await nursingModel.create({
-          sectionId,
+        const [ nursing ] = await nursingModel.create([{
+          sectionId: section._id,
           name: nursingName,
           maxBedNumber,
           internalServiceId: hospitalizationServiceId
-        });
+        }], { session });
 
         nursingId = nursing._id.toString();
-      }
-    
-    const allocated = await canAddBedToNursing(nursingId);
+      }else
+        if(nursingName){
+          await throwValidatePattern({ value: nursingName, to: "nursing"});
+          
+          const [ nursing ] = await nursingModel.create([{
+            sectionId,
+            name: nursingName,
+            maxBedNumber,
+            internalServiceId: hospitalizationServiceId
+          }], { session });
 
-    if(!allocated.state) throw new Error(allocated?.message, { cause: 403 });
+          nursingId = nursing._id.toString();
+        }
+      
+      const allocated = await canAddBedToNursing(nursingId);
 
-    await throwValidatePattern({ value: bedNumber, to: "bed" });
+      if(!allocated.state) throw new Error(allocated?.message, { cause: 403 });
 
-    await bedNursingModel.create({
-      internalServiceId: hospitalizationServiceId,
-      nursingId,
-      bed: bedNumber
+      await throwValidatePattern({ value: bedNumber, to: "bed"});
+
+      await bedNursingModel.create([{
+        internalServiceId: hospitalizationServiceId,
+        nursingId,
+        bed: bedNumber
+      }], { session });
     });
 
     return {
@@ -317,7 +319,7 @@ export async function getBeds({
   service,
   nursing,
   section,
-  nursingId 
+  nursingId,
 }:{
   service?: string,
   nursing?: string,
@@ -332,11 +334,11 @@ export async function getBeds({
       const nursing = await nursingModel.findById({ _id: bed.nursingId });
       if(!nursing) continue;
 
-      const internalService = await internalServiceModel.findById({_id: bed.internalServiceId });
+      const internalService = await internalServiceModel.findById({ _id: bed.internalServiceId });
       if(!internalService) continue;
 
       const section = await sectionModel.findById({ _id: nursing?.sectionId });
-      if(!section) continue; // pula provaveis camas com erro 
+      if(!section) continue; // pula provaveis camas com erro
 
       formatedBeds.push({
         id: bed._id.toString(),
@@ -415,7 +417,7 @@ export async function canAddBedToNursing(id: string){
   // id da enfermaria
   try{
     const nursing = await nursingModel.findById({ _id: id });
-    
+
     if(!nursing) throw new Error("Cama não alocada!");
 
     const beds = (await getBeds({nursingId: id})).totalItems;
@@ -612,11 +614,11 @@ export async function registerPattern({ value, to }:{
   to: "bed" | "nursing";
 }){
   try{
-    await namePatternsModel.create({ to, regex: inferRegexPattern(value) });
+    await namePatternsModel.create([{ to, regex: inferRegexPattern(value) }]);
     return true;
   }catch (e){
     console.error(e);
-    return false
+    return false;
   }
 }
 
@@ -625,7 +627,7 @@ export async function getPattern(type: "bed" | "nursing") {
     const pattern = await namePatternsModel.findOne({ to: type });
     return pattern?.regex;
   }catch (e){
-    console.error(e)
+    console.error(e);
     return null;
   }
 }
@@ -636,9 +638,8 @@ export async function validatePattern({ value, to }:{
 }){
   try{
     const regex = await getPattern(to);
-    
     if(!regex) 
-      throw new Error("padrao nao registrado!");
+      throw new Error("padrao nao registrado!", {cause: "not_registered"});
 
     const reg = new RegExp(regex);
 
@@ -652,10 +653,10 @@ export async function validatePattern({ value, to }:{
   }
 }
 
-export async function throwValidatePattern({ value, to }: { value: string; to: "bed" | "nursing" }){
+export async function throwValidatePattern({ value, to}: { value: string; to: "bed" | "nursing"}){
   const isPossible = await registerPattern({
     value,
-    to
+    to  
   });
 
   if(!isPossible){
