@@ -687,6 +687,7 @@ async function putInScreening(prev: unknown, formData: FormData){
         userId
       }], { session });
     });
+    
     return {
       message: 'Utente enviado para a Triagem!',
       status: true,
