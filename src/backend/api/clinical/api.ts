@@ -665,22 +665,29 @@ async function updateAccessType(prev: unknown, formData: FormData){
 
 async function putInScreening(prev: unknown, formData: FormData){
   try{
+    const userId = await getUserId();
     const patientId = formData.get('patientId');
-    const existInScreening = await screeningModel.findOne({ patientId, served: false });
-
-    if(existInScreening)
-      if(existInScreening.isArchived)
-        throw new Error("Utente está na triagem, mas está arquivado!", { cause: "archived" });
-      else
-        throw new Error("Utente já em atendimento!", { cause: "exist" });
-
-    const patient = await patientModel.findByIdAndUpdate({_id: patientId}, { served: true });
     
-    await screeningModel.create({
-      patientId: patient?._id,
-      userId: await getUserId()
-    });
+    await db.transaction(async (session) => {
+      const existInScreening = await screeningModel.findOne({ patientId, served: false }).session(session);
 
+      if(existInScreening)
+        if(existInScreening.isArchived)
+          throw new Error("Utente está na triagem, mas está arquivado!", { cause: "archived" });
+        else
+          throw new Error("Utente já em atendimento!", { cause: "exist" });
+
+      const patient = await patientModel.findByIdAndUpdate({_id: patientId}, { served: true }, { session });
+      
+      if(!patient)
+        throw new Error("Paciente não encontrado!", { cause: "patient_not_found" });
+
+      await screeningModel.create([{
+        patientId: patient._id,
+        userId
+      }], { session });
+    });
+    
     return {
       message: 'Utente enviado para a Triagem!',
       status: true,
