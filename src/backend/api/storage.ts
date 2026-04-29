@@ -11,9 +11,9 @@ import type {
 import { getServiceToken } from "@/lib/web-token";
 
 const instance = axios.create({ 
-  baseURL: process.env.API_URL+"/st/v1",
-  headers: {
-    Authorization: `Bearer ${getServiceToken()}`
+  baseURL: process.env.API_URL + "/st/v1",
+    headers: {
+    Authorization: `Bearer ${await getServiceToken()}`
   }
 });
 
@@ -26,7 +26,6 @@ export async function upload(params: unknown, authorId: string){
     return res.data;
   }catch (e) {
     const err = (e as AxiosError).response?.data as Error;
-
     throw new Error(err.message);
   }
 }
