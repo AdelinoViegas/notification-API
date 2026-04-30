@@ -68,7 +68,7 @@ import dbConfigure from "./db.config";
 export const db = createConnection(process.env.MONGO_URL as string, {
   family: process.env.NODE_ENV === "development" 
     ? 4 
-    : undefined,
+    : 6,
   appName: "app-master-clinical"
 });
 
