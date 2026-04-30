@@ -17,7 +17,14 @@ export default function FeedbackLogoutButton({
 }) {
   const { submitted } = useFeedback();
 
-  const handleLogout = () => {
+  const handleClick = () => {
+    if (!submitted) {
+      toast.info(
+        "Para sair, preencha primeiro o formulário de feedback. Clique no botão azul 'Feedback' na tela.",
+        { autoClose: 5000 }
+      );
+      return;
+    }
     logout()
       .then((ev) => toast.success(ev.message))
       .catch((e) => toast.error(e.response.data.message))
@@ -26,41 +33,15 @@ export default function FeedbackLogoutButton({
       });
   };
 
-  const handleBlockedLogout = () => {
-    toast.info(
-      "Para sair, preencha primeiro o formulário de feedback. Clique no botão laranja 'Feedback' na tela.",
-      { autoClose: 5000 }
-    );
-  };
-
-  const baseClass =
-    className ??
-    "rounded-md flex w-full grow md:py-2 items-center justify-center gap-2 border-2 p-3 text-sm font-medium md:flex-none md:justify-start md:p-2 md:px-3";
-
-  if (!submitted) {
-    return (
-      <button
-        type="button"
-        onClick={handleBlockedLogout}
-        title="Preencha o formulário de feedback antes de sair"
-        className={clsx(
-          baseClass,
-          "bg-gray-100 border-gray-300 text-gray-400 cursor-not-allowed"
-        )}
-      >
-        <BsPower className="w-5" />
-        <div className="hidden md:block">Sair</div>
-      </button>
-    );
-  }
-
   return (
     <button
       type="button"
-      onClick={handleLogout}
+      onClick={handleClick}
+      title={!submitted ? "Preencha o formulário de feedback antes de sair" : undefined}
       className={clsx(
-        baseClass,
-        "bg-red-100 border-red-300 hover:bg-red-200 text-red-500"
+        className ??
+          "rounded-md flex w-full grow md:py-2 items-center justify-center gap-2 bg-red-100 border-red-300 border-2 hover:bg-red-200 p-3 text-sm font-medium md:flex-none md:justify-start md:p-2 md:px-3 text-red-500",
+        !submitted && "opacity-50 cursor-not-allowed hover:bg-red-100"
       )}
     >
       <BsPower className="w-5" />

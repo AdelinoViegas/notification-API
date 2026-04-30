@@ -35,6 +35,13 @@ const RATING_LABELS: Record<number, string> = {
   4: "Bom",
   5: "Excelente",
 };
+const RATING_COLORS: Record<number, { selected: string; hover: string }> = {
+  1: { selected: "border-red-500 bg-red-50 text-red-700",    hover: "hover:border-red-300" },
+  2: { selected: "border-orange-500 bg-orange-50 text-orange-700", hover: "hover:border-orange-300" },
+  3: { selected: "border-amber-500 bg-amber-50 text-amber-700",  hover: "hover:border-amber-300" },
+  4: { selected: "border-lime-500 bg-lime-50 text-lime-700",    hover: "hover:border-lime-300" },
+  5: { selected: "border-yellow-500 bg-yellow-50 text-yellow-700", hover: "hover:border-yellow-300" },
+};
 
 export default function FeedbackWidget() {
   const { submitted, setSubmitted } = useFeedback();
@@ -89,7 +96,7 @@ export default function FeedbackWidget() {
         type="button"
         onClick={() => setOpen(true)}
         title="Enviar feedback da fase de testes"
-        className="fixed bottom-24 right-[3vw] z-40 flex items-center gap-2 rounded-full bg-amber-500 px-4 py-3 text-white shadow-xl hover:bg-amber-600 transition-colors"
+        className="fixed bottom-24 right-[3vw] z-40 flex items-center gap-2 rounded-full bg-primary px-4 py-3 text-white shadow-xl hover:bg-[#0f4e87] transition-colors"
       >
         <MdOutlineFeedback className="size-6" />
         <span className="hidden sm:block text-sm font-medium">Feedback</span>
@@ -134,7 +141,7 @@ export default function FeedbackWidget() {
                     value={form.nome}
                     onChange={handleChange}
                     placeholder="Seu nome"
-                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                   />
                 </div>
                 <div>
@@ -147,7 +154,7 @@ export default function FeedbackWidget() {
                     value={form.setor}
                     onChange={handleChange}
                     placeholder="Ex: Triagem, Cirurgia..."
-                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                   />
                 </div>
               </div>
@@ -171,8 +178,8 @@ export default function FeedbackWidget() {
                         className={clsx(
                           "flex flex-col items-center rounded-lg border-2 py-2 text-sm font-semibold transition-colors",
                           form.avaliacao === String(r)
-                            ? "border-amber-500 bg-amber-50 text-amber-700"
-                            : "border-gray-200 text-gray-500 hover:border-amber-300"
+                            ? RATING_COLORS[r].selected
+                            : clsx("border-gray-200 text-gray-500", RATING_COLORS[r].hover)
                         )}
                       >
                         <span className="text-base">{r}</span>
@@ -194,7 +201,7 @@ export default function FeedbackWidget() {
                   onChange={handleChange}
                   rows={2}
                   placeholder="Descreva os pontos positivos..."
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-amber-400"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
                 />
               </div>
 
@@ -208,7 +215,7 @@ export default function FeedbackWidget() {
                   onChange={handleChange}
                   rows={2}
                   placeholder="Descreva o que pode ser melhorado..."
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-amber-400"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
                 />
               </div>
 
@@ -223,7 +230,7 @@ export default function FeedbackWidget() {
                   onChange={handleChange}
                   rows={2}
                   placeholder="Descreva qualquer bug ou comportamento inesperado..."
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-amber-400"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
                 />
               </div>
 
@@ -239,7 +246,7 @@ export default function FeedbackWidget() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="rounded-md bg-amber-500 px-5 py-2 text-sm font-medium text-white hover:bg-amber-600 disabled:opacity-60 transition-colors"
+                  className="rounded-md bg-primary px-5 py-2 text-sm font-medium text-white hover:bg-[#0f4e87] disabled:opacity-60 transition-colors"
                 >
                   {loading ? "Enviando..." : "Enviar feedback"}
                 </button>
