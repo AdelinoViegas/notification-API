@@ -3,6 +3,9 @@ import Container from "@/components/container";
 import Userbar from "@/components/userbar";
 import NavLabel from "@/components/clinical/nav-label";
 import { getGrantedRoles } from "@/backend/api/admin";
+// FEEDBACK PHASE — remover as 2 linhas abaixo após encerrar fase de testes
+import { FeedbackProvider } from "@/components/feedback/feedback-context";
+import FeedbackWidget from "@/components/feedback/feedback-widget";
 
 export default async function Layout({ children }: Readonly<{ children: React.ReactNode }>){
   const routes = await getGrantedRoles();
@@ -10,13 +13,17 @@ export default async function Layout({ children }: Readonly<{ children: React.Re
   routes.forEach(e => routeMap.set(e.href, e));
 
   return(
-    <main className="md:flex h-screen">
-      <SideNav />
-      <div className="w-full">
-        <Userbar />
-        <NavLabel routes={routeMap} />
-        <Container>{children}</Container>
-      </div>
-    </main>
+    // FEEDBACK PHASE — substituir <FeedbackProvider> por <> após encerrar fase de testes
+    <FeedbackProvider>
+      <main className="md:flex h-screen">
+        <SideNav />
+        <div className="w-full">
+          <Userbar />
+          <NavLabel routes={routeMap} />
+          <Container>{children}</Container>
+        </div>
+      </main>
+      <FeedbackWidget />
+    </FeedbackProvider>
   );
 }
