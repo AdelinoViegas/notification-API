@@ -40,7 +40,7 @@ const RATING_COLORS: Record<number, { selected: string; hover: string }> = {
   2: { selected: "border-orange-500 bg-orange-50 text-orange-700", hover: "hover:border-orange-300" },
   3: { selected: "border-amber-500 bg-amber-50 text-amber-700",  hover: "hover:border-amber-300" },
   4: { selected: "border-lime-500 bg-lime-50 text-lime-700",    hover: "hover:border-lime-300" },
-  5: { selected: "border-yellow-500 bg-yellow-50 text-yellow-700", hover: "hover:border-yellow-300" },
+  5: { selected: "border-green-500 bg-green-50 text-green-700",   hover: "hover:border-green-300" },
 };
 
 export default function FeedbackWidget() {
@@ -48,8 +48,6 @@ export default function FeedbackWidget() {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState<FeedbackForm>(INITIAL_FORM);
   const [loading, setLoading] = useState(false);
-
-  if (submitted) return null;
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -82,6 +80,7 @@ export default function FeedbackWidget() {
 
       toast.success("Feedback enviado! Obrigado pela sua contribuição.");
       setSubmitted(true);
+      setForm(INITIAL_FORM);
       setOpen(false);
     } catch {
       toast.error("Não foi possível enviar o feedback. Tente novamente.");
@@ -95,11 +94,16 @@ export default function FeedbackWidget() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        title="Enviar feedback da fase de testes"
+        title={submitted ? "Enviar novo feedback" : "Enviar feedback da fase de testes"}
         className="fixed bottom-24 right-[3vw] z-40 flex items-center gap-2 rounded-full bg-primary px-4 py-3 text-white shadow-xl hover:bg-[#0f4e87] transition-colors"
       >
         <MdOutlineFeedback className="size-6" />
         <span className="hidden sm:block text-sm font-medium">Feedback</span>
+        {submitted && (
+          <span className="absolute -top-1 -right-1 flex size-4 items-center justify-center rounded-full bg-green-400 text-[9px] font-bold text-white">
+            ✓
+          </span>
+        )}
       </button>
 
       <Dialog
