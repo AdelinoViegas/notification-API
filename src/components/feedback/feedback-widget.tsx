@@ -1,13 +1,15 @@
 "use client";
 
 // FEEDBACK PHASE — remover após encerrar fase de testes
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { MdOutlineFeedback } from "react-icons/md";
 import { IoClose } from "react-icons/io5";
 import { toast } from "react-toastify";
 import clsx from "clsx";
 import { useFeedback } from "@/components/feedback/feedback-context";
+import { getMyProfile } from "@/backend/api/admin";
+import { getMyClinicalProfile } from "@/backend/api/clinical/api";
 
 type FeedbackForm = {
   nome: string;
@@ -48,6 +50,18 @@ export default function FeedbackWidget() {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState<FeedbackForm>(INITIAL_FORM);
   const [loading, setLoading] = useState(false);
+
+  // FEEDBACK PHASE — pré-popula nome e setor a partir do perfil do utilizador
+  useEffect(() => {
+    Promise.all([getMyProfile(), getMyClinicalProfile()]).then(([profile, clinical]) => {
+      const setor = clinical?.internalService?.name ?? clinical?.urgencyService?.name ?? "";
+      setForm((prev) => ({
+        ...prev,
+        nome: profile?.fullname ?? "",
+        setor,
+      }));
+    });
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
