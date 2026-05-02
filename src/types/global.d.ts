@@ -8,5 +8,3 @@ declare global {
     code: number;
   }
 }
-
-declare module "./globals.css";

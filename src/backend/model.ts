@@ -68,8 +68,8 @@ import dbConfigure from "./db.config";
 export const db = createConnection(process.env.MONGO_URL as string, {
   family: process.env.NODE_ENV === "development" 
     ? 4 
-    : 6,
-  appName: "app-master-clinical"
+    : undefined,
+  appName: "erp-clinical-service"
 });
 
 db.on("connected", async ()=> await dbConfigure());
