@@ -8,7 +8,8 @@ COPY . .
 ARG NEXT_PUBLIC_STORAGE_URL
 ENV NEXT_PUBLIC_STORAGE_URL=$NEXT_PUBLIC_STORAGE_URL
 
-RUN yarn install 
+RUN yarn install
+RUN env 
 RUN yarn build
 
 FROM node:22-alpine
