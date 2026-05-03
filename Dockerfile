@@ -12,13 +12,14 @@ ARG MONGO_URL
 ENV MONGO_URL=$MONGO_URL
 
 ENV NODE_ENV="production"
+ENV NEXT_TELEMETRY_DISABLED=1
 
 ARG FEEDBACK_GOOGLE_SCRIPT_URL
 ENV FEEDBACK_GOOGLE_SCRIPT_URL=$FEEDBACK_GOOGLE_SCRIPT_URL
 
-RUN npm install
+RUN yarn install
 
-RUN npm run build
+RUN yarn build
 
 FROM node:22-alpine
 
@@ -31,7 +32,6 @@ RUN apk add --no-cache alpine-conf && \
 WORKDIR /app
 
 COPY --from=builder /app/package.json .
-COPY --from=builder /app/package-lock.json .
 COPY --from=builder /app/yarn.lock .
 COPY --from=builder /app/.next .next
 COPY --from=builder /app/public public
@@ -40,4 +40,4 @@ COPY --from=builder /app/next.config.ts .
 
 EXPOSE 3000
 
-CMD ["npm", "run", "start"]
+CMD ["yarn", "start"]
