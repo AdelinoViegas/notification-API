@@ -27,7 +27,8 @@
     "src/**/*.ts",    // Garante que a pasta src está coberta
     "src/**/*.tsx",   // Garante que os componentes estão cobertos 
     "**/*.ts", 
-    "**/*.tsx", 
+    "**/*.tsx",
+    "src/app/globals.d.ts",
     ".next/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
