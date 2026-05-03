@@ -16,7 +16,7 @@ ENV NODE_ENV="production"
 ARG FEEDBACK_GOOGLE_SCRIPT_URL
 ENV FEEDBACK_GOOGLE_SCRIPT_URL=$FEEDBACK_GOOGLE_SCRIPT_URL
 
-RUN npm run install
+RUN npm install
 
 RUN npm run build
 
@@ -32,6 +32,7 @@ WORKDIR /app
 
 COPY --from=builder /app/package.json .
 COPY --from=builder /app/package-lock.json .
+COPY --from=builder /app/yarn.lock .
 COPY --from=builder /app/.next .next
 COPY --from=builder /app/public public
 COPY --from=builder /app/node_modules node_modules
