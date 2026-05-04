@@ -19,9 +19,11 @@ ENV NODE_ENV="production"
 ENV NEXT_TELEMETRY_DISABLED=1
 ARG FEEDBACK_GOOGLE_SCRIPT_URL
 ENV FEEDBACK_GOOGLE_SCRIPT_URL=$FEEDBACK_GOOGLE_SCRIPT_URL
+ARG JWT_SECRET
+ENV JWT_SECRET=$JWT_SECRET
 
 # Forçar o build usando o binário local do TypeScript para evitar que o Next instale o TS 6.0.3
-RUN ./node_modules/.bin/next build
+RUN yarn build
 
 # --- ESTÁGIO FINAL ---
 FROM node:22-alpine
