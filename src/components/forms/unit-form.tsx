@@ -78,7 +78,7 @@ export default function UnitForm({ jsonData }: UnitProps){
   const [ isInternment, setIsInternment ] = useState(false);
   const router = useRouter();
   const param = useParams();
-  
+
   const handleUnitType = (data: unknown)=>{
     const param = data as { target: { value: string } };
 
@@ -107,7 +107,7 @@ export default function UnitForm({ jsonData }: UnitProps){
           <input 
             type="hidden" 
             name="unitId" 
-            value={param.unitId} 
+            defaultValue={param.id} 
           />
           <InputField
             textLabel="Nome da Unidade"
