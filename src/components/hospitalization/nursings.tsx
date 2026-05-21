@@ -18,7 +18,7 @@ export default async function Nursings({
   section: string; 
 }){
   
-  const beds = await getBeds({service, nursing, section});
+  const beds = await getBeds({service, nursing, section, session: null });
 
   const rows = formater(beds.beds, {
     filterKey: [
