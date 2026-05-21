@@ -14,7 +14,7 @@ import {
   urgencyServiceModel,
   db,
 } from "@/backend/model";
-import { omitUndefined } from "mongoose";
+import { ClientSession, omitUndefined } from "mongoose";
 import { getUser } from "@/backend/api/clinical/api";
 import { getUserId } from "@/lib/web-token";
 import { patientStates } from "./translator";
@@ -168,7 +168,7 @@ export async function signNursing(p: unknown, formData: FormData){
           nursingId = nursing._id.toString();
         }
       
-      const allocated = await canAddBedToNursing(nursingId);
+      const allocated = await canAddBedToNursing(nursingId, session);
 
       if(!allocated.state) throw new Error(allocated?.message, { cause: 403 });
 
@@ -320,24 +320,26 @@ export async function getBeds({
   nursing,
   section,
   nursingId,
+  session
 }:{
-  service?: string,
-  nursing?: string,
-  section?: string,
-  nursingId?: string,
+  service?: string;
+  nursing?: string;
+  section?: string;
+  nursingId?: string;
+  session?: ClientSession;
 }){
   try{
-    const beds = await bedNursingModel.find(omitUndefined({ nursingId }));
+    const beds = await bedNursingModel.find(omitUndefined({ nursingId }), { session });
     const formatedBeds = [];
 
     for (const bed of beds){
-      const nursing = await nursingModel.findById({ _id: bed.nursingId });
+      const nursing = await nursingModel.findById({ _id: bed.nursingId }, { session });
       if(!nursing) continue;
 
-      const internalService = await internalServiceModel.findById({ _id: bed.internalServiceId });
+      const internalService = await internalServiceModel.findById({ _id: bed.internalServiceId }, { session });
       if(!internalService) continue;
 
-      const section = await sectionModel.findById({ _id: nursing?.sectionId });
+      const section = await sectionModel.findById({ _id: nursing?.sectionId }, { session });
       if(!section) continue; // pula provaveis camas com erro
 
       formatedBeds.push({
@@ -413,14 +415,16 @@ export async function resolvedBed(id: string){
   }
 }
 
-export async function canAddBedToNursing(id: string){
+export async function canAddBedToNursing(id: string, session?: ClientSession){
   // id da enfermaria
   try{
-    const nursing = await nursingModel.findById({ _id: id });
+    const nursing = await nursingModel.findById({ _id: id }, {
+      session
+    });
 
     if(!nursing) throw new Error("Cama não alocada!");
 
-    const beds = (await getBeds({nursingId: id})).totalItems;
+    const beds = (await getBeds({nursingId: id, session })).totalItems;
 
     if(beds >= nursing.maxBedNumber) throw new Error("Limite de cama atingido!");
     
