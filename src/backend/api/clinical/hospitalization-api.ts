@@ -326,20 +326,32 @@ export async function getBeds({
   nursing?: string;
   section?: string;
   nursingId?: string;
-  session?: ClientSession;
+  session: ClientSession | null;
 }){
   try{
-    const beds = await bedNursingModel.find(omitUndefined({ nursingId }), { session });
+    const beds = await bedNursingModel
+      .find(omitUndefined({ nursingId }))
+      .session(session);
+
     const formatedBeds = [];
 
     for (const bed of beds){
-      const nursing = await nursingModel.findById({ _id: bed.nursingId }, { session });
+      const nursing = await nursingModel
+        .findById({ _id: bed.nursingId })
+        .session(session);
+
       if(!nursing) continue;
 
-      const internalService = await internalServiceModel.findById({ _id: bed.internalServiceId }, { session });
+      const internalService = await internalServiceModel
+        .findById({ _id: bed.internalServiceId })
+        .session(session);
+
       if(!internalService) continue;
 
-      const section = await sectionModel.findById({ _id: nursing?.sectionId }, { session });
+      const section = await sectionModel
+        .findById({ _id: nursing?.sectionId })
+        .session(session);
+
       if(!section) continue; // pula provaveis camas com erro
 
       formatedBeds.push({
@@ -415,16 +427,16 @@ export async function resolvedBed(id: string){
   }
 }
 
-export async function canAddBedToNursing(id: string, session?: ClientSession){
+export async function canAddBedToNursing(id: string, session: ClientSession | null){
   // id da enfermaria
   try{
-    const nursing = await nursingModel.findById({ _id: id }, {
-      session
-    });
+    const nursing = await nursingModel
+      .findById({ _id: id })
+      .session(session);
 
     if(!nursing) throw new Error("Cama não alocada!");
 
-    const beds = (await getBeds({nursingId: id, session })).totalItems;
+    const beds = (await getBeds({nursingId: id, session: session })).totalItems;
 
     if(beds >= nursing.maxBedNumber) throw new Error("Limite de cama atingido!");
     
@@ -452,7 +464,7 @@ export async function updateBed(prev: unknown, formData: FormData){
 
     const bed = await bedNursingModel.findById({ _id: id });
 
-    const allocated = await canAddBedToNursing(nursingId);
+    const allocated = await canAddBedToNursing(nursingId, null);
 
     if(!bed) throw new Error("cama não encontrada!");
 
