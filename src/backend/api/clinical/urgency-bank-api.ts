@@ -24,7 +24,9 @@ import {
   hospitalizationModel,
   patientStateModel,
   patientExitModel,
-  patientWaitingModel
+  patientWaitingModel,
+  patientSyncModel,
+  externalTransferModel
 } from "@/backend/model";
 import { 
   patientAccess,
@@ -1512,6 +1514,85 @@ async function updateClinicalDiary(prev: unknown, formData:FormData){
   }
 }
 
+async function getTransferHistories({
+  page,
+  name,
+  registerNumber,
+}: {
+  page: number;
+  registerNumber?: number;
+  name?: string;
+}){
+  try{
+    const numberOfItems = 10 * page;
+    const patients =  await patientModel.find({transfered: true});
+    const filter = name || registerNumber;
+
+    const patientTransferred = [];
+
+    for(const patient of patients.slice(numberOfItems - 10, filter?patients.length:numberOfItems)){
+      patientTransferred.push({
+        id: patient?._id.toString() as string,
+        processNumber: patient?.registerNumber as number,
+        fullname: patient.fullname as string,
+      });
+    }
+
+    const _patients = filter?patientTransferred.filter((item)=>{
+      const byName = !name || item.fullname.match(new RegExp(`^${name}`, 'i'));
+      const byProcessNumber = !registerNumber || item.processNumber.toString().match(new RegExp(`^${registerNumber}`, 'i'));
+      return byName && byProcessNumber;
+    }):patientTransferred;
+     
+    return {
+      patients: _patients,
+      totalItems: patients.length,
+      availablePages: Math.ceil(patients.length /10),
+      currentPage: page,
+    }
+  }catch (e){
+    console.error(e);
+
+    return {
+      patients: [],
+      totalItems: 0,
+      availablePages: 0,
+      currentPage: page
+    }
+  }
+}
+
+
+async function getPatientTransferHistories(id: string){
+  const patient = await patientSyncModel.findOne({id});
+  const firstData = await patientModel.findOne({_id: patient?.secondaries[0]});
+  const patientTransferred = [];
+
+  for(const id of patient?.secondaries || []){
+    const transferred = await externalTransferModel.findOne({patientId: id});
+
+    if(transferred){
+      const tried = await triedModel.findOne({patientId: id, served: true});
+      const service = await urgencyServiceModel.findOne({_id: tried?.serviceId});
+      const unit = await externalUnitModel.findOne({_id: transferred.unitId});
+
+      patientTransferred.push({
+        id: patient?._id.toString() as string,
+        processNumber: firstData?.registerNumber as number,
+        fullname: firstData?.fullname as string,
+        service: service?.label as string, 
+        admissionDate: getDataAndHoursFormat(firstData?.createdAt as Date),
+        transferDate: getDataAndHoursFormat(transferred?.createdAt as Date),
+        unitExternal: unit?.name as string,
+        transferReason: transferred?.reason as string,
+        doctorResponsible: (await getUser(transferred?.userId as string)).fullname
+      });
+    }
+  }
+  
+  return patientTransferred;
+}
+
 export {
   finishHospitalization,
   getPatients,
@@ -1545,5 +1626,7 @@ export {
   getPrescription,
   movementInUrgencyBank,
   definePatientState,
-  getPatientState
+  getPatientState, 
+  getTransferHistories,
+  getPatientTransferHistories
 };
