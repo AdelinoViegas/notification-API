@@ -24,7 +24,8 @@ import {
   hospitalizationModel,
   patientStateModel,
   patientExitModel,
-  patientWaitingModel
+  patientWaitingModel,
+  inHospitalizeModel
 } from "@/backend/model";
 import { 
   patientAccess,
@@ -41,6 +42,7 @@ import { getUser } from "@/backend/api/clinical/api";
 import { DoctorCalendar } from "@/backend/api/clinical/types";
 import { getPatient as mainPatient } from "@/backend/api/clinical/api";
 import { closePatientProcess, getSyncedHistories, syncPatientRegister } from "@/backend/api/clinical/process-control";
+import { createDischargeRecord } from "@/backend/api/clinical/discharge-history-api";
 
 type UnitType = "workplace" | "internment" | "laboratory" | "imaging";
 
@@ -1248,6 +1250,8 @@ async function applyDischarge(p:unknown, formdata:FormData){
   try{
     const patientId = formdata.get("patientId") as string;
     const userMakedAt = formdata.get("makedAt");
+    const dischargeKind = (formdata.get("kind") as string) ?? "hospital";
+    const reason = formdata.get("reason") as string;
     const userId = await getUserId();
     const recoveredPatient = await patientStateModel.findOne({ patientId , stateId: "recovered" });
 
@@ -1255,6 +1259,7 @@ async function applyDischarge(p:unknown, formdata:FormData){
       throw new Error("defina o estado do paciente para recuperado", { cause: "recovered" });
 
     await db.transaction(async (session) => {
+      // fechar ciclo na urgência
       await triedModel.updateOne({
         userId,
         patientId,
@@ -1264,15 +1269,44 @@ async function applyDischarge(p:unknown, formdata:FormData){
       }, { session });
 
       await closePatientProcess(patientId, "urgency", session);
+
+      // fechar ciclo de internamento — libertar cama/leito
+      await inHospitalizeModel.updateOne(
+        { patientId, served: false },
+        { served: true },
+        { session }
+      );
+
+      await hospitalizationModel.updateOne(
+        { patientId, served: true },
+        { served: true },
+        { session }
+      );
+
+      await closePatientProcess(patientId, "hospitalization", session);
+
+      // sincronizar e criar registo de saída
       await syncPatientRegister(patientId, session);
       const id = (await getSyncedHistories(patientId, session))?.id as string;
 
-      await patientExitModel.create([{
+      const [ exitRecord ] = await patientExitModel.create([{
         patientId: id,
         userId,
         userEventAt: userMakedAt,
+        lockProfileState: true,
         where: "high"
       }], { session });
+
+      // criar registo automático no histórico de altas
+      await createDischargeRecord({
+        patientId,
+        dischargeDate: userMakedAt ? new Date(userMakedAt as string) : new Date(),
+        dischargeType: dischargeKind,
+        reason: reason || undefined,
+        userId,
+        patientExitId: exitRecord._id.toString(),
+        session,
+      });
     });
 
     return {

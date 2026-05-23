@@ -63,6 +63,7 @@ import {
   sectionSchema 
 } from "@/backend/schemas/hospitalization";
 import { operatingRoomResultSchema, operatingRoomSchema } from "@/backend/schemas/operating-room";
+import { dischargeHistorySchema } from "@/backend/schemas/discharge-history";
 import dbConfigure from "./db.config";
 
 export const db = createConnection(process.env.MONGO_URL as string, {
@@ -136,7 +137,10 @@ const internalMovimentModel = db.model("InternalMoviments", internalMovimentsSch
 const serviceRequestsModel = db.model("ServiceRequest", serviceRequestsSchema);
 const namePatternsModel = db.model("NamePattern", namePatternsSchema);
 
-export { namePatternsModel }
+//historico de altas
+const dischargeHistoryModel = db.model("DischargeHistory", dischargeHistorySchema);
+
+export { namePatternsModel, dischargeHistoryModel }
 
 export {
   userModel,

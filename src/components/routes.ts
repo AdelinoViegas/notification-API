@@ -8,6 +8,7 @@ import { GrDocumentText } from "react-icons/gr";
 import { GrTest } from "react-icons/gr";
 import { FaRadiationAlt } from "react-icons/fa";
 import { MdOutlineBedroomChild } from "react-icons/md";
+import { TbReportMedical } from "react-icons/tb";
 
 export const clinicalIcons = [
   {
@@ -65,6 +66,10 @@ export const clinicalIcons = [
   {
     route: "hospitalization",
     Icon: MdOutlineBedroomChild
+  },
+  {
+    route: "discharge-history",
+    Icon: TbReportMedical
   }
 ];
 
@@ -138,5 +143,10 @@ export const clinicalRoutes = [
     href: "/clinical/hospitalization",
     route: "hospitalization",
     label: "Internamento"
+  },
+  {
+    href: "/clinical/discharge-history",
+    route: "discharge-history",
+    label: "Histórico de Altas"
   },
 ];
