@@ -16,10 +16,14 @@ import { getUser } from "@/backend/api/clinical/api";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
 
 // ---------- tipos de alta ----------
-export const dischargeTypes = [
+const dischargeTypes = [
   { _id: "hospital", label: "Alta Hospitalar" },
   { _id: "medical", label: "Alta Médica" },
 ];
+
+export async function getDischargeTypes() {
+  return dischargeTypes;
+}
 
 // ---------- criar registo automático ----------
 export async function createDischargeRecord({
