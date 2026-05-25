@@ -7,7 +7,7 @@ import { BsCalendar2Week } from "react-icons/bs";
 import { GrDocumentText } from "react-icons/gr";
 import { GrTest } from "react-icons/gr";
 import { FaRadiationAlt } from "react-icons/fa";
-import { MdOutlineBedroomChild } from "react-icons/md";
+import { MdOutlineBedroomChild, MdHistory } from "react-icons/md";
 
 export const clinicalIcons = [
   {
@@ -65,6 +65,10 @@ export const clinicalIcons = [
   {
     route: "hospitalization",
     Icon: MdOutlineBedroomChild
+  },
+  {
+    route: "historical",
+    Icon: MdHistory
   }
 ];
 
@@ -127,7 +131,7 @@ export const clinicalRoutes = [
   {
     href: "/clinical/operating-room",
     route: 'operating-room',
-    label: 'Bloco Operatório',
+    label: 'Bloco Operatório', 
   },
   {
     href: "/clinical/schedule-surgery",
@@ -138,5 +142,10 @@ export const clinicalRoutes = [
     href: "/clinical/hospitalization",
     route: "hospitalization",
     label: "Internamento"
+  },
+  {
+    href: "/clinical/historical",
+    route: "historical",
+    label: "Históricos"
   },
 ];
