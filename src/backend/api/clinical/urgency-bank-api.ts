@@ -1596,6 +1596,8 @@ async function getTransferHistories({
   }
 }
 
+
+
 async function getPatientTransferHistories(id: string){
   const patient = await patientSyncModel.findOne({id});
   const firstData = await patientModel.findOne({_id: patient?.secondaries[0]});

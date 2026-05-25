@@ -131,7 +131,7 @@ export const clinicalRoutes = [
   {
     href: "/clinical/operating-room",
     route: 'operating-room',
-    label: 'Bloco Operatório',
+    label: 'Bloco Operatório', 
   },
   {
     href: "/clinical/schedule-surgery",
