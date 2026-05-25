@@ -47,16 +47,21 @@ export async function createDischargeRecord({
     // dados do paciente
     const patient = await patientModel
       .findById({ _id: patientId })
-      .select({ fullname: 1 })
+      .select({ fullname: 1, registerNumber: 1 })
       .session(session || null);
 
     // dados do internamento
     const hospitalization = await hospitalizationModel
       .findOne({ patientId })
+      .sort({ createdAt: -1 })
       .session(session || null);
 
+    // Nota: não filtrar por served:false porque applyDischarge já
+    // marcou o registo como served:true antes de chamar esta função
+    // dentro da mesma transacção.
     const inHospitalized = await inHospitalizeModel
-      .findOne({ patientId, served: false })
+      .findOne({ patientId })
+      .sort({ createdAt: -1 })
       .session(session || null);
 
     // resolver cama/enfermaria/serviço
@@ -103,6 +108,16 @@ export async function createDischargeRecord({
       }
     }
 
+    // Se não houver dados de internamento, usar data do banco de urgência
+    if (!admissionDate) {
+      const urgencyCreation = await urgencyBankModel
+        .findOne({ patientId })
+        .select({ createdAt: 1 })
+        .sort({ createdAt: -1 })
+        .session(session || null);
+      admissionDate = urgencyCreation?.createdAt;
+    }
+
     // diagnóstico de admissão — buscar da urgencyBank
     let admissionDiagnosis = reason ?? "Não especificado";
 
@@ -131,7 +146,7 @@ export async function createDischargeRecord({
       [
         {
           patientId,
-          processNumber: inHospitalized?.processNumber ?? Date.now(),
+          processNumber: inHospitalized?.processNumber ?? (patient?.registerNumber as number) ?? Date.now(),
           patientName: patient?.fullname ?? "Desconhecido",
           internalServiceName,
           nursingName,
