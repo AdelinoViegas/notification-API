@@ -1,31 +1,13 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import localFont from "next/font/local";
 import './globals.css';
 import ToastProvider from "@/components/toastProvider";
 import 'react-toastify/dist/ReactToastify.css';
 
-// const local = localFont({ 
-//   src: [
-//     { 
-//       path: './fonts/GeistVF.woff', 
-//       weight: "400", 
-//       style: "normal" 
-//     },
-//     { 
-//       path: './fonts/GeistMonoVF.woff', 
-//       weight: "700", 
-//       style: "normal" 
-//     },
-//     { 
-//       path: './fonts/GeistMonoVF.woff', 
-//       weight: "600", 
-//       style: "normal" 
-//     }
-//   ] 
-// });
-
-const font = Inter({
-  subsets: ["latin"]
+const font = localFont({
+  src: './fonts/Inter-latin.woff2',
+  display: 'swap',
+  variable: '--font-inter',
 });
 
 export const metadata: Metadata = { title: "Master ERP" };

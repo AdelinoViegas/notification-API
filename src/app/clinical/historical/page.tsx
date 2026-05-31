@@ -1,7 +1,7 @@
 import TabNav from "@/components/tabnav";
 import TransferHistory from "@/components/transfer-history";
 import DeathHistory from "@/components/death-history";
-import DischargeHistory from "@/components/discharge-history";
+import DischargeHistoryPanel from "@/components/discharge-history/discharge-history-panel";
 
 export const dynamic = "force-dynamic";
 
@@ -12,10 +12,21 @@ export default async function Page({
     r: "o" | "t" | "a", 
     name: string,
     registerNumber: number,
+    processNumber: string,
+    fromDate: string,
+    toDate: string,
     p: number,
   }>
 }){
-  const { r: route, name, registerNumber, p: page } = await searchParams;
+  const { 
+    r: route, 
+    name, 
+    registerNumber, 
+    processNumber,
+    fromDate,
+    toDate,
+    p: page 
+  } = await searchParams;
 
   return(
     <div>
@@ -30,9 +41,17 @@ export default async function Page({
           { path: "a", title: "Histórico de Altas" }
         ]}
       />
-      { route === "o" && <DeathHistory {...{name}} /> }
-      { route === "t" && <TransferHistory {...{name}} {...{page}} {...{registerNumber}} /> }
-      { route === "a" && <DischargeHistory {...{name}}/>}
+      { route === "o" && <DeathHistory name={name} /> }
+      { route === "t" && <TransferHistory name={name} page={page} registerNumber={registerNumber} /> }
+      { route === "a" && (
+        <DischargeHistoryPanel 
+          name={name} 
+          processNumber={processNumber}
+          fromDate={fromDate}
+          toDate={toDate}
+          page={page ? Number(page) : 1}
+        />
+      )}
     </div>
   )
 }

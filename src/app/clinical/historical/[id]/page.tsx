@@ -4,6 +4,10 @@ import Tag from "@/components/ui/tag";
 import Accordium from "@/components/ui/accordium";
 import { getPatientTransferHistories } from "@/backend/api/clinical/urgency-bank-api";
 import Button from "@/components/ui/button";
+import Link from "next/link";
+import { IoArrowBack } from "react-icons/io5";
+
+export const dynamic = "force-dynamic";
 
 export default async function Page({ params }: { params: Promise<{ id: string }>}){
   const { id } = await params; 
@@ -11,6 +15,15 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   
   return(
     <main className="space-y-3">
+      <div className="flex items-center gap-3">
+        <Link href="/clinical/historical?r=t">
+          <Button type="button" cancel className="flex items-center gap-2">
+            <IoArrowBack className="size-4" />
+            Voltar
+          </Button>
+        </Link>
+      </div>
+
       <div className="overflow-auto h-[80vh] scroll overflow-auto">
         <Card className="mb-8 pb-4">
          <div className="flex justify-between mt-3 mb-5">
@@ -87,7 +100,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
                     <TitleAndSubtitle
                       label="Motivo da transferência"
-                      value={props.transferDate}
+                      value={props.transferReason}
                       className={{
                         label:"font-medium text-gray-500 ms-4",
                         content: "ms-6"
