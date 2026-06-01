@@ -97,15 +97,6 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                         content: "ms-6"
                       }} 
                     />
-
-                    <TitleAndSubtitle
-                      label="Motivo da transferência"
-                      value={props.transferReason}
-                      className={{
-                        label:"font-medium text-gray-500 ms-4",
-                        content: "ms-6"
-                      }} 
-                    />
                   </div>
                   <div>                                                    
                     <Tag className="inline-flex mt-1">Razões da Transferência</Tag>
