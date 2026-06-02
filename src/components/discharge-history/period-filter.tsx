@@ -42,12 +42,14 @@ export default function PeriodFilter() {
   return (
     <div className="flex items-end gap-3">
       <InputField
+        className="my-0"
         ref={fromRef}
         textLabel="De"
         type="date"
         defaultValue={searchParams.get("fromDate") ?? ""}
       />
       <InputField
+        className="my-0"
         ref={toRef}
         textLabel="Até"
         type="date"

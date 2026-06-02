@@ -29,7 +29,7 @@ export default async function Page({
   } = await searchParams;
 
   return(
-    <div>
+    <div className="space-y-3">
       <TabNav
         keyParam="" 
         useReactHook

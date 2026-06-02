@@ -19,7 +19,7 @@ export default async function Page({
   const { r: route, name, _fst: section , _fs: service, _fn: nursing } = await searchParams;
 
   return(
-    <div>
+    <div className="space-y-3">
       <TabNav
         keyParam="" 
         useReactHook

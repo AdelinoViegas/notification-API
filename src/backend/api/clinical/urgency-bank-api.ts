@@ -1272,21 +1272,6 @@ async function applyDischarge(p:unknown, formdata:FormData){
 
       await closePatientProcess(patientId, "urgency", session);
 
-      // fechar ciclo de internamento — libertar cama/leito
-      await inHospitalizeModel.updateOne(
-        { patientId, served: false },
-        { served: true },
-        { session }
-      );
-
-      await hospitalizationModel.updateOne(
-        { patientId, served: true },
-        { served: true },
-        { session }
-      );
-
-      await closePatientProcess(patientId, "hospitalization", session);
-
       // sincronizar e criar registo de saída
       await syncPatientRegister(patientId, session);
       const id = (await getSyncedHistories(patientId, session))?.id as string;
@@ -1300,6 +1285,8 @@ async function applyDischarge(p:unknown, formdata:FormData){
       }], { session });
 
       // criar registo automático no histórico de altas
+      // NOTA: deve ser chamado ANTES de remover o inHospitalize,
+      // para que os dados de cama/enfermaria/serviço ainda sejam legíveis
       await createDischargeRecord({
         patientId,
         dischargeDate: userMakedAt ? new Date(userMakedAt as string) : new Date(),
@@ -1309,6 +1296,23 @@ async function applyDischarge(p:unknown, formdata:FormData){
         patientExitId: exitRecord._id.toString(),
         session,
       });
+
+      // fechar ciclo de internamento — libertar cama/leito
+      // Usa deleteOne em vez de updateOne para evitar conflito com o
+      // índice único {patientId, served} quando o paciente já teve
+      // internamentos anteriores (served: true já existe).
+      await inHospitalizeModel.deleteOne(
+        { patientId, served: false },
+        { session }
+      );
+
+      await hospitalizationModel.updateOne(
+        { patientId, served: true },
+        { served: true },
+        { session }
+      );
+
+      await closePatientProcess(patientId, "hospitalization", session);
     });
 
     return {
