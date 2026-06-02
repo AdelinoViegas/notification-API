@@ -3,7 +3,7 @@ import Search from "@/components/ui/search";
 import { formater } from "@/lib/table-formater";
 import Pagination from "@/components/pagination";
 import Refresh from "@/components/refresh";
-import { getPatients } from "@/backend/api/clinical/hospitalization-api";
+import { getHospitalizedPatients } from "@/backend/api/clinical/hospitalization-api";
 import Filter from "@/components/hospitalization/filter";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
 import Alert from "@/components/ui/alert";
@@ -20,16 +20,13 @@ export default async function Hospitalized({
   nursing?: string;
   page?: number;
 }){
-  const patients = await getPatients({ 
+  const patients = await getHospitalizedPatients({ 
     page: page?Number(page):1,
     served: true,
-    filterByUserId: true,
-    strictQuery: true,
     name,
     section,
     nursing,
   });
-
   const intService = (await getMyClinicalProfile())?.internalService;
   
   const rows = formater(patients.patients, {
@@ -55,7 +52,7 @@ export default async function Hospitalized({
       fn: e => getDataAndHoursFormat(new Date(e))
     }
   });
-  
+
   return (
     <main className="space-y-3">
       <Refresh />
