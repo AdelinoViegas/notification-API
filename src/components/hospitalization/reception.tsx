@@ -1,11 +1,11 @@
+import { getDataAndHoursFormat } from "@/lib/date-formater";
+import { formater } from "@/lib/table-formater";
 import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
-import { formater } from "@/lib/table-formater";
 import Pagination from "@/components/pagination";
 import Refresh from "@/components/refresh";
-import { getPatients } from "@/backend/api/clinical/hospitalization-api";
-import { getDataAndHoursFormat } from "@/lib/date-formater";
+import { getPatientsReception } from "@/backend/api/clinical/hospitalization-api";
 
 export default async function Reception({ 
   name,
@@ -14,7 +14,7 @@ export default async function Reception({
   name?: string;
   page?: number;
 }){
-  const patients = await getPatients({ 
+  const patients = await getPatientsReception({ 
     page: page?Number(page):1,
     filterByUserId: true,
     strictQuery: true,
