@@ -20,23 +20,18 @@ import { getUserId } from "@/lib/web-token";
 import { patientStates } from "./translator";
 import { inferRegexPattern } from "@/lib/regexp";
 
-export async function getPatients({
+export async function getPatientsReception({
   page,
   name,
   served,
   filterByUserId,
   strictQuery,
-  section,
-  nursing
 }: {
-  fullname?: string;
   page: number;
   served?: boolean;
   filterByUserId?: boolean;
   strictQuery?: boolean; // busca sem a omissão de undefined
   name?: string;
-  section?: string;
-  nursing?: string;
 }){
   try{
     const queryParams = strictQuery 
@@ -60,8 +55,65 @@ export async function getPatients({
       const doctor = await getUser(patient.userId?.toString() as string);
       const personalData = await patientModel.findById({ _id: patient.patientId }).select({ fullname: 1 });
       const serviceSource = await urgencyServiceModel.findById({ _id: patient?.fromServiceId })?.select({ label: 1 });
-      // const reason = await patientHospitalizedModel.findOne({ hospitalizedId: patient?._id }).select({ currentState: 1 });
-      const inHospitalized = await inHospitalizeModel.findOne({ patientId: patient.patientId });
+      const patientState = await patientStateModel.findOne({ patientId: patient.patientId });
+      const resolvedPatientState = patientState 
+        ? patientStates.find(state => state._id === patientState.stateId)?.label
+        : "Sem estado";
+     
+      formated.push({
+        id: patient?.patientId?.toString() as string,
+        service: serviceSource?.label as string ?? "Desconhecido",
+        createdAt: patient?.createdAt as Date,
+        fullname: personalData?.fullname as string,
+        currentState: resolvedPatientState,
+        user: doctor?.fullname as string,
+      });
+    }
+
+    const patientData = formated.filter((item)=> !name || item.fullname.toLowerCase().startsWith(name.toLowerCase()) );
+
+    return {
+      patients: patientData.slice(0, 9),
+      availablePages: patientData.length/10,//formated.length < 11
+        // ? 1
+        // : formated.length/10,
+      currentPage: page,
+      totalItems: patientData.length
+    }
+  }catch (e){
+    console.error(e);
+
+    return {
+      patients: [],
+      availablePages: 1,
+      currentPage: 1,
+      totalItems: 1
+    }
+  }
+}
+
+export async function getHospitalizedPatients({
+  page,
+  name,
+  served,
+  section,
+  nursing
+}: {
+  page: number;
+  served?: boolean;
+  name?: string;
+  section?: string;
+  nursing?: string;
+}){
+  try{
+    const patients =  await hospitalizationModel.find({served});
+    const formated = [];
+
+    for(const patient of patients){
+      const doctor = await getUser(patient.userId?.toString() as string);
+      const personalData = await patientModel.findById({ _id: patient.patientId }).select({ fullname: 1 });
+      const serviceSource = await urgencyServiceModel.findById({ _id: patient?.fromServiceId })?.select({ label: 1 });
+      const inHospitalized = await inHospitalizeModel.findOne({ patientId: patient.patientId, served: false });
       const patientState = await patientStateModel.findOne({ patientId: patient.patientId });
       const resolvedPatientState = patientState 
         ? patientStates.find(state => state._id === patientState.stateId)?.label
@@ -77,7 +129,7 @@ export async function getPatients({
           service: serviceSource?.label as string ?? "Desconhecido",
           createdAt: patient?.createdAt as Date,
           fullname: personalData?.fullname as string,
-          currentState: resolvedPatientState,//reason?.currentState as string ?? "Sem motivo",
+          currentState: resolvedPatientState,
           user: doctor?.fullname as string,
           processNumber: inHospitalized?.processNumber,
           bed: bed?.bed,
@@ -85,18 +137,7 @@ export async function getPatients({
           sectionId: section?._id.toString() as string,
           nursingId: nursing?._id.toString() as string
         });
-
-        continue;
       }
-     
-      formated.push({
-        id: patient?.patientId?.toString() as string,
-        service: serviceSource?.label as string ?? "Desconhecido",
-        createdAt: patient?.createdAt as Date,
-        fullname: personalData?.fullname as string,
-        currentState: resolvedPatientState,
-        user: doctor?.fullname as string,
-      });
     }
 
     const patientData = formated.filter((item)=>{
@@ -113,9 +154,7 @@ export async function getPatients({
 
     return {
       patients: patientData.slice(0, 9),
-      availablePages: patientData.length/10,//formated.length < 11
-        // ? 1
-        // : formated.length/10,
+      availablePages: patientData.length/10,
       currentPage: page,
       totalItems: patientData.length
     }
@@ -520,9 +559,9 @@ export async function signToHospitalize(p: unknown, formData: FormData){
   try{
     const patientId = formData.get("patientId");
     const bedId = formData.get("bedId");
-    const exists = await inHospitalizeModel.findOne({ bedId });
+    const isOccupied = await inHospitalizeModel.findOne({ bedId, served: false });
 
-    if(exists) 
+    if(isOccupied) 
       throw new Error("Cama já oucupada por um paciente!, escolha outra", { cause: "occupied" });
 
     await db.transaction(async (session) => {
