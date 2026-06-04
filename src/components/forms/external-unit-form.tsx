@@ -6,12 +6,14 @@ import {
   useRef,
   useActionState 
 } from "react";
+import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import Modal from "@/components/modal";
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
+import Selection from "@/components/ui/selection";
 import { signExternalUnit } from "@/backend/api/clinical/urgency-bank-api";
-import { toast } from "react-toastify";
+import { AngolaProvices } from "@/backend/api/clinical/translator";
 
 export default function ExternalUnitForm({ isEdit }: { isEdit?: boolean }) {
   const [ state, action ] = useActionState(signExternalUnit, { message: "", status: false });
@@ -43,7 +45,7 @@ export default function ExternalUnitForm({ isEdit }: { isEdit?: boolean }) {
         onClick={openModal} 
         className="flex gap-x-2"
       >
-        Nova
+        Nova Unidade Externa
       </Button>
 
       <Modal 
@@ -71,10 +73,11 @@ export default function ExternalUnitForm({ isEdit }: { isEdit?: boolean }) {
             name="municipality"
           />
 
-          <InputField
-            textLabel="Província" 
-            placeholder="Província"
+          <Selection
+            label="Província"
+            options={AngolaProvices}
             name="province"
+            required
           />
 
           <div className="flex gap-3 justify-end">
