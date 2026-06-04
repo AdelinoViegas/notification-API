@@ -9,9 +9,9 @@ import type {
   ResponseDriveFile 
 } from "@/backend/api/types";
 import { getServiceToken } from "@/lib/web-token";
-import { Fetch } from "@/lib/fetch";
+import { FetchService } from "@/lib/fetch";
 
-const api = new Fetch({
+const api = new FetchService({
   baseUrl: String(process.env.API_URL)+"/st/v2",
   headers: {
     Authorization: `Bearer ${await getServiceToken()}`

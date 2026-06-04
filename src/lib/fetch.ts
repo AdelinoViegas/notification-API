@@ -14,9 +14,14 @@ interface MethodConfig {
   }
 }
 
-type HttpPostBody = { [k: string]: string } | FormData;
+type HttpBody = { [k: string]: string } | FormData;
 
-export class Fetch {
+interface Fetch {
+  get<T>(pathname: string, config: MethodConfig): Promise<T | ArrayBuffer>;
+  post<T>(pathname: string, body: HttpBody, config: MethodConfig): Promise<T>;
+}
+
+export class FetchService implements Fetch {
   #config: Instance;
   #baseUrl: URL;
 
@@ -55,7 +60,7 @@ export class Fetch {
 
   async post<T>(
     pathname: string, 
-    body: HttpPostBody, 
+    body: HttpBody, 
     config: MethodConfig = { params: {}, headers: {} }
   ): Promise<T>{
     this.#baseUrl.pathname = pathname;
