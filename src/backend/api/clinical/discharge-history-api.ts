@@ -56,11 +56,10 @@ export async function createDischargeRecord({
       .sort({ createdAt: -1 })
       .session(session || null);
 
-    // Nota: não filtrar por served:false porque applyDischarge já
-    // marcou o registo como served:true antes de chamar esta função
-    // dentro da mesma transacção.
+    // Buscar o registo activo (served: false) — esta função é chamada
+    // ANTES de o applyDischarge remover o documento, dentro da mesma transacção.
     const inHospitalized = await inHospitalizeModel
-      .findOne({ patientId })
+      .findOne({ patientId, served: false })
       .sort({ createdAt: -1 })
       .session(session || null);
 

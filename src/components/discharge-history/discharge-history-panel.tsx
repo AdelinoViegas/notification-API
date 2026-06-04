@@ -67,24 +67,22 @@ export default async function DischargeHistoryPanel({
         message="Duplo clique sobre o registo para visualizar o processo completo em modo bloqueado."
       />
 
-      <div className="flex flex-col lg:flex-row justify-between lg:items-end gap-3">
+      <div className="flex flex-wrap items-end gap-3">
         <PeriodFilter />
 
-        <div className="flex gap-x-3 items-end">
-          <Search
-            className="flex items-center gap-3"
-            filterKey="processNumber"
-            label="Nº Processo"
-            placeholder="Buscar por nº processo..."
-          />
+        <Search
+          className="flex items-end gap-3"
+          filterKey="processNumber"
+          label="Nº Processo"
+          placeholder="Buscar por nº processo..."
+        />
 
-          <Search
-            className="flex items-center gap-3"
-            filterKey="name"
-            label="Nome do Paciente"
-            placeholder="Buscar pelo nome..."
-          />
-        </div>
+        <Search
+          className="flex items-end gap-3"
+          filterKey="name"
+          label="Nome do Paciente"
+          placeholder="Buscar pelo nome..."
+        />
       </div>
 
       <Table

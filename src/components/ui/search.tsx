@@ -53,6 +53,7 @@ export default function Search({
   return(
     <div ref={divRef} className={className?className:"flex w-96 items-center gap-3"}>
       <InputField
+        className="my-0"
         textLabel={label}
         placeholder={placeholder} 
         onChange={onChangeText}
