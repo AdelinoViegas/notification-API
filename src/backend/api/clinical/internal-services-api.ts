@@ -223,13 +223,13 @@ async function registerExamResult(prev:unknown, formData:FormData){
   try{
     const serviceId = formData.get("serviceId"); // ex: laboratorio ou imagiologia
     const description = formData.get("description");
-    const examFile = formData.get("internalExamFile") as File;
+    const examFile = formData.get("file") as File;
     const examId = formData.get("examId");
 
     if(examFile.size){
       const storage = await upload(formData, await getUserId());
 
-      const data = await internalExamResultModel.findOneAndUpdate({ serviceId, examId }, { storageId: storage.id });
+      const data = await internalExamResultModel.findOneAndUpdate({ serviceId, examId }, { storageId:  storage.id });
 
       if(!data)
         await internalExamResultModel.create({
@@ -256,6 +256,7 @@ async function registerExamResult(prev:unknown, formData:FormData){
       status: true
     }
   }catch (e){
+    console.error(e);
     const err = e as CustonAxiosError;
     console.error("error: ", err.message);
 

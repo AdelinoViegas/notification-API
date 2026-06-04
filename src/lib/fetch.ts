@@ -1,5 +1,6 @@
 interface Instance {
-  baseUrl: string;
+  url: string;
+  base: string;
   headers: {
     [key: string]: string;
   }
@@ -25,98 +26,77 @@ export class FetchService implements Fetch {
   #config: Instance;
   #baseUrl: URL;
 
-  constructor({ baseUrl, headers }: Instance){
+  constructor({ url, base, headers }: Instance){
     this.#config = {
-      baseUrl,
+      url,
+      base,
       headers: {
         "content-type": "application/json",
         ...headers
       }
     }
 
-    this.#baseUrl = new URL(baseUrl);
+    this.#baseUrl = new URL(url);
   }
 
   async get<T>(
     pathname: string, 
     config: MethodConfig = { params: {}, headers: {} }
   ): Promise<T | ArrayBuffer> {
-    this.#baseUrl.pathname = pathname;
+
+    this.#baseUrl.pathname = this.#parsePathname([pathname]);
     this.#baseUrl.search = "";
     
     for (const k in config.params)
       this.#baseUrl.searchParams.set(k, config.params[k]);
       
-    const data = await fetch(this.#baseUrl.toString(), { headers: this.#config.headers });
+    console.log(this.#baseUrl.toString());
+
+    const data = await fetch(this.#baseUrl.toString(), { 
+      headers: { 
+        ...this.#config.headers,
+        ...config.headers
+      }}
+    );
     
     if (this.#config.headers["content-type"] !== "application/json"){
       return await data.arrayBuffer();
     }
 
-    this.#log({ headers: JSON.stringify(this.#config.headers)});
+    console.log(data);
 
-    return await data.json() as T;
+    return {} as T//await data.json() as T;
   }
 
   async post<T>(
     pathname: string, 
     body: HttpBody, 
     config: MethodConfig = { params: {}, headers: {} }
-  ): Promise<T>{
-    this.#baseUrl.pathname = pathname;
+  ): Promise<T> {
+    this.#baseUrl.pathname = this.#parsePathname([pathname]);
     this.#baseUrl.search = "";
     
     for (const k in config.params)
       this.#baseUrl.searchParams.set(k, config.params[k]);
-    
+
+    const headers = body instanceof FormData 
+      ? { ...this.#config.headers, ...config.headers, "content-type": "multipart/form-data" }
+      : { ...this.#config.headers, ...config.headers }
+
     const data = await fetch(this.#baseUrl.toString(), { 
       method: "POST",
-      headers: {
-        ...this.#config.headers,
-        ...config.headers
-      },
+      headers,
       body: body instanceof FormData 
         ? body
         : JSON.stringify(body),
     });
     
-    this.#log({ headers: JSON.stringify(data.headers)});
+    console.log(await data.text());
 
-    return await data.json() as T;
+    return { } as T//await data.json() as T;
   }
 
-  // async postFile<T>(
-  //   pathname: string, 
-  //   body: unknown, 
-  //   config: MethodConfig = { params: {}, headers: {} }
-  // ): Promise<T | unknown>{
-  //   this.#baseUrl.pathname = pathname;
-  //   this.#baseUrl.search = "";
-    
-  //   for (const k in config.params)
-  //     this.#baseUrl.searchParams.set(k, config.params[k]);
-      
-  //   const data = await fetch(this.#baseUrl.toString(), { 
-  //     method: "POST",
-  //     headers: {
-  //       ...this.#config.headers,
-  //       ...config.headers,
-  //     },
-  //   });
-    
-  //   this.#log();
-
-  //   if (this.#config.headers["content-type"] !== "application/json"){
-  //     return await data.arrayBuffer();
-  //   }
-
-  //   return await data.json() as T;
-  // }
-
-  #log({ headers }: { headers: string }){
-    console.log({ 
-      url: this.#baseUrl.toString(),
-      headers: JSON.parse(headers)
-    });
+  #parsePathname(chunks: string[]){
+    return [this.#config.base, ...chunks].join("");
   }
 }

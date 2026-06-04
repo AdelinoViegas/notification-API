@@ -12,7 +12,8 @@ import { getServiceToken } from "@/lib/web-token";
 import { FetchService } from "@/lib/fetch";
 
 const api = new FetchService({
-  baseUrl: String(process.env.API_URL)+"/st/v2",
+  url: process.env.API_URL as string,
+  base: "/st/v2",
   headers: {
     Authorization: `Bearer ${await getServiceToken()}`
   }
@@ -38,12 +39,19 @@ export async function upload(params: FormData, authorId: string){
   //   throw new Error(err.message);
   // }
 
-  const data = await api.post<FileResponse>("/uploads", params, {
-    headers: { "x-auth-author-id": authorId },
-    params: {}
-  });
+  // const data = await api.post<FileResponse>("/uploads", params, {
+  //   headers: { 
+  //     "x-auth-author-id": authorId,
+  //     "content-type": ""
+  //   },
+  //   params: {}
+  // });
 
-  return data;
+  console.log(await api.get("/files"));
+
+  // return data;
+
+  return { id: "test" }
 }
 
 export async function getAllFiles(){

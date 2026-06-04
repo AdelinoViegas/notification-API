@@ -48,7 +48,7 @@ export function LoboratoryForm({
         <InputField
           textLabel="Arquivo (PDF/IMAGEM/VIDEO)"
           type="file"
-          name="internalExamFile"
+          name="file"
           accept={".pdf, video/*, image/*"}
           onChange={({ target }) =>{
             if(target.files?.length){
