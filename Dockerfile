@@ -5,7 +5,7 @@ WORKDIR /app
 COPY package.json yarn.lock ./
 
 # Garante que o TypeScript seja instalado e visível
-RUN yarn install --frozen-lockfile
+RUN yarn install
 
 # Copiar o resto dos ficheiros
 COPY . . 
