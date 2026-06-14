@@ -11,11 +11,42 @@ import type {
 import { getServiceToken } from "@/lib/web-token";
 import { FetchService } from "@/lib/fetch";
 
+interface DriveFile {
+  name: string;
+  linkPathname: string;
+  metadata: {
+    name: string;
+    size: string;
+    type: string;
+    humanSize: string;
+  }
+}
+
+interface FileError {
+  message: string;
+  error: string;
+}
+
+interface CidData {
+  code: string;
+  value: string;
+}
+
+interface CidDataItems {
+  items: CidData[];
+  total: number;
+}
+
+interface UploadedFile {
+  data: { id: string; link: string },
+  message: string;
+}
+
 const api = new FetchService({
   url: process.env.API_URL as string,
   base: "/st/v2",
   headers: {
-    Authorization: `Bearer ${await getServiceToken()}`
+    Authorization: `Bearer ${await getServiceToken()}`,
   }
 });
 
@@ -28,51 +59,48 @@ const instance = axios.create({
 
 
 export async function upload(params: FormData, authorId: string){
-  // try{
-  //   const res = await instance.post<FileResponse>("/uploads", params, {
-  //     headers: { authorId }
-  //   });
+  try{
+    const data = await api.post<UploadedFile | FileError>("/uploads", params, {
+      headers: { 
+        "x-auth-author-id": authorId,
+        "x-forwarded-uri": "/v2/uploads"
+      },
+      params: {}
+    });
 
-  //   return res.data;
-  // }catch (e) {
-  //   const err = (e as AxiosError).response?.data as Error;
-  //   throw new Error(err.message);
-  // }
-
-  // const data = await api.post<FileResponse>("/uploads", params, {
-  //   headers: { 
-  //     "x-auth-author-id": authorId,
-  //     "content-type": ""
-  //   },
-  //   params: {}
-  // });
-
-  console.log(await api.get("/files"));
-
-  // return data;
-
-  return { id: "test" }
+    return data;
+  }catch(e){
+    console.error(e);
+    return null;
+  }
 }
 
 export async function getAllFiles(){
-  // const res = await instance.get<ListAllFiles>("/files");
-  // return res.data;
-  return await api.get<ListAllFiles>("/files") as ListAllFiles;
+  return await api.get<ListAllFiles>("/files", {
+    headers: { "x-forwarded-uri": "/v2/files" },
+    params: {}
+  });
 }
 
-export async function getFile(id: string){
-  const res = await instance.get<ResponseDriveFile>("/files/", {
-    params: { id }
-  });
+export async function getFileById(id: string){
+  try{
+    const data = await api.get<DriveFile | FileError>(`/files/${id}`, {
+      headers: { "x-forwarded-uri": "/v2/files/:id" },
+      params: {}
+    });
 
-  return res.data;
+    return data;
+  }catch(e){
+    console.error(e);
+    return null;
+  }
 }
 
 export async function queryCid(ref: string){
   try{
-    const res = await instance.get<CidResponse[] | CidResponse | DefaultResponse>(`/cid/10/${ref}`);
-    return res.data;
-  }catch{
-    return [];
+    return await api.get<CidData | CidDataItems>(`/cid/10/${ref}`);
+  }catch (e){
+    console.error(e);
+    return null;
   }
 }

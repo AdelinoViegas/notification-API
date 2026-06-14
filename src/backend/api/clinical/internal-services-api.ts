@@ -227,9 +227,16 @@ async function registerExamResult(prev:unknown, formData:FormData){
     const examId = formData.get("examId");
 
     if(examFile.size){
-      const storage = await upload(formData, await getUserId());
+      const uploadedFile = await upload(formData, await getUserId());
+      
+      if(!uploadedFile || "error" in uploadedFile) 
+        throw new Error("falha no carregamento do arquivo");
 
-      const data = await internalExamResultModel.findOneAndUpdate({ serviceId, examId }, { storageId:  storage.id });
+      const data = await internalExamResultModel
+        .findOneAndUpdate({ 
+          serviceId, 
+          examId 
+        }, { storageId:  uploadedFile.data.id });
 
       if(!data)
         await internalExamResultModel.create({
@@ -237,7 +244,7 @@ async function registerExamResult(prev:unknown, formData:FormData){
           examId,
           description,
           userId: await getUserId(),
-          storageId: storage.id
+          storageId: uploadedFile.data.id
         });
     }else{
       const data = await internalExamResultModel.findOneAndUpdate({ serviceId, examId }, { description });

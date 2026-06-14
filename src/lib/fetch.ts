@@ -42,7 +42,7 @@ export class FetchService implements Fetch {
   async get<T>(
     pathname: string, 
     config: MethodConfig = { params: {}, headers: {} }
-  ): Promise<T | ArrayBuffer> {
+  ): Promise<T> {
 
     this.#baseUrl.pathname = this.#parsePathname([pathname]);
     this.#baseUrl.search = "";
@@ -50,8 +50,6 @@ export class FetchService implements Fetch {
     for (const k in config.params)
       this.#baseUrl.searchParams.set(k, config.params[k]);
       
-    console.log(this.#baseUrl.toString());
-
     const data = await fetch(this.#baseUrl.toString(), { 
       headers: { 
         ...this.#config.headers,
@@ -59,13 +57,11 @@ export class FetchService implements Fetch {
       }}
     );
     
-    if (this.#config.headers["content-type"] !== "application/json"){
-      return await data.arrayBuffer();
-    }
+    // if (this.#config.headers["content-type"] !== "application/json"){
+    //   return await data.arrayBuffer();
+    // }
 
-    console.log(data);
-
-    return {} as T//await data.json() as T;
+    return await data.json() as T;
   }
 
   async post<T>(
@@ -80,7 +76,10 @@ export class FetchService implements Fetch {
       this.#baseUrl.searchParams.set(k, config.params[k]);
 
     const headers = body instanceof FormData 
-      ? { ...this.#config.headers, ...config.headers, "content-type": "multipart/form-data" }
+      ? { 
+          Authorization: this.#config.headers["Authorization"], 
+          ...config.headers 
+        }
       : { ...this.#config.headers, ...config.headers }
 
     const data = await fetch(this.#baseUrl.toString(), { 
@@ -91,9 +90,7 @@ export class FetchService implements Fetch {
         : JSON.stringify(body),
     });
     
-    console.log(await data.text());
-
-    return { } as T//await data.json() as T;
+    return await data.json() as T;
   }
 
   #parsePathname(chunks: string[]){
