@@ -426,7 +426,6 @@ export async function getConsultationHistory(id: string){
 
 async function uploadExternalExamFile(prev: unknown, formData: FormData){
   try{
-    const file = formData.get("externalFile") as File;
     const officeId = formData.get("officeId");
     const patientId = formData.get("patientId");
     const storageId = formData.get("storageId");
