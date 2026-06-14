@@ -28,10 +28,10 @@ export default function ViewUserFile({ id }:{ id: string }){
       { (file && "linkPathname" in file) &&  
         <UserViewerButton
           driveFile={{
-            name: file.name,
-            link: [baseUrl, file.linkPathname].join("/"),
-            size: file.metadata.size,
-            extension: file.name.split(".")[1] as "pdf"
+            name: file.metadata.name,
+            link: [baseUrl, file.linkPathname].join(""),
+            size: file.metadata.humanSize,
+            extension: file.name.split(".")[1]
           }}
         />
       }

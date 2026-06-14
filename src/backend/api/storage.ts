@@ -1,13 +1,5 @@
 "use server";
 
-import axios from "axios";
-import type { 
-  CidResponse, 
-  DefaultResponse, 
-  FileResponse, 
-  ListAllFiles, 
-  ResponseDriveFile 
-} from "@/backend/api/types";
 import { getServiceToken } from "@/lib/web-token";
 import { FetchService } from "@/lib/fetch";
 
@@ -50,14 +42,6 @@ const api = new FetchService({
   }
 });
 
-const instance = axios.create({ 
-  baseURL: process.env.API_URL,
-    headers: {
-    Authorization: `Bearer ${await getServiceToken()}`
-  }
-});
-
-
 export async function upload(params: FormData, authorId: string){
   try{
     const data = await api.post<UploadedFile | FileError>("/uploads", params, {
@@ -76,7 +60,7 @@ export async function upload(params: FormData, authorId: string){
 }
 
 export async function getAllFiles(){
-  return await api.get<ListAllFiles>("/files", {
+  return await api.get("/files", {
     headers: { "x-forwarded-uri": "/v2/files" },
     params: {}
   });

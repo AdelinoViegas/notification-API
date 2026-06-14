@@ -1,12 +1,16 @@
 "use client";
 
-import { ResponseDriveFile } from "@/backend/api/types";
 import { GrDocumentPdf } from "react-icons/gr";
 import { FaPhotoVideo } from "react-icons/fa";
 
-type Props = Omit<ResponseDriveFile, "uniqueName">;
-
-export default function UserViewerButton({ driveFile }: { driveFile: Props }){
+export default function UserViewerButton({ driveFile }: {
+  driveFile: {
+    link: string;
+    name: string;
+    size: string;
+    extension: string;
+  }
+}){
   const handlerClick = ()=> {
     window.open(driveFile.link);
   }
