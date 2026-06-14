@@ -10,13 +10,28 @@ RUN yarn install
 # Copiar o resto dos ficheiros
 COPY . . 
 
-# Variáveis de Build
+# --- VARIÁVEIS DE BUILD ---
+# Necessárias para que o Next.js não falhe ao pré-renderizar as páginas estáticas
+ARG MONGO_URL
+ENV MONGO_URL=$MONGO_URL
+
+ARG JWT_SECRET
+ENV JWT_SECRET=$JWT_SECRET
+
+ARG API_URL
+ENV API_URL=$API_URL
+
+ARG WEB_ADMIN_URL
+ENV WEB_ADMIN_URL=$WEB_ADMIN_URL
+
 ARG NEXT_PUBLIC_STORAGE_URL
 ENV NEXT_PUBLIC_STORAGE_URL=$NEXT_PUBLIC_STORAGE_URL
-ENV NODE_ENV="production"
-ENV NEXT_TELEMETRY_DISABLED=1
+
 ARG FEEDBACK_GOOGLE_SCRIPT_URL
 ENV FEEDBACK_GOOGLE_SCRIPT_URL=$FEEDBACK_GOOGLE_SCRIPT_URL
+
+ENV NODE_ENV="production"
+ENV NEXT_TELEMETRY_DISABLED=1
 
 # Forçar o build usando o binário local do TypeScript para evitar que o Next instale o TS 6.0.3
 RUN yarn build
@@ -24,26 +39,24 @@ RUN yarn build
 # --- ESTÁGIO FINAL ---
 FROM node:22-alpine
 
-# Variáveis de Runtime (Nunca colocar segredos reais aqui, apenas os nomes das chaves)
+# Variáveis de Runtime 
 ENV COOKIE_AUTH_HEADER="auth_token" 
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV="production"
 
+# Configuração de fuso horário local para Luanda
 RUN apk add --no-cache alpine-conf && \
   setup-timezone -z Africa/Luanda
 
 WORKDIR /app
 
-# Copiar apenas o estritamente necessário
+# Copiar apenas o estritamente necessário do estágio de build
 COPY --from=builder /app/package.json .
 COPY --from=builder /app/yarn.lock .
 COPY --from=builder /app/.next .next
 COPY --from=builder /app/public public
 COPY --from=builder /app/node_modules node_modules
-
-# CRITICAL: Não copies o next.config.ts se não for necessário em runtime, 
-# ou garante que ele está compilado/disponível como .mjs
-COPY --from=builder /app/next.config.ts . 
+COPY --from=builder /app/next.config.ts .
 
 EXPOSE 3000
 
