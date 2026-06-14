@@ -33,7 +33,10 @@ export default async function SideNav(){
       <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
         <NavLink routes={routes} />
         <div className="hidden h-auto w-full grow md:block rounded-md" />
-        <FeedbackLogoutButton baseUrl={process.env.WEB_ADMIN_URL as string } />
+        <FeedbackLogoutButton 
+          baseUrl={process.env.WEB_ADMIN_URL as string }
+          goo={process.env.NODE_ENV !== "development"}
+        />
       </div>
     </div>
   );

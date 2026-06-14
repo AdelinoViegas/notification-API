@@ -1,11 +1,11 @@
 "use client";
 
-import { getFile } from "@/backend/api/storage";
+import { getFileById } from "@/backend/api/storage";
 import UserViewerButton from "@/components/user-viewer-button";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-type MyFile = Awaited<ReturnType<typeof getFile>>;
+type MyFile = Awaited<ReturnType<typeof getFileById>>;
 
 export default function ViewUserFile({ id }:{ id: string }){
   const [ file, setFile ] = useState<MyFile>();
@@ -13,24 +13,25 @@ export default function ViewUserFile({ id }:{ id: string }){
   const baseUrl = new URL(process.env.NEXT_PUBLIC_STORAGE_URL as string).toString();
 
   useEffect(()=>{
-    getFile(id).then(data => {
-      setFile(data);
-    })
-    .catch(() => {
-      toast.warn("Não foi possivel carregar os arquivos, tente mais tarde!");
-      setFinalState(true);
-    });
+    getFileById(id)
+      .then(data => {
+        setFile(data);
+      })
+      .catch(() => {
+        toast.warn("Não foi possivel carregar os arquivos, tente mais tarde!");
+        setFinalState(true);
+      });
   }, []);
 
   return(
     <>
-      { file &&  
+      { (file && "linkPathname" in file) &&  
         <UserViewerButton
           driveFile={{
-            name: file.name,
-            link: [baseUrl, file.uniqueName].join("/"),
-            size: file.size,
-            extension: file.extension
+            name: file.metadata.name,
+            link: [baseUrl, file.linkPathname].join(""),
+            size: file.metadata.humanSize,
+            extension: file.name.split(".")[1]
           }}
         />
       }

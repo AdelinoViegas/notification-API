@@ -11,14 +11,16 @@ import { useFeedback } from "@/components/feedback/feedback-context";
 export default function FeedbackLogoutButton({
   baseUrl,
   className,
+  goo
 }: {
   baseUrl: string;
   className?: string;
+  goo: boolean;
 }) {
   const { submitted } = useFeedback();
 
   const handleClick = () => {
-    if (!submitted) {
+    if (!submitted && goo) {
       toast.info(
         "Para sair, preencha primeiro o formulário de feedback. Clique no botão azul 'Feedback' na tela.",
         { autoClose: 5000 }
@@ -37,11 +39,11 @@ export default function FeedbackLogoutButton({
     <button
       type="button"
       onClick={handleClick}
-      title={!submitted ? "Preencha o formulário de feedback antes de sair" : undefined}
+      title={(!submitted && goo) ? "Preencha o formulário de feedback antes de sair" : undefined}
       className={clsx(
         className ??
           "rounded-md flex w-full grow md:py-2 items-center justify-center gap-2 bg-red-100 border-red-300 border-2 hover:bg-red-200 p-3 text-sm font-medium md:flex-none md:justify-start md:p-2 md:px-3 text-red-500",
-        !submitted && "opacity-50 cursor-not-allowed hover:bg-red-100"
+        (!submitted && goo) && "opacity-50 cursor-not-allowed hover:bg-red-100"
       )}
     >
       <BsPower className="w-5" />

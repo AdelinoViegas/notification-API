@@ -426,23 +426,23 @@ export async function getConsultationHistory(id: string){
 
 async function uploadExternalExamFile(prev: unknown, formData: FormData){
   try{
-    const file = formData.get("externalFile") as File;
     const officeId = formData.get("officeId");
     const patientId = formData.get("patientId");
     const storageId = formData.get("storageId");
 
-    const formdata = new FormData();
-    formdata.append("userFile", file);
-    const data = await upload(formdata, await getUserId());
+    const uploadedFile = await upload(formData, await getUserId());
+
+    if(!uploadedFile || "error" in uploadedFile) 
+      throw new Error("falha no carregamento do arquivo");
 
     if(storageId){
       const consult = await officeModel.findById({ _id: officeId });
-      await externalResultsModel.updateOne({ _id: consult?.externalId }, { storageId: data.id });
+      await externalResultsModel.updateOne({ _id: consult?.externalId }, { storageId: uploadedFile.data.id });
     }else{
       const externalResult = await externalResultsModel.create({
         patientId,
         officeId,
-        storageId: data.id,
+        storageId: uploadedFile.data.id,
         userId: await getUserId()
       });
         
@@ -450,17 +450,15 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
     }
 
     return {
-      message: data.message,
+      message: uploadedFile.message,
       status: true,
     }
   }catch(e){
     const err = e as CustonAxiosError;
-    console.log(err);
+    console.error(err);
     
-    if(err.cause?.code === "ECONNREFUSED"){
+    if(err.cause?.code === "ECONNREFUSED")
       console.error("[-] A api do serviço de arquivo não está rodando!");
-      console.error("[!] ajuda: https://github.com/mr0xff/master-clinical");
-    }
 
     return {
       message: err.cause 

@@ -223,13 +223,20 @@ async function registerExamResult(prev:unknown, formData:FormData){
   try{
     const serviceId = formData.get("serviceId"); // ex: laboratorio ou imagiologia
     const description = formData.get("description");
-    const examFile = formData.get("internalExamFile") as File;
+    const examFile = formData.get("file") as File;
     const examId = formData.get("examId");
 
     if(examFile.size){
-      const storage = await upload(formData, await getUserId());
+      const uploadedFile = await upload(formData, await getUserId());
+      
+      if(!uploadedFile || "error" in uploadedFile) 
+        throw new Error("falha no carregamento do arquivo");
 
-      const data = await internalExamResultModel.findOneAndUpdate({ serviceId, examId }, { storageId: storage.id });
+      const data = await internalExamResultModel
+        .findOneAndUpdate({ 
+          serviceId, 
+          examId 
+        }, { storageId:  uploadedFile.data.id });
 
       if(!data)
         await internalExamResultModel.create({
@@ -237,7 +244,7 @@ async function registerExamResult(prev:unknown, formData:FormData){
           examId,
           description,
           userId: await getUserId(),
-          storageId: storage.id
+          storageId: uploadedFile.data.id
         });
     }else{
       const data = await internalExamResultModel.findOneAndUpdate({ serviceId, examId }, { description });
@@ -256,6 +263,7 @@ async function registerExamResult(prev:unknown, formData:FormData){
       status: true
     }
   }catch (e){
+    console.error(e);
     const err = e as CustonAxiosError;
     console.error("error: ", err.message);
 

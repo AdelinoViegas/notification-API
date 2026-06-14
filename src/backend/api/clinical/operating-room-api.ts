@@ -489,19 +489,17 @@ async function getOperatingRoom(scheduleId: string, served = false){
 
 async function uploadExternalExamFile(prev: unknown, formData: FormData){
   try{
-    const file = formData.get("externalFile") as File;
     const operatingRoomId = formData.get("operatingRoomId") as string;
     const patientId = formData.get("patientId") as string;
     const storageId = formData.get("storageId") as string;  
     const typeOfExam = formData.get("typeOfExam") as string;
     const description = formData.get("description") as string;
- 
-    if(!file)
-      throw new Error("", { cause: "empty_file" });
     
-    const formdata = new FormData();
-    formdata.append("userFile", file);
-    const data = await upload(formdata, await getUserId());
+    const data = await upload(formData, await getUserId());
+
+    if(!data || "error" in data) 
+        throw new Error("falha no carregamento do arquivo");
+
     const operatingRoom = await operatingRoomModel.findById({ _id: operatingRoomId });
 
     const dataInOperatingRoom = {
@@ -521,7 +519,7 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
     if(storageId){
       await operatingRoomResultModel.updateOne({
         _id: externalId
-      }, { storageId: data.id });
+      }, { storageId: data.data.id });
 
       await operatingRoomModel.updateOne({ 
         _id: operatingRoomId 
@@ -534,7 +532,7 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
       const externalResult = await operatingRoomResultModel.create({
         patientId,
         operatingRoomId,
-        storageId: data.id,
+        storageId: data.data.id,
         userId: await getUserId()
       });
 
@@ -557,7 +555,6 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
     
     if(err.cause.code === "ECONNREFUSED"){
       console.error("[-] A api do serviço de arquivo não está rodando!");
-      console.error("[!] ajuda: https://github.com/mr0xff/master-clinical");
     }
 
     return {
