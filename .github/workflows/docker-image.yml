@@ -1,8 +1,7 @@
 name: Clinical Service Image Builder
 on:
   push:
-    branches: [ "main" ]
-    
+    branches: []
 env:
   REGISTRY: ghcr.io
   # github.repository já traz o formato 'organizacao/nome-do-repo'
