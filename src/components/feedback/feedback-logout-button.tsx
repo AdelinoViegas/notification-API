@@ -42,12 +42,12 @@ export default function FeedbackLogoutButton({
       title={(!submitted && goo) ? "Preencha o formulário de feedback antes de sair" : undefined}
       className={clsx(
         className ??
-          "rounded-md flex w-full grow md:py-2 items-center justify-center gap-2 bg-red-100 border-red-300 border-2 hover:bg-red-200 p-3 text-sm font-medium md:flex-none md:justify-start md:p-2 md:px-3 text-red-500",
+        "bg-red-500 text-white flex items-center gap-x-3 py-2 px-3 rounded-lg hover:bg-red-400 outline outline-1 outline-red-700",
         (!submitted && goo) && "opacity-50 cursor-not-allowed hover:bg-red-100"
       )}
     >
       <BsPower className="w-5" />
-      <div className="hidden md:block">Sair</div>
+      <div className="font-semibold text-sm">Terminar Sessão</div>
     </button>
   );
 }
