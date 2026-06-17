@@ -223,10 +223,12 @@ async function registerExamResult(prev:unknown, formData:FormData){
   try{
     const serviceId = formData.get("serviceId"); // ex: laboratorio ou imagiologia
     const description = formData.get("description");
-    const examFile = formData.get("file") as File;
+    const examFile = formData.get("userFile") as File;
     const examId = formData.get("examId");
 
-    if(examFile.size){
+    console.log({ userFile: examFile });
+
+    if(examFile?.size){
       const uploadedFile = await upload(formData, await getUserId());
       
       if(!uploadedFile || "error" in uploadedFile) 
