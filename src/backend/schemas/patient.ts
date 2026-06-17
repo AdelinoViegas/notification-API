@@ -177,9 +177,28 @@ const patientExitSchema = new Schema({
     required: true,
     enum: [
       "transfer",
-      "high"
+      "high",
+      "deceased",
     ]
   },
+}, {
+  timestamps: true
+});
+
+const deceasedPatientSchema = new Schema({
+  patientId: Schema.ObjectId,
+  unitId: Schema.ObjectId,
+  userId: String,
+  bedId: Schema.ObjectId,
+  dateOfDeath: {
+    type: Date,
+    default: new Date
+  },
+  admissionDate: Date,
+  reasonOfDeath: {
+    type: String,
+    required: true
+  }
 }, {
   timestamps: true
 });
@@ -195,5 +214,6 @@ export {
   patientSyncSchema,
   municipalitySchema,
   patientStateSchema,
-  patientExitSchema
+  patientExitSchema,
+  deceasedPatientSchema
 };
