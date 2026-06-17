@@ -7,7 +7,6 @@ import { useActionState, useEffect } from "react";
 import { registerExamResult } from "@/backend/api/clinical/internal-services-api";
 import { toast } from "react-toastify";
 import { useRef } from "react";
-import { useRouter } from "next/navigation";
 import forceRefreshPage from "@/lib/force-refresh";
 
 export function LoboratoryForm({
@@ -20,7 +19,6 @@ export function LoboratoryForm({
   serviceId: string;
 }){
   const [ state, action ] = useActionState(registerExamResult, { message: "", status: false });
-  const router = useRouter();
   const MAX_FILE_SIZE = Math.pow(1024, 2) * 10; // 10 mb 
   const formRef = useRef<HTMLFormElement>(null);
 
