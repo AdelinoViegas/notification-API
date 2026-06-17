@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import NavLink from '@/components/clinical/nav-link';
-// FEEDBACK PHASE — substituir FeedbackLogoutButton por LogoutButton após encerrar fase de testes
 import FeedbackLogoutButton from '@/components/feedback/feedback-logout-button';
 import Image from 'next/image';
 import { getGrantedRoles } from '@/backend/api/admin';
@@ -9,12 +8,9 @@ export default async function SideNav(){
   const routes = await getGrantedRoles();
 
   return(
-    <div className="bg-white border-r flex sm:h-full flex-col px-3 py-4 md:px-2">
-      <Link
-        className="rounded-md mb-2 flex h-20 items-end justify-start bg-gradient-to-r from-primary to-sky-500 p-4 md:h-auto"
-        href={"/clinical"}
-      >
-        <div className="flex justify-center md:items-center w-full sm:w-32 text-white md:w-60 gap-3">
+    <div className="bg-white border-r flex lg:h-full flex-col px-3 py-4 md:px-2 md:w-xl">
+      <Link href="/clinical">
+        <div className="bg-primary text-white flex gap-x-3 px-3 py-2 mb-1 rounded items-center">
           <Image 
             width={100}
             height={100}
@@ -30,9 +26,9 @@ export default async function SideNav(){
         </div>
       </Link>
 
-      <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
+      <div className="md:h-full flex justify-between flex-col">
         <NavLink routes={routes} />
-        <div className="hidden h-auto w-full grow md:block rounded-md" />
+        
         <FeedbackLogoutButton 
           baseUrl={process.env.WEB_ADMIN_URL as string }
           goo={process.env.NODE_ENV !== "development"}

@@ -17,7 +17,7 @@ export default function NavLink({ routes }:{ routes: Route[] }){
   clinicalIcons.forEach(e => icons.set(e.route, e));
 
   return(
-    <>
+    <div className="overflow-y-auto md:h-[80vh] space-y-1">
       {routes.map((item, index)=>{
         const urlString = pathname.split('/')[2]; 
         const currentRoute = !!(item.href.split('/').includes(urlString) && urlString);
@@ -28,15 +28,15 @@ export default function NavLink({ routes }:{ routes: Route[] }){
             key={index}
             href={item.href}
             className={clsx(
-              "flex rounded-md py-2 px-3 items-center gap-2 border-2",
+              "flex rounded-md py-2 px-3 items-center gap-2 border-2 text-nowrap",
               "text-sm font-medium hover:bg-blue-100 hover:hover:text-blue-600",
               { "text-blue-500 font-bold bg-blue-100 border-blue-300": currentRoute }
             )}>
             {!!Icon && <Icon fontSize={25} />}
-            <p className="hidden md:block">{item.label}</p>
+            <p>{item.label}</p>
           </Link>
         );
       })}
-    </>
+    </div>
   );
 }
