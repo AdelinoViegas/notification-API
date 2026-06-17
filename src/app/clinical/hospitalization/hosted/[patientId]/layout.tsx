@@ -38,7 +38,7 @@ export default async function Layout({
           place="hospitalization"
           basePathname={basePath}
         />
-        <DefineState />
+        <DefineState hospitalized />
         <InternalMoviment />
       </div>
 

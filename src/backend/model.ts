@@ -29,7 +29,8 @@ import {
   patientSyncSchema,
   patientStateSchema,
   patientExitSchema,
-  externalTransferSchema
+  externalTransferSchema,
+  deceasedPatientSchema
 } from "@/backend/schemas/patient";
 import { 
   patientWaitingSchema,
@@ -90,6 +91,7 @@ const triedModel = db.model("Tried", triedSchema);
 const patientWaitingModel = db.model("PatientWaiting", patientWaitingSchema);
 const patientStateModel = db.model("PatientState", patientStateSchema);
 const patientExitModel = db.model("PatientExit", patientExitSchema);
+const deceasedPatientModel = db.model("DeceasedPatient", deceasedPatientSchema);
 export const externalTransferModel = db.model("ExternalTransfer", externalTransferSchema);
 
 //agendamentos (schedulings)
@@ -181,6 +183,7 @@ export {
   scheduleSugeryModel,
   operatingRoomModel,
   operatingRoomResultModel,
+  deceasedPatientModel,
 };
 
 export {

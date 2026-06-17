@@ -27,7 +27,11 @@ import {
   patientWaitingModel,
   patientSyncModel,
   inHospitalizeModel,
-  externalTransferModel
+  externalTransferModel,
+  deceasedPatientModel,
+  bedNursingModel,
+  nursingModel,
+  internalServiceModel
 } from "@/backend/model";
 import { 
   patientAccess,
@@ -1632,6 +1636,150 @@ async function getPatientTransferHistories(id: string){
   return patientTransferred;
 }
 
+async function markPatientDeceased (prev: unknown, formData: FormData){
+  try{
+    const userId = await getUserId();
+    const patientId = formData.get("patientId") as string;
+    const stateId = formData.get("stateId");
+    const dateOfDeath = formData.get("date");
+    const reasonOfDeath = formData.get("reason");
+    const urgencyId = (await getPatientUrgencyBank(patientId))?.id;
+    const urgency = await urgencyBankModel.findById({ _id: urgencyId });
+    const state = await patientStateModel.findOneAndUpdate({ patientId }, { stateId });
+
+    if(!state) 
+      await patientStateModel.create({ patientId, stateId });
+
+    await db.transaction(async (session) => {
+      await Promise.all([
+        triedModel.updateOne({ _id: urgency?.triedId }, { served: true }, { session }),
+        urgencyBankModel.updateOne({ _id: urgencyId }, { served: true }, { session })
+      ]);
+
+      await syncPatientRegister(patientId, session);
+
+      await patientExitModel.create([{
+        patientId,
+        userId,
+        lockProfileState: true,
+        where: "deceased"
+      }], { session });
+
+      
+      const deleted = await inHospitalizeModel.findOneAndDelete(
+        { patientId, served: false },
+        { session }
+      );
+
+      await deceasedPatientModel.create([{
+        patientId,
+        userId,
+        bedId: deleted?.bedId ?? null,
+        admissionDate: deleted?.createdAt ?? null,
+        dateOfDeath,
+        reasonOfDeath
+      }]);
+
+      await hospitalizationModel.findOneAndUpdate(
+        { patientId, served: true },
+        { served: true },
+        { session }
+      );
+
+      await closePatientProcess(patientId, deleted?"hospitalization":"urgency", session);
+    });
+
+    return {
+      message: "Paciente foi a óbito!",
+      status: true
+    }
+  }catch (e) {
+    const err = e as Error;
+    console.error(e);
+
+    return {
+      message: err.cause ? err.message : "Não foi possivel finalizar!",
+      status: false
+    }
+  }
+}
+
+async function getDeathHistories({
+  page,
+  name,
+  registerNumber,
+}: {
+  page: number;
+  registerNumber?: number;
+  name?: string;
+}){
+  try{
+    const numberOfItems = 10 * page;
+    const deceasedpatients =  await deceasedPatientModel.find();
+    const filter = name || registerNumber;
+
+    const patientTransferred = [];
+
+    for(const deceasedpatient of deceasedpatients.slice(numberOfItems - 10, filter?deceasedpatients.length:numberOfItems)){
+      const patient = await patientModel.findOne({_id: deceasedpatient.patientId, served: true});
+      
+      if(!patient) 
+        continue;
+
+      patientTransferred.push({
+        id: patient?._id.toString() as string,
+        processNumber: patient?.registerNumber as number,
+        fullname: patient.fullname as string,
+      });
+    }
+
+    const _patients = filter?patientTransferred.filter((item)=>{
+      const byName = !name || item.fullname.match(new RegExp(`^${name}`, 'i'));
+      const byProcessNumber = !registerNumber || item.processNumber.toString().match(new RegExp(`^${registerNumber}`, 'i'));
+      return byName && byProcessNumber;
+    }):patientTransferred;
+     
+    return {
+      patients: _patients,
+      totalItems: deceasedpatients.length,
+      availablePages: Math.ceil(deceasedpatients.length /10),
+      currentPage: page,
+    }
+  }catch (e){
+    console.error(e);
+
+    return {
+      patients: [],
+      totalItems: 0,
+      availablePages: 0,
+      currentPage: page
+    }
+  }
+}
+
+async function getDeceasedPatient(id: string){
+  const deceasedPatient = await deceasedPatientModel.findOne({patientId:id});
+  const patient = deceasedPatient?.patientId ? await patientModel.findById(deceasedPatient?.patientId):null;
+  //const urgency = await urgencyBankModel.findOne({patientId: deceasedPatient?.id});
+  const bedNursing = deceasedPatient?.bedId ? await bedNursingModel.findById(deceasedPatient?.bedId):null;
+  const internalService = bedNursing?.internalServiceId ? await internalServiceModel.findById(bedNursing.internalServiceId):null;
+  const nursing = bedNursing?.nursingId ? await nursingModel.findById(bedNursing?.nursingId):null;
+  
+  return {
+    id: patient?._id.toString() as string,
+    processNumber: patient?.registerNumber as number,
+    fullname: patient?.fullname as string,
+    service: internalService?.name as string,
+    nursing: nursing?.name as string,
+    bed: bedNursing?.bed as string,
+    /*diagnosis: urgency?.anamnesis?.generalClinic?.diagnosticHypothesis as string[],*/
+    admissionDate: deceasedPatient?.admissionDate && getDataAndHoursFormat(deceasedPatient?.admissionDate as Date),
+    dateOfDeath: getDataAndHoursFormat(deceasedPatient?.dateOfDeath as Date),
+    reasonOfDeath: deceasedPatient?.reasonOfDeath as string,
+    doctorResponsible: (await getUser(deceasedPatient?.userId as string)).fullname
+  }
+}
+
 export {
   finishHospitalization,
   getPatients,
@@ -1667,5 +1815,8 @@ export {
   definePatientState,
   getPatientState,
   getTransferHistories,
-  getPatientTransferHistories
+  getPatientTransferHistories,
+  markPatientDeceased,
+  getDeathHistories,
+  getDeceasedPatient
 };

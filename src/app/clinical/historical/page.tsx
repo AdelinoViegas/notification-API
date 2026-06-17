@@ -41,7 +41,7 @@ export default async function Page({
           { path: "a", title: "Histórico de Altas" }
         ]}
       />
-      { route === "o" && <DeathHistory name={name} /> }
+      { route === "o" && <DeathHistory name={name} page={page} registerNumber={registerNumber}/> }
       { route === "t" && <TransferHistory name={name} page={page} registerNumber={registerNumber} /> }
       { route === "a" && (
         <DischargeHistoryPanel 

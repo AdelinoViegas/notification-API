@@ -2,21 +2,31 @@
 
 import { useActionState, useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import clsx from "clsx";
 import { useParams, useRouter } from "next/navigation";
 import Button from "@/components/ui/button";
 import Modal from "@/components/modal";
 import Selection from "@/components/ui/selection";
-import { getPatientState, definePatientState } from "@/backend/api/clinical/urgency-bank-api";
-import { patientStates } from "@/backend/api/clinical/translator";
 import Tag from "@/components/ui/tag";
 import FallbackComponent from "@/components/fallback-components";
-import clsx from "clsx";
+import InputDetails from "@/components/ui/input-details";
+import InputField from "@/components/ui/input-field";
+import { getPatientState, definePatientState, markPatientDeceased } from "@/backend/api/clinical/urgency-bank-api";
+import { patientStates } from "@/backend/api/clinical/translator";
 
 type PatientState = Awaited<ReturnType<typeof getPatientState>>;
 
-export default function DefineState({ id }: { id?: string }){
+export default function DefineState({ id, hospitalized }: { id?: string, hospitalized?: boolean }){
   const [modalstate, setModalState] = useState(false);
-  const [ state, action ] = useActionState(definePatientState, { message: "", status: false });
+  const [ deceasedState, setDeceasedState ] = useState(false);
+  const [ state, action ] = useActionState( 
+    async (prev: unknown, formData: FormData) => {
+      if (deceasedState) {
+        return markPatientDeceased (prev,formData);
+      }else {
+        return definePatientState(prev, formData);
+      }
+  }, { message: "", status: false });
   const [ patientState, setPatientState] = useState<PatientState>(null);
   const closeModal = () => {
     setModalState(false);
@@ -35,7 +45,13 @@ export default function DefineState({ id }: { id?: string }){
 
     setPatientState(state);
   });
-  
+
+  useEffect(() => {
+    if (patientState?._id) {
+      setDeceasedState(patientState._id === "deceased");
+    }
+  }, [patientState]);
+
   useEffect(()=>{
     updatePatientState();
 
@@ -43,6 +59,12 @@ export default function DefineState({ id }: { id?: string }){
       if(state.status)
         toast.success(state.message, {
           onOpen: ()=> {
+            if(deceasedState && hospitalized)
+              router.replace("/clinical/hospitalization");
+            
+            if(deceasedState)
+              router.replace("/clinical/urgency-bank")
+
             router.refresh();
             setEdit(false);
             setPatientState(null);
@@ -52,7 +74,7 @@ export default function DefineState({ id }: { id?: string }){
       else 
         toast.error(state.message);
   }, [state, router]);
-  
+
   return(
     <div>
       <div className="relative">
@@ -62,8 +84,7 @@ export default function DefineState({ id }: { id?: string }){
           patientState?.color.tw.bg,
           { "animate-ping": [ "critical","serious" ].includes(patientState?._id ?? "none") }
         )} />
-      </div>
-     
+      </div>     
 
       <Modal 
         title="Estado do Utente"
@@ -80,6 +101,7 @@ export default function DefineState({ id }: { id?: string }){
                 label={patientState ? "Estado Atual" : "Selecione o Estado"}
                 options={patientStates}
                 name="stateId"
+                onChange={e => setDeceasedState(e.target.value === "deceased")}
                 defaultValue={patientState?._id}
                 disabled={!edit}
                 required
@@ -93,11 +115,25 @@ export default function DefineState({ id }: { id?: string }){
                 {patientState?.description ?? "Não definido"}
               </p>
             </div>
+
+            {deceasedState && 
+            <>
+              <InputField
+                type="datetime-local"
+                textLabel="Data do Falecimento"
+                name="date"
+              />
+              
+              <InputDetails
+                textLabel="Causa do Falecimento"
+                name="reason"
+              />
+            </>}
           </div>
 
           <div className="flex gap-x-3 justify-end">
             <Button cancel type="button" onClick={closeModal}>Fechar</Button>
-            { edit && <Button>Salvar</Button> }
+            { deceasedState ? edit && <Button>Confirmar Falecimento</Button> : edit && <Button>Salvar</Button> }
 
             { !edit && 
               <Button 

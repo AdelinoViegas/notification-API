@@ -1,13 +1,26 @@
+import { formater } from "@/lib/table-formater";
 import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
 import Refresh from "@/components/refresh";
+import { getDeathHistories } from "@/backend/api/clinical/urgency-bank-api";
 
 export default async function DeathHistory({ 
-  name: _name,
+  name,
+  page,
+  registerNumber
 }: {
   name?: string;
+  page: number;
+  registerNumber: number;
 }){
+  const patients = await getDeathHistories({ 
+      page: page?Number(page):1,
+      name,
+      registerNumber
+    });
+  const rows = formater(patients.patients);
+
   return (
     <main className="space-y-3">
       <Refresh />
@@ -27,15 +40,12 @@ export default async function DeathHistory({
       </div>
 
       <Table
-        baseRowLink="/clinical/historical"
+        baseRowLink="/clinical/death-history"
         columns={[
           "Nº do processo",
           "Nome do paciente",
-          "Serviço",
-          "Data admissão",
-          "Médico Assistente",
         ]} 
-        rows={[]}
+        rows={rows}
       />
     </main>
   );
