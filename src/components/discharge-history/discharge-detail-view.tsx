@@ -24,7 +24,7 @@ type DischargeRecord = {
   createdAt: Date;
 };
 
-function Field({
+export function Field({
   label,
   value,
   fullWidth,
