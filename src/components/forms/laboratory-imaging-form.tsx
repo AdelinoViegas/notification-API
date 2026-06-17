@@ -8,6 +8,7 @@ import { registerExamResult } from "@/backend/api/clinical/internal-services-api
 import { toast } from "react-toastify";
 import { useRef } from "react";
 import { useRouter } from "next/navigation";
+import forceRefreshPage from "@/lib/force-refresh";
 
 export function LoboratoryForm({
   description,
@@ -26,7 +27,7 @@ export function LoboratoryForm({
   useEffect(()=>{
     if(state.message)
       if(state.status)
-        toast.success(state.message, { onOpen: router.refresh });
+        toast.success(state.message, { onOpen: forceRefreshPage });
       else
         toast.warn(state.message);
   }, [state]);
