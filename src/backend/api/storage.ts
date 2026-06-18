@@ -34,43 +34,53 @@ interface UploadedFile {
   message: string;
 }
 
-const api = new FetchService({
-  url: process.env.API_URL as string,
-  base: "/st/v2",
-  headers: {
-    Authorization: `Bearer ${await getServiceToken()}`,
-  }
-});
+// 1. Instanciamos o serviço APENAS com a URL base. Os cabeçalhos dinâmicos entram nas requisições.
+const getApiClient = async () => {
+  const token = await getServiceToken();
+  return new FetchService({
+    url: process.env.API_URL as string,
+    base: "/st/v2",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    }
+  });
+};
 
 export async function upload(params: FormData, authorId: string){
   try{
+    const api = await getApiClient(); // Garante o token atualizado nesta chamada
+    
     const data = await api.post<UploadedFile | FileError>("/uploads", params, {
       headers: { 
         "x-auth-author-id": authorId,
         "x-forwarded-uri": "/v2/uploads"
-      },
-      params: {}
+      }
     });
 
     return data;
   }catch(e){
-    console.error(e);
+    console.error("Erro no upload da API:", e);
     return null;
   }
 }
 
 export async function getAllFiles(){
-  return await api.get("/files", {
-    headers: { "x-forwarded-uri": "/v2/files" },
-    params: {}
-  });
+  try {
+    const api = await getApiClient();
+    return await api.get("/files", {
+      headers: { "x-forwarded-uri": "/v2/files" }
+    });
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
 }
 
 export async function getFileById(id: string){
   try{
+    const api = await getApiClient();
     const data = await api.get<DriveFile | FileError>(`/files/${id}`, {
-      headers: { "x-forwarded-uri": "/v2/files/:id" },
-      params: {}
+      headers: { "x-forwarded-uri": "/v2/files/:id" }
     });
 
     return data;
@@ -82,6 +92,7 @@ export async function getFileById(id: string){
 
 export async function queryCid(ref: string){
   try{
+    const api = await getApiClient();
     return await api.get<CidData | CidDataItems>(`/cid/10/${ref}`);
   }catch (e){
     console.error(e);

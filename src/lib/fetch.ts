@@ -1,99 +1,97 @@
 interface Instance {
   url: string;
   base: string;
-  headers: {
-    [key: string]: string;
-  }
+  headers: Record<string, string>;
 }
 
+// Tornamos as propriedades parciais/opcionais para evitar erros ao omitir parâmetros
 interface MethodConfig {
-  params: {
-    [n: string]: string;
-  },
-  headers: {
-    [n: string]: string;
-  }
+  params?: Record<string, string>;
+  headers?: Record<string, string>;
 }
 
-type HttpBody = { [k: string]: string } | FormData;
+type HttpBody = Record<string, unknown> | FormData;
 
 interface Fetch {
-  get<T>(pathname: string, config: MethodConfig): Promise<T | ArrayBuffer>;
-  post<T>(pathname: string, body: HttpBody, config: MethodConfig): Promise<T>;
+  get<T>(pathname: string, config?: MethodConfig): Promise<T>;
+  post<T>(pathname: string, body: HttpBody, config?: MethodConfig): Promise<T>;
 }
 
 export class FetchService implements Fetch {
   #config: Instance;
-  #baseUrl: URL;
 
-  constructor({ url, base, headers }: Instance){
+  constructor({ url, base, headers }: Instance) {
     this.#config = {
-      url,
-      base,
+      url: url.replace(/\/$/, ""), // Remove barra no final se houver
+      base: base.startsWith("/") ? base : `/${base}`, // Garante barra no início
       headers: {
         "content-type": "application/json",
-        ...headers
+        ...headers,
+      },
+    };
+  }
+
+  // Helper para criar uma URL isolada e segura por requisição
+  #createRequestUrl(pathname: string, params: Record<string, string> = {}): string {
+    const cleanPath = pathname.startsWith("/") ? pathname : `/${pathname}`;
+    const fullPath = `${this.#config.base}${cleanPath}`.replace(/\/+/g, "/"); // Evita barras duplicadas //
+    
+    const requestUrl = new URL(fullPath, this.#config.url);
+    
+    for (const [key, value] of Object.entries(params)) {
+      if (value !== undefined && value !== null) {
+        requestUrl.searchParams.set(key, value);
       }
     }
-
-    this.#baseUrl = new URL(url);
+    
+    return requestUrl.toString();
   }
 
-  async get<T>(
-    pathname: string, 
-    config: MethodConfig = { params: {}, headers: {} }
-  ): Promise<T> {
-
-    this.#baseUrl.pathname = this.#parsePathname([pathname]);
-    this.#baseUrl.search = "";
+  async get<T>(pathname: string, config: MethodConfig = {}): Promise<T> {
+    const url = this.#createRequestUrl(pathname, config.params);
     
-    for (const k in config.params)
-      this.#baseUrl.searchParams.set(k, config.params[k]);
-      
-    const data = await fetch(this.#baseUrl.toString(), { 
-      headers: { 
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
         ...this.#config.headers,
-        ...config.headers
-      }}
-    );
-    
-    // if (this.#config.headers["content-type"] !== "application/json"){
-    //   return await data.arrayBuffer();
-    // }
-
-    return await data.json() as T;
-  }
-
-  async post<T>(
-    pathname: string, 
-    body: HttpBody, 
-    config: MethodConfig = { params: {}, headers: {} }
-  ): Promise<T> {
-    this.#baseUrl.pathname = this.#parsePathname([pathname]);
-    this.#baseUrl.search = "";
-    
-    for (const k in config.params)
-      this.#baseUrl.searchParams.set(k, config.params[k]);
-
-    const headers = body instanceof FormData 
-      ? { 
-          Authorization: this.#config.headers["Authorization"], 
-          ...config.headers 
-        }
-      : { ...this.#config.headers, ...config.headers }
-
-    const data = await fetch(this.#baseUrl.toString(), { 
-      method: "POST",
-      headers,
-      body: body instanceof FormData 
-        ? body
-        : JSON.stringify(body),
+        ...config.headers,
+      },
     });
-    
-    return await data.json() as T;
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status} na rota GET ${pathname}`);
+    }
+
+    return (await response.json()) as T;
   }
 
-  #parsePathname(chunks: string[]){
-    return [this.#config.base, ...chunks].join("");
+  async post<T>(pathname: string, body: HttpBody, config: MethodConfig = {}): Promise<T> {
+    const url = this.#createRequestUrl(pathname, config.params);
+    const isFormData = body instanceof FormData;
+
+    // Se for FormData, REMOVEMOS o content-type para o fetch injetar o boundary nativo
+    const requestHeaders = {
+      ...this.#config.headers,
+      ...config.headers,
+    };
+
+    if (isFormData) {
+      delete requestHeaders["content-type"]; 
+      // Se houver uma versão em caixa alta ou baixa, limpamos ambas
+      delete requestHeaders["Content-Type"]; 
+    }
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: requestHeaders,
+      body: isFormData ? body : JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text().catch(() => "Erro desconhecido");
+      throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
+    }
+
+    return (await response.json()) as T;
   }
 }

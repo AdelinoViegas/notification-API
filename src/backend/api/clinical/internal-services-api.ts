@@ -219,64 +219,85 @@ async function finishScheduledExam(prev: unknown, formData: FormData){
   }
 }
 
-async function registerExamResult(prev:unknown, formData:FormData){
-  try{
-    const serviceId = formData.get("serviceId"); // ex: laboratorio ou imagiologia
+async function registerExamResult(prev: unknown, formData: FormData) {
+  try {
+    const serviceId = formData.get("serviceId");
     const description = formData.get("description");
-    const examFile = formData.get("userFile") as File;
+    const examFile = formData.get("userFile") as File | null;
     const examId = formData.get("examId");
 
     console.log({ userFile: examFile });
 
-    if(examFile?.size){
-      const uploadedFile = await upload(formData, await getUserId());
+    const userId = await getUserId();
+
+    // Verifica se o arquivo realmente existe e tem conteúdo válido
+    if (examFile && examFile.size > 0) {
       
-      if(!uploadedFile || "error" in uploadedFile) 
+      // Criamos um FormData LIMPO apenas com o arquivo e o userId para a função de upload
+      const uploadPayload = new FormData();
+      uploadPayload.append("file", examFile);
+      uploadPayload.append("userId", userId);
+
+      // Passamos o payload isolado para não dar conflito com o stream do Next.js
+      const uploadedFile = await upload(uploadPayload, userId);
+      
+      if (!uploadedFile || "error" in uploadedFile) {
         throw new Error("falha no carregamento do arquivo");
+      }
 
-      const data = await internalExamResultModel
-        .findOneAndUpdate({ 
-          serviceId, 
-          examId 
-        }, { storageId:  uploadedFile.data.id });
+      // Atualiza ou cria o registro com o ID do Storage
+      const data = await internalExamResultModel.findOneAndUpdate(
+        { serviceId, examId }, 
+        { storageId: uploadedFile.data.id, description } // Atualiza a descrição também se enviada com arquivo
+      );
 
-      if(!data)
+      if (!data) {
         await internalExamResultModel.create({
           serviceId,
           examId,
           description,
-          userId: await getUserId(),
+          userId,
           storageId: uploadedFile.data.id
         });
-    }else{
-      const data = await internalExamResultModel.findOneAndUpdate({ serviceId, examId }, { description });
+      }
+    } else {
+      // Fluxo sem arquivo (Apenas descrição)
+      const data = await internalExamResultModel.findOneAndUpdate(
+        { serviceId, examId }, 
+        { description }
+      );
       
-      if(!data)
+      if (!data) {
         await internalExamResultModel.create({
           serviceId,
           examId,
           description,
-          userId: await getUserId(),
+          userId,
         });
+      }
     }
 
     return {
-      message: "salvo com sucesso!",
+      message: "Salvo com sucesso!",
       status: true
-    }
-  }catch (e){
-    console.error(e);
+    };
+
+  } catch (e) {
+    console.error("Erro capturado na Server Action:", e);
     const err = e as CustonAxiosError;
-    console.error("error: ", err.message);
+
+    // Melhores logs para você debugar na Railway
+    if (err.cause?.code === "ECONNREFUSED") {
+      return {
+        message: "Serviço de armazenamento de arquivos indisponível no servidor!",
+        status: false,
+      };
+    }
 
     return {
-      message: err.cause 
-        ? err.cause.code === "ECONNREFUSED" 
-          ? "Serviço de arquivos indisponível!"
-          : "Operação impossivel"
-        : "Arquivo invalido!",
+      message: err.message || "Erro interno ao processar a operação.",
       status: false,
-    }
+    };
   }
 }
 
