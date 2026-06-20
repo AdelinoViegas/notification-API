@@ -1760,11 +1760,12 @@ async function getDeathHistories({
 async function getDeceasedPatient(id: string){
   const deceasedPatient = await deceasedPatientModel.findOne({patientId:id});
   const patient = deceasedPatient?.patientId ? await patientModel.findById(deceasedPatient?.patientId):null;
-  //const urgency = await urgencyBankModel.findOne({patientId: deceasedPatient?.id});
+  const urgency = await urgencyBankModel.findOne({patientId: patient?.id});
   const bedNursing = deceasedPatient?.bedId ? await bedNursingModel.findById(deceasedPatient?.bedId):null;
   const internalService = bedNursing?.internalServiceId ? await internalServiceModel.findById(bedNursing.internalServiceId):null;
   const nursing = bedNursing?.nursingId ? await nursingModel.findById(bedNursing?.nursingId):null;
-  
+  const cids = urgency?.anamnesis?.generalClinic?.diagnosticHypothesis;
+
   return {
     id: patient?._id.toString() as string,
     processNumber: patient?.registerNumber as number,
@@ -1772,7 +1773,7 @@ async function getDeceasedPatient(id: string){
     service: internalService?.name as string,
     nursing: nursing?.name as string,
     bed: bedNursing?.bed as string,
-    /*diagnosis: urgency?.anamnesis?.generalClinic?.diagnosticHypothesis as string[],*/
+    admissionDiagnosis: cids && cids.join(", ") as string,
     admissionDate: deceasedPatient?.admissionDate && getDataAndHoursFormat(deceasedPatient?.admissionDate as Date),
     dateOfDeath: getDataAndHoursFormat(deceasedPatient?.dateOfDeath as Date),
     reasonOfDeath: deceasedPatient?.reasonOfDeath as string,
