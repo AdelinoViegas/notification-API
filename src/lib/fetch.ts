@@ -87,10 +87,17 @@ export class FetchService implements Fetch {
       body: isFormData ? body : JSON.stringify(body),
     });
 
-    if (!response.ok) {
-      const errorText = await response.text().catch(() => "Erro desconhecido");
-      throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
-    }
+    // if (!response.ok) {
+    //   const errorText = await response.text().catch(() => "Erro desconhecido");
+    //   throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
+    // }
+
+    if(!response.ok)
+      return Promise.reject({ 
+        status: response.status,
+        message: response.status === 502 ? "Falha na conexção" : "Erro desconhecido",
+        detail: response.statusText
+      });
 
     return (await response.json()) as T;
   }

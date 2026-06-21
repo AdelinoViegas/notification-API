@@ -2,6 +2,7 @@
 
 import { getServiceToken } from "@/lib/web-token";
 import { FetchService } from "@/lib/fetch";
+import { error } from "@/lib/storage-errors";
 
 interface DriveFile {
   name: string;
@@ -17,6 +18,12 @@ interface DriveFile {
 interface FileError {
   message: string;
   error: string;
+}
+
+interface UnavaliableServiceError {
+  status: number;
+  message: string;
+  detail: string;
 }
 
 interface CidData {
@@ -59,8 +66,15 @@ export async function upload(params: FormData, authorId: string){
 
     return data;
   }catch(e){
-    console.error("Erro no upload da API:", e);
-    return null;
+    const err = e as UnavaliableServiceError;
+    console.error(err);
+
+    switch(err.status) {
+      case 502:
+        return error.SERVICE_UNAVIABLE;
+      default: 
+        return error.UNKNOWN_ERROR;
+    }
   }
 }
 

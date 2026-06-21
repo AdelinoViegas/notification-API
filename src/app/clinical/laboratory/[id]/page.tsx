@@ -48,10 +48,8 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                   examId={props._id}
                   serviceId={id}
                   description={examResult?.description as string}
+                  storageId={examResult?.storageId as string}
                 />
-                { examResult?.storageId &&
-                  <ViewUserFile id={examResult.storageId} />
-                }
               </Accordium>
             );
           })}

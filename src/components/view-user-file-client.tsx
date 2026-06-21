@@ -12,16 +12,14 @@ export default function ViewUserFile({ id }:{ id: string }){
   const [ finalState, setFinalState ] = useState(false); 
   const baseUrl = new URL(process.env.NEXT_PUBLIC_STORAGE_URL as string).toString();
 
-  useEffect(()=>{
+  useEffect(() => {
     getFileById(id)
-      .then(data => {
-        setFile(data);
-      })
+      .then(data => { console.log({ data }); setFile(data)})
       .catch(() => {
         toast.warn("Não foi possivel carregar os arquivos, tente mais tarde!");
         setFinalState(true);
       });
-  }, []);
+  }, [id]);
 
   return(
     <>
