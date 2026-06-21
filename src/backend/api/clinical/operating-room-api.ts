@@ -21,6 +21,7 @@ import { ServiceRequest, serviceRequestSchema } from "../type-schema";
 import { ClientSession } from "mongoose";
 import { getPatientIds } from "./process-control";
 import { getDateInSlashFormat } from "@/lib/date-formater";
+import { error as storageError } from "@/lib/storage-errors";
 
 async function getPatients({
   name,
@@ -497,8 +498,18 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
     
     const data = await upload(formData, await getUserId());
 
-    if(!data || "error" in data) 
-        throw new Error("falha no carregamento do arquivo");
+    switch(data){
+      case storageError.SERVICE_UNAVIABLE: 
+        return { status: false, message: "Serviço de arquivos Indisponivel!" }
+      case storageError.UNKNOWN_ERROR: 
+        throw new Error;
+    }
+    
+    if ("error" in data)
+      return {
+        status: false,
+        message: data.message
+      }
 
     const operatingRoom = await operatingRoomModel.findById({ _id: operatingRoomId });
 

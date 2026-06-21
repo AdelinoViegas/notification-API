@@ -4,8 +4,7 @@ import { getFileById } from "@/backend/api/storage";
 import UserViewerButton from "@/components/user-viewer-button";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { MdWarning } from "react-icons/md";
-import Alert from "./ui/alert";
+import Alert from "@/components/ui/alert";
 
 type MyFile = Awaited<ReturnType<typeof getFileById>>;
 
