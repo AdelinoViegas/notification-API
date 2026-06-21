@@ -30,8 +30,8 @@ export default function WorkplaceForm(params: Props) {
   }, [state, router]);
 
   return (
-    <div className="flex flex-col md:flex-row p-3 md:p-0 md:gap-x-3">
-      <div className="hidden md:block w-3/5 h-full overflow-hidden rounded-r-xl">
+    <div className="flex flex-col md:flex-row p-3 md:p-0 md:gap-x-3 h-screen">
+      <div className="hidden md:block w-3/5 overflow-hidden">
         <Carousel url={[ "/slides/1.jpg", "/slides/2.jpg" ]} />
       </div>
 
@@ -39,12 +39,13 @@ export default function WorkplaceForm(params: Props) {
         <MasterLogo />
         <h2 className="my-3">Seja bem vindo(a) <span className="font-bold capitalize">{params.name}</span></h2>
 
-        <form action={action} className="w-96">
+        <form action={action} className="md:w-96">
           {params.units.length >= 2 && (
             <Selection
               label="Área de trabalho"
               options={params.units}
               name="workplaceId"
+              disabled={isPending}
               required
             />
           )}
@@ -61,7 +62,10 @@ export default function WorkplaceForm(params: Props) {
               {isPending ? "Processando..." : "Continuar"}
             </Button>
 
-            <FeedbackLogoutButton className="flex items-center bg-red-500 text-white p-2 rounded-lg w-full justify-center" />
+            <FeedbackLogoutButton 
+              disabled={isPending} 
+              className="flex items-center bg-red-500 text-white p-2 rounded-lg w-full justify-center"
+            />
           </div>
         </form>
       </div>
