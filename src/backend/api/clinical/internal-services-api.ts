@@ -13,10 +13,9 @@ import {
 import { getUserId } from "@/lib/web-token";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
 import { getUser } from "@/backend/api/admin";
-import { upload } from "@/backend/api/storage";
+import { serviceUpload } from "@/backend/api/storage";
 import { closePatientProcess, syncPatientRegister } from "@/backend/api/clinical/process-control";
 import { CustonAxiosError } from "@/backend/api/types";
-import { error as storageError } from "@/lib/storage-errors";
 
 async function updatePaymentData(prev: unknown, formData: FormData){
   try{
@@ -226,39 +225,17 @@ async function registerExamResult(prev: unknown, formData: FormData) {
     const description = formData.get("description");
     const examFile = formData.get("userFile") as File | null;
     const examId = formData.get("examId");
-
+    const userId = await getUserId();
     console.warn(examFile);
 
-    const userId = await getUserId();
-
-    // Verifica se o arquivo realmente existe e tem conteúdo válido
     if (examFile && examFile.size > 0) {
-      
-      // Criamos um FormData LIMPO apenas com o arquivo e o userId para a função de upload
-      const uploadPayload = new FormData();
-      uploadPayload.append("file", examFile);
-      uploadPayload.append("userId", userId);
-
-      // Passamos o payload isolado para não dar conflito com o stream do Next.js
-      const uploadedFile = await upload(uploadPayload, userId);
-
-      switch(uploadedFile){
-        case storageError.SERVICE_UNAVIABLE: 
-          return { status: false, message: "Serviço de arquivos Indisponivel!" }
-        case storageError.UNKNOWN_ERROR: 
-          throw new Error;
-      }
-      
-      if ("error" in uploadedFile)
-        return {
-          status: false,
-          message: uploadedFile.message
-        }
+      const file = await serviceUpload(formData, "userFile");
+      if("status" in file) return file
 
       // Atualiza ou cria o registro com o ID do Storage
       const data = await internalExamResultModel.findOneAndUpdate(
         { serviceId, examId }, 
-        { storageId: uploadedFile.data.id, description } // Atualiza a descrição também se enviada com arquivo
+        { storageId: file.data.id, description } // Atualiza a descrição também se enviada com arquivo
       );
 
       if (!data) {
@@ -267,7 +244,7 @@ async function registerExamResult(prev: unknown, formData: FormData) {
           examId,
           description,
           userId,
-          storageId: uploadedFile.data.id
+          storageId: file.data.id
         });
       }
     } else {

@@ -43,7 +43,7 @@ export default function FeedbackLogoutButton({
       disabled={disabled}
       className={clsx(
         className ??
-        "bg-red-500 text-white flex items-center gap-x-3 py-2 px-3 rounded-lg hover:bg-red-400 outline outline-1 outline-red-700",
+        "bg-red-500 hover:bg-red-400 text-white flex items-center gap-x-3 py-2 px-3 rounded-lg outline outline-1 outline-red-700",
         (!submitted && goo) && "opacity-50 cursor-not-allowed hover:bg-red-100",
         "disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed"
       )}
