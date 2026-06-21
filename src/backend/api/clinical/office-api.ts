@@ -20,6 +20,7 @@ import { getPatientIds, syncPatientRegister } from "./process-control";
 import { calculateAge } from "@/lib/calculate-age";
 import { ServiceRequest, serviceRequestSchema } from "../type-schema";
 import { omitUndefined } from "mongoose";
+import { error as storageError } from "@/lib/storage-errors";
 
 type ConsultationTypes = "vitalSignals" | "currentStates";
 
@@ -432,8 +433,18 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
 
     const uploadedFile = await upload(formData, await getUserId());
 
-    if(!uploadedFile || "error" in uploadedFile) 
-      throw new Error("falha no carregamento do arquivo");
+    switch(uploadedFile){
+      case storageError.SERVICE_UNAVIABLE: 
+        return { status: false, message: "Serviço de arquivos Indisponivel!" }
+      case storageError.UNKNOWN_ERROR: 
+        throw new Error;
+    }
+    
+    if ("error" in uploadedFile)
+      return {
+        status: false,
+        message: uploadedFile.message
+      }
 
     if(storageId){
       const consult = await officeModel.findById({ _id: officeId });
@@ -457,16 +468,9 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
     const err = e as CustonAxiosError;
     console.error(err);
     
-    if(err.cause?.code === "ECONNREFUSED")
-      console.error("[-] A api do serviço de arquivo não está rodando!");
-
     return {
-      message: err.cause 
-        ? err.cause.code === "ECONNREFUSED" 
-          ? "Serviço de arquivos indisponível!"
-          : "Operação impossivel"
-        : "Arquivo invalido!",
-      status: false,
+      message: err.message,
+      status: false
     }
   }
 }

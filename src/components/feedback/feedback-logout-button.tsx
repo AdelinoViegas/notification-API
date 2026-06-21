@@ -9,13 +9,13 @@ import clsx from "clsx";
 import { useFeedback } from "@/components/feedback/feedback-context";
 
 export default function FeedbackLogoutButton({
-  baseUrl,
   className,
-  goo
+  goo = false,
+  disabled
 }: {
-  baseUrl: string;
   className?: string;
-  goo: boolean;
+  goo?: boolean;
+  disabled?: boolean;
 }) {
   const { submitted } = useFeedback();
 
@@ -31,7 +31,7 @@ export default function FeedbackLogoutButton({
       .then((ev) => toast.success(ev.message))
       .catch((e) => toast.error(e.response.data.message))
       .finally(() => {
-        window.location.href = baseUrl ?? "/";
+        window.location.href = process.env.NEXT_LOGIN_PAGE_URL ?? "/";
       });
   };
 
@@ -40,10 +40,12 @@ export default function FeedbackLogoutButton({
       type="button"
       onClick={handleClick}
       title={(!submitted && goo) ? "Preencha o formulário de feedback antes de sair" : undefined}
+      disabled={disabled}
       className={clsx(
         className ??
         "bg-red-500 text-white flex items-center gap-x-3 py-2 px-3 rounded-lg hover:bg-red-400 outline outline-1 outline-red-700",
-        (!submitted && goo) && "opacity-50 cursor-not-allowed hover:bg-red-100"
+        (!submitted && goo) && "opacity-50 cursor-not-allowed hover:bg-red-100",
+        "disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed"
       )}
     >
       <BsPower className="w-5" />

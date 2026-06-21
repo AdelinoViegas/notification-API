@@ -34,7 +34,7 @@ export default function Alert({
     )}>
       <IconComponent className="size-6" />
       <div>
-        <p className="font-bold">{titles[type]}</p>
+        <p className="font-bold text-sm">{titles[type]}</p>
         <p>{message}</p>
       </div>
     </div>
