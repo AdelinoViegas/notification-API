@@ -29,8 +29,9 @@ export default function NavLink({ routes }:{ routes: Route[] }){
             href={item.href}
             className={clsx(
               "flex rounded-md py-2 px-3 items-center gap-2 border-2 text-nowrap",
-              "text-sm font-medium hover:bg-blue-100 hover:hover:text-blue-600",
-              { "text-blue-500 font-bold bg-blue-100 border-blue-300": currentRoute }
+              "text-sm font-medium hover:to-primary/25 hover:text-primary/50 hover:border-primary/50",
+              "bg-gradient-to-t from-gray-300",
+              { "text-primary font-bold bg-gradient-to-t from-primary/50 border-primary/50": currentRoute }
             )}>
             {!!Icon && <Icon fontSize={25} />}
             <p>{item.label}</p>
