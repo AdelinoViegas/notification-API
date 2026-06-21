@@ -33,11 +33,7 @@ export default async function SideNav(){
 
       <div className="md:h-full flex justify-between flex-col">
         <NavLink routes={routes} />
-        
-        <FeedbackLogoutButton 
-          baseUrl={process.env.WEB_ADMIN_URL as string }
-          goo={process.env.NODE_ENV !== "development"}
-        />
+        <FeedbackLogoutButton goo={process.env.NODE_ENV !== "development"} />
       </div>
     </div>
   );

@@ -9,13 +9,11 @@ import clsx from "clsx";
 import { useFeedback } from "@/components/feedback/feedback-context";
 
 export default function FeedbackLogoutButton({
-  baseUrl,
   className,
-  goo
+  goo = false
 }: {
-  baseUrl: string;
   className?: string;
-  goo: boolean;
+  goo?: boolean;
 }) {
   const { submitted } = useFeedback();
 
@@ -31,7 +29,7 @@ export default function FeedbackLogoutButton({
       .then((ev) => toast.success(ev.message))
       .catch((e) => toast.error(e.response.data.message))
       .finally(() => {
-        window.location.href = baseUrl ?? "/";
+        window.location.href = process.env.NEXT_LOGIN_PAGE_URL ?? "/";
       });
   };
 
