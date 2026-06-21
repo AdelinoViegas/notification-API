@@ -4,6 +4,8 @@ import { getFileById } from "@/backend/api/storage";
 import UserViewerButton from "@/components/user-viewer-button";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { MdWarning } from "react-icons/md";
+import Alert from "./ui/alert";
 
 type MyFile = Awaited<ReturnType<typeof getFileById>>;
 
@@ -14,9 +16,9 @@ export default function ViewUserFile({ id }:{ id: string }){
 
   useEffect(() => {
     getFileById(id)
-      .then(data => { console.log({ data }); setFile(data)})
+      .then(data => setFile(data))
       .catch(() => {
-        toast.warn("Não foi possivel carregar os arquivos, tente mais tarde!");
+        toast.warn("Lamentamos, mas não foi possivel carregar o arquivo, tente mais tarde!", { autoClose: 7000 });
         setFinalState(true);
       });
   }, [id]);
@@ -35,9 +37,7 @@ export default function ViewUserFile({ id }:{ id: string }){
       }
 
       { (!file && finalState) &&
-        <div className="inline-flex px-3 py-2 rounded animate-pulse bg-orange-300 text-orange-950 mt-3">
-          { true && "Serviço de arquivos indisponivel..."}
-        </div>
+        <Alert type="warn" message="Serviço de arquivos indisponivel, tente mais tarde!" />
       }
     </>
   )

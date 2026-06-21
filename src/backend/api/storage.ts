@@ -99,8 +99,8 @@ export async function getFileById(id: string){
 
     return data;
   }catch(e){
-    console.error(e);
-    return null;
+    const err = e as UnavaliableServiceError;
+    return Promise.reject(err);
   }
 }
 

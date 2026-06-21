@@ -58,9 +58,12 @@ export class FetchService implements Fetch {
       },
     });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status} na rota GET ${pathname}`);
-    }
+    if (!response.ok) 
+      return Promise.reject({ 
+        status: response.status,
+        message: "Falha na conexão!",
+        detail: response.statusText
+      });
 
     return (await response.json()) as T;
   }
