@@ -17,7 +17,7 @@ export default function NavLink({ routes }:{ routes: Route[] }){
   clinicalIcons.forEach(e => icons.set(e.route, e));
 
   return(
-    <div className="overflow-y-auto md:h-[80vh] space-y-1">
+    <div className="overflow-y-auto md:h-[80vh] space-y-1 mb-2 sm:mb-0">
       {routes.map((item, index)=>{
         const urlString = pathname.split('/')[2]; 
         const currentRoute = !!(item.href.split('/').includes(urlString) && urlString);
