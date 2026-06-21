@@ -16,12 +16,10 @@ import {
 } from "@/backend/model";
 import { getUser } from "@/backend/api/clinical/api";
 import { CustonAxiosError } from "@/backend/api/types";
-import { upload } from "@/backend/api/storage";
 import { ServiceRequest, serviceRequestSchema } from "../type-schema";
 import { ClientSession } from "mongoose";
 import { getPatientIds } from "./process-control";
 import { getDateInSlashFormat } from "@/lib/date-formater";
-import { error as storageError } from "@/lib/storage-errors";
 
 async function getPatients({
   name,
@@ -495,21 +493,6 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
     const storageId = formData.get("storageId") as string;  
     const typeOfExam = formData.get("typeOfExam") as string;
     const description = formData.get("description") as string;
-    
-    const data = await upload(formData, await getUserId());
-
-    switch(data){
-      case storageError.SERVICE_UNAVIABLE: 
-        return { status: false, message: "Serviço de arquivos Indisponivel!" }
-      case storageError.UNKNOWN_ERROR: 
-        throw new Error;
-    }
-    
-    if ("error" in data)
-      return {
-        status: false,
-        message: data.message
-      }
 
     const operatingRoom = await operatingRoomModel.findById({ _id: operatingRoomId });
 
@@ -528,10 +511,6 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
     : operatingRoom?.preoperativeEvaluation?.imagingTests?.externalId;
   
     if(storageId){
-      await operatingRoomResultModel.updateOne({
-        _id: externalId
-      }, { storageId: data.data.id });
-
       await operatingRoomModel.updateOne({ 
         _id: operatingRoomId 
       }, { preoperativeEvaluation: {
@@ -543,7 +522,6 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
       const externalResult = await operatingRoomResultModel.create({
         patientId,
         operatingRoomId,
-        storageId: data.data.id,
         userId: await getUserId()
       });
 
@@ -557,24 +535,16 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
     }
 
     return {
-      message: data.message,
+      message: "Salvo com sucesso!",
       status: true,
     }
   }catch(e){
     const err = e as CustonAxiosError;
     console.log(err);
-    
-    if(err.cause.code === "ECONNREFUSED"){
-      console.error("[-] A api do serviço de arquivo não está rodando!");
-    }
 
     return {
-      message: err.cause 
-        ? err.cause.code === "ECONNREFUSED" 
-          ? "Serviço de arquivos indisponível!"
-          : "Escolha antes um arquivo para actualizar"
-        : "Arquivo invalido!",
-      status: false,
+      message: err.message,
+      status: false
     }
   }
 }

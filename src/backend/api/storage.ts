@@ -1,6 +1,6 @@
 "use server";
 
-import { getServiceToken } from "@/lib/web-token";
+import { getServiceToken, getUserId } from "@/lib/web-token";
 import { FetchService } from "@/lib/fetch";
 import { error } from "@/lib/storage-errors";
 
@@ -112,4 +112,27 @@ export async function queryCid(ref: string){
     console.error(e);
     return null;
   }
+}
+
+export async function serviceUpload(formData: FormData, fileField: string){
+  const uploadPayload = new FormData();
+  uploadPayload.append("file", formData.get(fileField) as File);
+
+  const userId = await getUserId();
+  const data = await upload(uploadPayload, userId);
+  
+  switch(data){
+    case error.SERVICE_UNAVIABLE: 
+      return { status: false, message: "Serviço de arquivos Indisponivel!" }
+    case error.UNKNOWN_ERROR: 
+      throw new Error;
+  }
+  
+  if ("error" in data)
+    return {
+      status: false,
+      message: data.message
+    }
+
+  return data;
 }
