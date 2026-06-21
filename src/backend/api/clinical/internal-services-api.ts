@@ -16,6 +16,7 @@ import { getUser } from "@/backend/api/admin";
 import { upload } from "@/backend/api/storage";
 import { closePatientProcess, syncPatientRegister } from "@/backend/api/clinical/process-control";
 import { CustonAxiosError } from "@/backend/api/types";
+import { error as storageError } from "@/lib/storage-errors";
 
 async function updatePaymentData(prev: unknown, formData: FormData){
   try{
@@ -226,7 +227,7 @@ async function registerExamResult(prev: unknown, formData: FormData) {
     const examFile = formData.get("userFile") as File | null;
     const examId = formData.get("examId");
 
-    console.log({ userFile: examFile });
+    console.warn(examFile);
 
     const userId = await getUserId();
 
@@ -240,10 +241,19 @@ async function registerExamResult(prev: unknown, formData: FormData) {
 
       // Passamos o payload isolado para não dar conflito com o stream do Next.js
       const uploadedFile = await upload(uploadPayload, userId);
-      
-      if (!uploadedFile || "error" in uploadedFile) {
-        throw new Error("falha no carregamento do arquivo");
+
+      switch(uploadedFile){
+        case storageError.SERVICE_UNAVIABLE: 
+          return { status: false, message: "Serviço de arquivos Indisponivel!" }
+        case storageError.UNKNOWN_ERROR: 
+          throw new Error;
       }
+      
+      if ("error" in uploadedFile)
+        return {
+          status: false,
+          message: uploadedFile.message
+        }
 
       // Atualiza ou cria o registro com o ID do Storage
       const data = await internalExamResultModel.findOneAndUpdate(
@@ -283,16 +293,7 @@ async function registerExamResult(prev: unknown, formData: FormData) {
     };
 
   } catch (e) {
-    console.error("Erro capturado na Server Action:", e);
     const err = e as CustonAxiosError;
-
-    // Melhores logs para você debugar na Railway
-    if (err.cause?.code === "ECONNREFUSED") {
-      return {
-        message: "Serviço de armazenamento de arquivos indisponível no servidor!",
-        status: false,
-      };
-    }
 
     return {
       message: err.message || "Erro interno ao processar a operação.",

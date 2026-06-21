@@ -3,12 +3,17 @@ import NavLink from '@/components/clinical/nav-link';
 import FeedbackLogoutButton from '@/components/feedback/feedback-logout-button';
 import Image from 'next/image';
 import { getGrantedRoles } from '@/backend/api/admin';
+import clsx from 'clsx';
 
 export default async function SideNav(){
   const routes = await getGrantedRoles();
 
   return(
-    <div className="bg-white border-r flex lg:h-full flex-col px-3 py-4 md:px-2 md:w-xl">
+    <div className={clsx(
+      "bg-white border-r flex lg:h-full flex-col px-3 py-4 md:px-2",
+      "md:w-2/3 min-[958px]:w-2/4",
+      "min-[1144px]:w-[350px]"
+    )}>
       <Link href="/clinical">
         <div className="bg-primary text-white flex gap-x-3 px-3 py-2 mb-1 rounded items-center">
           <Image 

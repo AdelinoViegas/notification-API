@@ -58,9 +58,12 @@ export class FetchService implements Fetch {
       },
     });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status} na rota GET ${pathname}`);
-    }
+    if (!response.ok) 
+      return Promise.reject({ 
+        status: response.status,
+        message: "Falha na conexão!",
+        detail: response.statusText
+      });
 
     return (await response.json()) as T;
   }
@@ -87,10 +90,17 @@ export class FetchService implements Fetch {
       body: isFormData ? body : JSON.stringify(body),
     });
 
-    if (!response.ok) {
-      const errorText = await response.text().catch(() => "Erro desconhecido");
-      throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
-    }
+    // if (!response.ok) {
+    //   const errorText = await response.text().catch(() => "Erro desconhecido");
+    //   throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
+    // }
+
+    if(!response.ok)
+      return Promise.reject({ 
+        status: response.status,
+        message: response.status === 502 ? "Falha na conexção" : "Erro desconhecido",
+        detail: response.statusText
+      });
 
     return (await response.json()) as T;
   }

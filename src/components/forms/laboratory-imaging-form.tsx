@@ -6,25 +6,29 @@ import Button from "@/components/ui/button";
 import { useActionState, useEffect, useRef } from "react";
 import { registerExamResult } from "@/backend/api/clinical/internal-services-api";
 import { toast } from "react-toastify";
-import forceRefreshPage from "@/lib/force-refresh";
+import { useRouter } from "next/navigation";
+import ViewUserFile from "@/components/view-user-file-client";
 
 export function LoboratoryForm({
   description,
   examId,
-  serviceId
+  serviceId,
+  storageId
 }: {
   description?: string;
   examId: string;
   serviceId: string;
+  storageId?: string;
 }) {
   const [state, action, isPending] = useActionState(registerExamResult, { message: "", status: false });
   const formRef = useRef<HTMLFormElement>(null);
   const MAX_FILE_SIZE = 1024 * 1024 * 10; // 10 MB bem definido ($10485760$ bytes)
+  const router = useRouter();
 
   useEffect(() => {
     if (state.message) {
       if (state.status) {
-        toast.success(state.message, { onOpen: forceRefreshPage });
+        toast.success(state.message, { onOpen: router.refresh });
       } else {
         toast.warn(state.message);
       }
@@ -45,36 +49,33 @@ export function LoboratoryForm({
   };
 
   return (
-    // encType adicionado e validação movida para o onSubmit
     <form 
       action={action} 
       ref={formRef} 
       onSubmit={handleSubmit}
-      encType="multipart/form-data"
     >
       <input type="hidden" name="examId" value={examId} />
       <input type="hidden" name="serviceId" value={serviceId} />
 
-      <div className="grid md:grid-cols-2 gap-3 mb-4">
-        <InputDetails
-          textLabel="Descrição do Resultado"
-          name="description"
-          defaultValue={description}
-          placeholder="O resultado descritivo do exame feito"
-          rows={3}
-        />
+      <InputDetails
+        textLabel="Descrição do Resultado"
+        name="description"
+        defaultValue={description}
+        placeholder="O resultado descritivo do exame feito"
+        rows={3}
+      />
 
-        <InputField
-          textLabel="Arquivo (PDF/IMAGEM/VIDEO)"
-          type="file"
-          name="userFile"
-          accept=".pdf, video/*, image/*"
-          // O onChange foi removido para evitar que o estado limpe o input acidentalmente
-        />
-      </div>
+      <InputField
+        textLabel="Arquivo (PDF/IMAGEM/VIDEO)"
+        type="file"
+        name="userFile"
+        accept=".pdf, video/*, image/*"
+      />
+
+      { !!storageId && <ViewUserFile  id={storageId} />}
 
       <Button disabled={isPending}>
-        {isPending ? "Salvando..." : "Salvar"}
+        {isPending ? "A Processar..." : "Salvar"}
       </Button>
     </form>
   );
