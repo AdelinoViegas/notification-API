@@ -28,6 +28,9 @@ import {
   urgencyServiceModel,
   externalTransferModel,
   externalUnitModel,
+  inHospitalizeModel,
+  patientExitModel,
+  hospitalizationModel,
 } from "@/backend/model";
 import { 
   patientAccess,
@@ -1033,7 +1036,7 @@ async function updateSpecialty(prev: unknown, formData:FormData){
 
 export async function externalTransfer(prev: unknown, formData: FormData){
   try{
-    const id = formData.get("patientId") as string;
+    const patientId = formData.get("patientId") as string;
     const externalUnitId = formData.get("unitId");
     const reason = formData.get("reason");
     const createdAt = formData.get("date");
@@ -1041,20 +1044,39 @@ export async function externalTransfer(prev: unknown, formData: FormData){
 
     await db.transaction(async (session) => {
       await externalTransferModel.create([{
-        patientId: id,
+        patientId,
         unitId: externalUnitId,
         userId,
         userCreatedAt: createdAt,
         reason
       }], { session });
 
-      await syncPatientRegister(id, session);
-      const newId = (await getSyncedHistories(id, session))?.id?.toString() as string;
+      await syncPatientRegister(patientId, session);
+      const newId = (await getSyncedHistories(patientId, session))?.id?.toString() as string;
 
       await Promise.all([
-        closePatientInUrgency(id, session),
+        closePatientInUrgency(patientId, session),
         patientModel.updateOne({ _id: newId }, { transfered: true }, { session })
       ]);
+
+      await patientExitModel.create([{
+        patientId,
+        userId,
+        userEventAt: createdAt,
+        lockProfileState: true,
+        where: "transfer"
+      }], { session });
+
+      await inHospitalizeModel.deleteOne(
+        { patientId, served: false },
+        { session }
+      );
+
+      await hospitalizationModel.updateOne(
+        { patientId, served: true },
+        { served: true },
+        { session }
+      );
     });
     
     return {
