@@ -43,7 +43,7 @@ export default async function Page({
       </div>
 
       <div className="flex gap-x-2 pb-4">
-        <ExternalUnitForm />
+        <ExternalUnitForm location="phisical"/>
       </div>
 
       <div className="flex lg:flex-row justify-between gap-3 items-center">
