@@ -11,7 +11,6 @@ export default async function Page({
   searchParams: Promise<{
     r: "o" | "t" | "a", 
     name: string,
-    registerNumber: number,
     processNumber: string,
     fromDate: string,
     toDate: string,
@@ -21,7 +20,6 @@ export default async function Page({
   const { 
     r: route, 
     name, 
-    registerNumber, 
     processNumber,
     fromDate,
     toDate,
@@ -41,8 +39,24 @@ export default async function Page({
           { path: "a", title: "Histórico de Altas" }
         ]}
       />
-      { route === "o" && <DeathHistory name={name} page={page} registerNumber={registerNumber}/> }
-      { route === "t" && <TransferHistory name={name} page={page} registerNumber={registerNumber} /> }
+      { route === "o" && 
+        <DeathHistory 
+          name={name} 
+          page={page} 
+          processNumber={processNumber}
+          fromDate={fromDate}
+          toDate={toDate}
+      /> 
+      }
+      { route === "t" && 
+        <TransferHistory 
+          name={name} 
+          page={page} 
+          processNumber={processNumber}
+          fromDate={fromDate}
+          toDate={toDate} 
+        /> 
+      }
       { route === "a" && (
         <DischargeHistoryPanel 
           name={name} 
