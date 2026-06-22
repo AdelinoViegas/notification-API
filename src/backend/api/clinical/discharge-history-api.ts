@@ -215,18 +215,9 @@ export async function getDischargeHistory({
     const formated = records.map((record) => ({
       id: record._id.toString(),
       processNumber: String(record.processNumber ?? ""),
-      patientName: record.patientName as string,
-      internalServiceName: record.internalServiceName as string,
-      nursingName: record.nursingName as string,
-      bedName: record.bedName as string,
-      admissionDate: getDataAndHoursFormat(record.admissionDate as Date),
       dischargeDate: getDataAndHoursFormat(record.dischargeDate as Date),
-      dischargeType:
-        dischargeTypes.find((t) => t._id === record.dischargeType)?.label ??
-        (record.dischargeType as string),
-      admissionDiagnosis: record.admissionDiagnosis as string,
+      patientName: record.patientName as string,
       doctorName: record.doctorName as string,
-      status: record.status === "locked" ? "Bloqueado" : "Activo",
     }));
 
     return {

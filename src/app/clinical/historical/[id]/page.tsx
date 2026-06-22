@@ -73,7 +73,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
                     <TitleAndSubtitle
                       label="Data de admissão"
-                      value={props.admissionDate}
+                      value={'props.admissionDate'}
                       className={{
                         label:"font-medium text-gray-500 ms-4",
                         content: "ms-6"
