@@ -9,7 +9,7 @@ import { Types} from "mongoose";
 import { ClientSession } from "mongodb";
 
 
-type WorkLocation = "screening" | "urgency" | "laboratory" | "imaging" | string ;
+type WorkLocation = "screening" | "urgency" | "laboratory" | "imaging" | "hospitalization" | string;
 
 export async function openPatientProcess(patientId: string, location: WorkLocation){
   try{
