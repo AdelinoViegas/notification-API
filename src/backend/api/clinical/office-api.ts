@@ -15,7 +15,7 @@ import { findDoctorCalendar } from "@/backend/api/clinical/scheduling-api";
 import { getDateInSlashFormat } from "@/lib/date-formater";
 import { getUser } from "@/backend/api/clinical/api";
 import { upload } from "@/backend/api/storage";
-import { CustonAxiosError } from "@/backend/api/types";
+import { CustonAxiosError, MongoError } from "@/backend/api/types";
 import { getPatientIds, syncPatientRegister } from "./process-control";
 import { calculateAge } from "@/lib/calculate-age";
 import { ServiceRequest, serviceRequestSchema } from "../type-schema";

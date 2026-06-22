@@ -4,8 +4,8 @@ import { NextConfig } from 'next';
 
 export const config: NextConfig = {
   matcher: [
-    "/clinical/:path*",
-    "/workplace:path*"
+    "/clinical:path*",
+    "/wp:path*"
   ],
   runtime: "nodejs"
 }
