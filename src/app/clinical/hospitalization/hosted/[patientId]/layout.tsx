@@ -41,7 +41,7 @@ export default async function Layout({
         />
         <DefineState hospitalized />
         <InternalMoviment />
-        <ExternalTransfer /> 
+        <ExternalTransfer location="hospitalization"/> 
       </div>
 
       <div className={clsx("my-4 text-center pt-3 text-white bg-blue-400 rounded-lg",
