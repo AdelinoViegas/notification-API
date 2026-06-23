@@ -1581,15 +1581,22 @@ async function getTransferHistories({
     const patientTransferred = [];
 
     for(const patient of patients.slice(numberOfItems - 10, filter?patients.length:numberOfItems)){
-      const transfered = await externalTransferModel.findOne({});
-
-      patientTransferred.push({
-        id: patient?._id.toString() as string,
-        processNumber: patient?.registerNumber as number,
-        transferDate: transfered?.userCreatedAt as Date,
-        fullname: patient.fullname as string,
-        responsibleDoctor: (await getUser(transfered?.userId as string)).fullname
-      });
+      const patientSync = await patientSyncModel.findOne({id: patient._id});
+      const lastId = patientSync?.secondaries[patientSync?.secondaries.length - 1];
+      
+      /*caso existir para ocorrências de transferências desse mesmo paciente 
+      ele irá pegar a última para ser mostrada na tabela principal*/
+      const transfered = await externalTransferModel.findOne({patientId: lastId});
+         
+      if(transfered){
+        patientTransferred.push({
+          id: patient?._id.toString() as string,
+          processNumber: patient?.registerNumber as number,
+          transferDate: transfered?.userCreatedAt as Date,
+          fullname: patient.fullname as string,
+          responsibleDoctor: (await getUser(transfered?.userId as string)).fullname
+        });
+      }
     }
 
     const _patients = filter?patientTransferred.filter((item)=>{
@@ -1637,15 +1644,15 @@ async function getPatientTransferHistories(id: string){
 
     if(transferred){
       const patient = await patientModel.findById(transferred.patientId);
-      const tried = await triedModel.findOne({patientId: id, served: true});
-      const service = await urgencyServiceModel.findOne({_id: tried?.serviceId});
       const unit = await externalUnitModel.findOne({_id: transferred.unitId});
-      //const hospitalized
+      const hospitalization = await hospitalizationModel.findOne({patientId: patient?.id});
+      const internalService = hospitalization?.toInternalServiceId ? await internalServiceModel.findById(hospitalization.toInternalServiceId):null;
+
       patientTransferred.push({
         id: patient?._id.toString() as string,
         processNumber: patient?.registerNumber as number,
         fullname: patient?.fullname as string,
-        service: service?.label as string, 
+        service: internalService?.name as string, 
         //admissionDate: "", //getDataAndHoursFormat(firstData?.createdAt as Date),
         transferDate: getDataAndHoursFormat(transferred?.userCreatedAt as Date),
         unitExternal: unit?.name as string,

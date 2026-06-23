@@ -4,7 +4,7 @@ import { getUserId } from "@/lib/web-token";
 import { validatePatientDoc } from "@/lib/regexp";
 import { calculateAge } from "@/lib/calculate-age";
 import { omitUndefined } from "mongoose";
-import { closePatientInUrgency } from "./urgency-bank-api";
+import { getPatientUrgencyBank } from "./urgency-bank-api";
 import { closePatientProcess, getSyncedHistories, syncPatientRegister } from "./process-control";
 import {
   Responsable,
@@ -1037,12 +1037,21 @@ async function updateSpecialty(prev: unknown, formData:FormData){
 export async function externalTransfer(prev: unknown, formData: FormData){
   try{
     const patientId = formData.get("patientId") as string;
+    const location = formData.get("location") as string;
     const externalUnitId = formData.get("unitId");
     const reason = formData.get("reason");
     const createdAt = formData.get("date");
     const userId = await getUserId();
-
+    const urgencyId = (await getPatientUrgencyBank(patientId))?.id 
+    const urgency = urgencyId ? await urgencyBankModel.findById(urgencyId ):null;
+    
     await db.transaction(async (session) => {
+      const existsPatientSync = await getSyncedHistories(patientId, session);
+            
+      // sincronizar e criar registo de saída
+      if(!existsPatientSync || existsPatientSync.id.toString() === patientId)
+        await syncPatientRegister(patientId, session);   
+
       await externalTransferModel.create([{
         patientId,
         unitId: externalUnitId,
@@ -1051,13 +1060,13 @@ export async function externalTransfer(prev: unknown, formData: FormData){
         reason
       }], { session });
 
-      await syncPatientRegister(patientId, session);
-      const newId = (await getSyncedHistories(patientId, session))?.id?.toString() as string;
+      if(urgency)
+        await triedModel.updateOne({ _id: urgency?.triedId }, { served: true }, { session });
 
-      await Promise.all([
-        closePatientInUrgency(patientId, session),
-        patientModel.updateOne({ _id: newId }, { transfered: true }, { session })
-      ]);
+      if(urgencyId)
+        await urgencyBankModel.updateOne({ _id: urgencyId }, { served: true }, { session });
+      
+      await closePatientProcess(patientId, location, session);
 
       await patientExitModel.create([{
         patientId,
@@ -1077,6 +1086,10 @@ export async function externalTransfer(prev: unknown, formData: FormData){
         { served: true },
         { session }
       );
+      
+      /*marca o último registro do paciente como transferido*/
+      const newId = (await getSyncedHistories(patientId, session))?.id?.toString() as string;
+      await patientModel.updateOne({ _id: newId }, { transfered: true }, { session });
     });
     
     return {
