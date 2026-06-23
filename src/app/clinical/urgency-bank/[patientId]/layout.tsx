@@ -39,7 +39,7 @@ export default async function Layout({
         />
 
         <Hospitalization />
-        <ExternalTransfer />
+        <ExternalTransfer location="urgency"/>
         <DefineState />
         <WaitingState />
       </div>

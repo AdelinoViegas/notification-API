@@ -4,20 +4,27 @@ import Alert from "@/components/ui/alert";
 import Search from "@/components/ui/search";
 import Refresh from "@/components/refresh";
 import { getDeathHistories } from "@/backend/api/clinical/urgency-bank-api";
+import PeriodFilter from "./discharge-history/period-filter";
 
 export default async function DeathHistory({ 
   name,
   page,
-  registerNumber
+  processNumber,
+  fromDate,
+  toDate
 }: {
   name?: string;
   page: number;
-  registerNumber: number;
+  processNumber: string,
+  fromDate?: string,
+  toDate?: string,
 }){
   const patients = await getDeathHistories({ 
       page: page?Number(page):1,
       name,
-      registerNumber
+      processNumber,
+      fromDate,
+      toDate
     });
   const rows = formater(patients.patients);
 
@@ -25,25 +32,36 @@ export default async function DeathHistory({
     <main className="space-y-3">
       <Refresh />
 
-      <div className="flex flex-col lg:flex-row justify-between lg:items-center">
-        <Alert 
-          type="info" 
-          message="Registos de óbitos serão exibidos nesta secção." 
-        />
-        
+      <Alert
+        type="info"
+        message="Duplo clique sobre o registo para visualizar o processo completo em modo bloqueado."
+      />
+
+      <div className="flex flex-wrap items-end gap-3">
+        <PeriodFilter />
+
         <Search
-          className="flex items-center gap-3"
+          className="flex items-end gap-3"
+          filterKey="processNumber"
+          label="Nº Processo"
+          placeholder="Buscar por nº processo..."
+        />
+
+        <Search
+          className="flex items-end gap-3"
           filterKey="name"
-          label="Filtar por nome"
-          placeholder="Buscar pelo nome do utente..."
+          label="Nome do Paciente"
+          placeholder="Buscar pelo nome..."
         />
       </div>
 
       <Table
         baseRowLink="/clinical/death-history"
         columns={[
-          "Nº do processo",
-          "Nome do paciente",
+          "Nº do Processo",
+          "Data do Óbito",
+          "Nome do Paciente",
+          "Médico Responsável",
         ]} 
         rows={rows}
       />

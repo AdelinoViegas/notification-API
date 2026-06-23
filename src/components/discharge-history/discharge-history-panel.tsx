@@ -32,29 +32,15 @@ export default async function DischargeHistoryPanel({
     filterKey: [
       "id",
       "processNumber",
-      "patientName",
-      "internalServiceName",
-      "nursingName",
-      "bedName",
-      "admissionDate",
       "dischargeDate",
-      "dischargeType",
-      "admissionDiagnosis",
+      "patientName",
       "doctorName",
-      "status",
     ],
     order: [
       "processNumber",
-      "patientName",
-      "internalServiceName",
-      "nursingName",
-      "bedName",
-      "admissionDate",
       "dischargeDate",
-      "dischargeType",
-      "admissionDiagnosis",
+      "patientName",
       "doctorName",
-      "status",
     ],
   });
 
@@ -88,17 +74,10 @@ export default async function DischargeHistoryPanel({
       <Table
         baseRowLink="/clinical/discharge-history"
         columns={[
-          "Nº Processo",
-          "Nome",
-          "Serviço",
-          "Enfermaria",
-          "Leito",
-          "Data Admissão",
-          "Data Alta",
-          "Tipo Alta",
-          "Diagnóstico",
-          "Médico",
-          "Estado",
+          "Nº do Processo",
+          "Data da Alta",
+          "Nome do Paciente",
+          "Médico Responsável",
         ]}
         rows={rows}
         rowLength={11}

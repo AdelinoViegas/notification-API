@@ -1071,6 +1071,7 @@ async function finishHospitalization(prev: unknown, formData: FormData){
     await db.transaction(async (session) =>{
       const hospitalizedPatient = await hospitalizationModel.findOne({ patientId: lastPatientId }).session(session);
       const tried = await triedModel.findOneAndUpdate({ _id: urgency?.triedId }, { served: true }, { session, new: true });
+      const existsPatientSync = await getSyncedHistories(patientId, session);
 
       if(hospitalizedPatient)
         throw new Error("Este utente ja se encontra no internamento!");
@@ -1098,8 +1099,10 @@ async function finishHospitalization(prev: unknown, formData: FormData){
         donedAt,
         currentState
       }], { session });
+      
+      if(!existsPatientSync || existsPatientSync.id.toString() === patientId)
+        await syncPatientRegister(patientId, session);
 
-      await syncPatientRegister(patientId, session);
       await closePatientProcess(tried.patientId?.toString() as string, "urgency", session);
     });
     
@@ -1254,11 +1257,12 @@ async function getSurgery({ id }:{ id?: string }){
 
 async function applyDischarge(p:unknown, formdata:FormData){
   try{
+    const userId = await getUserId();
+    const location = formdata.get("location") as string; 
     const patientId = formdata.get("patientId") as string;
     const userMakedAt = formdata.get("makedAt");
     const dischargeKind = (formdata.get("kind") as string) ?? "hospital";
     const reason = formdata.get("reason") as string;
-    const userId = await getUserId();
     const recoveredPatient = await patientStateModel.findOne({ patientId , stateId: "recovered" });
 
     if(!recoveredPatient)
@@ -1266,7 +1270,7 @@ async function applyDischarge(p:unknown, formdata:FormData){
 
     await db.transaction(async (session) => {
       // fechar ciclo na urgência
-      await triedModel.updateOne({
+     await triedModel.updateOne({
         userId,
         patientId,
         served: false
@@ -1274,14 +1278,14 @@ async function applyDischarge(p:unknown, formdata:FormData){
         served: true
       }, { session });
 
-      await closePatientProcess(patientId, "urgency", session);
-
       // sincronizar e criar registo de saída
-      await syncPatientRegister(patientId, session);
-      const id = (await getSyncedHistories(patientId, session))?.id as string;
+      const existsPatientSync = await getSyncedHistories(patientId, session);
+
+      if(!existsPatientSync || existsPatientSync.id.toString() === patientId)
+        await syncPatientRegister(patientId, session);
 
       const [ exitRecord ] = await patientExitModel.create([{
-        patientId: id,
+        patientId,
         userId,
         userEventAt: userMakedAt,
         lockProfileState: true,
@@ -1291,7 +1295,7 @@ async function applyDischarge(p:unknown, formdata:FormData){
       // criar registo automático no histórico de altas
       // NOTA: deve ser chamado ANTES de remover o inHospitalize,
       // para que os dados de cama/enfermaria/serviço ainda sejam legíveis
-      await createDischargeRecord({
+     await createDischargeRecord({
         patientId,
         dischargeDate: userMakedAt ? new Date(userMakedAt as string) : new Date(),
         dischargeType: dischargeKind,
@@ -1305,7 +1309,7 @@ async function applyDischarge(p:unknown, formdata:FormData){
       // Usa deleteOne em vez de updateOne para evitar conflito com o
       // índice único {patientId, served} quando o paciente já teve
       // internamentos anteriores (served: true já existe).
-      await inHospitalizeModel.deleteOne(
+     await inHospitalizeModel.deleteOne(
         { patientId, served: false },
         { session }
       );
@@ -1316,7 +1320,7 @@ async function applyDischarge(p:unknown, formdata:FormData){
         { session }
       );
 
-      await closePatientProcess(patientId, "hospitalization", session);
+      await closePatientProcess(patientId, location, session);
     });
 
     return {
@@ -1559,35 +1563,60 @@ async function updateClinicalDiary(prev: unknown, formData:FormData){
 async function getTransferHistories({
   page,
   name,
-  registerNumber,
+  processNumber,
+  fromDate,
+  toDate
 }: {
   page: number;
-  registerNumber?: number;
+  processNumber?: string;
   name?: string;
+  fromDate?: string;
+  toDate?: string;
 }){
   try{
     const numberOfItems = 10 * page;
     const patients =  await patientModel.find({transfered: true});
-    const filter = name || registerNumber;
+    const filter = name || processNumber || fromDate || toDate;
 
     const patientTransferred = [];
 
     for(const patient of patients.slice(numberOfItems - 10, filter?patients.length:numberOfItems)){
-      patientTransferred.push({
-        id: patient?._id.toString() as string,
-        processNumber: patient?.registerNumber as number,
-        fullname: patient.fullname as string,
-      });
+      const patientSync = await patientSyncModel.findOne({id: patient._id});
+      const lastId = patientSync?.secondaries[patientSync?.secondaries.length - 1];
+      
+      /*caso existir para ocorrências de transferências desse mesmo paciente 
+      ele irá pegar a última para ser mostrada na tabela principal*/
+      const transfered = await externalTransferModel.findOne({patientId: lastId});
+         
+      if(transfered){
+        patientTransferred.push({
+          id: patient?._id.toString() as string,
+          processNumber: patient?.registerNumber as number,
+          transferDate: transfered?.userCreatedAt as Date,
+          fullname: patient.fullname as string,
+          responsibleDoctor: (await getUser(transfered?.userId as string)).fullname
+        });
+      }
     }
 
     const _patients = filter?patientTransferred.filter((item)=>{
       const byName = !name || item.fullname.match(new RegExp(`^${name}`, 'i'));
-      const byProcessNumber = !registerNumber || item.processNumber.toString().match(new RegExp(`^${registerNumber}`, 'i'));
-      return byName && byProcessNumber;
+      const byProcessNumber = !processNumber || item.processNumber.toString().match(new RegExp(`^${processNumber}`, 'i'));
+      const byDate =
+      (!fromDate || item.transferDate >= new Date(fromDate)) &&
+      (!toDate || item.transferDate <= new Date(toDate));
+      
+      return byName && byProcessNumber && byDate;
     }):patientTransferred;
-     
+    
+    /* formata a data no formato para apresentar na tabela*/
+    const _patientsFormatted = _patients.map((item) => ({
+      ...item,
+      transferDate: getDataAndHoursFormat(item.transferDate),
+    }));
+
     return {
-      patients: _patients,
+      patients: _patientsFormatted,
       totalItems: patients.length,
       availablePages: Math.ceil(patients.length /10),
       currentPage: page,
@@ -1608,24 +1637,24 @@ async function getTransferHistories({
 
 async function getPatientTransferHistories(id: string){
   const patient = await patientSyncModel.findOne({id});
-  const firstData = await patientModel.findOne({_id: patient?.secondaries[0]});
   const patientTransferred = [];
 
   for(const id of patient?.secondaries || []){
     const transferred = await externalTransferModel.findOne({patientId: id});
 
     if(transferred){
-      const tried = await triedModel.findOne({patientId: id, served: true});
-      const service = await urgencyServiceModel.findOne({_id: tried?.serviceId});
+      const patient = await patientModel.findById(transferred.patientId);
       const unit = await externalUnitModel.findOne({_id: transferred.unitId});
+      const hospitalization = await hospitalizationModel.findOne({patientId: patient?.id});
+      const internalService = hospitalization?.toInternalServiceId ? await internalServiceModel.findById(hospitalization.toInternalServiceId):null;
 
       patientTransferred.push({
         id: patient?._id.toString() as string,
-        processNumber: firstData?.registerNumber as number,
-        fullname: firstData?.fullname as string,
-        service: service?.label as string, 
-        admissionDate: getDataAndHoursFormat(firstData?.createdAt as Date),
-        transferDate: getDataAndHoursFormat(transferred?.createdAt as Date),
+        processNumber: patient?.registerNumber as number,
+        fullname: patient?.fullname as string,
+        service: internalService?.name as string, 
+        //admissionDate: "", //getDataAndHoursFormat(firstData?.createdAt as Date),
+        transferDate: getDataAndHoursFormat(transferred?.userCreatedAt as Date),
         unitExternal: unit?.name as string,
         transferReason: transferred?.reason as string,
         doctorResponsible: (await getUser(transferred?.userId as string)).fullname
@@ -1707,18 +1736,22 @@ async function markPatientDeceased (prev: unknown, formData: FormData){
 async function getDeathHistories({
   page,
   name,
-  registerNumber,
+  processNumber,
+  fromDate,
+  toDate
 }: {
   page: number;
-  registerNumber?: number;
+  processNumber?: string;
   name?: string;
+  fromDate?: string,
+  toDate?: string
 }){
   try{
     const numberOfItems = 10 * page;
     const deceasedpatients =  await deceasedPatientModel.find();
-    const filter = name || registerNumber;
+    const filter = name || processNumber || fromDate || toDate;
 
-    const patientTransferred = [];
+    const _deceasedpatients = [];
 
     for(const deceasedpatient of deceasedpatients.slice(numberOfItems - 10, filter?deceasedpatients.length:numberOfItems)){
       const patient = await patientModel.findOne({_id: deceasedpatient.patientId, served: true});
@@ -1726,21 +1759,33 @@ async function getDeathHistories({
       if(!patient) 
         continue;
 
-      patientTransferred.push({
+      _deceasedpatients.push({
         id: patient?._id.toString() as string,
         processNumber: patient?.registerNumber as number,
+        dateOfDeath: deceasedpatient.dateOfDeath as Date,
         fullname: patient.fullname as string,
+        responsibleDoctor: (await getUser(deceasedpatient?.userId as string)).fullname
       });
     }
 
-    const _patients = filter?patientTransferred.filter((item)=>{
+    const _patients = filter?_deceasedpatients.filter((item)=>{
       const byName = !name || item.fullname.match(new RegExp(`^${name}`, 'i'));
-      const byProcessNumber = !registerNumber || item.processNumber.toString().match(new RegExp(`^${registerNumber}`, 'i'));
-      return byName && byProcessNumber;
-    }):patientTransferred;
+      const byProcessNumber = !processNumber || item.processNumber.toString().match(new RegExp(`^${processNumber}`, 'i'));
+      const byDate =
+      (!fromDate || item.dateOfDeath >= new Date(fromDate)) &&
+      (!toDate || item.dateOfDeath <= new Date(toDate));
+      
+      return byName && byProcessNumber && byDate;
+    }):_deceasedpatients;
+    
+    /* formata a data no formato para apresentar na tabela*/
+    const _patientsFormatted = _patients.map((item) => ({
+      ...item,
+      dateOfDeath: getDataAndHoursFormat(item.dateOfDeath),
+    }));
      
     return {
-      patients: _patients,
+      patients: _patientsFormatted,
       totalItems: deceasedpatients.length,
       availablePages: Math.ceil(deceasedpatients.length /10),
       currentPage: page,
