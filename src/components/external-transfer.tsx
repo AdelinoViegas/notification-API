@@ -12,7 +12,7 @@ import InputDetails from "@/components/ui/input-details";
 import InputField from "./ui/input-field";
 import ExternalUnitForm from "./forms/external-unit-form";
 
-export default function ExternalTransfer({ id }: { id?: string }){
+export default function ExternalTransfer({ id, location }: { id?: string, location: string}){
   const [modalstate, setModalState] = useState(false);
   const [ state, action ] = useActionState(externalTransfer, { message: "", status: false });
   const [ selectState, setSelectState ] = useState(false);
@@ -26,7 +26,6 @@ export default function ExternalTransfer({ id }: { id?: string }){
   const patientId = id ?? params.id ?? params.patientId;
 
   useEffect(()=>{
-
     if(state.message)
       if(state.status)
         toast.success(state.message, {
@@ -55,6 +54,7 @@ export default function ExternalTransfer({ id }: { id?: string }){
         <form action={action}>
           <div className="my-4">
             <input type="hidden" name="patientId" defaultValue={patientId} />
+            <input type="hidden" name="location" defaultValue={location} />
              
             <div className="flex gap-x-3 items-center">
               <Selection
