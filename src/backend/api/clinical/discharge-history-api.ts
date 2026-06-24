@@ -11,9 +11,11 @@ import {
   internalServiceModel,
   urgencyBankModel,
   patientModel,
+  patientSyncModel,
 } from "@/backend/model";
 import { getUser } from "@/backend/api/clinical/api";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
+import { getSyncedHistories } from "./process-control";
 
 // ---------- tipos de alta ----------
 const dischargeTypes = [
@@ -203,8 +205,10 @@ export async function getDischargeHistory({
     }
 
     const totalItems = await dischargeHistoryModel.countDocuments(filter);
+    const patientSync = await patientSyncModel.find();
     const numberOfItems = 10;
     const skip = (page - 1) * numberOfItems;
+    const lastOccurrence = [];
 
     const records = await dischargeHistoryModel
       .find(filter)
@@ -213,15 +217,22 @@ export async function getDischargeHistory({
       .limit(numberOfItems);
 
     const formated = records.map((record) => ({
-      id: record._id.toString(),
+      id: record.patientId.toString(),
       processNumber: String(record.processNumber ?? ""),
       dischargeDate: getDataAndHoursFormat(record.dischargeDate as Date),
       patientName: record.patientName as string,
       doctorName: record.doctorName as string,
     }));
+    
+    for (const sync of patientSync) {
+      const lastId = sync.secondaries.at(-1)?.toString();
 
+      if(lastId)  
+        lastOccurrence.push(...formated.filter(props => props.id === lastId));
+    }
+    
     return {
-      records: formated,
+      records: lastOccurrence,
       totalItems,
       availablePages: Math.ceil(totalItems / numberOfItems),
       currentPage: page,
@@ -241,32 +252,43 @@ export async function getDischargeHistory({
 // ---------- obter registo individual ----------
 export async function getDischargeRecord(id: string) {
   try {
-    const record = await dischargeHistoryModel.findById({ _id: id });
+    const existsPatientSync = await getSyncedHistories(id);
+    const patients = [];
 
-    if (!record)
+    if(!existsPatientSync?.secondaries)
       throw new Error("Registo não encontrado!", { cause: "not_found" });
 
-    return {
-      id: record._id.toString(),
-      patientId: record.patientId?.toString() as string,
-      processNumber: record.processNumber as number,
-      patientName: record.patientName as string,
-      internalServiceName: record.internalServiceName as string,
-      nursingName: record.nursingName as string,
-      bedName: record.bedName as string,
-      admissionDate: record.admissionDate as Date,
-      dischargeDate: record.dischargeDate as Date,
-      dischargeType: record.dischargeType as string,
-      dischargeTypeLabel:
-        dischargeTypes.find((t) => t._id === record.dischargeType)?.label ??
-        (record.dischargeType as string),
-      admissionDiagnosis: record.admissionDiagnosis as string,
-      doctorName: record.doctorName as string,
-      doctorId: record.doctorId as string,
-      status: record.status as string,
-      statusLabel: record.status === "locked" ? "Bloqueado" : "Activo",
-      createdAt: record.createdAt as Date,
-    };
+    for(const patientId of existsPatientSync?.secondaries || []){
+      const record = await dischargeHistoryModel.findOne({ patientId });
+
+      if (!record)
+        continue
+    
+      patients.push({
+        id: record._id.toString(),
+        patientId: record.patientId?.toString() as string,
+        processNumber: record.processNumber as number,
+        patientName: record.patientName as string,
+        internalServiceName: record.internalServiceName as string,
+        nursingName: record.nursingName as string,
+        bedName: record.bedName as string,
+        admissionDate: record.admissionDate as Date,
+        dischargeDate: record.dischargeDate as Date,
+        dischargeType: record.dischargeType as string,
+        dischargeTypeLabel:
+          dischargeTypes.find((t) => t._id === record.dischargeType)?.label ??
+          (record.dischargeType as string),
+        admissionDiagnosis: record.admissionDiagnosis as string,
+        doctorName: record.doctorName as string,
+        doctorId: record.doctorId as string,
+        status: record.status as string,
+        statusLabel: record.status === "locked" ? "Bloqueado" : "Activo",
+        createdAt: record.createdAt as Date,
+      })
+    }
+    
+   /* retorna todos registros de altas do paciente*/
+   return patients;
   } catch (e) {
     console.error("[DischargeHistory] Falha ao obter registo:", e);
     return null;
