@@ -1,7 +1,7 @@
 "use client";
 
 import Tag from "@/components/ui/tag";
-import ExportPdfButton from "@/components/discharge-history/export-pdf-button";
+//import ExportPdfButton from "@/components/discharge-history/export-pdf-button";
 import clsx from "clsx";
 
 type DischargeRecord = {
@@ -60,36 +60,10 @@ export default function DischargeDetailView({
   );
 
   return (
-    <div className="space-y-6">
-      {/* Cabeçalho */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-xl font-bold text-gray-800">
-            {record.patientName}
-          </h2>
-          <p className="text-sm text-gray-500">
-            Processo Nº {record.processNumber}
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <span
-            className={clsx(
-              "px-3 py-1 rounded-full text-xs font-semibold",
-              {
-                "bg-red-100 text-red-700": record.status === "locked",
-                "bg-green-100 text-green-700": record.status === "active",
-              }
-            )}
-          >
-            {record.statusLabel}
-          </span>
-          <ExportPdfButton record={record} />
-        </div>
-      </div>
-
+    <div className="space-y-4">
       {/* Dados do Internamento */}
       <div>
-        <Tag className="inline-flex mb-3">Dados do Internamento</Tag>
+        <Tag className="inline-flex my-4">Dados do Internamento</Tag>
         <div className="grid grid-cols-2 gap-4">
           <Field label="Serviço de Internamento" value={record.internalServiceName} />
           <Field label="Enfermaria" value={record.nursingName} />
@@ -100,7 +74,7 @@ export default function DischargeDetailView({
 
       {/* Dados da Alta */}
       <div>
-        <Tag className="inline-flex mb-3">Dados da Alta</Tag>
+        <Tag className="inline-flex my-4">Dados da Alta</Tag>
         <div className="grid grid-cols-2 gap-4">
           <Field label="Data da Alta" value={dischargeDate} />
           <Field label="Tipo de Alta" value={record.dischargeTypeLabel} />
@@ -113,7 +87,7 @@ export default function DischargeDetailView({
         </div>
       </div>
 
-      {/* Aviso read-only */}
+      {/* Aviso read-only 
       <div className="bg-yellow-50 border border-yellow-200 rounded-lg px-4 py-3 text-sm text-yellow-800 flex items-center gap-2">
         <svg className="size-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
           <path
@@ -123,7 +97,7 @@ export default function DischargeDetailView({
           />
         </svg>
         Processo bloqueado — Modo somente leitura. Não é possível editar registos de altas.
-      </div>
+      </div>*/}
     </div>
   );
 }
