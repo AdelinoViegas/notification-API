@@ -1,4 +1,4 @@
-import { GoAlertFill } from "react-icons/go";
+//import { GoAlertFill } from "react-icons/go";
 import { IoArrowBack } from "react-icons/io5";
 import Link from "next/link";
 import Card from "@/components/ui/card";
@@ -41,7 +41,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
               </p>
             </div>
             <div className="flex items-center gap-3">
-              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700">
+              <span className="px-3 py-1 mt-4 rounded-full text-xs font-semibold bg-red-100 text-red-700">
                 Bloqueado
               </span>
               {<Button>Gerar PDF</Button>}
@@ -50,18 +50,18 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
           {
             transferData.map( (props) => (
-              <Accordium extraClassName="mt-4 mb-6" title={`Transferência feita em ${props.transferDate}`} key={props.id}>
-                <div className="space-y-6">
+              <Accordium extraClassName="my-6" title={`Transferência feita em ${props.transferDate}`} key={props.id}>
+                <div className="space-y-3">
                   <div>
-                    <Tag className="inline-flex mb-3">Dados do Internamento</Tag>
+                    <Tag className="inline-flex my-4">Dados do Internamento</Tag>
                     <div className="grid grid-cols-2 gap-4">
                       <Field label="Serviço de Internamento" value={props.service ?? "Desconhecido"} />
-                      <Field label="Data de Admissão" value={ "Desconhecido"} />
+                      <Field label="Data de Admissão" value={props.admissionDate ?? "Desconhecido"} />
                     </div>
                   </div>
             
                   <div>
-                    <Tag className="inline-flex mb-3">Dados da Transferência</Tag>
+                    <Tag className="inline-flex my-4">Dados da Transferência</Tag>
                     <div className="grid grid-cols-2 gap-4">
                       <Field label="Data da Transferência" value={props.transferDate ?? "Desconhecido"} />
                       <Field label="Médico Responsável" value={props.doctorResponsible ?? "Desconhecido"} />
@@ -76,16 +76,15 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                     </div>
                   </div>
             
-                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg px-4 py-3 text-sm text-yellow-800 flex items-center gap-2">
+                  {/*<div className="bg-yellow-50 border border-yellow-200 rounded-lg px-4 py-3 text-sm text-yellow-800 flex items-center gap-2">
                     <GoAlertFill size={20} />
                     Processo bloqueado — Modo somente leitura. Não é possível editar registos de altas.
-                  </div>
+                  </div>*/}
                 </div>
               </Accordium>
             ))
           }
 
-          <Button>Gerar PDF</Button>
       </Card>
     </main>
   );
