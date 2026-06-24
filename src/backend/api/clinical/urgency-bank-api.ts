@@ -1063,14 +1063,17 @@ async function finishHospitalization(prev: unknown, formData: FormData){
     if(!["critical", "serious", "moderate"].includes(patientState._id))
       throw new Error("Lamentamos, mas este utente não aprensenta um estado clínico válido para internar!", { cause: 404 });
     
-    const urgencyId = (await getPatientUrgencyBank(patientId))?.id;
-    const patient = await getSyncedHistories(patientId);
-    const lastPatientId = patient?.secondaries.pop();
-    const urgency = await urgencyBankModel.findById({ _id: urgencyId });
-    
     await db.transaction(async (session) =>{
+      const patient = await getSyncedHistories(patientId);
+      const lastPatientId = patient?.secondaries.pop();
+      const urgencyId = (await getPatientUrgencyBank(patientId))?.id;
+      const urgency = urgencyId ? await urgencyBankModel.findById(urgencyId): null;
+      const tried = urgency?.triedId  ? await triedModel.findOneAndUpdate(
+        { _id: urgency?.triedId },
+        { served: true }, 
+        { session, new: true }
+      ):null;
       const hospitalizedPatient = await hospitalizationModel.findOne({ patientId: lastPatientId }).session(session);
-      const tried = await triedModel.findOneAndUpdate({ _id: urgency?.triedId }, { served: true }, { session, new: true });
       const existsPatientSync = await getSyncedHistories(patientId, session);
 
       if(hospitalizedPatient)
@@ -1574,8 +1577,11 @@ async function getTransferHistories({
   toDate?: string;
 }){
   try{
-    const numberOfItems = 10 * page;
-    const patients =  await patientModel.find({transfered: true});
+    const numberOfItems = 10 * page; 
+    /* permite ter os dados dos paciente tranferido e que retornou a unidade, 
+    dados que serão necessários para o históricos de transferências*/
+    const patients = await patientModel.find({ transferStatus: { $in: ["transferred", "returned"] }});
+
     const filter = name || processNumber || fromDate || toDate;
 
     const patientTransferred = [];
@@ -1641,7 +1647,7 @@ async function getPatientTransferHistories(id: string){
 
   for(const id of patient?.secondaries || []){
     const transferred = await externalTransferModel.findOne({patientId: id});
-
+    
     if(transferred){
       const patient = await patientModel.findById(transferred.patientId);
       const unit = await externalUnitModel.findOne({_id: transferred.unitId});
@@ -1653,7 +1659,7 @@ async function getPatientTransferHistories(id: string){
         processNumber: patient?.registerNumber as number,
         fullname: patient?.fullname as string,
         service: internalService?.name as string, 
-        //admissionDate: "", //getDataAndHoursFormat(firstData?.createdAt as Date),
+        admissionDate: getDataAndHoursFormat(transferred?.admissionDate as Date),
         transferDate: getDataAndHoursFormat(transferred?.userCreatedAt as Date),
         unitExternal: unit?.name as string,
         transferReason: transferred?.reason as string,
