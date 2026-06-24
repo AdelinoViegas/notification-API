@@ -1042,7 +1042,7 @@ export async function externalTransfer(prev: unknown, formData: FormData){
     const reason = formData.get("reason");
     const createdAt = formData.get("date");
     const userId = await getUserId();
-    const urgencyId = (await getPatientUrgencyBank(patientId))?.id 
+    const urgencyId = (await getPatientUrgencyBank(patientId))?.id; 
     const urgency = urgencyId ? await urgencyBankModel.findById(urgencyId ):null;
     
     await db.transaction(async (session) => {
@@ -1051,14 +1051,6 @@ export async function externalTransfer(prev: unknown, formData: FormData){
       // sincronizar e criar registo de saída
       if(!existsPatientSync || existsPatientSync.id.toString() === patientId)
         await syncPatientRegister(patientId, session);   
-
-      await externalTransferModel.create([{
-        patientId,
-        unitId: externalUnitId,
-        userId,
-        userCreatedAt: createdAt,
-        reason
-      }], { session });
 
       if(urgency)
         await triedModel.updateOne({ _id: urgency?.triedId }, { served: true }, { session });
@@ -1076,20 +1068,29 @@ export async function externalTransfer(prev: unknown, formData: FormData){
         where: "transfer"
       }], { session });
 
-      await inHospitalizeModel.deleteOne(
-        { patientId, served: false },
-        { session }
-      );
-
       await hospitalizationModel.updateOne(
         { patientId, served: true },
         { served: true },
         { session }
       );
+
+      const deleted = await inHospitalizeModel.findOneAndDelete(
+        { patientId, served: false },
+        { session }
+      );
+
+      await externalTransferModel.create([{
+        patientId,
+        unitId: externalUnitId,
+        userId,
+        userCreatedAt: createdAt,
+        reason,
+        admissionDate: deleted?.createdAt ?? null,
+      }], { session });
       
       /*marca o último registro do paciente como transferido*/
       const newId = (await getSyncedHistories(patientId, session))?.id?.toString() as string;
-      await patientModel.updateOne({ _id: newId }, { transfered: true }, { session });
+      await patientModel.updateOne({ _id: newId }, { transfered: true, transferStatus: "transferred" }, { session });
     });
     
     return {
@@ -1145,7 +1146,7 @@ export async function recuverFromExternalTransfer(prev: unknown, formData: FormD
     const patientId = await getSyncedHistories(transfer?.patientId?.toString() as string);
 
     if(!transfer) throw new Error;
-    await patientModel.updateOne({ _id: patientId?.id }, { transfered: false });
+    await patientModel.updateOne({ _id: patientId?.id }, { transfered: false, transferStatus: "returned"});
 
     return {
       message: "Ficha do utente recuperada com sucesso!",
