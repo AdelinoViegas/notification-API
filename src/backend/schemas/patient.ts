@@ -17,6 +17,11 @@ const patientSchema = new Schema({
     type: Boolean,
     default: false
   },
+  transferStatus: {
+    type: String,
+    enum: ["none", "transferred", "returned"],
+    default: "none"
+  },
   lang: String,
   served: {
     type: Boolean,
@@ -32,6 +37,7 @@ export const externalTransferSchema = new Schema({
   patientId: Schema.ObjectId,
   userCreatedAt: Date,
   unitId: Schema.ObjectId,
+  admissionDate: Date,
   userId: String,
   reason: {
     type: String,
