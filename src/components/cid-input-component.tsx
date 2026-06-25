@@ -13,6 +13,10 @@ type Cid = {
   code: string;
   value: string;
 }
+type CidDataItems = {
+  items: Cid[];
+  total: number;
+}
 
 export default function CidInputComponent({ defaultValue }: { defaultValue?: string }){
   // o defaultValue deve ser um array de codigos cid: { code: string }[]
@@ -29,22 +33,17 @@ export default function CidInputComponent({ defaultValue }: { defaultValue?: str
 
   const handlerSearchByReference = debounce((ev: React.ChangeEvent<HTMLInputElement>) => {
     queryCid(ev.target.value).then(data => {
-
-      if(!(data instanceof Array))
-        setResults([]);
-
-      const normalized = data instanceof Array 
-      ? (data as Cid[]).map(el => ({
+      const normalized = data && "items" in data ?
+      (data as CidDataItems).items.map(el => ({
           _id: el.code,
           label: el.value
-        }))
-      : [
+      }))
+      :[
         { 
           _id: (data as Cid).code, 
           label: (data as Cid).value 
         }
       ]
-
       setResults(normalized);
     })
     .catch(() =>{
@@ -55,7 +54,7 @@ export default function CidInputComponent({ defaultValue }: { defaultValue?: str
 
   const handlerAddSelectedRef = () => {
     if(!allSavedRefs.includes(selectedRef)){
-      setAllSavedRefs([selectedRef, ...allSavedRefs]);
+      setAllSavedRefs([...allSavedRefs, selectedRef]);
       queryCid(selectedRef).then(data => {
         setNameRefs([ ...nameRefs, data as Cid ]);
       });
@@ -86,7 +85,7 @@ export default function CidInputComponent({ defaultValue }: { defaultValue?: str
 
   return (
     <div>
-      <input type="hidden" name="CID" value={allSavedRefs.slice(0, -1)} />
+      <input type="hidden" name="CID" value={allSavedRefs.slice(0)} />
 
       <div className="flex gap-x-3">
         <InputField
