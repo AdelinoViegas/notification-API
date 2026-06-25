@@ -6,6 +6,8 @@ import { getDischargeRecord } from "@/backend/api/clinical/discharge-history-api
 import Button from "@/components/ui/button";
 import Link from "next/link";
 import { IoArrowBack } from "react-icons/io5";
+import Accordium from "@/components/ui/accordium";
+import { getDataAndHoursFormat } from "@/lib/date-formater";
 
 export const dynamic = "force-dynamic";
 
@@ -16,11 +18,11 @@ export default async function Page({
 }) {
   const { id } = await params;
   const record = await getDischargeRecord(id);
-
+  
   if (!record) redirect("/clinical/discharge-history");
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 pb-5">
       <div className="flex items-center gap-3">
         <Link href="/clinical/historical?r=a">
           <Button type="button" cancel className="flex items-center gap-2">
@@ -35,7 +37,40 @@ export default async function Page({
       </div>
 
       <Card className="p-6">
-        <DischargeDetailView record={record} />
+        <div className="flex justify-between items-center">
+          <div>
+            <h2 className="text-xl font-bold text-gray-800">
+              {record[0].patientName}
+            </h2>
+            <p className="text-sm text-gray-500">
+              Processo Nº {record[0].processNumber}
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            {/*<span
+              className={clsx(
+                "px-3 py-1 mt-4 rounded-full text-xs font-semibold",
+                {
+                  "bg-red-100 text-red-700": record.status === "locked",
+                  "bg-green-100 text-green-700": record.status === "active",
+                }
+              )}
+            >
+              {record.statusLabel}
+            </span>*
+            <ExportPdfButton record={record} />*/}
+            <span className="px-3 py-1 mt-4 rounded-full text-xs font-semibold bg-red-100 text-red-700">
+              Bloqueado
+            </span>
+            {<Button>Gerar PDF</Button>}
+          </div>
+        </div>
+
+        {record.map(props => ( 
+          <Accordium extraClassName="my-6" title={`Recebeu alta em ${getDataAndHoursFormat(props.dischargeDate)}`} key={props.id}>
+            <DischargeDetailView record={props} />
+          </Accordium>
+        ))}
       </Card>
     </div>
   );
