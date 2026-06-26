@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import clsx from "clsx";
 import { SelectionOption } from "@/components/ui/selection";
@@ -52,18 +52,7 @@ export default function SelectionCID({
         value: option._id,
       },
     });
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) 
-        setIsOpen(false);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+  }; 
 
   return (
     <div
