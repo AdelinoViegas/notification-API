@@ -2,21 +2,19 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import clsx from "clsx";
 import { SelectionOption } from "@/components/ui/selection";
 
 type CustomCidProps = {
-  name?: string;
-  options?: SelectionOption[];
-  onChange?: (e: {
+  options: SelectionOption[];
+  onChange: (e: {
     target: {
-      name?: string;
       value: string;
     };
   }) => void;
 };
 
 export default function SelectionCID({
-  name,
   options,
   onChange,
 }: CustomCidProps) {
@@ -51,7 +49,6 @@ export default function SelectionCID({
 
     onChange?.({
       target: {
-        name,
         value: option._id,
       },
     });
@@ -59,15 +56,9 @@ export default function SelectionCID({
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) 
         setIsOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
+    }
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -105,7 +96,7 @@ export default function SelectionCID({
                 key={option._id}
                 type="button"
                 onClick={() => selectOption(option)}
-                className={`w-full border px-4 py-3 text-left last:border-b-0 hover:bg-gray-100 ${selected?._id === option._id ? "bg-blue-100": ""}`}
+                className={clsx(`w-full border px-4 py-3 text-left last:border-b-0 hover:bg-gray-100, ${selected?._id === option._id}:"bg-blue-100"`)}
               >
                 <span className="break-words whitespace-normal">
                   {option.label}
