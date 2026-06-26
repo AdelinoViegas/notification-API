@@ -18,7 +18,7 @@ export default function Accordium({
   return(
     <details {...rest} className={clsx("overflow-hidden outline outline-1 outline-gray-300 rounded", extraClassName)}>
       <summary className={`select-none ${className?className:'hover:bg-primary/20 bg-primary/15'} hover:cursor-pointer font-sans font-medium px-3 py-2`}>{title}</summary>
-      <div className="py-3 px-6 max-h-[420px] overflow-y-auto">
+      <div className="py-3 px-6 max-h-[480px] overflow-y-auto">
         {children}
       </div>
     </details>
