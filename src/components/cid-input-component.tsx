@@ -1,13 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import InputField from "@/components/ui/input-field";
-import Selection, { SelectionOption } from "@/components/ui/selection";
+import { RiDeleteBin6Line } from "react-icons/ri";
 import debounce from "debounce";
-import { queryCid } from "@/backend/api/storage";
+import InputField from "@/components/ui/input-field";
+import { SelectionOption } from "@/components/ui/selection";
+import SelectionCID from "@/components/ui/selectionCID";
 import Button from "@/components/ui/button";
 import FallbackComponent from "@/components/fallback-components";
-import { RiDeleteBin6Line } from "react-icons/ri";
+import { queryCid } from "@/backend/api/storage";
 
 type Cid = {
   code: string;
@@ -19,9 +20,7 @@ type CidDataItems = {
 }
 
 export default function CidInputComponent({ defaultValue }: { defaultValue?: string }){
-  // o defaultValue deve ser um array de codigos cid: { code: string }[]
   const [ results, setResults ] = useState<SelectionOption[]>([]);
-  // const tempNamesRefs = useRef([]);
   const [ selectedRef, setSelectedRef ] = useState("")
   const [ allSavedRefs, setAllSavedRefs ] = useState<string[]>(
     defaultValue 
@@ -44,6 +43,7 @@ export default function CidInputComponent({ defaultValue }: { defaultValue?: str
           label: (data as Cid).value 
         }
       ]
+
       setResults(normalized);
     })
     .catch(() =>{
@@ -82,28 +82,27 @@ export default function CidInputComponent({ defaultValue }: { defaultValue?: str
     setIsLoading(true);
     resolveAllSavedRefs()
   }, []);
-
+ 
   return (
     <div>
       <input type="hidden" name="CID" value={allSavedRefs.slice(0)} />
 
-      <div className="flex gap-x-3">
+      <div className="flex gap-x-3 items-center justify-between mb-6">
         <InputField
+          className="my-0 w-full"
           textLabel="Nome ou Código CID 10"
           placeholder="Descreva com precisão"
           onChange={handlerSearchByReference}
         />
 
-        <div className="flex gap-x-3 items-center grow">
-          <Selection
-            label="Referências Cid"
-            options={results} 
-            className="max-w-[35rem] grow"
-            id="ref"
-            onChange={e => setSelectedRef(e.target.value)}
+        <div className="flex gap-x-3 items-center mt-6">
+          <SelectionCID 
+            options={results}
+            onChange={e => setSelectedRef(e.target.value)} 
           />
 
-          <Button 
+          <Button
+            className="!mt-0" 
             disabled={!selectedRef} 
             onClick={handlerAddSelectedRef} 
             type="button"
