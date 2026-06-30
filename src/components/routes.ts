@@ -69,6 +69,10 @@ export const clinicalIcons = [
   {
     route: "historical",
     Icon: MdHistory
+  },
+  {
+    route: "morgue",
+    Icon: MdOutlineBedroomChild
   }
 ];
 
@@ -147,5 +151,10 @@ export const clinicalRoutes = [
     href: "/clinical/historical",
     route: "historical",
     label: "Históricos"
+  },
+  {
+    href: "/clinical/morgue",
+    route: "morgue",
+    label: "Morgue"
   },
 ];
