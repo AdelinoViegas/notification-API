@@ -65,6 +65,11 @@ import {
 } from "@/backend/schemas/hospitalization";
 import { operatingRoomResultSchema, operatingRoomSchema } from "@/backend/schemas/operating-room";
 import { dischargeHistorySchema } from "@/backend/schemas/discharge-history";
+import {
+  morgueChamberSchema,
+  morgueAccommodationSchema,
+  morgueExitSchema,
+} from "@/backend/schemas/morgue";
 import dbConfigure from "./db.config";
 
 export const db = createConnection(process.env.MONGO_URL as string, {
@@ -142,6 +147,12 @@ const namePatternsModel = db.model("NamePattern", namePatternsSchema);
 //historico de altas
 const dischargeHistoryModel = db.model("DischargeHistory", dischargeHistorySchema);
 
+// morgue
+const morgueChamberModel = db.model("MorgueChamber", morgueChamberSchema);
+const morgueAccommodationModel = db.model("MorgueAccommodation", morgueAccommodationSchema);
+const morgueExitModel = db.model("MorgueExit", morgueExitSchema);
+
+
 export { namePatternsModel, dischargeHistoryModel }
 
 export {
@@ -184,6 +195,9 @@ export {
   operatingRoomModel,
   operatingRoomResultModel,
   deceasedPatientModel,
+  morgueChamberModel,
+  morgueAccommodationModel,
+  morgueExitModel,
 };
 
 export {
