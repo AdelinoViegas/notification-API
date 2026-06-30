@@ -72,7 +72,7 @@ async function sendPatientToUnit(prev: unknown, formData: FormData){
   try{
     const scheduleId = formData.get('scheduleId');
     const scheduleService = await scheduleExamModel.findById({_id: scheduleId });
-    const typeUnit = await unitModel.findById({ _id: scheduleService?.laboratoryId }).select({ unitTypeId: 1 });
+    const typeUnit = await unitModel.findById({ _id: scheduleService?.phisicalUnitId }).select({ unitTypeId: 1 });
     let totalPrice = 0;
     
     if(scheduleService)
@@ -147,8 +147,8 @@ async function getPatients({
         patient: patient?.fullname as string,
         markedDataTime: getDataAndHoursFormat(scheduledService?.dateTime as Date),
         user: user.fullname,
-        nameLaboratory: (await unitModel.findById({ _id: scheduledService?.laboratoryId }))?.name as string,
-        unitId: scheduledService?.laboratoryId?.toString() as string
+        nameLaboratory: (await unitModel.findById({ _id: scheduledService?.phisicalUnitId }))?.name as string,
+        unitId: scheduledService?.phisicalUnitId?.toString() as string
       });
     }
     
