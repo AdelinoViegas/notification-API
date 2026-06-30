@@ -67,9 +67,12 @@ const examClassificationSchema = new Schema({
 const scheduleExamSchema = new Schema({
   patientId: Schema.ObjectId,
   exams: [ Schema.ObjectId ],
-  laboratoryId: Schema.ObjectId,
+  phisicalUnitId: Schema.ObjectId,
   dateTime: Date,
-  Type: String,
+  Type: {
+    type: String,
+    enum:["laboratory", "imaging"]
+  },
   payment: {
     status: {
       type: String,
