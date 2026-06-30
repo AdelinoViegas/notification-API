@@ -1,6 +1,5 @@
 import Header from "@/components/header";
 import Card from "@/components/ui/card";
-import React from "react";
 import Tag from "@/components/ui/tag";
 import RescheduleExam from "@/components/reschedule-exam";
 import { SelectionOption } from "@/components/ui/selection";
