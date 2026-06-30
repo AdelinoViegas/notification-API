@@ -5,32 +5,30 @@ import {
   useState, 
   useActionState,
 } from "react";
+import { LuArchiveRestore } from "react-icons/lu";
+import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { archivingScheduleExam } from "@/backend/api/clinical/scheduling-api";
 import Button from "@/components/ui/button";
 import Modal from "@/components/modal";
 import InputDetails from "@/components/ui/input-details";
-import Alert from "@/components/ui/alert";
-import { LuArchiveRestore } from "react-icons/lu";
+import { archivingScheduleExam } from "@/backend/api/clinical/scheduling-api";
 
 export default function ArchivingScheduleExam({ scheduleId }: { scheduleId: string }){
   const [ state, action ] = useActionState(archivingScheduleExam, { message: "", status: false });
   const [ modalState, setModalState ] = useState(false);
-  const [ messageState, setMessageState ] = useState(false);
   const router = useRouter();
   const closeModal = ()=>setModalState(false);
 
   useEffect(()=>{
-    if(state.message){
-      setMessageState(true);
-
-      setTimeout(()=>{
-        if(state.status){
-          closeModal();
-          router.replace('/clinical/schedule-exams-services');
-        }
-        setMessageState(false);
-      }, 2000);
+    if(state?.message){
+      if(state.status){
+        toast.success(state.message, {
+          onClose: ()=>{
+            closeModal();
+            router.replace('/clinical/schedule-exams');           
+          }
+        })
+      }
     }
   }, [state, router]);
   
@@ -67,16 +65,6 @@ export default function ArchivingScheduleExam({ scheduleId }: { scheduleId: stri
             <Button>Salvar</Button>
           </div>
         </form>
-
-        {
-          state.message && messageState &&
-          <div className="mt-3">
-            <Alert
-              type={state.status?'success':'error'}
-              message={state.message}
-            />
-          </div>
-        }
       </Modal>
     </div>
   )

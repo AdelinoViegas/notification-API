@@ -1,16 +1,16 @@
+import { angolaCurrency } from "@/lib/table-formater";
 import Header from "@/components/header";
 import Card from "@/components/ui/card";
-import { getSchedulePatientExam } from "@/backend/api/clinical/scheduling-api";
 import RescheduleExam from "@/components/reschedule-exam";
-import { getUnits } from "@/backend/api/clinical/urgency-bank-api";
 import { SelectionOption } from "@/components/ui/selection";
 import Tag from "@/components/ui/tag";
 import ArchivingScheduleExam from "@/components/archiving-schedule-exam";
-import { angolaCurrency } from "@/lib/table-formater";
 import TitleAndSubtitle from "@/components/title-subtitle";
 import SendScheduleExam from "@/components/send-schedule-exam";
 import ValidateService from "@/components/validate-services";
 import PDFButton from "@/components/pdf-button";
+import { getSchedulePatientExam } from "@/backend/api/clinical/scheduling-api";
+import { getUnits } from "@/backend/api/clinical/urgency-bank-api";
 
 export default async function Page({ params }:{ params: Promise<{ id: string }>
 }){ 

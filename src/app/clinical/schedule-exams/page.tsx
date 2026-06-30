@@ -1,13 +1,13 @@
 import { formater } from "@/lib/table-formater";
+import { getDateInSlashFormat } from "@/lib/date-formater";
+import { TiInputChecked } from "react-icons/ti";
+import { PiArchiveDuotone } from "react-icons/pi";
 import Link from "next/link";
 import Table from "@/components/table";
 import Alert from "@/components/ui/alert";
 import Button from "@/components/ui/button";
 import Search from "@/components/ui/search";
-import { TiInputChecked } from "react-icons/ti";
-import { PiArchiveDuotone } from "react-icons/pi";
 import Refresh from "@/components/refresh";
-import { getDateInSlashFormat } from "@/lib/date-formater";
 import { getSchedulePatientExams } from "@/backend/api/clinical/scheduling-api";
 
 export const dynamic = "force-dynamic";
@@ -21,7 +21,6 @@ export default async function Page({
 }){
   const { name } = await searchParams;
   const scheduleds =  await getSchedulePatientExams({ name });
-
   const rows = formater(scheduleds.scheduleExams, {
     order: [
       "createdAt",
@@ -44,14 +43,14 @@ export default async function Page({
       <Refresh />
 
       <div className="flex gap-x-3">
-        <Link href="/clinical/schedule-exams-services/serveds">
+        <Link href="/clinical/schedule-exams/serveds">
           <Button className="flex gap-x-2">
             <TiInputChecked className="size-5" />
             Atendidos
           </Button>
         </Link>
 
-        <Link href="/clinical/schedule-exams-services/archiveds">
+        <Link href="/clinical/schedule-exams/archiveds">
           <Button className="flex gap-x-2 bg-slate-700">
             <PiArchiveDuotone className="size-5" />
             Arquivados

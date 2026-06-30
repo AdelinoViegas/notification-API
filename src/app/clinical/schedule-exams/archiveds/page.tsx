@@ -1,9 +1,9 @@
+import { getDateInSlashFormat } from "@/lib/date-formater";
 import { formater } from "@/lib/table-formater";
 import Header from "@/components/header";
 import Table from "@/components/table";
 import Search from "@/components/ui/search";
 import { getSchedulePatientExams } from "@/backend/api/clinical/scheduling-api";
-import { getDateInSlashFormat } from "@/lib/date-formater";
 
 export const dynamic = "force-dynamic";
 
@@ -41,11 +41,6 @@ export default async function Page({
       </div>
 
       <div className="flex">
-        {/*<SelectFilter
-          label="Filtrar por Tipo de Unidades"
-          unitType="laboratory" 
-        />*/}
-
         <Search
           className="flex items-center gap-3"
           filterKey="name"
@@ -55,7 +50,7 @@ export default async function Page({
       </div>
 
       <Table
-        baseRowLink="/clinical/schedule-exams-services/archiveds/"
+        baseRowLink="/clinical/schedule-exams/archiveds/"
         columns={[
           "Data e Hora", 
           "Nome do Utente", 
@@ -65,6 +60,7 @@ export default async function Page({
           "Estado"
         ]} 
         rows={patientRows}
+        rowLength={6}
       />
     </main>
   );
