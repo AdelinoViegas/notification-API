@@ -69,7 +69,7 @@ const scheduleExamSchema = new Schema({
   exams: [ Schema.ObjectId ],
   phisicalUnitId: Schema.ObjectId,
   dateTime: Date,
-  Type: {
+  type: {
     type: String,
     enum:["laboratory", "imaging"]
   },
