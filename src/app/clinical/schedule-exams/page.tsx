@@ -9,6 +9,7 @@ import Button from "@/components/ui/button";
 import Search from "@/components/ui/search";
 import Refresh from "@/components/refresh";
 import { getSchedulePatientExams } from "@/backend/api/clinical/scheduling-api";
+import Pagination from "@/components/pagination";
 
 export const dynamic = "force-dynamic";
 
@@ -17,10 +18,14 @@ export default async function Page({
 }:{
   searchParams: Promise<{
     name:string;
+    p: number;
   }>
 }){
-  const { name } = await searchParams;
-  const scheduleds =  await getSchedulePatientExams({ name });
+  const { name, p: page } = await searchParams;
+  const scheduleds =  await getSchedulePatientExams({
+    name:name,
+    page: page?Number(page):1, 
+  });
   const rows = formater(scheduleds.scheduleExams, {
     order: [
       "createdAt",
@@ -83,6 +88,11 @@ export default async function Page({
           "Estado"
         ]} 
         rows={rows}
+      />
+
+      <Pagination
+        availablePages={scheduleds.availablePages as number}
+        totalItems={scheduleds.totalItems as number} 
       />
     </main>
   );
