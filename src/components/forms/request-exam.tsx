@@ -151,7 +151,7 @@ export default function RequestExams({
         <div className={clsx({ "grid gap-3 lg:grid-cols-2": isFullWindow})}>
           <Selection
             label="Área do Exame"
-            name="laboratoryId"
+            name="phisicalUnitId"
             options={units}
             required
             onClick={handleUnits}

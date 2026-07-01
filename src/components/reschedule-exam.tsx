@@ -43,10 +43,10 @@ export default function RescheduleExam({
         toast.success(state.message, {
           onClose: ()=>{
             closeModal();
-              if(isArchived)
-                router.replace('/clinical/schedule-exams/archiveds')
-              else
-                router.refresh();           
+            if(isArchived)
+              router.replace('/clinical/schedule-exams/archiveds')
+            else
+              router.refresh();           
           }
         })
       }
