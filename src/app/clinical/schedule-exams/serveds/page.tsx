@@ -1,4 +1,5 @@
 import { formater } from "@/lib/table-formater";
+import { getDateInSlashFormat } from "@/lib/date-formater";
 import Header from "@/components/header";
 import Table from "@/components/table";
 import Search from "@/components/ui/search";
@@ -20,16 +21,21 @@ export default async function Page({
     isServed: true, 
     name: name,
     page: page?Number(page):1,
- 
   });
 
   const rows = formater(patientsData.patients, {
     order: [
-      "markedDataTime",
-      "patient",
+      "createdAt",
+      "fullname",
       "user",
-      "nameLaboratory"
-    ]
+      "phisicalUnit"
+    ],
+    transform: {
+      targetKey: "createdAt",
+      fn(e) {
+        return getDateInSlashFormat(new Date(e));
+      }
+    }
   });
 
   return (
