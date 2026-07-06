@@ -12,23 +12,8 @@ import {
 } from "@/backend/api/clinical/morgue-api";
 import { toast } from "react-toastify";
 import AccommodationGuidePdf from "@/components/morgue/accommodation-guide-pdf";
-
-type GuideData = {
-  accommodationId: string;
-  fullname: string;
-  processNumber: string;
-  gender: string;
-  service: string;
-  admissionDate: string;
-  dateOfDeath: string;
-  chamberName: string;
-  drawer: string;
-  responsibleName: string;
-  responsibleBI: string;
-  responsibleContact: string;
-  responsibleKinship: string;
-  issuedAt: string;
-};
+import type { AccommodationGuideData } from "@/lib/morgue-pdf";
+import { kinshipDegree } from "@/backend/api/clinical/translator";
 
 export default function AccommodateForm({ patientId }: { patientId: string }) {
   const [state, action] = useActionState(accommodatePatient, {
@@ -38,7 +23,7 @@ export default function AccommodateForm({ patientId }: { patientId: string }) {
   const [chambers, setChambers] = useState<SelectionOption[]>([]);
   const [drawers, setDrawers] = useState<SelectionOption[]>([]);
   const [selectedChamber, setSelectedChamber] = useState("");
-  const [guideData, setGuideData] = useState<GuideData | null>(null);
+  const [guideData, setGuideData] = useState<AccommodationGuideData | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -58,7 +43,7 @@ export default function AccommodateForm({ patientId }: { patientId: string }) {
     if (state.status) {
       toast.success(state.message);
       if (state.guideData) {
-        setGuideData(state.guideData as GuideData);
+        setGuideData(state.guideData as AccommodationGuideData);
       }
     } else {
       toast.error(state.message);
@@ -112,7 +97,12 @@ export default function AccommodateForm({ patientId }: { patientId: string }) {
         <InputField textLabel="Nome do Responsável" name="responsibleName" required />
         <InputField textLabel="Nº do Bilhete de Identidade" name="responsibleBI" required />
         <InputField textLabel="Contacto" name="responsibleContact" type="tel" required />
-        <InputField textLabel="Parentesco" name="responsibleKinship" required />
+        <Selection
+          label="Parentesco"
+          name="responsibleKinship"
+          options={kinshipDegree}
+          required
+        />
       </div>
 
       <div className="flex gap-3 pt-2">
