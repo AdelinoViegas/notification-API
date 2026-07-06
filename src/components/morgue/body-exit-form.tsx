@@ -25,7 +25,6 @@ const DESTINATION_OPTIONS = [
 export default function BodyExitForm({
   accommodationId,
   patientId,
-  patientData,
 }: {
   accommodationId: string;
   patientId: string;
