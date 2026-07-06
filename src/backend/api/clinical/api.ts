@@ -904,7 +904,7 @@ async function finishScreening(prev: unknown, formData: FormData){
     const userId = await getUserId();
     const patientId = formData.get('patientId') as string;
     const serviceId = formData.get('serviceId');
-
+    
     if(!patientId || !serviceId)
       throw new Error("Formato inválido!", { cause: "invalid_request"});
 
@@ -913,15 +913,9 @@ async function finishScreening(prev: unknown, formData: FormData){
     if(!scrPatient)
       throw new Error("Opps, ficha não encontrada!", { cause: "not_found"});
     
-    if(!scrPatient?.reason)
-      throw new Error("Informe o motivo da vinda do Utente!", { cause: "empty"});
+    if(!scrPatient?.reason || !scrPatient?.state  ||  !scrPatient?.priority || !scrPatient?.vitalSignals)
+      throw new Error("Preencha os campos em falta!", { cause: "empty"});
     
-    if(!scrPatient?.state)
-      throw new Error("Informe o estado actual do utente!", { cause: "empty"});
-
-    if(!scrPatient?.priority)
-      throw new Error("Escolha a prioridade do utente!", { cause: "empty"});
-
     const patientExistInUrgency = await triedModel.findOne({
       patientId,
       served: false
