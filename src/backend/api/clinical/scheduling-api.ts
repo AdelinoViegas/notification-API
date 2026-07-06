@@ -321,22 +321,23 @@ async function schedulePatientExam(prev: unknown, formData: FormData){
   try{
     const patientId = formData.get("patientId") as string;
     const isScheduleInScreening = formData.get("scheduleType") as string;
-    const laboratoryId = formData.get("laboratoryId") as string; 
+    const phisicalUnitId = formData.get("phisicalUnitId") as string; 
     const dateTime = formData.get("datetime") as unknown as Date;
     const detail = formData.get("detail") as string;
     const exams = formData.get('exams')?JSON.parse(formData.get("exams") as string) as string[]:[];    
     const scrPatient = await screeningModel.findOne({ patientId, served: false });
-        
+    const unit = phisicalUnitId ? await unitModel.findById(phisicalUnitId):null;
+    const userId = await getUserId();
+
     if(!exams.length)
       throw new Error("Escolha os exames desejado!", { cause: "empty" });
-
-    const userId = await getUserId();
 
     await db.transaction(async (session) => {
       await scheduleExamModel.create([{
         patientId,
-        laboratoryId,
+        phisicalUnitId,
         dateTime: dateTime ? dateTime : new Date(),
+        type: unit?.unitTypeId,
         exams,
         detail,
         userId
@@ -375,51 +376,61 @@ async function getSchedulePatientExams({
   name,
   isCanceled,
   isServed,
+  page
 }:{
   unitId?: string, 
   name?: string,
   isCanceled?: boolean, 
-  isServed?: boolean
+  isServed?: boolean,
+  page: number
 }){
   try{
-    const schedules = unitId?await scheduleExamModel.find({ 
-      laboratoryId: unitId, 
-      served: isServed?isServed:false,
-      canceled: isCanceled?isCanceled:false, 
-    }):
-    await scheduleExamModel.find({ 
-      served: isServed?isServed:false,
-      canceled: isCanceled?isCanceled:false, 
-    });
+    const filter: Record<string, string | boolean> = {
+        served: isServed ?? false,
+        canceled: isCanceled ?? false,
+    };
 
+    if (unitId) {
+        filter.phisicalUnitId = unitId;
+    }
+
+    const schedules = await scheduleExamModel.find(filter);
     const formatedList = [];
+    let numberOfItems = 10;
+    numberOfItems *= page;
 
-    for(const item of schedules){
-      const patient = await patientModel.findById({_id: item.patientId }).select({ fullname: 1 });
-      const laboratory = await unitModel.findById({_id: item.laboratoryId }).select({ name: 1 });
-      const user = await getUser(item.userId?.toString() as string) // await userModel.findById({ _id: item.userId }).select({ fullname: 1 });
+    for(const item of schedules.slice(numberOfItems - 10, name?schedules.length:numberOfItems)){
+      const patient = item.patientId ? await patientModel.findById(item.patientId).select({ fullname: 1 }):null;
+      const phisicalUnit = item.phisicalUnitId ? await unitModel.findById(item.phisicalUnitId).select({ name: 1 }):null;
+      const user = await getUser(item.userId?.toString() as string)
       const patientExams = await getSchedulePatientExam(item._id.toString());
       
       formatedList.push({
         id: item._id.toString(),
         createdAt: item.dateTime,
         patientName: patient?.fullname as string,
-        laboratory: laboratory?.name as string,
+        laboratory: phisicalUnit?.name as string,
         user: user.fullname,
         examQty: patientExams?.exams.length as number,
         status: (item.payment?.status === "pending")?"Pendente":"Confirmado" as string,
       });
     }
+
     return {
-      total: formatedList.length,
       scheduleExams: name?formatedList.filter(props => props.patientName.match(new RegExp(`^${name}`, 'i'))):formatedList,
+      totalItems: schedules.length,
+      availablePages: Math.ceil(schedules.length /10),
+      currentPage: page,
     }
   }catch(err: unknown){
+    console.error(err);
+
     return {
-      total: 0,
       scheduleExams: [],
-      detail: err
-    };
+      totalItems: 0,
+      availablePages: 0,
+      currentPage: page
+    }
   }
 }
 
@@ -427,7 +438,7 @@ async function getSchedulePatientExam(scheduleId: string){
   try{
     const schedule = await scheduleExamModel.findById({ _id: scheduleId });
     const patient = await patientModel.findById({ _id: schedule?.patientId });
-    const unit = await unitModel.findById({ _id: schedule?.laboratoryId }).select({ name: 1});
+    const unit = await unitModel.findById({ _id: schedule?.phisicalUnitId }).select({ name: 1});
     const user = await getUser(schedule?.userId?.toString() as string);
     const exams = [];
     let totalPrice = 0;
@@ -1219,44 +1230,6 @@ async function updatePaymentDataToSugery(prev: unknown, formData: FormData){
   }
 }
 
-/*async function rescheduleSugery(prev: unknown, formData: FormData){
-  try{
-    //const isArchived = Boolean(formData.get("isArchived"));
-    const scheduleId = formData.get("scheduleId") as string;
-    //const doctorId = formData.get("doctorId") as string;
-    //const doctorDay = new Date(formData.get("date") as string);
-    //const doctorTime = formData.get("time") as string;
-    const existingSugery = await scheduleSugeryModel.findById({_id: scheduleId });
-
-    if(!existingSugery)
-      throw new Error("Desculpe, contacte o seu administrador!", { cause: "not_found" });
-
-    if(existingSugery?.doctorDay?.getTime() === doctorDay.getTime() && existingSugery?.doctorId?.toString() === doctorId){
-      const verifySugery = await scheduleSugeryModel.findOne({
-        doctorId,
-        doctorDay,
-        doctorTime,
-        served: false,
-        canceled: false,
-      });
-
-      if(verifySugery)
-        throw new Error("Desculpe, a hora selecionada já foi ocupada!", { cause: "busy" });
-
-    return {
-      message: "Cirurgia reagendada com sucesso!",
-      status: true,
-    }
-  }catch(e: unknown){
-    const err = e as Error;
-
-    return {
-      message: err.cause ? err.message : "Desculpe, não foi possível realizar o reagendamento!",
-      status: false,
-    };
-  }
-}*/
-
 async function getExamsHistories(patientId: string){
   try{
     const servicesProvided = await scheduleServiceModel.find({ served: true }).select({ scheduleId: 1 });
@@ -1316,6 +1289,59 @@ async function getExamResultDetail(id: string){
   }
 }
 
+async function getPatientScheduledServeds({
+  unitType,
+  name,
+  page,
+  isServed,
+}:{
+  unitType?: string, 
+  name?: string,
+  page:number, 
+  isServed?: boolean
+}){
+  try{
+    let numberOfItems = 10;
+    numberOfItems *= page;
+    const formatedList = [];
+    const schedules = await scheduleExamModel.find({ 
+      unitType, 
+      served: isServed?isServed:false,
+    });
+
+    for(const item of schedules.slice(numberOfItems - 10, numberOfItems)){
+      const patient = await patientModel.findById({_id: item.patientId }).select({ fullname: 1 });
+      const phisicalUnit = await unitModel.findById({_id: item.phisicalUnitId }).select({ name: 1 });
+      const user = await getUser(item.userId?.toString() as string)
+      
+      formatedList.push({
+        id: item._id.toString(),
+        createdAt: item.dateTime,
+        fullname: patient?.fullname as string,
+        user: user.fullname,
+        phisicalUnit: phisicalUnit?.name as string,
+      });
+    }
+
+    return {
+      patients: name?formatedList.filter(props => props.fullname.match(new RegExp(`^${name}`, 'i'))):formatedList,
+      totalItems: schedules.length,
+      availablePages: Math.ceil(schedules.length /10),
+      currentPage: 1,
+    }
+
+  }catch(err: unknown){
+    console.error(err);
+
+    return {
+      patients: [],
+      totalItems: 0,
+      availablePages: 1,
+      currentPage: 1,
+    };
+  }
+}
+
 export {
   signExamResult,
   signDateSugery,
@@ -1344,7 +1370,7 @@ export {
   getScheduleSugeries,
   getScheduleSugery,
   updatePaymentDataToSugery,
-  /*rescheduleSugery,*/
   getExamsHistories,
-  getExamResultDetail
+  getExamResultDetail, 
+  getPatientScheduledServeds,
 };

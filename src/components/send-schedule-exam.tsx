@@ -5,12 +5,11 @@ import {
   useEffect,
   useActionState
 } from "react";
+import { VscSend } from "react-icons/vsc";
+import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import Modal from "@/components/modal";
 import Button from "@/components/ui/button";
-import Alert from "@/components/ui/alert";
-
-import { VscSend } from "react-icons/vsc";
 import { sendPatientToUnit } from "@/backend/api/clinical/internal-services-api";
 
 export default function SendAppointment({ scheduleId }:{ scheduleId: string }){
@@ -18,19 +17,18 @@ export default function SendAppointment({ scheduleId }:{ scheduleId: string }){
   const [ modalState, setModalState ] = useState(false);
   const closeModal = ()=> setModalState(false);
   const openModal = ()=> setModalState(true);
-  const [ messageState, setMessageState ] = useState(false);
   const router = useRouter();
 
   useEffect(()=>{
     if(state?.message){
-      setMessageState(true);
-
-      setTimeout(()=>{
-        if(state.status){
-          router.replace('/clinical/schedule-exams');
-        }
-        setMessageState(false);
-      }, 2000);
+      if(state.status){
+        toast.success(state.message, {
+          onClose: ()=>{
+            closeModal();
+            router.replace('/clinical/schedule-exams');           
+          }
+        })
+      }
     }
   }, [state, router]);
 
@@ -65,16 +63,6 @@ export default function SendAppointment({ scheduleId }:{ scheduleId: string }){
             <Button>Sim</Button>
           </div>
         </form>
-
-        {
-          state?.message && messageState &&
-          <div className="mt-3">
-            <Alert
-              type={state.status?'success':'error'}
-              message={state.message}
-            />
-          </div>
-        }
       </Modal>
     </div>
   )

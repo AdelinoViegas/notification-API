@@ -1,8 +1,10 @@
 import { formater } from "@/lib/table-formater";
+import { getDateInSlashFormat } from "@/lib/date-formater";
 import Header from "@/components/header";
 import Table from "@/components/table";
 import Search from "@/components/ui/search";
-import { getPatients } from "@/backend/api/clinical/internal-services-api";
+import Pagination from "@/components/pagination";
+import { getPatientScheduledServeds } from "@/backend/api/clinical/scheduling-api";
 
 export const dynamic = "force-dynamic";
 
@@ -11,25 +13,29 @@ export default async function Page({
 }:{
   searchParams: Promise<{
     name: string;
+    p: string;
   }>
 }){
-  const { name } = await searchParams;
-  const patientsData = await getPatients({
-    served: true, 
-    page: 1,
-    type: "laboratory",
-    filters: {
-      fullname: name,
-    } 
+  const { name, p: page } = await searchParams;
+  const patientsData = await getPatientScheduledServeds({
+    isServed: true, 
+    name: name,
+    page: page?Number(page):1,
   });
 
   const rows = formater(patientsData.patients, {
     order: [
-      "markedDataTime",
-      "patient",
+      "createdAt",
+      "fullname",
       "user",
-      "nameLaboratory"
-    ]
+      "phisicalUnit"
+    ],
+    transform: {
+      targetKey: "createdAt",
+      fn(e) {
+        return getDateInSlashFormat(new Date(e));
+      }
+    }
   });
 
   return (
@@ -53,6 +59,11 @@ export default async function Page({
           "Laboratório"
         ]} 
         rows={rows}
+      />
+
+      <Pagination
+        availablePages={patientsData.availablePages as number}
+        totalItems={patientsData.totalItems as number} 
       />
     </main>
   );

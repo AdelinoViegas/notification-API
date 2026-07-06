@@ -5,15 +5,15 @@ import {
   useEffect,
   useActionState
 } from "react";
+import { GrSchedulePlay } from "react-icons/gr"; 
+import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import Modal from "@/components/modal";
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
 import InputDetails from "@/components/ui/input-details";
-import Alert from "@/components/ui/alert";
-import { reschedulePatientExam } from "@/backend/api/clinical/scheduling-api";
 import Selection, { SelectionOption } from "@/components/ui/selection";
-import { GrSchedulePlay } from "react-icons/gr"; 
+import { reschedulePatientExam } from "@/backend/api/clinical/scheduling-api";
 
 export default function RescheduleExam({
   detail, 
@@ -35,26 +35,24 @@ export default function RescheduleExam({
   const [ modalState, setModalState ] = useState(false);
   const closeModal = ()=> setModalState(false);
   const openModal = ()=> setModalState(true);
-  const [ messageState, setMessageState ] = useState(false);
   const router = useRouter();
 
   useEffect(()=>{
     if(state.message){
-      setMessageState(true);
-
-      setTimeout(()=>{
-        setMessageState(false);
-
-        if(state.status){
-          closeModal();
-          if(isArchived)
-            router.replace('/clinical/schedule-exams-services/archiveds')
-          else
-            router.refresh(); 
-        }
-      }, 2000);
+      if(state.status){
+        toast.success(state.message, {
+          onClose: ()=>{
+            closeModal();
+            if(isArchived)
+              router.replace('/clinical/schedule-exams/archiveds')
+            else
+              router.refresh();           
+          }
+        })
+      }
     }
   }, [state, router, isArchived]);
+
 
   return(
     <div>
@@ -116,16 +114,6 @@ export default function RescheduleExam({
             <Button>Salvar</Button>
           </div>
         </form>
-
-        {
-          state.message && messageState &&
-          <div className="mt-3">
-            <Alert
-              type={state.status?'success':'error'}
-              message={state.message}
-            />
-          </div>
-        }
       </Modal>
     </div>
   )

@@ -5,14 +5,13 @@ import {
   useEffect,
   useActionState
 } from "react";
+import { MdAttachMoney } from "react-icons/md";
+import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import Modal from "@/components/modal";
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
-import Alert from "@/components/ui/alert";
 import { updatePaymentData } from "@/backend/api/clinical/internal-services-api";
-
-import { MdAttachMoney } from "react-icons/md";
 
 export default function ValidateService({
   scheduleId,
@@ -31,19 +30,18 @@ export default function ValidateService({
   const [ modalState, setModalState ] = useState(false);
   const closeModal = ()=> setModalState(false);
   const openModal = ()=> setModalState(true);
-  const [ messageState, setMessageState ] = useState(false);
   const router = useRouter();
 
   useEffect(()=>{
     if(state?.message){
-      setMessageState(true);
-
-      setTimeout(()=>{
-        if(state.status){
-          router.replace('/clinical/schedule-exams-services');
-        }
-        setMessageState(false);
-      }, 2000);
+      if(state.status){
+        toast.success(state.message, {
+          onClose: ()=>{
+            closeModal();
+            router.replace('/clinical/schedule-exams');           
+          }
+        })
+      }
     }
   }, [state, router]);
 
@@ -99,16 +97,6 @@ export default function ValidateService({
             <Button>Salvar</Button>
           </div>
         </form>
-
-        {
-          state?.message && messageState &&
-          <div className="mt-3">
-            <Alert
-              type={state.status?'success':'error'}
-              message={state.message}
-            />
-          </div>
-        }
       </Modal>
     </div>
   )
