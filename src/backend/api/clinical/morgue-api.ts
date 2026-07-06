@@ -9,11 +9,17 @@ import {
   db,
 } from "@/backend/model";
 import { getDeceasedPatient } from "@/backend/api/clinical/urgency-bank-api";
+import { kinshipDegree } from "@/backend/api/clinical/translator";
 import { getDataAndHoursFormat } from "@/lib/date-formater";
 import { SelectionOption } from "@/components/ui/selection";
 import { revalidatePath } from "next/cache";
 
-// ─── Tipos ───────────────────────────────────────────────────────────────────
+/** Traduz o _id do grau de parentesco (ex: "father") para o label em português (ex: "Pai") */
+function kinshipLabel(id?: string | null): string {
+  if (!id) return "—";
+  return kinshipDegree.find((k) => k._id === id)?.label ?? id;
+}
+
 
 export type MorgueWaitingPatient = {
   id: string;
@@ -135,7 +141,7 @@ export async function getMorgueAccommodated({
         responsibleName: acc.responsible?.name ?? "—",
         responsibleBI: acc.responsible?.idNumber ?? "—",
         responsibleContact: acc.responsible?.contact ?? "—",
-        responsibleKinship: acc.responsible?.kinship ?? "—",
+        responsibleKinship: kinshipLabel(acc.responsible?.kinship),
       });
     }
 
@@ -154,7 +160,6 @@ export async function getMorgueAccommodated({
 }
 
 // ─── Detalhe do falecido (para página de acomodação) ─────────────────────────
-// Reutiliza getDeceasedPatient do módulo de histórico de óbitos
 
 export async function getMorguePatientDetail(patientId: string): Promise<MorguePatientDetail | null> {
   try {
@@ -212,7 +217,7 @@ export async function getMorgueAccommodationDetail(accommodationId: string) {
       // Sobrescreve com os dados reais do responsável pela entrada
       responsibleName: acc.responsible?.name ?? "—",
       responsibleContact: acc.responsible?.contact ?? "—",
-      responsibleKinship: acc.responsible?.kinship ?? "—",
+      responsibleKinship: kinshipLabel(acc.responsible?.kinship),
     };
   } catch (e) {
     console.error(e);
@@ -324,7 +329,7 @@ export async function accommodatePatient(
       responsibleName,
       responsibleBI,
       responsibleContact,
-      responsibleKinship,
+      responsibleKinship: kinshipLabel(responsibleKinship),
       issuedAt: getDataAndHoursFormat(new Date()),
     };
 
@@ -448,16 +453,16 @@ export async function registerBodyExit(
       dateOfDeath: detail?.dateOfDeath ?? "—",
       responsibleEntry: acc?.responsible?.name ?? "",
       responsibleEntryContact: acc?.responsible?.contact ?? "",
-      responsibleEntryKinship: acc?.responsible?.kinship ?? "",
+      responsibleEntryKinship: kinshipLabel(acc?.responsible?.kinship),
       chamberName: chamber?.name ?? "",
       drawer: acc?.drawer ?? "",
       responsibleExitName,
       responsibleExitBI,
       responsibleExitContact,
-      responsibleExitKinship,
+      responsibleExitKinship: kinshipLabel(responsibleExitKinship),
       transportType,
       transportFamilyName: transportType === "family" ? transportFamilyName : "",
-      transportFamilyKinship: transportType === "family" ? transportFamilyKinship : "",
+      transportFamilyKinship: transportType === "family" ? kinshipLabel(transportFamilyKinship) : "",
       transportAgencyName: transportType === "funeral_agency" ? transportAgencyName : "",
       transportAgencyDriver: transportType === "funeral_agency" ? transportAgencyDriver : "",
       transportAgencyVehicleBrand: transportType === "funeral_agency" ? transportAgencyVehicleBrand : "",
