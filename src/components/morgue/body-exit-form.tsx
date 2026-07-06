@@ -10,18 +10,9 @@ import { registerBodyExit } from "@/backend/api/clinical/morgue-api";
 import { toast } from "react-toastify";
 import BodyExitGuidePdf from "@/components/morgue/body-exit-guide-pdf";
 import type { MorguePatientDetail } from "@/backend/api/clinical/morgue-api";
+import { kinshipDegree } from "@/backend/api/clinical/translator";
 
 type ExitData = Record<string, unknown>;
-
-const KINSHIP_OPTIONS = [
-  { _id: "Pai/Mãe", label: "Pai/Mãe" },
-  { _id: "Filho(a)", label: "Filho(a)" },
-  { _id: "Cônjuge", label: "Cônjuge" },
-  { _id: "Irmão/Irmã", label: "Irmão/Irmã" },
-  { _id: "Avô/Avó", label: "Avô/Avó" },
-  { _id: "Tio(a)", label: "Tio(a)" },
-  { _id: "Outro", label: "Outro" },
-];
 
 const DESTINATION_OPTIONS = [
   { _id: "home", label: "Casa" },
@@ -34,6 +25,7 @@ const DESTINATION_OPTIONS = [
 export default function BodyExitForm({
   accommodationId,
   patientId,
+  patientData,
 }: {
   accommodationId: string;
   patientId: string;
@@ -83,7 +75,7 @@ export default function BodyExitForm({
           <Selection
             label="Parentesco"
             name="responsibleExitKinship"
-            options={KINSHIP_OPTIONS}
+            options={kinshipDegree}
             required
           />
         </div>
@@ -120,7 +112,7 @@ export default function BodyExitForm({
             <Selection
               label="Parentesco"
               name="transportFamilyKinship"
-              options={KINSHIP_OPTIONS}
+              options={kinshipDegree}
               required
             />
             <InputField textLabel="Nº do BI" name="transportFamilyBI" required />
