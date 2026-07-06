@@ -10,8 +10,8 @@ export const patientPlug = _patientPlug as Template;
 export const appointmentPlug = _appointmentPlug as Template;
 export const examPlug = _examPlug as Template;
 export const screeningPlug = _screeningPlug as Template;
-export const morgueAccommodationPlug = _morgueAccommodationPlug as Template;
-export const morgueExitPlug = _morgueExitPlug as Template;
+export const morgueAccommodationPlug = _morgueAccommodationPlug as unknown as Template;;
+export const morgueExitPlug = _morgueExitPlug as unknown as Template;;
 
 export function browserPdf(data: unknown){
   const blob = new Blob([data as BlobPart], { type: "application/pdf" });
