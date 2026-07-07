@@ -121,13 +121,12 @@ export default function ScreeningUI({
   priority,
   scrId,
 }:{
-  ui: UIComponent,
+  ui: UIComponent;
   patientId: string;
   priority?: string;
   scrId?: string;
 }){
   const [ state, action ] = useActionState(insertScreening, initialState);
-  const [ editable, setEditable ] = useState(false);
   const [ _priority, setPriority ] = useState(priority);
   const [ screeningData, setScreeningData ] = useState<Screening>();
   const router = useRouter();
@@ -137,10 +136,7 @@ export default function ScreeningUI({
     if(state.message){
       if(state.status)
         toast.success(state.message, {
-          onOpen: ()=>{
-            router.refresh();
-            setEditable(false);
-          }
+          onOpen: ()=> router.refresh()
         });
       else
         toast.error(state.message);
@@ -153,10 +149,6 @@ export default function ScreeningUI({
     .then(data => setScreeningData(data as Screening));
 
   }, [state, patientId, pathname]);
-
-  useEffect(()=> {
-    return () => setEditable(false)
-  }, [ui]);
 
   return(
     <div>
@@ -172,7 +164,6 @@ export default function ScreeningUI({
               placeholder="Descreva o motivo da vinda do utente..."
               name="reason"
               defaultValue={screeningData?.reason}
-              disabled={!editable}
               required
             />
           </>
@@ -187,7 +178,6 @@ export default function ScreeningUI({
                 name="paMax" 
                 placeholder="0 (mmHG)"
                 defaultValue={screeningData?.vitalSignals?.paMax}
-                disabled={!editable}
                 required
               />
 
@@ -197,7 +187,6 @@ export default function ScreeningUI({
                 name="paMin" 
                 placeholder="0 (mmHG)"
                 defaultValue={screeningData?.vitalSignals?.paMin}
-                disabled={!editable}
                 required
               />
               
@@ -207,7 +196,6 @@ export default function ScreeningUI({
                 name="jump" 
                 placeholder="0 (BPM)"
                 defaultValue={screeningData?.vitalSignals?.jump}
-                disabled={!editable}
                 required
               />
 
@@ -218,7 +206,6 @@ export default function ScreeningUI({
                 name="temperature"
                 placeholder="0 graus(°)"
                 defaultValue={screeningData?.vitalSignals?.temperature}
-                disabled={!editable}
                 required
               />
 
@@ -228,7 +215,6 @@ export default function ScreeningUI({
                 name="breathing" 
                 placeholder="0 (IRPM)"
                 defaultValue={screeningData?.vitalSignals?.breathing}
-                disabled={!editable}
                 required
               />
 
@@ -239,7 +225,6 @@ export default function ScreeningUI({
                 placeholder="0 (kg)"
                 step={0.01}
                 defaultValue={screeningData?.vitalSignals?.weight}
-                disabled={!editable}
                 required
               />
 
@@ -250,7 +235,6 @@ export default function ScreeningUI({
                 name="height"
                 placeholder="0 (m)"
                 defaultValue={screeningData?.vitalSignals?.height}
-                disabled={!editable}
                 required
               />
 
@@ -270,7 +254,6 @@ export default function ScreeningUI({
                 step={0.01}
                 placeholder="0 (%)"
                 defaultValue={screeningData?.vitalSignals?.sp02}
-                disabled={!editable}
               />
 
               <InputField
@@ -279,7 +262,6 @@ export default function ScreeningUI({
                 name="pvc"
                 placeholder="0 (CH20)"
                 defaultValue={screeningData?.vitalSignals?.pvc}
-                disabled={!editable}
               />
 
               <InputField
@@ -289,7 +271,6 @@ export default function ScreeningUI({
                 name="bloodGlucose"
                 placeholder="0 (mg/dl)"
                 defaultValue={screeningData?.vitalSignals?.bloodGlucose}
-                disabled={!editable}
               />
             </div> 
           </>
@@ -304,7 +285,6 @@ export default function ScreeningUI({
                 name="priority"
                 required
                 value={_priority}
-                disabled={!editable}
                 onChange={(e)=>setPriority(e.target.value)}
               />
             </div>
@@ -319,7 +299,6 @@ export default function ScreeningUI({
               name="state"
               defaultValue={screeningData?.state}
               required
-              disabled={!editable}
             />
           </>
         }
@@ -332,20 +311,12 @@ export default function ScreeningUI({
               name="advice"
               defaultValue={screeningData?.advice}
               required
-              disabled={!editable}
             />
           </>
         }
 
         <div className="flex gap-x-2">
-          <Button 
-            type="button" 
-            onClick={()=>setEditable(!editable)} 
-            cancel={editable}
-          >
-            {!editable ? "Editar": "Cancelar"}
-          </Button>
-          <Button type="submit" disabled={!editable}>Salvar</Button>
+          <Button type="submit" >Salvar</Button>
 
           { !pathname.includes("urgency-bank") && 
             <DoneScreening 
