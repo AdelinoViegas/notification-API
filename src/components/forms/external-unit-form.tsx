@@ -15,7 +15,7 @@ import Selection from "@/components/ui/selection";
 import { signExternalUnit } from "@/backend/api/clinical/urgency-bank-api";
 import { AngolaProvices } from "@/backend/api/clinical/translator";
 
-export default function ExternalUnitForm({ isEdit, location }: { isEdit?: boolean, location?: string }) {
+export default function ExternalUnitForm({ location }: { location?: string }) {
   const [ state, action ] = useActionState(signExternalUnit, { message: "", status: false });
   const [ modalState, setModalState ] = useState(false);
   const closeModal = ()=> setModalState(false);
@@ -40,7 +40,6 @@ export default function ExternalUnitForm({ isEdit, location }: { isEdit?: boolea
   return(
     <div>
       <Button
-        disabled={isEdit} 
         type="button" 
         onClick={openModal} 
         className="flex gap-x-2"

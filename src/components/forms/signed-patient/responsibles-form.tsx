@@ -29,10 +29,8 @@ export default function ResposiblesForm({
 }: InfoProps){
   const [ state, action ] = useActionState(updateResposible, { message: "", status: false })
   const router = useRouter();
-  const [ isEdit, setIsEdit ] = useState(false);
   const [ _firstKinship, setFirstKinship ] = useState(first.kinship);
   const [ _secondKinship, setSecondKinship ] = useState(second?.kinship);
-  const disableEdit = ()=>setIsEdit(false);
   
   useEffect( () => {
     setFirstKinship(first.kinship);
@@ -43,10 +41,7 @@ export default function ResposiblesForm({
     if(state.message){
       if(state.status)
         toast.success(state.message, { 
-          onOpen: ()=>{
-            router.refresh();
-            disableEdit();
-          }
+          onOpen: ()=> router.refresh()
         });
       else
         toast.error(state.message);
@@ -67,7 +62,6 @@ export default function ResposiblesForm({
           required
           name="name"
           placeholder="Nome Completo do Responsável"
-          disabled={!isEdit}
           defaultValue={first.name}
         />
 
@@ -77,7 +71,6 @@ export default function ResposiblesForm({
           label="Grau de Parentesco"
           name="kinship"
           required
-          disabled={!isEdit}
           defaultValue={_firstKinship}
         />
         
@@ -88,7 +81,6 @@ export default function ResposiblesForm({
           required
           name="tel"
           placeholder="Nº de Telefone do Responsável"
-          disabled={!isEdit}
           defaultValue={first.tel}
         />
 
@@ -96,7 +88,6 @@ export default function ResposiblesForm({
           textLabel="Nome 2ª responsável (opcional)"
           name="name1"
           placeholder="Nome Completo do Responsável"
-          disabled={!isEdit}
           defaultValue={second?.name}
         />
 
@@ -105,7 +96,6 @@ export default function ResposiblesForm({
           options={kinshipDegree}
           label="Grau de Parentesco (opcional)"
           name="kinship1"
-          disabled={!isEdit}
           defaultValue={_secondKinship}
         />
 
@@ -115,31 +105,11 @@ export default function ResposiblesForm({
           maxLength={9}
           name="tel1"
           placeholder="Nº de Telefone do Responsável"
-          disabled={!isEdit}
           defaultValue={second?.tel}
         />
       </div>
       
-      <div className="flex gap-3">
-        {
-          !isEdit && 
-          <Button 
-            type={"button"}
-            onClick={()=>setIsEdit(true)}>
-              Editar
-          </Button>
-        }
-        {
-          isEdit && <>
-          <Button 
-            cancel 
-            onClick={disableEdit}>
-              Cancelar
-          </Button>
-          <Button type="submit">Actualizar</Button>
-          </>
-        }
-      </div>
+      <Button type="submit">Actualizar</Button>
     </form>
   );
 }

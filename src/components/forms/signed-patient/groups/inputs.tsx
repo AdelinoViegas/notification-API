@@ -1,37 +1,23 @@
 import InputField from "@/components/ui/input-field";
+import InputDetails from "@/components/ui/input-details";
 import type { 
   Enterprise,
   Assured,
   Employee
 } from "@/backend/api/clinical/types";
-import InputDetails from "@/components/ui/input-details";
-
-type AssuredProps = {
-  disabled: boolean;
-} & Assured;
-
-type EnterpriseProps = {
-  disabled: boolean;
-} & Enterprise;
-
-type EmployeeProps = {
-  disabled: boolean;
-} & Employee;
 
 function AssuredInputs({
-  disabled,
   apolice,
   detail,
   name,
   tel
-}: AssuredProps){
+}: Assured){
   return(
     <div className="grid md:grid-cols-2 large:grid-cols-3 gap-3">
       <InputField
         name="name"
         textLabel="Asseguradora"
         placeholder="Nome da Asseguradora"
-        disabled={disabled}
         defaultValue={name}
         required
       />
@@ -43,7 +29,6 @@ function AssuredInputs({
         required
         placeholder="Número da Apolice"
         defaultValue={apolice}
-        disabled={disabled}
       />
 
       <InputField
@@ -54,7 +39,6 @@ function AssuredInputs({
         required
         placeholder="Telefone"
         defaultValue={tel}
-        disabled={disabled}
       />
 
       <InputDetails
@@ -63,18 +47,16 @@ function AssuredInputs({
         placeholder="Escreva detalhes da asseguradora"
         required
         defaultValue={detail}
-        disabled={disabled}
       />
     </div>
   );
 }
 
 function EnterpriseInputs({
-  disabled,
   name,
   passNumber,
   role
-}: EnterpriseProps){
+}: Enterprise){
   return(
     <div className="grid md:grid-cols-2 large:grid-cols-3 gap-3">
       <InputField
@@ -83,7 +65,6 @@ function EnterpriseInputs({
         required
         placeholder="Nome da Empresa"
         defaultValue={name}
-        disabled={disabled}
       />
       
       <InputField
@@ -92,7 +73,6 @@ function EnterpriseInputs({
         required
         placeholder="Nº de Indentificação na empresa"
         defaultValue={passNumber}
-        disabled={disabled}
       />
 
       <InputField
@@ -101,18 +81,16 @@ function EnterpriseInputs({
         required
         placeholder="Digite a função"
         defaultValue={role}
-        disabled={disabled}
       />
     </div>
   );
 }
 
 function EmployeeInputs({
-  disabled,
   passNumber,
   role,
   workArea,
-}: EmployeeProps){
+}: Employee){
   return(
     <div className="grid md:grid-cols-2 large:grid-cols-3 gap-3">
       <InputField
@@ -121,7 +99,6 @@ function EmployeeInputs({
         required
         placeholder="Digite o número de passe"
         defaultValue={passNumber}
-        disabled={disabled}
       />
       
       <InputField
@@ -130,7 +107,6 @@ function EmployeeInputs({
         required
         placeholder="Digite a função"
         defaultValue={role}
-        disabled={disabled}
       />
 
       <InputField
@@ -139,7 +115,6 @@ function EmployeeInputs({
         required
         placeholder="Digite a área de serviço"
         defaultValue={workArea}
-        disabled={disabled}
       />
     </div>
   );

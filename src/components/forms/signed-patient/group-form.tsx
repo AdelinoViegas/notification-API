@@ -37,13 +37,11 @@ export default function GroupForm({
 }: AccessType){
   const [ state, action ] = useActionState(updatePatientGroup, { message: "", status: false })
   const [ inputs, setInputs ] = useState(type);
-  const [ isEdit, setIsEdit ] = useState(false);
   const [ groupType, setGroupType ] = useState(type);
   const parsedGroup = jsonGroup?JSON.parse(jsonGroup):undefined;
   const assuredGroup = parsedGroup as Assured;
   const enterpriseGroup = parsedGroup as Enterprise;
   const employeeGroup  = parsedGroup as Employee;
-  const disableEdit = ()=>setIsEdit(false);
   const router = useRouter();
   
   useEffect(() => {
@@ -54,10 +52,7 @@ export default function GroupForm({
     if(state.message){
       if(state.status)
         toast.success(state.message, { 
-          onOpen: ()=>{
-            router.refresh();
-            disableEdit();
-          }
+          onOpen: ()=>router.refresh()
         });
       else
         toast.error(state.message);
@@ -79,52 +74,17 @@ export default function GroupForm({
           options={UserGroup}
           required
           onChange={(item)=>setInputs(item.target.value)}
-          disabled={!isEdit}
           defaultValue={groupType}
         />
       </div>
 
       <div>
-        { inputs === "assured" &&
-          <AssuredInputs 
-            disabled={!isEdit}
-            {...assuredGroup}
-          />
-        }
-        { inputs === "enterprise" && 
-          <EnterpriseInputs 
-            disabled={!isEdit}
-            {...enterpriseGroup}
-          /> 
-        }
-        { inputs === "employee" && 
-          <EmployeeInputs
-            disabled={!isEdit}
-            {...employeeGroup} 
-          /> 
-        }
+        {inputs === "assured" && <AssuredInputs {...assuredGroup}/>}
+        {inputs === "enterprise" && <EnterpriseInputs {...enterpriseGroup}/>}
+        {inputs === "employee" && <EmployeeInputs {...employeeGroup} />}
       </div>
-      
-      <div className="flex gap-3">
-        {
-          !isEdit && 
-          <Button 
-            type={"button"}
-            onClick={()=>setIsEdit(true)}>
-              Editar
-          </Button>
-        }
-        {
-          isEdit && <>
-          <Button
-            cancel 
-            onClick={disableEdit}>
-              Cancelar
-          </Button>
-          <Button type="submit">Actualizar</Button>
-          </>
-        }
-      </div>
+             
+      <Button type="submit">Actualizar</Button>
     </form>
   );
 }
