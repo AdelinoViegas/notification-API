@@ -4,7 +4,6 @@ import {
   HTMLInputTypeAttribute, 
   useActionState, 
   useEffect,
-  useState
 } from "react";
 import { useRouter } from "next/navigation";
 import Accordium from "@/components/ui/accordium";
@@ -75,14 +74,12 @@ function Component({
   initialState
 }: InternalComponent){
   const [ state, action ] = useActionState(apiFn?apiFn:FallbackFn, initialState);
-  const [ editable, setEditable ] = useState(false);
   const router = useRouter();
   const childrenTransformed: Children[] = childrens.map(elem => {
     const elements = elem.elements.map(e => ({
       ...e,
       props: { 
         ...e.props,
-        disabled: !editable 
       }
     }));
     
@@ -91,7 +88,6 @@ function Component({
         ...e,
         props: {
           ...e.props,
-          disabled: !editable
         }
       }))
 
@@ -111,9 +107,8 @@ function Component({
   useEffect(()=>{
     if(state?.message){
       if(state.status) {
-        router.refresh();
         toast.success(state.message, {
-          onOpen: ()=> setEditable(false)
+          onOpen: ()=> router.refresh()
         });
       }else 
         if(state?.isWarn)
@@ -148,17 +143,8 @@ function Component({
             </div>
           ))}
         </div>
-
-        <div className="flex gap-x-3">
-          <Button
-            type="button" 
-            cancel={editable}
-            onClick={()=> setEditable(!editable)}
-            >{ editable ? "Cancelar" : "Editar" }
-          </Button>
           
-          {editable && <Button>Salvar</Button>}
-        </div>
+        <Button>Salvar</Button>
       </form>
     </Accordium>
   );

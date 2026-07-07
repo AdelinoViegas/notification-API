@@ -31,15 +31,11 @@ export default function DemographicInfoForm({
 }: InfoProps){
   const [ state, action] = useActionState(updateDemography,{ message:"", status:false })
   const router = useRouter();
-  const [ isEdit, setIsEdit ] = useState(false);
   const [ isExternal, setIsExternal ] = useState(false);
   const [ _naturality, setNaturality ] = useState(naturality);
-  /*const [ _nationality, setNationality ] = useState(nationality);*/
   const [ _province, setProvince ] = useState(province);
-  const disableEdit = ()=>setIsEdit(false);
 
   useEffect(() => {
-    //setNationality(_nationality);
     setProvince(province);
   }, [province]);
 
@@ -47,10 +43,7 @@ export default function DemographicInfoForm({
     if(state.message){
       if(state.status)
         toast.success(state.message, { 
-          onOpen: ()=>{
-            router.refresh();
-            disableEdit();
-          }
+          onOpen: ()=> router.refresh()
         });
       else
         toast.error(state.message);
@@ -78,7 +71,6 @@ export default function DemographicInfoForm({
             }
           }}
           defaultValue={nationality}
-          disabled={!isEdit}
           required
         />}
 
@@ -102,7 +94,6 @@ export default function DemographicInfoForm({
           name="naturality"
           required 
           placeholder="Naturalidade do utente"
-          disabled={!isEdit}
           value={_naturality}
           onChange={(e) => setNaturality(e.target.value)}
         />
@@ -123,7 +114,6 @@ export default function DemographicInfoForm({
             name="province"
             required
             defaultValue={_province}
-            disabled={!isEdit}
           />
         }
 
@@ -132,7 +122,6 @@ export default function DemographicInfoForm({
           name="actualLocation"
           required 
           placeholder="Município/bairro/ponto de referência"
-          disabled={!isEdit}
           defaultValue={actualLocation}
         />
 
@@ -140,7 +129,6 @@ export default function DemographicInfoForm({
           textLabel="Rua (Opcional)"
           name="street" 
           placeholder="Digite a rua"
-          disabled={!isEdit}
           defaultValue={street}
         />
 
@@ -148,31 +136,11 @@ export default function DemographicInfoForm({
           textLabel="Nª da casa (Opcional)"
           name="homeNumber" 
           placeholder="Digite o seu município"
-          disabled={!isEdit}
           defaultValue={homeNumber}
         />
       </div>
       
-      <div className="flex gap-3">
-        {
-          !isEdit && 
-          <Button 
-            type={"button"}
-            onClick={()=>setIsEdit(true)}>
-              Editar
-          </Button>
-        }
-        {
-          isEdit && <>
-          <Button 
-            cancel 
-            onClick={disableEdit}>
-              Cancelar
-          </Button>
-          <Button type="submit">Actualizar</Button>
-          </>
-        }
-      </div>
+      <Button type="submit">Actualizar</Button>
     </form>
   );
 }
