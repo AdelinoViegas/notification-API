@@ -9,7 +9,6 @@ import clsx from "clsx";
 
 export default function FeedbackLogoutButton({
   className,
-  goo = false,
   disabled
 }: {
   className?: string;
