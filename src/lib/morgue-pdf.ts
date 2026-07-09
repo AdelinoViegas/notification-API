@@ -1,12 +1,13 @@
 import { generate } from "@pdfme/generator";
-import { image, rectangle, text, barcodes } from "@pdfme/schemas";
-import { morgueAccommodationPlug, morgueExitPlug, browserPdf } from "@/lib/pdf-templates";
+import { image, rectangle, text, barcodes, line } from "@pdfme/schemas";
+import { morgueAccommodationPlug, morgueExitPlug, downloadPdf } from "@/lib/pdf-templates";
 
 const plugins = {
   rectangle,
   text,
   image,
   qrcode: barcodes.qrcode,
+  line,
 };
 
 // ── Types ────────────────────────────────────────────────────────────────────
@@ -57,10 +58,17 @@ export type BodyExitGuideData = {
   issuedAt: string;
 };
 
+/** Remove caracteres inválidos para nomes de ficheiro, mantendo espaços e acentos */
+function sanitizeFilename(name: string): string {
+  return name.replace(/[\\/:*?"<>|]/g, "").trim();
+}
+
 // ── Guia de Acomodação (A5) ───────────────────────────────────────────────────
 
-export function generateAccommodationGuide(data: AccommodationGuideData) {
-  generate({
+export async function generateAccommodationGuide(data: AccommodationGuideData) {
+  const docNumber = data.accommodationId.slice(-8).toUpperCase();
+
+  const pdf = await generate({
     template: morgueAccommodationPlug,
     inputs: [
       {
@@ -76,35 +84,32 @@ export function generateAccommodationGuide(data: AccommodationGuideData) {
         responsibleBI: data.responsibleBI,
         responsibleContact: data.responsibleContact,
         responsibleKinship: data.responsibleKinship,
-        issuedAt: data.issuedAt,
-        accommodationId: data.accommodationId.slice(-10).toUpperCase(),
-        qr_code: `ACOMODACAO:${data.accommodationId}`,
+        issuedAtLine: `Emitido em: ${data.issuedAt} | Doc. Nº: ${docNumber}`,
       },
     ],
     plugins,
-  }).then(browserPdf);
+  });
+
+  downloadPdf(pdf, `Guia de Acomodação - ${sanitizeFilename(data.fullname)}.pdf`);
 }
 
 // ── Guia de Saída de Corpo (A4) ───────────────────────────────────────────────
 
-const CHECK = "☑";
-const UNCHECK = "☐";
-
 function docLine(checked: boolean, label: string) {
-  return `${checked ? CHECK : UNCHECK}  ${label}`;
+  return `${checked ? "☑" : "☐"}  ${label}`;
 }
 
-export function generateBodyExitGuide(data: BodyExitGuideData) {
+export async function generateBodyExitGuide(data: BodyExitGuideData) {
   const isFamily = data.transportType === "family";
 
-  generate({
+  const pdf = await generate({
     template: morgueExitPlug,
     inputs: [
       {
         fullname: data.fullname,
-        processNumber: data.processNumber,
         gender: data.gender,
         age: `${data.age} anos`,
+        processNumber: data.processNumber,
         dateOfDeath: data.dateOfDeath,
         responsibleEntry: data.responsibleEntry,
         responsibleEntryContact: data.responsibleEntryContact,
@@ -117,26 +122,25 @@ export function generateBodyExitGuide(data: BodyExitGuideData) {
 
         transportTypeLabel: isFamily ? "Família" : "Agência Funerária",
 
-        // Família
         transportFamilyName:    isFamily ? (data.transportFamilyName ?? "—")    : "—",
         transportFamilyKinship: isFamily ? (data.transportFamilyKinship ?? "—") : "—",
 
-        // Agência
         transportAgencyName:         !isFamily ? (data.transportAgencyName ?? "—")         : "—",
         transportAgencyDriver:       !isFamily ? (data.transportAgencyDriver ?? "—")       : "—",
         transportAgencyVehicleBrand: !isFamily ? (data.transportAgencyVehicleBrand ?? "—") : "—",
         transportAgencyLicensePlate: !isFamily ? (data.transportAgencyLicensePlate ?? "—") : "—",
 
-        docDeathCertificate:    docLine(data.docDeathCertificate,    "Certificado de Óbito"),
-        docFamilyAuthorization: docLine(data.docFamilyAuthorization, "Autorização da Família"),
-        docAgencyTransportGuide: docLine(data.docAgencyTransportGuide, "Guia de Transporte da Agência"),
+        docDeathCertificate:      docLine(data.docDeathCertificate,      "Certificado de Óbito"),
+        docFamilyAuthorization:   docLine(data.docFamilyAuthorization,   "Autorização da Família"),
+        docAgencyTransportGuide:  docLine(data.docAgencyTransportGuide,  "Guia de Transporte da Agência"),
         docJudicialAuthorization: docLine(data.docJudicialAuthorization, "Autorização Judicial"),
 
         destination: data.destination,
-        issuedAt: data.issuedAt,
-        qr_code: `SAIDA:${data.responsibleExitBI}:${data.issuedAt}`,
+        issuedAtLine: `Emitido em: ${data.issuedAt}`,
       },
     ],
     plugins,
-  }).then(browserPdf);
+  });
+
+  downloadPdf(pdf, `Guia de Saída de Corpo - ${sanitizeFilename(data.fullname)}.pdf`);
 }
