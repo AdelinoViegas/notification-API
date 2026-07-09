@@ -20,14 +20,14 @@
           "y": 10
         },
         "width": 128,
-        "height": 9,
+        "height": 7,
         "rotate": 0,
         "alignment": "center",
         "verticalAlignment": "middle",
-        "fontSize": 13,
+        "fontSize": 12.5,
         "lineHeight": 1,
         "characterSpacing": 0,
-        "fontColor": "#1f2937",
+        "fontColor": "#374151",
         "fontName": "Roboto",
         "opacity": 1,
         "strikethrough": false,
@@ -41,14 +41,14 @@
         "content": "Morgue — Sistema Integrado de Gestão Clínica",
         "position": {
           "x": 10,
-          "y": 20
+          "y": 17.5
         },
         "width": 128,
         "height": 5,
         "rotate": 0,
         "alignment": "center",
         "verticalAlignment": "middle",
-        "fontSize": 8,
+        "fontSize": 7.5,
         "lineHeight": 1,
         "characterSpacing": 0,
         "fontColor": "#6b7280",
@@ -60,60 +60,38 @@
         "readOnly": true
       },
       {
-        "name": "sep1",
-        "type": "rectangle",
+        "name": "header_line",
+        "type": "line",
         "content": "",
         "position": {
           "x": 10,
-          "y": 27
+          "y": 24
         },
         "width": 128,
-        "height": 0.3,
+        "height": 0.5,
         "rotate": 0,
         "opacity": 1,
-        "borderWidth": 0,
-        "borderColor": "#d1d5db",
-        "color": "#d1d5db",
-        "radius": 0,
         "readOnly": true,
-        "required": false
-      },
-      {
-        "name": "sec_a_bg",
-        "type": "rectangle",
-        "content": "",
-        "position": {
-          "x": 10,
-          "y": 29
-        },
-        "width": 128,
-        "height": 5.5,
-        "rotate": 0,
-        "opacity": 1,
-        "borderWidth": 0,
-        "borderColor": "#374151",
         "color": "#374151",
-        "radius": 0,
-        "readOnly": true,
         "required": false
       },
       {
-        "name": "sec_a_title",
+        "name": "sec1_title",
         "type": "text",
         "content": "DADOS DO FALECIDO",
         "position": {
-          "x": 12,
-          "y": 29
+          "x": 10,
+          "y": 28
         },
-        "width": 124,
-        "height": 5.5,
+        "width": 128,
+        "height": 5,
         "rotate": 0,
         "alignment": "left",
-        "verticalAlignment": "middle",
-        "fontSize": 8,
+        "verticalAlignment": "top",
+        "fontSize": 9.5,
         "lineHeight": 1,
         "characterSpacing": 0,
-        "fontColor": "#ffffff",
+        "fontColor": "#374151",
         "fontName": "Roboto",
         "opacity": 1,
         "strikethrough": false,
@@ -122,19 +100,35 @@
         "readOnly": true
       },
       {
-        "name": "lbl_fullname",
+        "name": "sec1_line",
+        "type": "line",
+        "content": "",
+        "position": {
+          "x": 10,
+          "y": 33.3
+        },
+        "width": 128,
+        "height": 0.25,
+        "rotate": 0,
+        "opacity": 1,
+        "readOnly": true,
+        "color": "#d1d5db",
+        "required": false
+      },
+      {
+        "name": "fullname_lbl",
         "type": "text",
         "content": "NOME COMPLETO",
         "position": {
           "x": 10,
-          "y": 37
+          "y": 36.5
         },
         "width": 128,
-        "height": 4,
+        "height": 3.2,
         "rotate": 0,
         "alignment": "left",
         "verticalAlignment": "top",
-        "fontSize": 7.5,
+        "fontSize": 7,
         "lineHeight": 1,
         "characterSpacing": 0,
         "fontColor": "#6b7280",
@@ -148,20 +142,20 @@
       {
         "name": "fullname",
         "type": "text",
-        "content": "Nome completo do falecido",
+        "content": "Nome do falecido",
         "position": {
           "x": 10,
-          "y": 41
+          "y": 39.9
         },
         "width": 128,
-        "height": 6,
+        "height": 5,
         "rotate": 0,
         "alignment": "left",
-        "verticalAlignment": "middle",
+        "verticalAlignment": "top",
         "fontSize": 10,
         "lineHeight": 1,
         "characterSpacing": 0,
-        "fontColor": "#1f2937",
+        "fontColor": "#111827",
         "fontName": "Roboto",
         "opacity": 1,
         "strikethrough": false,
@@ -170,43 +164,19 @@
         "readOnly": false
       },
       {
-        "name": "lbl_proc",
+        "name": "proc_lbl",
         "type": "text",
         "content": "Nº DE PROCESSO",
         "position": {
           "x": 10,
-          "y": 49
+          "y": 46.0
         },
-        "width": 61,
-        "height": 4,
+        "width": 62.0,
+        "height": 3.2,
         "rotate": 0,
         "alignment": "left",
         "verticalAlignment": "top",
-        "fontSize": 7.5,
-        "lineHeight": 1,
-        "characterSpacing": 0,
-        "fontColor": "#6b7280",
-        "fontName": "Roboto",
-        "opacity": 1,
-        "strikethrough": false,
-        "underline": false,
-        "required": false,
-        "readOnly": true
-      },
-      {
-        "name": "lbl_gender",
-        "type": "text",
-        "content": "SEXO",
-        "position": {
-          "x": 74,
-          "y": 49
-        },
-        "width": 64,
-        "height": 4,
-        "rotate": 0,
-        "alignment": "left",
-        "verticalAlignment": "top",
-        "fontSize": 7.5,
+        "fontSize": 7,
         "lineHeight": 1,
         "characterSpacing": 0,
         "fontColor": "#6b7280",
@@ -223,41 +193,65 @@
         "content": "000000",
         "position": {
           "x": 10,
-          "y": 53
+          "y": 49.4
         },
-        "width": 61,
-        "height": 6,
+        "width": 62.0,
+        "height": 5,
         "rotate": 0,
         "alignment": "left",
-        "verticalAlignment": "middle",
+        "verticalAlignment": "top",
         "fontSize": 10,
         "lineHeight": 1,
         "characterSpacing": 0,
-        "fontColor": "#1f2937",
+        "fontColor": "#111827",
         "fontName": "Roboto",
         "opacity": 1,
         "strikethrough": false,
         "underline": false,
         "required": true,
         "readOnly": false
+      },
+      {
+        "name": "gender_lbl",
+        "type": "text",
+        "content": "SEXO",
+        "position": {
+          "x": 76.0,
+          "y": 46.0
+        },
+        "width": 62.0,
+        "height": 3.2,
+        "rotate": 0,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "fontSize": 7,
+        "lineHeight": 1,
+        "characterSpacing": 0,
+        "fontColor": "#6b7280",
+        "fontName": "Roboto",
+        "opacity": 1,
+        "strikethrough": false,
+        "underline": false,
+        "required": false,
+        "readOnly": true
       },
       {
         "name": "gender",
         "type": "text",
         "content": "—",
         "position": {
-          "x": 74,
-          "y": 53
+          "x": 76.0,
+          "y": 49.4
         },
-        "width": 64,
-        "height": 6,
+        "width": 62.0,
+        "height": 5,
         "rotate": 0,
         "alignment": "left",
-        "verticalAlignment": "middle",
+        "verticalAlignment": "top",
         "fontSize": 10,
         "lineHeight": 1,
         "characterSpacing": 0,
-        "fontColor": "#1f2937",
+        "fontColor": "#111827",
         "fontName": "Roboto",
         "opacity": 1,
         "strikethrough": false,
@@ -266,19 +260,19 @@
         "readOnly": false
       },
       {
-        "name": "lbl_service",
+        "name": "service_lbl",
         "type": "text",
         "content": "SERVIÇO DE INTERNAMENTO",
         "position": {
           "x": 10,
-          "y": 61
+          "y": 55.5
         },
         "width": 128,
-        "height": 4,
+        "height": 3.2,
         "rotate": 0,
         "alignment": "left",
         "verticalAlignment": "top",
-        "fontSize": 7.5,
+        "fontSize": 7,
         "lineHeight": 1,
         "characterSpacing": 0,
         "fontColor": "#6b7280",
@@ -295,17 +289,17 @@
         "content": "—",
         "position": {
           "x": 10,
-          "y": 65
+          "y": 58.9
         },
         "width": 128,
-        "height": 6,
+        "height": 5,
         "rotate": 0,
         "alignment": "left",
-        "verticalAlignment": "middle",
+        "verticalAlignment": "top",
         "fontSize": 10,
         "lineHeight": 1,
         "characterSpacing": 0,
-        "fontColor": "#1f2937",
+        "fontColor": "#111827",
         "fontName": "Roboto",
         "opacity": 1,
         "strikethrough": false,
@@ -314,43 +308,19 @@
         "readOnly": false
       },
       {
-        "name": "lbl_adm",
+        "name": "adm_lbl",
         "type": "text",
         "content": "DATA/HORA ADMISSÃO",
         "position": {
           "x": 10,
-          "y": 73
+          "y": 65.0
         },
-        "width": 61,
-        "height": 4,
+        "width": 62.0,
+        "height": 3.2,
         "rotate": 0,
         "alignment": "left",
         "verticalAlignment": "top",
-        "fontSize": 7.5,
-        "lineHeight": 1,
-        "characterSpacing": 0,
-        "fontColor": "#6b7280",
-        "fontName": "Roboto",
-        "opacity": 1,
-        "strikethrough": false,
-        "underline": false,
-        "required": false,
-        "readOnly": true
-      },
-      {
-        "name": "lbl_dod",
-        "type": "text",
-        "content": "DATA/HORA DO ÓBITO",
-        "position": {
-          "x": 74,
-          "y": 73
-        },
-        "width": 64,
-        "height": 4,
-        "rotate": 0,
-        "alignment": "left",
-        "verticalAlignment": "top",
-        "fontSize": 7.5,
+        "fontSize": 7,
         "lineHeight": 1,
         "characterSpacing": 0,
         "fontColor": "#6b7280",
@@ -364,127 +334,41 @@
       {
         "name": "admissionDate",
         "type": "text",
-        "content": "dd/mm/aaaa hh:mm",
+        "content": "—",
         "position": {
           "x": 10,
-          "y": 77
+          "y": 68.4
         },
-        "width": 61,
-        "height": 6,
-        "rotate": 0,
-        "alignment": "left",
-        "verticalAlignment": "middle",
-        "fontSize": 10,
-        "lineHeight": 1,
-        "characterSpacing": 0,
-        "fontColor": "#1f2937",
-        "fontName": "Roboto",
-        "opacity": 1,
-        "strikethrough": false,
-        "underline": false,
-        "required": true,
-        "readOnly": false
-      },
-      {
-        "name": "dateOfDeath",
-        "type": "text",
-        "content": "dd/mm/aaaa hh:mm",
-        "position": {
-          "x": 74,
-          "y": 77
-        },
-        "width": 64,
-        "height": 6,
-        "rotate": 0,
-        "alignment": "left",
-        "verticalAlignment": "middle",
-        "fontSize": 10,
-        "lineHeight": 1,
-        "characterSpacing": 0,
-        "fontColor": "#1f2937",
-        "fontName": "Roboto",
-        "opacity": 1,
-        "strikethrough": false,
-        "underline": false,
-        "required": true,
-        "readOnly": false
-      },
-      {
-        "name": "sep2",
-        "type": "rectangle",
-        "content": "",
-        "position": {
-          "x": 10,
-          "y": 85
-        },
-        "width": 128,
-        "height": 0.3,
-        "rotate": 0,
-        "opacity": 1,
-        "borderWidth": 0,
-        "borderColor": "#d1d5db",
-        "color": "#d1d5db",
-        "radius": 0,
-        "readOnly": true,
-        "required": false
-      },
-      {
-        "name": "sec_b_bg",
-        "type": "rectangle",
-        "content": "",
-        "position": {
-          "x": 10,
-          "y": 87
-        },
-        "width": 128,
-        "height": 5.5,
-        "rotate": 0,
-        "opacity": 1,
-        "borderWidth": 0,
-        "borderColor": "#374151",
-        "color": "#374151",
-        "radius": 0,
-        "readOnly": true,
-        "required": false
-      },
-      {
-        "name": "sec_b_title",
-        "type": "text",
-        "content": "ACOMODAÇÃO",
-        "position": {
-          "x": 12,
-          "y": 87
-        },
-        "width": 124,
-        "height": 5.5,
-        "rotate": 0,
-        "alignment": "left",
-        "verticalAlignment": "middle",
-        "fontSize": 8,
-        "lineHeight": 1,
-        "characterSpacing": 0,
-        "fontColor": "#ffffff",
-        "fontName": "Roboto",
-        "opacity": 1,
-        "strikethrough": false,
-        "underline": false,
-        "required": false,
-        "readOnly": true
-      },
-      {
-        "name": "lbl_chamber",
-        "type": "text",
-        "content": "CÂMARA",
-        "position": {
-          "x": 10,
-          "y": 95
-        },
-        "width": 61,
-        "height": 4,
+        "width": 62.0,
+        "height": 5,
         "rotate": 0,
         "alignment": "left",
         "verticalAlignment": "top",
-        "fontSize": 7.5,
+        "fontSize": 10,
+        "lineHeight": 1,
+        "characterSpacing": 0,
+        "fontColor": "#111827",
+        "fontName": "Roboto",
+        "opacity": 1,
+        "strikethrough": false,
+        "underline": false,
+        "required": true,
+        "readOnly": false
+      },
+      {
+        "name": "dod_lbl",
+        "type": "text",
+        "content": "DATA/HORA DO ÓBITO",
+        "position": {
+          "x": 76.0,
+          "y": 65.0
+        },
+        "width": 62.0,
+        "height": 3.2,
+        "rotate": 0,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "fontSize": 7,
         "lineHeight": 1,
         "characterSpacing": 0,
         "fontColor": "#6b7280",
@@ -496,19 +380,83 @@
         "readOnly": true
       },
       {
-        "name": "lbl_drawer",
+        "name": "dateOfDeath",
         "type": "text",
-        "content": "GAVETA",
+        "content": "—",
         "position": {
-          "x": 74,
-          "y": 95
+          "x": 76.0,
+          "y": 68.4
         },
-        "width": 64,
-        "height": 4,
+        "width": 62.0,
+        "height": 5,
         "rotate": 0,
         "alignment": "left",
         "verticalAlignment": "top",
-        "fontSize": 7.5,
+        "fontSize": 10,
+        "lineHeight": 1,
+        "characterSpacing": 0,
+        "fontColor": "#111827",
+        "fontName": "Roboto",
+        "opacity": 1,
+        "strikethrough": false,
+        "underline": false,
+        "required": true,
+        "readOnly": false
+      },
+      {
+        "name": "sec2_title",
+        "type": "text",
+        "content": "ACOMODAÇÃO",
+        "position": {
+          "x": 10,
+          "y": 76.0
+        },
+        "width": 128,
+        "height": 5,
+        "rotate": 0,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "fontSize": 9.5,
+        "lineHeight": 1,
+        "characterSpacing": 0,
+        "fontColor": "#374151",
+        "fontName": "Roboto",
+        "opacity": 1,
+        "strikethrough": false,
+        "underline": false,
+        "required": false,
+        "readOnly": true
+      },
+      {
+        "name": "sec2_line",
+        "type": "line",
+        "content": "",
+        "position": {
+          "x": 10,
+          "y": 81.3
+        },
+        "width": 128,
+        "height": 0.25,
+        "rotate": 0,
+        "opacity": 1,
+        "readOnly": true,
+        "color": "#d1d5db",
+        "required": false
+      },
+      {
+        "name": "chamber_lbl",
+        "type": "text",
+        "content": "CÂMARA",
+        "position": {
+          "x": 10,
+          "y": 84.5
+        },
+        "width": 62.0,
+        "height": 3.2,
+        "rotate": 0,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "fontSize": 7,
         "lineHeight": 1,
         "characterSpacing": 0,
         "fontColor": "#6b7280",
@@ -525,17 +473,17 @@
         "content": "—",
         "position": {
           "x": 10,
-          "y": 99
+          "y": 87.9
         },
-        "width": 61,
-        "height": 6,
+        "width": 62.0,
+        "height": 5,
         "rotate": 0,
         "alignment": "left",
-        "verticalAlignment": "middle",
+        "verticalAlignment": "top",
         "fontSize": 10,
         "lineHeight": 1,
         "characterSpacing": 0,
-        "fontColor": "#1f2937",
+        "fontColor": "#111827",
         "fontName": "Roboto",
         "opacity": 1,
         "strikethrough": false,
@@ -544,84 +492,22 @@
         "readOnly": false
       },
       {
-        "name": "drawer",
+        "name": "drawer_lbl",
         "type": "text",
-        "content": "—",
+        "content": "GAVETA",
         "position": {
-          "x": 74,
-          "y": 99
+          "x": 76.0,
+          "y": 84.5
         },
-        "width": 64,
-        "height": 6,
+        "width": 62.0,
+        "height": 3.2,
         "rotate": 0,
         "alignment": "left",
-        "verticalAlignment": "middle",
-        "fontSize": 10,
+        "verticalAlignment": "top",
+        "fontSize": 7,
         "lineHeight": 1,
         "characterSpacing": 0,
-        "fontColor": "#1f2937",
-        "fontName": "Roboto",
-        "opacity": 1,
-        "strikethrough": false,
-        "underline": false,
-        "required": true,
-        "readOnly": false
-      },
-      {
-        "name": "sep3",
-        "type": "rectangle",
-        "content": "",
-        "position": {
-          "x": 10,
-          "y": 107
-        },
-        "width": 128,
-        "height": 0.3,
-        "rotate": 0,
-        "opacity": 1,
-        "borderWidth": 0,
-        "borderColor": "#d1d5db",
-        "color": "#d1d5db",
-        "radius": 0,
-        "readOnly": true,
-        "required": false
-      },
-      {
-        "name": "sec_c_bg",
-        "type": "rectangle",
-        "content": "",
-        "position": {
-          "x": 10,
-          "y": 109
-        },
-        "width": 128,
-        "height": 5.5,
-        "rotate": 0,
-        "opacity": 1,
-        "borderWidth": 0,
-        "borderColor": "#374151",
-        "color": "#374151",
-        "radius": 0,
-        "readOnly": true,
-        "required": false
-      },
-      {
-        "name": "sec_c_title",
-        "type": "text",
-        "content": "RESPONSÁVEL PELA ENTREGA",
-        "position": {
-          "x": 12,
-          "y": 109
-        },
-        "width": 124,
-        "height": 5.5,
-        "rotate": 0,
-        "alignment": "left",
-        "verticalAlignment": "middle",
-        "fontSize": 8,
-        "lineHeight": 1,
-        "characterSpacing": 0,
-        "fontColor": "#ffffff",
+        "fontColor": "#6b7280",
         "fontName": "Roboto",
         "opacity": 1,
         "strikethrough": false,
@@ -630,19 +516,83 @@
         "readOnly": true
       },
       {
-        "name": "lbl_rname",
+        "name": "drawer",
         "type": "text",
-        "content": "NOME COMPLETO",
+        "content": "—",
         "position": {
-          "x": 10,
-          "y": 117
+          "x": 76.0,
+          "y": 87.9
         },
-        "width": 128,
-        "height": 4,
+        "width": 62.0,
+        "height": 5,
         "rotate": 0,
         "alignment": "left",
         "verticalAlignment": "top",
-        "fontSize": 7.5,
+        "fontSize": 10,
+        "lineHeight": 1,
+        "characterSpacing": 0,
+        "fontColor": "#111827",
+        "fontName": "Roboto",
+        "opacity": 1,
+        "strikethrough": false,
+        "underline": false,
+        "required": true,
+        "readOnly": false
+      },
+      {
+        "name": "sec3_title",
+        "type": "text",
+        "content": "RESPONSÁVEL PELA ENTREGA",
+        "position": {
+          "x": 10,
+          "y": 95.5
+        },
+        "width": 128,
+        "height": 5,
+        "rotate": 0,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "fontSize": 9.5,
+        "lineHeight": 1,
+        "characterSpacing": 0,
+        "fontColor": "#374151",
+        "fontName": "Roboto",
+        "opacity": 1,
+        "strikethrough": false,
+        "underline": false,
+        "required": false,
+        "readOnly": true
+      },
+      {
+        "name": "sec3_line",
+        "type": "line",
+        "content": "",
+        "position": {
+          "x": 10,
+          "y": 100.8
+        },
+        "width": 128,
+        "height": 0.25,
+        "rotate": 0,
+        "opacity": 1,
+        "readOnly": true,
+        "color": "#d1d5db",
+        "required": false
+      },
+      {
+        "name": "rname_lbl",
+        "type": "text",
+        "content": "NOME",
+        "position": {
+          "x": 10,
+          "y": 104.0
+        },
+        "width": 128,
+        "height": 3.2,
+        "rotate": 0,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "fontSize": 7,
         "lineHeight": 1,
         "characterSpacing": 0,
         "fontColor": "#6b7280",
@@ -659,17 +609,17 @@
         "content": "—",
         "position": {
           "x": 10,
-          "y": 121
+          "y": 107.4
         },
         "width": 128,
-        "height": 6,
+        "height": 5,
         "rotate": 0,
         "alignment": "left",
-        "verticalAlignment": "middle",
+        "verticalAlignment": "top",
         "fontSize": 10,
         "lineHeight": 1,
         "characterSpacing": 0,
-        "fontColor": "#1f2937",
+        "fontColor": "#111827",
         "fontName": "Roboto",
         "opacity": 1,
         "strikethrough": false,
@@ -678,43 +628,19 @@
         "readOnly": false
       },
       {
-        "name": "lbl_rbi",
+        "name": "rbi_lbl",
         "type": "text",
         "content": "Nº DO BI",
         "position": {
           "x": 10,
-          "y": 129
+          "y": 113.5
         },
-        "width": 61,
-        "height": 4,
+        "width": 62.0,
+        "height": 3.2,
         "rotate": 0,
         "alignment": "left",
         "verticalAlignment": "top",
-        "fontSize": 7.5,
-        "lineHeight": 1,
-        "characterSpacing": 0,
-        "fontColor": "#6b7280",
-        "fontName": "Roboto",
-        "opacity": 1,
-        "strikethrough": false,
-        "underline": false,
-        "required": false,
-        "readOnly": true
-      },
-      {
-        "name": "lbl_rcontact",
-        "type": "text",
-        "content": "CONTACTO",
-        "position": {
-          "x": 74,
-          "y": 129
-        },
-        "width": 64,
-        "height": 4,
-        "rotate": 0,
-        "alignment": "left",
-        "verticalAlignment": "top",
-        "fontSize": 7.5,
+        "fontSize": 7,
         "lineHeight": 1,
         "characterSpacing": 0,
         "fontColor": "#6b7280",
@@ -731,41 +657,65 @@
         "content": "—",
         "position": {
           "x": 10,
-          "y": 133
+          "y": 116.9
         },
-        "width": 61,
-        "height": 6,
+        "width": 62.0,
+        "height": 5,
         "rotate": 0,
         "alignment": "left",
-        "verticalAlignment": "middle",
+        "verticalAlignment": "top",
         "fontSize": 10,
         "lineHeight": 1,
         "characterSpacing": 0,
-        "fontColor": "#1f2937",
+        "fontColor": "#111827",
         "fontName": "Roboto",
         "opacity": 1,
         "strikethrough": false,
         "underline": false,
         "required": true,
         "readOnly": false
+      },
+      {
+        "name": "rcontact_lbl",
+        "type": "text",
+        "content": "CONTACTO",
+        "position": {
+          "x": 76.0,
+          "y": 113.5
+        },
+        "width": 62.0,
+        "height": 3.2,
+        "rotate": 0,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "fontSize": 7,
+        "lineHeight": 1,
+        "characterSpacing": 0,
+        "fontColor": "#6b7280",
+        "fontName": "Roboto",
+        "opacity": 1,
+        "strikethrough": false,
+        "underline": false,
+        "required": false,
+        "readOnly": true
       },
       {
         "name": "responsibleContact",
         "type": "text",
         "content": "—",
         "position": {
-          "x": 74,
-          "y": 133
+          "x": 76.0,
+          "y": 116.9
         },
-        "width": 64,
-        "height": 6,
+        "width": 62.0,
+        "height": 5,
         "rotate": 0,
         "alignment": "left",
-        "verticalAlignment": "middle",
+        "verticalAlignment": "top",
         "fontSize": 10,
         "lineHeight": 1,
         "characterSpacing": 0,
-        "fontColor": "#1f2937",
+        "fontColor": "#111827",
         "fontName": "Roboto",
         "opacity": 1,
         "strikethrough": false,
@@ -774,19 +724,19 @@
         "readOnly": false
       },
       {
-        "name": "lbl_rkinship",
+        "name": "rkinship_lbl",
         "type": "text",
         "content": "PARENTESCO",
         "position": {
           "x": 10,
-          "y": 141
+          "y": 123.0
         },
         "width": 128,
-        "height": 4,
+        "height": 3.2,
         "rotate": 0,
         "alignment": "left",
         "verticalAlignment": "top",
-        "fontSize": 7.5,
+        "fontSize": 7,
         "lineHeight": 1,
         "characterSpacing": 0,
         "fontColor": "#6b7280",
@@ -803,17 +753,17 @@
         "content": "—",
         "position": {
           "x": 10,
-          "y": 145
+          "y": 126.4
         },
         "width": 128,
-        "height": 6,
+        "height": 5,
         "rotate": 0,
         "alignment": "left",
-        "verticalAlignment": "middle",
+        "verticalAlignment": "top",
         "fontSize": 10,
         "lineHeight": 1,
         "characterSpacing": 0,
-        "fontColor": "#1f2937",
+        "fontColor": "#111827",
         "fontName": "Roboto",
         "opacity": 1,
         "strikethrough": false,
@@ -822,60 +772,19 @@
         "readOnly": false
       },
       {
-        "name": "sep4",
-        "type": "rectangle",
-        "content": "",
-        "position": {
-          "x": 10,
-          "y": 154
-        },
-        "width": 128,
-        "height": 0.3,
-        "rotate": 0,
-        "opacity": 1,
-        "borderWidth": 0,
-        "borderColor": "#d1d5db",
-        "color": "#d1d5db",
-        "radius": 0,
-        "readOnly": true,
-        "required": false
-      },
-      {
         "name": "sig1_line",
-        "type": "rectangle",
+        "type": "line",
         "content": "",
         "position": {
           "x": 10,
-          "y": 163
+          "y": 136.0
         },
-        "width": 61,
+        "width": 60.0,
         "height": 0.3,
         "rotate": 0,
         "opacity": 1,
-        "borderWidth": 0,
-        "borderColor": "#374151",
-        "color": "#374151",
-        "radius": 0,
         "readOnly": true,
-        "required": false
-      },
-      {
-        "name": "sig2_line",
-        "type": "rectangle",
-        "content": "",
-        "position": {
-          "x": 74,
-          "y": 163
-        },
-        "width": 64,
-        "height": 0.3,
-        "rotate": 0,
-        "opacity": 1,
-        "borderWidth": 0,
-        "borderColor": "#374151",
         "color": "#374151",
-        "radius": 0,
-        "readOnly": true,
         "required": false
       },
       {
@@ -884,13 +793,13 @@
         "content": "Responsável pela Entrega",
         "position": {
           "x": 10,
-          "y": 165
+          "y": 137.2
         },
-        "width": 61,
-        "height": 5,
+        "width": 60.0,
+        "height": 4,
         "rotate": 0,
         "alignment": "center",
-        "verticalAlignment": "middle",
+        "verticalAlignment": "top",
         "fontSize": 7,
         "lineHeight": 1,
         "characterSpacing": 0,
@@ -901,20 +810,36 @@
         "underline": false,
         "required": false,
         "readOnly": true
+      },
+      {
+        "name": "sig2_line",
+        "type": "line",
+        "content": "",
+        "position": {
+          "x": 78.0,
+          "y": 136.0
+        },
+        "width": 60.0,
+        "height": 0.3,
+        "rotate": 0,
+        "opacity": 1,
+        "readOnly": true,
+        "color": "#374151",
+        "required": false
       },
       {
         "name": "sig2_lbl",
         "type": "text",
         "content": "Funcionário da Morgue",
         "position": {
-          "x": 74,
-          "y": 165
+          "x": 78.0,
+          "y": 137.2
         },
-        "width": 64,
-        "height": 5,
+        "width": 60.0,
+        "height": 4,
         "rotate": 0,
         "alignment": "center",
-        "verticalAlignment": "middle",
+        "verticalAlignment": "top",
         "fontSize": 7,
         "lineHeight": 1,
         "characterSpacing": 0,
@@ -927,136 +852,44 @@
         "readOnly": true
       },
       {
-        "name": "sep5",
-        "type": "rectangle",
+        "name": "footer_line",
+        "type": "line",
         "content": "",
         "position": {
           "x": 10,
-          "y": 173
+          "y": 146.0
         },
         "width": 128,
-        "height": 0.3,
+        "height": 0.25,
         "rotate": 0,
         "opacity": 1,
-        "borderWidth": 0,
-        "borderColor": "#d1d5db",
+        "readOnly": true,
         "color": "#d1d5db",
-        "radius": 0,
-        "readOnly": true,
         "required": false
       },
       {
-        "name": "lbl_issued",
+        "name": "issuedAtLine",
         "type": "text",
-        "content": "EMITIDO EM",
+        "content": "Emitido em: — | Doc. Nº: —",
         "position": {
           "x": 10,
-          "y": 175.5
+          "y": 149.0
         },
-        "width": 60,
-        "height": 4,
+        "width": 128,
+        "height": 5,
         "rotate": 0,
-        "alignment": "left",
+        "alignment": "center",
         "verticalAlignment": "top",
         "fontSize": 7.5,
         "lineHeight": 1,
         "characterSpacing": 0,
-        "fontColor": "#6b7280",
-        "fontName": "Roboto",
-        "opacity": 1,
-        "strikethrough": false,
-        "underline": false,
-        "required": false,
-        "readOnly": true
-      },
-      {
-        "name": "issuedAt",
-        "type": "text",
-        "content": "dd/mm/aaaa hh:mm",
-        "position": {
-          "x": 10,
-          "y": 179.5
-        },
-        "width": 100,
-        "height": 6,
-        "rotate": 0,
-        "alignment": "left",
-        "verticalAlignment": "middle",
-        "fontSize": 9,
-        "lineHeight": 1,
-        "characterSpacing": 0,
-        "fontColor": "#1f2937",
+        "fontColor": "#9ca3af",
         "fontName": "Roboto",
         "opacity": 1,
         "strikethrough": false,
         "underline": false,
         "required": true,
         "readOnly": false
-      },
-      {
-        "name": "lbl_docnum",
-        "type": "text",
-        "content": "DOC. Nº",
-        "position": {
-          "x": 10,
-          "y": 186
-        },
-        "width": 60,
-        "height": 4,
-        "rotate": 0,
-        "alignment": "left",
-        "verticalAlignment": "top",
-        "fontSize": 7.5,
-        "lineHeight": 1,
-        "characterSpacing": 0,
-        "fontColor": "#6b7280",
-        "fontName": "Roboto",
-        "opacity": 1,
-        "strikethrough": false,
-        "underline": false,
-        "required": false,
-        "readOnly": true
-      },
-      {
-        "name": "accommodationId",
-        "type": "text",
-        "content": "—",
-        "position": {
-          "x": 10,
-          "y": 190
-        },
-        "width": 100,
-        "height": 6,
-        "rotate": 0,
-        "alignment": "left",
-        "verticalAlignment": "middle",
-        "fontSize": 8,
-        "lineHeight": 1,
-        "characterSpacing": 0,
-        "fontColor": "#1f2937",
-        "fontName": "Roboto",
-        "opacity": 1,
-        "strikethrough": false,
-        "underline": false,
-        "required": true,
-        "readOnly": false
-      },
-      {
-        "name": "qr_code",
-        "type": "qrcode",
-        "content": "morgue-accommodation",
-        "position": {
-          "x": 127,
-          "y": 174
-        },
-        "width": 13,
-        "height": 13,
-        "rotate": 0,
-        "opacity": 1,
-        "backgroundColor": "#ffffff",
-        "barColor": "#000000",
-        "readOnly": true,
-        "required": false
       }
     ]
   ],
