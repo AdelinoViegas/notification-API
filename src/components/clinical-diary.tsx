@@ -120,7 +120,7 @@ export default function ClinicalDiary({
 
       selectedData.push(dataDiary.hydromineralBalance[Number(selectedId)]);  
     }
-  
+
   return(
     <Accordium className="bg-primary/15 hover:bg-primary/20" title={accordiumTitle}>
       <div>
@@ -133,8 +133,9 @@ export default function ClinicalDiary({
       </div>
 
       <Table
-        columns={columns} 
+        columns={columns}
         rows={tableData}
+        rowLength={columns.length}
         openModal={setModalState}
         setParams={setSelectedId}
         dataEdit
@@ -229,20 +230,20 @@ export default function ClinicalDiary({
           { diaryType === "vital" && <div className="grid grid-cols-2 gap-x-3">
             <InputField
               type="number"
-              textLabel="P.A MÁXIMA (mmHG)"
-              name="pamax" 
-              placeholder="0 (mmHG)"
-              required
-              defaultValue={selectedId?selectedData[0].vitalSignals?.paMax:""}
-            />
-  
-            <InputField
-              type="number"
               textLabel="P.A MÍNIMA (mmHG)"
               name="pamin" 
               placeholder="0 (mmHG)"
               required
               defaultValue={selectedId?selectedData[0].vitalSignals?.paMin:""}
+            />
+
+            <InputField
+              type="number"
+              textLabel="P.A MÁXIMA (mmHG)"
+              name="pamax" 
+              placeholder="0 (mmHG)"
+              required
+              defaultValue={selectedId?selectedData[0].vitalSignals?.paMax:""}
             />
             
             <InputField
@@ -276,18 +277,17 @@ export default function ClinicalDiary({
   
             <InputField
               type="number"
-              textLabel="PESO (kg)"
+              textLabel="PESO ((kg) opcional)"
               name="weight" 
               placeholder="0 (kg)"
               step={0.01}
-              required
               defaultValue={selectedId?selectedData[0].vitalSignals?.weight:""} 
             />
   
             <InputField
               type="number"
               step={0.01}
-              textLabel="ALTURA ((m)"
+              textLabel="ALTURA ((m) opcional)"
               name="height"
               placeholder="0 (m)"
               defaultValue={selectedId?selectedData[0].vitalSignals?.height:""}

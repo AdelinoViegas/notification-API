@@ -27,17 +27,15 @@ export default function AccessForm({ data, eUnitsJson }: { data?: string; eUnits
   const currentData = data?JSON.parse(data) as AccessType:undefined;
   const eUnits = JSON.parse(eUnitsJson) as SelectionOption[];
   const [ state, action] = useActionState(updateAccessType, { message:"", status:false })
-  const [ isEdit, setIsEdit ] = useState(false);
   const [ acessType, setAcessType ] = useState(currentData?.type);
   const [type, setType] = useState(currentData?.type);
   const [ externalUnit, setExternalUnit ] = useState(currentData?.externalUnitId);
   const [ externalUnits, setExternalUnits ] = useState<SelectionOption[]>(eUnits);
   const router = useRouter();
   const loadExternalUnits = useCallback(async()=>{
-    const externalUnits = await getExternalUnits({}) as SelectionOption[];
+  const externalUnits = await getExternalUnits({}) as SelectionOption[];
     setExternalUnits(externalUnits);
   }, []);
-  const disableEdit = ()=>setIsEdit(false);
 
   useEffect(()=>{
     loadExternalUnits();
@@ -52,10 +50,7 @@ export default function AccessForm({ data, eUnitsJson }: { data?: string; eUnits
     if(state.message){
       if(state.status)
         toast.success(state.message, { 
-          onOpen: ()=>{
-            router.refresh();
-            disableEdit();
-          }
+          onOpen: ()=> router.refresh()
         });
       else
         toast.error(state.message);
@@ -78,7 +73,6 @@ export default function AccessForm({ data, eUnitsJson }: { data?: string; eUnits
           options={accessType}
           required
           onChange={(e)=>setAcessType(e.target.value)}
-          disabled={!isEdit}
           defaultValue={type}
         />
 
@@ -89,39 +83,18 @@ export default function AccessForm({ data, eUnitsJson }: { data?: string; eUnits
               label="Escolha a unidade externa"
               options={externalUnits}
               name="externalUnitId"
-              disabled={!isEdit}
               defaultValue={externalUnit}
               className="grow"
               onClick={loadExternalUnits}
               required
             />
 
-            <ExternalUnitForm isEdit={!isEdit}/>
+            <ExternalUnitForm />
           </div>    
         }
-
       </div>
  
-      <div className="flex gap-3">
-        {
-          !isEdit && 
-          <Button 
-            type={"button"}
-            onClick={()=>setIsEdit(true)}>
-              Editar
-          </Button>
-        }
-        {
-          isEdit && <>
-          <Button 
-            cancel 
-            onClick={disableEdit}>
-              Cancelar
-          </Button>
-          <Button type="submit">Actualizar</Button>
-          </>
-        }
-      </div>
+      <Button type="submit">Actualizar</Button>
     </form>
   );
 }

@@ -34,10 +34,8 @@ export default function PersonalInfoForm({
 }: Personal){
   const [ state, action ] = useActionState(updatePersonalInfo, { message: "", status: false });
   const router = useRouter();
-  const [ isEdit, setIsEdit ] = useState(false);
   const [ civilStatus, setCivilStatus ] = useState(civilState);
   const [ _gender, setGender ] = useState(gender);
-  const disableEdit = ()=>setIsEdit(false);
   
   useEffect( ()=> {
     setCivilStatus(civilState);
@@ -48,10 +46,7 @@ export default function PersonalInfoForm({
     if(state.message){
       if(state.status)
         toast.success(state.message, { 
-          onOpen: ()=>{
-            router.refresh();
-            disableEdit();
-          }        
+          onOpen: ()=> router.refresh()
         });
       else
         toast.error(state.message);
@@ -68,7 +63,6 @@ export default function PersonalInfoForm({
           name="fullname"
           required
           placeholder="Nome completo do utentes"
-          disabled={!isEdit}
           defaultValue={fullname}
         />
         
@@ -77,7 +71,6 @@ export default function PersonalInfoForm({
           name="birthDate"
           required 
           type="date"
-          disabled={!isEdit}
           defaultValue={birthDate?.toISOString().split('T')[0]}
         />
 
@@ -95,7 +88,6 @@ export default function PersonalInfoForm({
           options={civilStateValues}
           label="Estado Civil"
           name="civilState"
-          disabled={!isEdit}
           required
           defaultValue={civilStatus}
         />
@@ -105,7 +97,6 @@ export default function PersonalInfoForm({
           label="Gênero" 
           name="gender"
           required
-          disabled={!isEdit}
           defaultValue={_gender}
         />
         
@@ -117,7 +108,6 @@ export default function PersonalInfoForm({
           maxLength={9}
           placeholder="Digite o Número de Telefone"
           defaultValue={tel}
-          disabled={!isEdit}
         />
 
         <InputField
@@ -125,7 +115,6 @@ export default function PersonalInfoForm({
           name="documentation" 
           required
           placeholder="Nº de BI / Nº de Cédula / Nº de Passaporte"
-          disabled={!isEdit}
           defaultValue={documentation}
         />
         
@@ -133,31 +122,11 @@ export default function PersonalInfoForm({
           textLabel="Idioma (Opcional)"
           name="language" 
           placeholder="idioma de comunicação habitual"
-          disabled={!isEdit}
           defaultValue={lang}
         />
       </div>
       
-      <div className="flex gap-3">
-        {
-          !isEdit && 
-          <Button 
-            type={"button"}
-            onClick={()=>setIsEdit(true)}>
-              Editar
-          </Button>
-        }
-        {
-          isEdit && <>
-          <Button 
-            cancel 
-            onClick={disableEdit}>
-              Cancelar
-          </Button>
-          <Button type="submit">Actualizar</Button>
-          </>
-        }
-      </div>
+      <Button type="submit">Actualizar</Button>
     </form>
   );
 }
