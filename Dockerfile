@@ -33,7 +33,7 @@ ENV NEXT_PUBLIC_STORAGE_URL=$NEXT_PUBLIC_STORAGE_URL
 ARG FEEDBACK_GOOGLE_SCRIPT_URL
 ENV FEEDBACK_GOOGLE_SCRIPT_URL=$FEEDBACK_GOOGLE_SCRIPT_URL
 
-ENV NODE_ENV="production"
+ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
 # Forçar o build usando o binário local do TypeScript para evitar que o Next instale o TS 6.0.3
@@ -43,9 +43,9 @@ RUN yarn build
 FROM node:22-alpine
 
 # Variáveis de Runtime 
-ENV COOKIE_AUTH_HEADER="auth_token" 
+ENV COOKIE_AUTH_HEADER=auth_token
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV NODE_ENV="production"
+ENV NODE_ENV=production
 
 # Configuração de fuso horário local para Luanda
 RUN apk add --no-cache alpine-conf && \

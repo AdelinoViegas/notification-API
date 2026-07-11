@@ -30,3 +30,5 @@ type ConnetionError = "ECONNREFUSED";
 export interface CustonAxiosError extends Error {
   cause: { code: ConnetionError }
 }
+
+export interface MongoError extends Error { code: number }

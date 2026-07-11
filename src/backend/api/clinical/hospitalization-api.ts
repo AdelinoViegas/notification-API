@@ -19,6 +19,7 @@ import { getUser } from "@/backend/api/clinical/api";
 import { getUserId } from "@/lib/web-token";
 import { patientStates } from "./translator";
 import { inferRegexPattern } from "@/lib/regexp";
+import { MongoError } from "../types";
 
 export async function getPatientsReception({
   page,
