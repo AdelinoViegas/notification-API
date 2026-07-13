@@ -6,6 +6,7 @@ import Button from "@/components/ui/button";
 import InputField from "@/components/ui/input-field";
 import Card from "@/components/ui/card";
 import Tag from "@/components/ui/tag";
+import Modal from "@/components/modal";
 import { toast } from "react-toastify";
 
 type Chamber = {
@@ -123,36 +124,35 @@ export default function Chambers() {
       </Card>
 
       {/* Modal de edição */}
-      {editing && (
-        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
-          <Card className="p-6 w-full max-w-md space-y-4">
-            <Tag className="inline-flex">Editar Câmara</Tag>
-            <form action={updateAction} className="space-y-4">
-              <input type="hidden" name="id" value={editing._id} />
-              <InputField
-                textLabel="Nome da Câmara"
-                name="name"
-                defaultValue={editing.name}
-                required
-              />
-              <InputField
-                textLabel="Nº de Gavetas"
-                name="maxDrawers"
-                type="number"
-                min={1}
-                defaultValue={editing.maxDrawers}
-                required
-              />
-              <div className="flex gap-3">
-                <Button type="submit">Salvar</Button>
-                <Button type="button" cancel onClick={() => setEditing(null)}>
-                  Cancelar
-                </Button>
-              </div>
-            </form>
-          </Card>
-        </div>
-      )}
+      <Modal
+        open={!!editing}
+        onClose={() => setEditing(null)}
+        title="Editar Câmara"
+      >
+        <form action={updateAction} className="space-y-4 mt-4">
+          <input type="hidden" name="id" value={editing?._id} />
+          <InputField
+            textLabel="Nome da Câmara"
+            name="name"
+            defaultValue={editing?.name}
+            required
+          />
+          <InputField
+            textLabel="Nº de Gavetas"
+            name="maxDrawers"
+            type="number"
+            min={1}
+            defaultValue={editing?.maxDrawers}
+            required
+          />
+          <div className="flex gap-3 mt-2">
+            <Button type="submit">Salvar</Button>
+            <Button type="button" cancel onClick={() => setEditing(null)}>
+              Cancelar
+            </Button>
+          </div>
+        </form>
+      </Modal>
     </main>
   );
 }
