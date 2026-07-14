@@ -1,6 +1,3 @@
-import Link from "next/link";
-import { IoArrowBack } from "react-icons/io5";
-import Button from "@/components/ui/button";
 import Card from "@/components/ui/card";
 import Header from "@/components/header";
 import Tag from "@/components/ui/tag";
@@ -22,15 +19,7 @@ export default async function Page({
   if (!patient) redirect("/clinical/morgue?r=w");
 
   return (
-    <main className="space-y-3">
-      <div className="flex items-center gap-3">
-        <Link href="/clinical/morgue?r=w">
-          <Button type="button" cancel className="flex items-center gap-2">
-            <IoArrowBack className="size-4" />
-            Voltar
-          </Button>
-        </Link>
-      </div>
+    <main className="space-y-3 overflow-y-auto max-h-[calc(100dvh-4rem)] pr-1">
 
       <Header title="Acomodação na Morgue" />
 
