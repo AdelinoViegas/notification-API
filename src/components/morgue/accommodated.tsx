@@ -33,31 +33,30 @@ export default async function Accommodated({
     <main className="space-y-3">
       <Refresh />
 
-      <div className="flex flex-col lg:flex-row justify-between lg:items-center gap-3">
-        <Alert
-          type="info"
-          message="Faça duplo click sobre o utente para registar a saída do corpo."
+      <Alert
+        type="info"
+        message="Faça duplo click sobre o utente para registar a saída do corpo."
+      />
+
+      <div className="flex flex-col sm:flex-row gap-2">
+        <Search
+          className="flex items-center gap-3"
+          filterKey="name"
+          label="Filtrar por nome do utente"
+          placeholder="Nome do utente..."
         />
-        <div className="flex flex-col sm:flex-row gap-2">
-          <Search
-            className="flex items-center gap-3"
-            filterKey="name"
-            label="Filtrar por nome do utente"
-            placeholder="Nome do utente..."
-          />
-          <Search
-            className="flex items-center gap-3"
-            filterKey="rName"
-            label="Nome do responsável"
-            placeholder="Nome do responsável..."
-          />
-          <Search
-            className="flex items-center gap-3"
-            filterKey="rBI"
-            label="BI do responsável"
-            placeholder="Nº do BI..."
-          />
-        </div>
+        <Search
+          className="flex items-center gap-3"
+          filterKey="rName"
+          label="Nome do responsável"
+          placeholder="Nome do responsável..."
+        />
+        <Search
+          className="flex items-center gap-3"
+          filterKey="rBI"
+          label="BI do responsável"
+          placeholder="Nº do BI..."
+        />
       </div>
 
       <Table
