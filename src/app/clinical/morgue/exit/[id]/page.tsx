@@ -32,10 +32,10 @@ export default async function Page({
         </Link>
       </div>
 
-      <Header title="Registo de Saída do Corpo" />
+      <Header title="Registo de Saída do Utente" />
 
       <Card className="p-6">
-        <Tag className="inline-flex mb-4">Dados do Falecido</Tag>
+        <Tag className="inline-flex mb-4">Dados do Utente</Tag>
         <div className="grid grid-cols-2 gap-4 mb-6">
           <Field label="Nome Completo" value={detail.fullname} />
           <Field label="Sexo" value={detail.gender} />

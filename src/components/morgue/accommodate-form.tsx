@@ -90,7 +90,7 @@ export default function AccommodateForm({ patientId }: { patientId: string }) {
       </div>
 
       <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide pt-2">
-        Responsável pela Entrega do Corpo
+        Responsável pela Entrega do Utente
       </p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

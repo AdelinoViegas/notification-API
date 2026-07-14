@@ -63,10 +63,10 @@ export default function BodyExitForm({
       <input type="hidden" name="accommodationId" value={accommodationId} />
       <input type="hidden" name="patientId" value={patientId} />
 
-      {/* a) Dados do falecido — só leitura, já exibidos na página acima */}
+      {/* a) Dados do utente — só leitura, já exibidos na página acima */}
 
-      {/* b) Responsável pela saída do corpo */}
-      <Accordium title="b) Responsável pela Saída do Corpo" open>
+      {/* b) Responsável pela saída do utente */}
+      <Accordium title="b) Responsável pela Saída do Utente">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <InputField textLabel="Nome do Responsável" name="responsibleExitName" required />
           <InputField textLabel="Nº do Bilhete de Identidade" name="responsibleExitBI" required />
@@ -81,7 +81,7 @@ export default function BodyExitForm({
       </Accordium>
 
       {/* c) Transportador */}
-      <Accordium title="c) Transportador" open>
+      <Accordium title="c) Transportador">
         <div className="flex gap-6 mb-4">
           <label className="flex items-center gap-2 cursor-pointer">
             <input
@@ -132,7 +132,7 @@ export default function BodyExitForm({
       </Accordium>
 
       {/* d) Documentos obrigatórios */}
-      <Accordium title="d) Documentos Obrigatórios" open>
+      <Accordium title="d) Documentos Obrigatórios">
         <div className="space-y-3">
           {[
             { name: "docDeathCertificate", label: "Certificado de Óbito" },
@@ -149,7 +149,7 @@ export default function BodyExitForm({
       </Accordium>
 
       {/* e) Destino */}
-      <Accordium title="e) Destino" open>
+      <Accordium title="e) Destino">
         <div className="space-y-3">
           {DESTINATION_OPTIONS.map(({ _id, label }) => (
             <label key={_id} className="flex items-center gap-3 cursor-pointer select-none">
