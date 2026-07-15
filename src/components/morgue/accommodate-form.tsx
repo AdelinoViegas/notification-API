@@ -90,17 +90,18 @@ export default function AccommodateForm({ patientId }: { patientId: string }) {
       </div>
 
       <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide pt-2">
-        Responsável pela Entrega do Corpo
+        Responsável pela Entrega do Utente
       </p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <InputField textLabel="Nome do Responsável" name="responsibleName" required />
-        <InputField textLabel="Nº do Bilhete de Identidade" name="responsibleBI" required />
-        <InputField textLabel="Contacto" name="responsibleContact" type="tel" required />
+        <InputField textLabel="Nome do Responsável" name="responsibleName" placeholder="Ex: João da Silva" required />
+        <InputField textLabel="Nº do Bilhete de Identidade" name="responsibleBI" placeholder="Ex: 000123456LA041" required />
+        <InputField textLabel="Contacto" name="responsibleContact" type="tel" placeholder="Ex: 923 456 789" required />
         <Selection
           label="Parentesco"
           name="responsibleKinship"
           options={kinshipDegree}
+          defaultOptionLabel="Selecione o parentesco"
           required
         />
       </div>
