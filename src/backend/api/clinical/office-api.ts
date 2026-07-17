@@ -14,13 +14,12 @@ import { getUserId } from "@/lib/web-token";
 import { findDoctorCalendar } from "@/backend/api/clinical/scheduling-api";
 import { getDateInSlashFormat } from "@/lib/date-formater";
 import { getUser } from "@/backend/api/clinical/api";
-import { upload } from "@/backend/api/storage";
+import { serviceUpload, } from "@/backend/api/storage";
 import { CustonAxiosError, MongoError } from "@/backend/api/types";
 import { getPatientIds, syncPatientRegister } from "./process-control";
 import { calculateAge } from "@/lib/calculate-age";
 import { ServiceRequest, serviceRequestSchema } from "../type-schema";
 import { omitUndefined } from "mongoose";
-import { error as storageError } from "@/lib/storage-errors";
 
 type ConsultationTypes = "vitalSignals" | "currentStates";
 
@@ -431,15 +430,8 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
     const patientId = formData.get("patientId");
     const storageId = formData.get("storageId");
 
-    const uploadedFile = await upload(formData, await getUserId());
+    const uploadedFile = await serviceUpload(formData);
 
-    switch(uploadedFile){
-      case storageError.SERVICE_UNAVIABLE: 
-        return { status: false, message: "Serviço de arquivos Indisponivel!" }
-      case storageError.UNKNOWN_ERROR: 
-        throw new Error;
-    }
-    
     if ("error" in uploadedFile)
       return {
         status: false,
@@ -448,12 +440,12 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
 
     if(storageId){
       const consult = await officeModel.findById({ _id: officeId });
-      await externalResultsModel.updateOne({ _id: consult?.externalId }, { storageId: uploadedFile.data.id });
+      await externalResultsModel.updateOne({ _id: consult?.externalId }, { storageId: uploadedFile.id });
     }else{
       const externalResult = await externalResultsModel.create({
         patientId,
         officeId,
-        storageId: uploadedFile.data.id,
+        storageId: uploadedFile.id,
         userId: await getUserId()
       });
         
@@ -461,7 +453,7 @@ async function uploadExternalExamFile(prev: unknown, formData: FormData){
     }
 
     return {
-      message: uploadedFile.message,
+      message: "Arquivo carregado!",
       status: true,
     }
   }catch(e){

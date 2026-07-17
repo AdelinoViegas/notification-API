@@ -30,5 +30,4 @@ Configurar corretamente as variaveis de ambiente mostrados abaixo:
 # dependencias principais
 NEXT_LOGIN_PAGE_URL="http://localhost:8081/"
 API_URL="http://localhost:8080"
-NEXT_PUBLIC_STORAGE_URL="http://localhost:8080/st/public"
 ```

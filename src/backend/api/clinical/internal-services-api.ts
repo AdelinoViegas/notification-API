@@ -161,7 +161,10 @@ async function getPatients({
       availablePages: Math.ceil(filteredPatients.length / 10),
       currentPage: page
     }
-  }catch(err: unknown){
+  }catch(e){
+    const err = e as Error;
+    console.error(err.message);
+
     return {
       patients: [],
       total: 0,
@@ -226,16 +229,15 @@ async function registerExamResult(prev: unknown, formData: FormData) {
     const examFile = formData.get("userFile") as File | null;
     const examId = formData.get("examId");
     const userId = await getUserId();
-    console.warn(examFile);
 
     if (examFile && examFile.size > 0) {
       const file = await serviceUpload(formData, "userFile");
-      if("status" in file) return file
+      if("error" in file) throw new Error(file.message);
 
       // Atualiza ou cria o registro com o ID do Storage
       const data = await internalExamResultModel.findOneAndUpdate(
         { serviceId, examId }, 
-        { storageId: file.data.id, description } // Atualiza a descrição também se enviada com arquivo
+        { storageId: file.id, description } // Atualiza a descrição também se enviada com arquivo
       );
 
       if (!data) {
@@ -244,7 +246,7 @@ async function registerExamResult(prev: unknown, formData: FormData) {
           examId,
           description,
           userId,
-          storageId: file.data.id
+          storageId: file.id
         });
       }
     } else {

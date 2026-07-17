@@ -1,7 +1,8 @@
 import { LuStethoscope } from "react-icons/lu";
 import { PiAmbulance } from "react-icons/pi";
 import { FiUsers } from "react-icons/fi";
-import { FaRegHospital, FaUserDoctor } from "react-icons/fa6";
+import { FaUserDoctor } from "react-icons/fa6";
+import { LuSettings } from "react-icons/lu";
 import { RiCalendarScheduleLine } from "react-icons/ri";
 import { BsCalendar2Week } from "react-icons/bs";
 import { GrDocumentText } from "react-icons/gr";
@@ -32,7 +33,7 @@ export const clinicalIcons = [
   },
   {
     route: 'phisical-unit',
-    Icon: FaRegHospital
+    Icon: LuSettings
   },
   {
     route: 'services',
@@ -105,7 +106,7 @@ export const clinicalRoutes = [
   {
     href: "/clinical/phisical-unit",
     route: 'phisical-unit',
-    label: 'Gestão da Unidade',
+    label: 'Configuração',
   },
   {
     href: "/clinical/services",

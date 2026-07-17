@@ -1,17 +1,16 @@
 "use client";
 
-import { getFileById } from "@/backend/api/storage";
-import UserViewerButton from "@/components/user-viewer-button";
+import { getFileById, getFileUrl } from "@/backend/api/storage";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Alert from "@/components/ui/alert";
+import { FaRegFile } from "react-icons/fa";
 
 type MyFile = Awaited<ReturnType<typeof getFileById>>;
 
 export default function ViewUserFile({ id }:{ id: string }){
   const [ file, setFile ] = useState<MyFile>();
   const [ finalState, setFinalState ] = useState(false); 
-  const baseUrl = new URL(process.env.NEXT_PUBLIC_STORAGE_URL as string).toString();
 
   useEffect(() => {
     getFileById(id)
@@ -24,20 +23,47 @@ export default function ViewUserFile({ id }:{ id: string }){
 
   return(
     <>
-      { (file && "linkPathname" in file) &&  
-        <UserViewerButton
-          driveFile={{
-            name: file.metadata.name,
-            link: [baseUrl, file.linkPathname].join(""),
-            size: file.metadata.humanSize,
-            extension: file.name.split(".")[1]
-          }}
-        />
+      { file && 
+        <FileButton 
+          id={file.id} 
+          name={file.name} 
+          size={file.size} 
+        /> 
       }
 
       { (!file && finalState) &&
         <Alert type="warn" message="Serviço de arquivos indisponivel, tente mais tarde!" />
       }
     </>
+  )
+}
+
+function FileButton(params: {
+  id: string;
+  name: string;
+  size: string;
+}){
+  const buttonHandler = () => {
+    getFileUrl(params.id)
+      .then(data => window.open(data))
+      .catch(() => {
+        toast.warn("Não foi possivel abrir o arquivo!", { autoClose: 7000 });
+      });
+  }
+  return (
+    <div className="inline-flex flex gap-x-3 border border-gray-300 py-1 px-2 items-center rounded bg-gray-200">
+      <FaRegFile className="size-8" />
+      <div>
+        <p>{params.name}</p>
+        <p className="text-sm font-bold">{params.size}</p>
+      </div>
+      <button 
+        type="button" 
+        className="hover:bg-primary/80 bg-primary text-white px-2 py-1 text-sm font-medium rounded"
+        onClick={buttonHandler}
+      >
+        Ver
+      </button>
+    </div>
   )
 }
