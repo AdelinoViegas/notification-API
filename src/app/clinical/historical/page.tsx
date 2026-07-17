@@ -9,32 +9,32 @@ export const dynamic = "force-dynamic";
 
 // Mapa: valor da configuração → path da tab e label
 const ACCESS_MAP = {
-  deaths:    { path: "o", title: "Histórico de Óbitos" },
+  deaths: { path: "o", title: "Histórico de Óbitos" },
   transfers: { path: "t", title: "Histórico de Transferências" },
-  discharges:{ path: "a", title: "Histórico de Altas" },
+  discharges: { path: "a", title: "Histórico de Altas" },
 } as const;
 
 type AccessKey = keyof typeof ACCESS_MAP;
 
-export default async function Page({ 
-  searchParams 
-}:{ 
+export default async function Page({
+  searchParams
+}: {
   searchParams: Promise<{
-    r: "o" | "t" | "a", 
+    r: "o" | "t" | "a",
     name: string,
     processNumber: string,
     fromDate: string,
     toDate: string,
     p: number,
   }>
-}){
-  const { 
-    r: route, 
-    name, 
+}) {
+  const {
+    r: route,
+    name,
     processNumber,
     fromDate,
     toDate,
-    p: page 
+    p: page
   } = await searchParams;
 
   const profile = await getMyClinicalProfile();
@@ -46,7 +46,7 @@ export default async function Page({
       <div className="space-y-3">
         <Alert
           type="warn"
-          message="Não tem acesso a nenhum histórico. Contacte o administrador para configurar o seu perfil."
+          message="Não tem Permissão."
         />
       </div>
     );
@@ -60,37 +60,37 @@ export default async function Page({
   const activeRoute = route ?? allowedTabs[0].path;
   const effectiveRoute = allowedTabs.some(t => t.path === activeRoute) ? activeRoute : allowedTabs[0].path;
 
-  return(
+  return (
     <div className="space-y-3">
       <TabNav
-        keyParam="" 
+        keyParam=""
         useReactHook
         idAsIndexPage={false}
         baseUrl="/clinical/historical"
         subPaths={allowedTabs}
       />
 
-      { effectiveRoute === "o" && 
-        <DeathHistory 
-          name={name} 
-          page={page} 
+      {effectiveRoute === "o" &&
+        <DeathHistory
+          name={name}
+          page={page}
           processNumber={processNumber}
           fromDate={fromDate}
           toDate={toDate}
-      /> 
+        />
       }
-      { effectiveRoute === "t" && 
-        <TransferHistory 
-          name={name} 
-          page={page} 
+      {effectiveRoute === "t" &&
+        <TransferHistory
+          name={name}
+          page={page}
           processNumber={processNumber}
           fromDate={fromDate}
-          toDate={toDate} 
-        /> 
+          toDate={toDate}
+        />
       }
-      { effectiveRoute === "a" && (
-        <DischargeHistoryPanel 
-          name={name} 
+      {effectiveRoute === "a" && (
+        <DischargeHistoryPanel
+          name={name}
           processNumber={processNumber}
           fromDate={fromDate}
           toDate={toDate}
