@@ -4,7 +4,7 @@ import { useEffect, useActionState } from "react";
 import Button from "@/components/ui/button";
 import InputField from "@/components/ui/input-field";
 import Selection, { SelectionOption } from "./ui/selection";
-import { userCategory } from '@/backend/api/clinical/translator';
+import { userCategory, historicalAccess } from '@/backend/api/clinical/translator';
 import { registerUser } from "@/backend/api/clinical/api";
 import { toast } from "react-toastify";
 
@@ -17,7 +17,8 @@ export default function UserClinicalConfig({
   services,
   specialties,
   internalServiceId,
-  internalServices
+  internalServices,
+  historicalAccessId,
 }: { 
   userId: string;
   categoryId: string;
@@ -28,6 +29,7 @@ export default function UserClinicalConfig({
   specialties: SelectionOption[];
   internalServices: SelectionOption[];
   internalServiceId: string;
+  historicalAccessId: string[];
 }){
   const [ state, action ] = useActionState(registerUser, { message: "", status: false });
 
@@ -84,6 +86,24 @@ export default function UserClinicalConfig({
           defaultValue={internalServiceId}
           className='w-full'
         />
+
+        <fieldset className="mt-4">
+          <legend className="text-sm font-medium text-gray-700 mb-2">Acesso ao Histórico</legend>
+          <div className="flex flex-col gap-2">
+            {historicalAccess.map((option) => (
+              <label key={option._id} className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  name="historicalAccessId"
+                  value={option._id}
+                  defaultChecked={historicalAccessId.includes(option._id)}
+                  className="w-4 h-4 accent-primary"
+                />
+                <span className="text-sm">{option.label}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
 
         <Button className="mt-6" type="submit">Salvar</Button>
       </form>

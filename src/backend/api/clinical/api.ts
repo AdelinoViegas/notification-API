@@ -122,6 +122,7 @@ async function getUser(id: string){
     orderNumber: clinical?.orderNumber as number,
     serviceId: clinical?.serviceId?.toString(),
     internalServiceId: clinical?.internalServiceId?.toString(),
+    historicalAccessId: (clinical?.historicalAccessId ?? []) as string[],
     ...user
   }
 }
@@ -153,7 +154,8 @@ export async function getMyClinicalProfile(){
           } 
         : null,
       "urgency-bank": urgencyService?.label,
-      hospitalization: internalService?.name
+      hospitalization: internalService?.name,
+      historicalAccess: (user?.historicalAccessId as string[] | undefined) ?? [],
     }
   }catch(e){
     console.error("clincal-profile: ", e);
@@ -171,6 +173,7 @@ async function registerUser(prev: unknown, formData: FormData){
     const specialtyId = formData.get("specialtyId");
     const serviceId = formData.get("serviceId");
     const internalServiceId = formData.get("internalServiceId"); 
+    const historicalAccessIds = formData.getAll("historicalAccessId") as string[];
 
     const filter = omitUndefined({
       orderNumber,
@@ -179,7 +182,8 @@ async function registerUser(prev: unknown, formData: FormData){
       categoryId,
       specialtyId: specialtyId || undefined,
       serviceId: serviceId || undefined,
-      internalServiceId: internalServiceId || undefined
+      internalServiceId: internalServiceId || undefined,
+      historicalAccessId: historicalAccessIds.length > 0 ? historicalAccessIds : undefined,
     });
 
     const hasUser = await userModel.findOneAndUpdate({ userId: id }, filter);

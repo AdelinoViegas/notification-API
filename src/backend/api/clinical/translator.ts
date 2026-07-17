@@ -269,6 +269,12 @@ const userCategory = [
   },
 ];
 
+const historicalAccess: SelectionOption[] = [
+  { _id: "deaths",    label: "Histórico de Óbitos" },
+  { _id: "transfers", label: "Histórico de Transferências" },
+  { _id: "discharges",label: "Histórico de Altas" },
+];
+
 const unitTypes = [
   {
     _id: "workplace",
@@ -437,6 +443,7 @@ export {
   priorityToComponent,
   urgencyServices,
   userCategory,
+  historicalAccess,
   unitTypes,
   ccgTypes,
   surgerySchedulingArea,

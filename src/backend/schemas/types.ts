@@ -8,6 +8,7 @@ export interface ClinicalUser extends Document {
   categoryId: string;
   officeId: Types.ObjectId;
   internalServiceId: Types.ObjectId;
+  historicalAccessId: string[];
 }
 
 export interface Prescription extends Document {
