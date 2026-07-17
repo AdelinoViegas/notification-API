@@ -38,10 +38,10 @@ export default async function Page({
   } = await searchParams;
 
   const profile = await getMyClinicalProfile();
-  const historicalAccess = profile?.historicalAccess as AccessKey | null | undefined;
+  const historicalAccess = profile?.historicalAccess as AccessKey[] | null | undefined;
 
   // Se não tem configuração, bloquear acesso
-  if (!historicalAccess || !ACCESS_MAP[historicalAccess]) {
+  if (!historicalAccess || !Array.isArray(historicalAccess) || historicalAccess.length === 0) {
     return (
       <div className="space-y-3">
         <Alert
@@ -52,20 +52,22 @@ export default async function Page({
     );
   }
 
-  const allowedTab = ACCESS_MAP[historicalAccess];
+  const allowedTabs = historicalAccess
+    .filter((key): key is AccessKey => key in ACCESS_MAP)
+    .map(key => ACCESS_MAP[key]);
 
-  // Garantir que a route activa é a permitida (redirecionar para a tab correcta se necessário)
-  const activeRoute = route ?? allowedTab.path;
-  const effectiveRoute = activeRoute === allowedTab.path ? activeRoute : allowedTab.path;
+  // Garantir que a route activa é uma das permitidas
+  const activeRoute = route ?? allowedTabs[0].path;
+  const effectiveRoute = allowedTabs.some(t => t.path === activeRoute) ? activeRoute : allowedTabs[0].path;
 
   return(
     <div className="space-y-3">
       <TabNav
         keyParam="" 
         useReactHook
-        idAsIndexPage
+        idAsIndexPage={false}
         baseUrl="/clinical/historical"
-        subPaths={[ allowedTab ]}
+        subPaths={allowedTabs}
       />
 
       { effectiveRoute === "o" && 

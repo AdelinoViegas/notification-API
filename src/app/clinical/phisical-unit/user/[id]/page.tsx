@@ -34,7 +34,7 @@ export default async function Page({ params }:{ params: Promise<{ id: string }>}
           specialties={specialties}
           internalServices={internalServices}
           internalServiceId={user?.internalServiceId ?? ""}
-          historicalAccessId={user?.historicalAccessId ?? ""}
+          historicalAccessId={user?.historicalAccessId ?? []}
         />
 
         <UserWorkplace userId={id} />

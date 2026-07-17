@@ -122,7 +122,7 @@ async function getUser(id: string){
     orderNumber: clinical?.orderNumber as number,
     serviceId: clinical?.serviceId?.toString(),
     internalServiceId: clinical?.internalServiceId?.toString(),
-    historicalAccessId: clinical?.historicalAccessId?.toString(),
+    historicalAccessId: (clinical?.historicalAccessId ?? []) as string[],
     ...user
   }
 }
@@ -155,7 +155,7 @@ export async function getMyClinicalProfile(){
         : null,
       "urgency-bank": urgencyService?.label,
       hospitalization: internalService?.name,
-      historicalAccess: user?.historicalAccessId ?? null,
+      historicalAccess: (user?.historicalAccessId as string[] | undefined) ?? [],
     }
   }catch(e){
     console.error("clincal-profile: ", e);
@@ -173,7 +173,7 @@ async function registerUser(prev: unknown, formData: FormData){
     const specialtyId = formData.get("specialtyId");
     const serviceId = formData.get("serviceId");
     const internalServiceId = formData.get("internalServiceId"); 
-    const historicalAccessId = formData.get("historicalAccessId");
+    const historicalAccessIds = formData.getAll("historicalAccessId") as string[];
 
     const filter = omitUndefined({
       orderNumber,
@@ -183,7 +183,7 @@ async function registerUser(prev: unknown, formData: FormData){
       specialtyId: specialtyId || undefined,
       serviceId: serviceId || undefined,
       internalServiceId: internalServiceId || undefined,
-      historicalAccessId: historicalAccessId || undefined,
+      historicalAccessId: historicalAccessIds.length > 0 ? historicalAccessIds : undefined,
     });
 
     const hasUser = await userModel.findOneAndUpdate({ userId: id }, filter);

@@ -29,7 +29,7 @@ export default function UserClinicalConfig({
   specialties: SelectionOption[];
   internalServices: SelectionOption[];
   internalServiceId: string;
-  historicalAccessId: string;
+  historicalAccessId: string[];
 }){
   const [ state, action ] = useActionState(registerUser, { message: "", status: false });
 
@@ -87,13 +87,23 @@ export default function UserClinicalConfig({
           className='w-full'
         />
 
-        <Selection
-          options={historicalAccess}
-          label="Histórico"
-          name="historicalAccessId"
-          defaultValue={historicalAccessId}
-          className='w-full'
-        />
+        <fieldset className="mt-4">
+          <legend className="text-sm font-medium text-gray-700 mb-2">Acesso ao Histórico</legend>
+          <div className="flex flex-col gap-2">
+            {historicalAccess.map((option) => (
+              <label key={option._id} className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  name="historicalAccessId"
+                  value={option._id}
+                  defaultChecked={historicalAccessId.includes(option._id)}
+                  className="w-4 h-4 accent-primary"
+                />
+                <span className="text-sm">{option.label}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
 
         <Button className="mt-6" type="submit">Salvar</Button>
       </form>

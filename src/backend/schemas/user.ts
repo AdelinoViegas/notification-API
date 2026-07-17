@@ -11,8 +11,9 @@ export const userSchema = new Schema<ClinicalUser>({
   specialtyId: Schema.ObjectId,
   internalServiceId: Schema.ObjectId,
   historicalAccessId: {
-    type: String,
+    type: [String],
     enum: ["deaths", "transfers", "discharges"],
+    default: [],
   },
 
   categoryId: {
