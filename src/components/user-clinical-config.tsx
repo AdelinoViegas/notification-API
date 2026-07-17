@@ -4,7 +4,7 @@ import { useEffect, useActionState } from "react";
 import Button from "@/components/ui/button";
 import InputField from "@/components/ui/input-field";
 import Selection, { SelectionOption } from "./ui/selection";
-import { userCategory } from '@/backend/api/clinical/translator';
+import { userCategory, historicalAccess } from '@/backend/api/clinical/translator';
 import { registerUser } from "@/backend/api/clinical/api";
 import { toast } from "react-toastify";
 
@@ -17,7 +17,8 @@ export default function UserClinicalConfig({
   services,
   specialties,
   internalServiceId,
-  internalServices
+  internalServices,
+  historicalAccessId,
 }: { 
   userId: string;
   categoryId: string;
@@ -28,6 +29,7 @@ export default function UserClinicalConfig({
   specialties: SelectionOption[];
   internalServices: SelectionOption[];
   internalServiceId: string;
+  historicalAccessId: string;
 }){
   const [ state, action ] = useActionState(registerUser, { message: "", status: false });
 
@@ -82,6 +84,14 @@ export default function UserClinicalConfig({
           label="Serviço de Internamento"
           name="internalServiceId"
           defaultValue={internalServiceId}
+          className='w-full'
+        />
+
+        <Selection
+          options={historicalAccess}
+          label="Histórico"
+          name="historicalAccessId"
+          defaultValue={historicalAccessId}
           className='w-full'
         />
 
