@@ -8,6 +8,7 @@ interface Instance {
 interface MethodConfig {
   params?: Record<string, string>;
   headers?: Record<string, string>;
+  omit?: { headers: string[]  }
 }
 
 type HttpBody = Record<string, unknown> | FormData;
@@ -68,6 +69,31 @@ export class FetchService implements Fetch {
     return (await response.json()) as T;
   }
 
+  async patch<T>(pathname: string, config: MethodConfig = {}): Promise<T> {
+    const url = this.#createRequestUrl(pathname, config.params);
+    
+    const headers = config.omit?.headers 
+      ? this.#omitHeaders(config.omit.headers)
+      : this.#config.headers;
+
+    const response = await fetch(url, {
+      method: "PATCH",
+      headers: {
+        ...headers,
+        ...config.headers,
+      },
+    });
+
+    if (!response.ok) 
+      return Promise.reject({ 
+        status: response.status,
+        message: "Falha na conexão!",
+        detail: response.statusText
+      });
+
+    return (await response.json()) as T;
+  }
+
   async post<T>(pathname: string, body: HttpBody, config: MethodConfig = {}): Promise<T> {
     const url = this.#createRequestUrl(pathname, config.params);
     const isFormData = body instanceof FormData;
@@ -90,18 +116,55 @@ export class FetchService implements Fetch {
       body: isFormData ? body : JSON.stringify(body),
     });
 
-    // if (!response.ok) {
-    //   const errorText = await response.text().catch(() => "Erro desconhecido");
-    //   throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
-    // }
-
     if(!response.ok)
       return Promise.reject({ 
         status: response.status,
-        message: response.status === 502 ? "Falha na conexção" : "Erro desconhecido",
+        message: response.status === 502 ? "Internal Service Error" : "Unknown Error",
         detail: response.statusText
       });
 
     return (await response.json()) as T;
+  }
+
+  async put<T>(pathname: string, body: HttpBody, config: MethodConfig = {}): Promise<T> {
+    const url = this.#createRequestUrl(pathname, config.params);
+    const isFormData = body instanceof FormData;
+
+    // Se for FormData, REMOVEMOS o content-type para o fetch injetar o boundary nativo
+    const requestHeaders = {
+      ...this.#config.headers,
+      ...config.headers,
+    };
+
+    if (isFormData) {
+      delete requestHeaders["content-type"]; 
+      // Se houver uma versão em caixa alta ou baixa, limpamos ambas
+      delete requestHeaders["Content-Type"]; 
+    }
+
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: requestHeaders,
+      body: isFormData ? body : JSON.stringify(body),
+    });
+    
+    if(!response.ok)
+      return Promise.reject({ 
+        status: response.status,
+        message: response.status === 502 ? "Internal Service Error" : "Unknown Error",
+        detail: response.statusText
+      });
+
+    return (await response.json()) as T;
+  }
+
+  #omitHeaders(headers: string[]){
+    const swap: Record<string, string> = {};
+    for (const k in this.#config.headers){
+      if(headers.includes(k)) continue;
+      swap[k] = this.#config.headers[k];
+    }
+
+    return swap;
   }
 }
