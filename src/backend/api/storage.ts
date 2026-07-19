@@ -78,6 +78,8 @@ export async function upload(params: FormData, authorId: string){
     });
 
     if("error" in preAssignedUrl) return error.PRE_ASSIGNED_URL;
+    
+    console.info(preAssignedUrl);
 
     const uploadedFile = await fetch(preAssignedUrl.url, {
       method: "PUT",
