@@ -4,10 +4,7 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { getMyClinicalProfile } from "@/backend/api/clinical/api";
 
-type RouteMap = Map<string, { 
-  href: string; 
-  label: string;
-}>;
+type RouteMap = Map<string, { href: string, label: string }>;
 
 type TypeService = "urgency-bank" | "hospitalization";
 
@@ -36,8 +33,8 @@ export default function NavLabel({ routes }: { routes: RouteMap }){
   }, [pathname]);
   
   return(
-    <div className="px-8 lg:px-48 border-b mb-3 py-1 flex gap-x-3 bg-[#25A2E9] rounded-es-md">
-      <h2 className="font-semibold uppercase text-white">{routes.get(pathname.split("/").slice(0, 3).join("/"))?.label}</h2>
+    <div className="px-8 lg:px-48 border-b mb-3 py-1 flex gap-x-3 bg-gray-100">
+      <h2 className="font-semibold uppercase">{routes.get(pathname.split("/").slice(0, 3).join("/"))?.label}</h2>
      {!!service && <h2 className="font-semibold uppercase text-white">»{" "}{service}</h2>}
     </div>
   )
