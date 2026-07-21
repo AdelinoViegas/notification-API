@@ -40,6 +40,7 @@ export default async function WaitingList({ name }: { name?: string }) {
 
       <Table
         baseRowLink="/clinical/morgue"
+        rowLength={6}
         columns={[
           "Nome do Utente",
           "Sexo",

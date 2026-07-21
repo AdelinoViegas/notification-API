@@ -10,9 +10,9 @@ export default async function SideNav(){
 
   return(
     <div className={clsx(
-      "bg-white border-r flex lg:h-full flex-col px-3 py-4 md:px-2",
-      "md:w-2/3 min-[958px]:w-2/4",
-      "min-[1144px]:w-[350px]"
+      "fixed top-0 left-0 bg-white border-r flex lg:h-full flex-col px-3 py-4 md:px-2",
+      "md:w-2/3 min-[958px]:w-2/4",  
+      "min-[1144px]:w-[320px]"
     )}>
       <Link href="/clinical">
         <div className="bg-gradient-to-b from-[#5ba3cf] to-primary text-white flex gap-x-3 px-3 py-2 mb-1 rounded items-center">
