@@ -61,6 +61,7 @@ export default async function Accommodated({
 
       <Table
         baseRowLink="/clinical/morgue/exit"
+        rowLength={7}
         columns={[
           "Nome do Utente",
           "Câmara",

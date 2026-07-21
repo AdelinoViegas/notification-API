@@ -17,9 +17,12 @@ export default async function Layout({ children }: Readonly<{ children: React.Re
     <FeedbackProvider>
       <main className="md:flex h-screen">
         <SideNav />
-        <div className="w-full">
-          <Userbar />
-          <NavLabel routes={routeMap} />
+        <div className="mt-0 ms-[320px] w-full">
+          <div className="sticky top-0 z-10 mb-10">
+            <Userbar />
+            <NavLabel routes={routeMap} />
+          </div>
+
           <Container>{children}</Container>
         </div>
       </main>
