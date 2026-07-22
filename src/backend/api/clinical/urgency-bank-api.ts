@@ -218,7 +218,7 @@ async function getPatient({ patientId }: { patientId: string }){
         reason: screening.reason as string,
         advice: screening.advice as string,
         state: screening.state as string,
-        vitalSignals: {}
+        vitalSignals: screening.vitalSignals
       }, 
       patientStatus: state?.patientStatus as string,
     }
