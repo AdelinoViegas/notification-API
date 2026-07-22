@@ -35,7 +35,7 @@ export default function NavLabel({ routes }: { routes: RouteMap }){
   return(
     <div className="px-8 lg:px-48 border-b mb-3 py-1 flex gap-x-3 bg-gray-100">
       <h2 className="font-semibold uppercase">{routes.get(pathname.split("/").slice(0, 3).join("/"))?.label}</h2>
-     {!!service && <h2 className="font-semibold uppercase text-white">»{" "}{service}</h2>}
+     {!!service && <h2 className="font-semibold uppercase">»{" "}{service}</h2>}
     </div>
   )
 }
