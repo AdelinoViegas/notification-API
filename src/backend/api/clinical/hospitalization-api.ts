@@ -181,7 +181,7 @@ export async function signNursing(p: unknown, formData: FormData){
     const nursingName = formData.get("nursingName") as string;
     const bedNumber = formData.get("bed") as string;
 
-    db.transaction(async (session) => {
+    await db.transaction(async (session) => {
       if(sectionName && nursingName){
         await throwValidatePattern({ value: nursingName, to: "nursing"});
         const [ section ] = await sectionModel.create([{ name: sectionName }], { session});
@@ -234,7 +234,7 @@ export async function signNursing(p: unknown, formData: FormData){
         ? "Nº da cama ja existente na enfermaria selecionada!"
         : err.cause 
           ? err.message
-          : "Não foi possivel registrar!",
+          : err.message || "Não foi possivel registrar!",
       status: false
     }
   }
@@ -500,7 +500,7 @@ export async function updateBed(prev: unknown, formData: FormData){
   try{
     const id = formData.get("id") // id da cama;
     const nursingId = formData.get("nursingId") as string;
-    const bedName = formData.get("name");
+    const bedName = formData.get("name") as string;
 
     const bed = await bedNursingModel.findById({ _id: id });
 
@@ -509,6 +509,8 @@ export async function updateBed(prev: unknown, formData: FormData){
     if(!bed) throw new Error("cama não encontrada!");
 
     if(!allocated.state) throw new Error(allocated.message);
+
+    await throwValidatePattern({ value: bedName, to: "bed"});
 
     await bedNursingModel.updateOne({ _id: id }, {
       nursingId,
