@@ -38,7 +38,7 @@ export default function SpecialtyModal({ shortWord }: { shortWord?: boolean; }){
 
   return(
     <div>
-      <Button type="button" onClick={openModal} className="flex gap-x-1">
+      <Button type="button" onClick={openModal} className="flex gap-x-1 mb-4">
         <PlusIcon className="w-5" />
         {shortWord?"Nova":"Nova Especialidade"}
       </Button>

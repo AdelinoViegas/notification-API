@@ -9,7 +9,6 @@ import { BsBackspace as BackspaceIcon } from "react-icons/bs";
 import { ChangeEvent, useRef } from "react";
 import debounce from "debounce";
 import InputField from "@/components/ui/input-field";
-import Button from "@/components/ui/button";
 
 type SearchProps = {
   filterKey: string;
@@ -51,17 +50,23 @@ export default function Search({
   }
 
   return(
-    <div ref={divRef} className={className?className:"flex w-96 items-center gap-3"}>
+    <div ref={divRef} className={className ? className : "flex w-96 items-end gap-3"}>
       <InputField
-        className="my-0"
+        className="my-0 grow"
         textLabel={label}
         placeholder={placeholder} 
         onChange={onChangeText}
         disabled={disabled}
       />
-      <Button onClick={handleClear} disabled={disabled}>
-        <BackspaceIcon className="size-6" />
-      </Button>
+      <button
+        onClick={handleClear}
+        disabled={disabled}
+        type="button"
+        className="flex items-center justify-center w-9 h-9 rounded-md border border-gray-300 hover:bg-gray-100 active:bg-gray-200 text-gray-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex-shrink-0"
+        title="Limpar pesquisa"
+      >
+        <BackspaceIcon className="size-5" />
+      </button>
     </div>
-  )
+  );
 }

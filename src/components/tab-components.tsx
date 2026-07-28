@@ -38,7 +38,7 @@ function AccesTypeForm(){
 
       {
         type === "transferred" &&
-        <div className="col-span-2 flex gap-3 items-center">
+        <div className="col-span-2 flex gap-3 items-end">
           <Selection
             label="Unidade Externa"
             options={externalUnits}
@@ -206,7 +206,7 @@ const tabComponents = [
         placeholder="Digite o Número de Telefone"
       />
 
-      <div className="flex gap-3 items-center">
+      <div className="flex gap-3 items-end">
         <InputField
           textLabel="Documentação (BI | Passaporte | Cédula)"
           name="patientDocument" 
