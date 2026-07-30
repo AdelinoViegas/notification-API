@@ -1,7 +1,7 @@
 "use client";
 
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
-import { IoClose } from 'react-icons/io5';
+
 import Button from '@/components/ui/button';
 import { ModalContext } from '@/components/modal-context';
 import clsx from 'clsx';
@@ -53,11 +53,9 @@ export default function Modal({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="absolute top-4 right-4 w-7 h-7 rounded-full border-2 border-red-400 bg-red-50 hover:bg-red-100 active:bg-red-200 transition-colors flex items-center justify-center text-red-500"
+                  className="absolute top-4 right-4 w-5 h-5 rounded-full border-2 border-red-400 bg-red-100 hover:bg-red-200 active:bg-red-300 transition-colors"
                   aria-label="Fechar"
-                >
-                  <IoClose className="size-4" />
-                </button>
+                />
               </div>
 
               {/* Separador */}
