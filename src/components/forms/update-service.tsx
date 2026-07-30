@@ -84,7 +84,7 @@ export default function UpdateService({
         />
 
 
-        { specialtyState && <div className="flex gap-3 items-center">
+        { specialtyState && <div className="flex gap-3 items-end">
           <Selection
             options={_specialties}
             label="Especialidade"

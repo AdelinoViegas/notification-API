@@ -71,7 +71,7 @@ export default function Prescription({
             required
           />
 
-          <div className="flex gap-x-3 items-center">
+          <div className="flex gap-x-3 justify-end mt-2">
             <Button cancel onClick={()=>setModal(false)} type="button">Fechar</Button>
             <Button disabled={!!description}>Salvar</Button>
           </div>

@@ -77,7 +77,7 @@ export default function AccessForm({ data, eUnitsJson }: { data?: string; eUnits
         />
 
         {acessType === "transferred" &&   
-          <div className="col-span-2 flex gap-3 items-center">
+          <div className="col-span-2 flex gap-3 items-end">
             <Selection
               key={externalUnit}
               label="Escolha a unidade externa"

@@ -95,7 +95,7 @@ export default function RegisterNursing(){
         title="Registro de Enfermaria"
       >
         <form action={action} ref={formRef}>
-          <div className="flex gap-x-3 items-center">
+          <div className="flex gap-x-3 items-end">
             <Selection
               label="Serviço de Internamento"
               name="serviceId"
@@ -105,10 +105,10 @@ export default function RegisterNursing(){
               onChange={e => setSelectedService(e.target.value)}
             />
 
-            <Button type="button" onClick={()=>setModalService(true)}>Novo</Button>
+            <Button type="button" className="mb-4" onClick={()=>setModalService(true)}>Novo</Button>
           </div>
 
-          {!newSectionState && <div className="flex gap-x-3 items-center">
+          {!newSectionState && <div className="flex gap-x-3 items-end">
             <Selection
               label="Ala"
               name="sectionId"
@@ -118,7 +118,7 @@ export default function RegisterNursing(){
               className="grow"
             />
 
-            <Button onClick={()=>setNewSectionState(true)} type="button">Nova</Button>
+            <Button onClick={()=>setNewSectionState(true)} type="button" className="mb-4">Nova</Button>
           </div>}
 
           { newSectionState && <>
@@ -148,7 +148,7 @@ export default function RegisterNursing(){
             </div>
           </>}
 
-          {(!newSectionState && !newNursingState) && <div className="flex gap-x-3 items-center">
+          {(!newSectionState && !newNursingState) && <div className="flex gap-x-3 items-end">
             <Selection
               label="Enfermaria"
               name="nursingId"
@@ -158,7 +158,7 @@ export default function RegisterNursing(){
               className="grow"
             />
 
-            <Button onClick={()=>setNewNursingState(true)} type="button">Nova</Button>
+            <Button onClick={()=>setNewNursingState(true)} type="button" className="mb-4">Nova</Button>
           </div>}
 
            { newNursingState && <>
@@ -198,9 +198,9 @@ export default function RegisterNursing(){
             required
           />
 
-          <div className="flex gap-x-3 items-center">
+          <div className="flex gap-x-3 items-center justify-end mt-2">
             <Button cancel onClick={()=>setModal(false)} type="button">Fechar</Button>
-            <Button onClick={reset} type="button">Repor Formulario</Button>
+            <Button onClick={reset} type="button">Repor Formulário</Button>
             <Button>Salvar</Button>
           </div>
         </form>
