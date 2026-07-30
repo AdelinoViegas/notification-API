@@ -211,7 +211,6 @@ const tabComponents = [
           textLabel="Documentação (BI | Passaporte | Cédula)"
           name="patientDocument" 
           placeholder="Nº de BI / Nº de Cédula / Nº de Passaporte"
-          required
           className="w-full"
           id="Documentação:0:documentation"
           title="123456789AB123"
