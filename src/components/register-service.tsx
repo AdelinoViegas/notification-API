@@ -127,7 +127,7 @@ export default function RegisterService(){
             required
           />
 
-          { specialtyState && <div className="flex gap-3 items-center">
+          { specialtyState && <div className="flex gap-3 items-end">
             <Selection
               options={specialties}
               label="Especialidade"
@@ -139,7 +139,7 @@ export default function RegisterService(){
             <SpecialtyModal shortWord />
           </div>}
 
-          <div className="flex gap-3 items-center">
+          <div className="flex gap-3 items-end">
             <Selection
               options={categories}
               label="Categoria"
@@ -149,7 +149,7 @@ export default function RegisterService(){
               onClick={handleSelect}
             />
             <Button
-              className="flex gap-x-1"  
+              className="flex gap-x-1 mb-4"  
               type="button" 
               onClick={toggleCategory}
             >
@@ -158,7 +158,7 @@ export default function RegisterService(){
             </Button>
           </div>
 
-          <div className="flex gap-3 items-center">
+          <div className="flex gap-3 items-end">
             <Selection
               options={classifications}
               label="Classificação"
@@ -168,7 +168,7 @@ export default function RegisterService(){
               onClick={handleSelect}
             />
             <Button
-              className="flex gap-x-1"  
+              className="flex gap-x-1 mb-4"  
               type="button" 
               onClick={toggleClassification}
             >
@@ -177,7 +177,7 @@ export default function RegisterService(){
             </Button>
           </div>
 
-          <div className="flex gap-3 items-center">
+          <div className="flex gap-3 items-end">
             <Selection
               options={groups}
               label="Grupo"
@@ -187,7 +187,7 @@ export default function RegisterService(){
               onClick={handleSelect}
             />
             <Button
-              className="flex gap-x-1" 
+              className="flex gap-x-1 mb-4" 
               type="button" 
               onClick={toggleGroupModal}
             >

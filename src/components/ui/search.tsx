@@ -74,5 +74,5 @@ export default function Search({
         </Button>
       </div>
     </div>
-  )
+  );
 }

@@ -1,7 +1,9 @@
 "use client";
 
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
+
 import Button from '@/components/ui/button';
+import { ModalContext } from '@/components/modal-context';
 import clsx from 'clsx';
 
 type ModalProps = {
@@ -28,21 +30,30 @@ export default function Modal({
   widthFull
 }: ModalProps){
   return(
-    <>
-    <Dialog {...{open}} as="div" className="relative z-10 focus:outline-none" onClose={asWindow?()=>{}:onClose}>
-        <div className="fixed inset-0 z-10 w-screen overflow-y-auto bg-primary/50 backdrop-blur">
+    <ModalContext.Provider value={true}>
+      <Dialog {...{open}} as="div" className="relative z-10 focus:outline-none" onClose={asWindow?()=>{}:onClose}>
+        <div className="fixed inset-0 z-10 w-screen overflow-y-auto bg-black/30 backdrop-blur-sm">
           <div className={clsx("flex min-h-full items-center justify-center p-4",
             widthFull && "mx-auto max-w-[1024px]"
           )}>
             <DialogPanel
               transition
-              className={clsx("rounded-xl bg-white p-6 duration-300 ease-out data-[closed]:transform-[scale(95%)] data-[closed]:opacity-0 border shadow-xl",
+              className={clsx("rounded-xl bg-white p-6 duration-300 ease-out data-[closed]:transform-[scale(95%)] data-[closed]:opacity-0 border shadow-xl relative",
                widthFull?"w-full":"w-full max-w-md"
               )}
             >
-              <DialogTitle as="h3" className="text-base/7 font-medium uppercase">
-                {title}
-              </DialogTitle>
+              <div className="flex items-center justify-between border-b pb-3 mb-4">
+                <DialogTitle as="h3" className="text-base/7 font-medium uppercase">
+                  {title}
+                </DialogTitle>
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="size-4 rounded-full bg-red-600 hover:bg-red-700 active:bg-red-800 transition-colors focus:outline-none cursor-pointer"
+                  title="Fechar"
+                  aria-label="Fechar"
+                />
+              </div>
               {
                 children?children:
                 <>
@@ -65,6 +76,6 @@ export default function Modal({
           </div>
         </div>
       </Dialog>
-    </>
+    </ModalContext.Provider>
   );
 }
