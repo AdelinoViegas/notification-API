@@ -49,7 +49,7 @@ function InternalMovimentForm(){
     <div>
       <form action={action}>
         <input type="hidden" name="patientId" value={params.patientId} />
-        <div className="flex gap-x-3 items-center">
+        <div className="flex gap-x-3 items-end">
           <Selection
             label="Serviço de Internamento"
             name="serviceId"
@@ -58,7 +58,7 @@ function InternalMovimentForm(){
             className="grow"
           />
 
-          <Button disabled type="button" onClick={()=>setModalService(true)}>Novo</Button>
+          <Button disabled type="button" className="mb-4" onClick={()=>setModalService(true)}>Novo</Button>
         </div>
 
         <InputDetails

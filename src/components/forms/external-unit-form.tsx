@@ -42,7 +42,7 @@ export default function ExternalUnitForm({ location }: { location?: string }) {
       <Button
         type="button" 
         onClick={openModal} 
-        className="flex gap-x-2"
+        className="flex gap-x-2 mb-4"
       >
         {location === "phisical"?"Nova Unidade Externa":"Nova"}
       </Button>

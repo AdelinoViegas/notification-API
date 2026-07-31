@@ -1,7 +1,9 @@
 "use client";
 
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
+
 import Button from '@/components/ui/button';
+import { ModalContext } from '@/components/modal-context';
 import clsx from 'clsx';
 
 type ModalProps = {
@@ -28,9 +30,9 @@ export default function Modal({
   widthFull
 }: ModalProps){
   return(
-    <>
-    <Dialog {...{open}} as="div" className="relative z-10 focus:outline-none" onClose={asWindow?()=>{}:onClose}>
-        <div className="fixed inset-0 z-10 w-screen overflow-y-auto bg-primary/50 backdrop-blur">
+    <ModalContext.Provider value={true}>
+      <Dialog {...{open}} as="div" className="relative z-10 focus:outline-none" onClose={asWindow?()=>{}:onClose}>
+        <div className="fixed inset-0 z-10 w-screen overflow-y-auto bg-black/30 backdrop-blur-sm">
           <div className={clsx("flex min-h-full items-center justify-center p-4",
             widthFull && "mx-auto max-w-[1024px]"
           )}>
@@ -74,6 +76,6 @@ export default function Modal({
           </div>
         </div>
       </Dialog>
-    </>
+    </ModalContext.Provider>
   );
 }

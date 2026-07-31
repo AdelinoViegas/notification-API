@@ -56,7 +56,7 @@ export default function ExternalTransfer({ id, location }: { id?: string, locati
             <input type="hidden" name="patientId" defaultValue={patientId} />
             <input type="hidden" name="location" defaultValue={location} />
              
-            <div className="flex gap-x-3 items-center">
+            <div className="flex gap-x-3 items-end">
               <Selection
                 label="Unidades Externas"
                 options={externalUnits}
