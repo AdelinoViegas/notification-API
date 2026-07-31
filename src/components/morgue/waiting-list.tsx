@@ -25,13 +25,12 @@ export default async function WaitingList({ name }: { name?: string }) {
     <main className="space-y-3">
       <Refresh />
 
-      <div className="flex flex-col lg:flex-row justify-between lg:items-center gap-3">
+      <div className="flex flex-col lg:flex-row justify-between lg:items-end gap-3">
         <Alert
           type="info"
           message="Faça duplo click sobre o utente para proceder à acomodação na morgue."
         />
         <Search
-          className="flex items-center gap-3"
           filterKey="name"
           label="Filtrar por nome"
           placeholder="Buscar pelo nome do utente..."

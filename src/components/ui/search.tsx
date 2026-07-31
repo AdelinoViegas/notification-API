@@ -10,6 +10,7 @@ import { ChangeEvent, useRef } from "react";
 import debounce from "debounce";
 import InputField from "@/components/ui/input-field";
 import Button from "@/components/ui/button";
+import clsx from "clsx";
 
 type SearchProps = {
   filterKey: string;
@@ -45,23 +46,33 @@ export default function Search({
 
   const handleClear = ()=>{
     const inputElement = divRef.current?.getElementsByTagName("input")[0] as HTMLInputElement;
-    inputElement.value = "";
+    if (inputElement) {
+      inputElement.value = "";
+    }
     search.delete(filterKey);
     router.push(`${pathname}?${search.toString()}`);
   }
 
   return(
-    <div ref={divRef} className={className?className:"flex w-96 items-center gap-3"}>
-      <InputField
-        className="my-0"
-        textLabel={label}
-        placeholder={placeholder} 
-        onChange={onChangeText}
-        disabled={disabled}
-      />
-      <Button onClick={handleClear} disabled={disabled}>
-        <BackspaceIcon className="size-6" />
-      </Button>
+    <div ref={divRef} className={clsx("flex flex-col gap-1", className)}>
+      {label && <span className="text-xs font-medium">{label}</span>}
+      <div className="flex items-center gap-2">
+        <InputField
+          className="my-0 flex-1"
+          placeholder={placeholder} 
+          onChange={onChangeText}
+          disabled={disabled}
+        />
+        <Button 
+          type="button"
+          onClick={handleClear} 
+          disabled={disabled}
+          className="!mt-0 h-[34px] px-3 bg-primary hover:opacity-90 active:opacity-80 text-white flex-shrink-0"
+          title="Limpar filtro"
+        >
+          <BackspaceIcon className="size-5" />
+        </Button>
+      </div>
     </div>
   )
 }

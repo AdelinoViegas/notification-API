@@ -38,21 +38,18 @@ export default async function Accommodated({
         message="Faça duplo click sobre o utente para registar a saída do corpo."
       />
 
-      <div className="flex flex-col sm:flex-row gap-2">
+      <div className="flex flex-col sm:flex-row gap-3 items-end">
         <Search
-          className="flex items-center gap-3"
           filterKey="name"
           label="Filtrar por nome do utente"
           placeholder="Nome do utente..."
         />
         <Search
-          className="flex items-center gap-3"
           filterKey="rName"
           label="Nome do responsável"
           placeholder="Nome do responsável..."
         />
         <Search
-          className="flex items-center gap-3"
           filterKey="rBI"
           label="BI do responsável"
           placeholder="Nº do BI..."
