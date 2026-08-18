@@ -123,7 +123,7 @@ async function getUser(id: string){
     serviceId: clinical?.serviceId?.toString(),
     internalServiceId: clinical?.internalServiceId?.toString(),
     historicalAccessId: (clinical?.historicalAccessId ?? []) as string[],
-    ...user
+    ...(user ?? { fullname: "Não identificado", id }),
   }
 }
 
@@ -170,9 +170,9 @@ async function registerUser(prev: unknown, formData: FormData){
     const officeId = formData.get("officeId") as string;
     const roleId = formData.get("roleId") as string;
     const categoryId = formData.get("categoryId") as string;
-    const specialtyId = formData.get("specialtyId");
-    const serviceId = formData.get("serviceId");
-    const internalServiceId = formData.get("internalServiceId"); 
+    const specialtyId = formData.get("specialtyId") as string;
+    const serviceId = formData.get("serviceId") as string;
+    const internalServiceId = formData.get("internalServiceId") as string;
     const historicalAccessIds = formData.getAll("historicalAccessId") as string[];
 
     const filter = omitUndefined({
@@ -199,11 +199,21 @@ async function registerUser(prev: unknown, formData: FormData){
         ? "Usuário actualizado com sucesso!"
         :"Usuário registrado com sucesso!",
       status: true,
+      // Devolve os valores guardados para o componente actualizar o estado local
+      saved: {
+        categoryId,
+        serviceId: serviceId || "",
+        orderNumber: Number(orderNumber),
+        specialtyId: specialtyId || "",
+        internalServiceId: internalServiceId || "",
+        historicalAccessId: historicalAccessIds,
+      }
     };
   }catch{
     return {
       message: "Não foi possivel registrar!",
-      status: false
+      status: false,
+      saved: undefined,
     }
   }
 }

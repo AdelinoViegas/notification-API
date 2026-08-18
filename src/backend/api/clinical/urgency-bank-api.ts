@@ -1595,12 +1595,13 @@ async function getTransferHistories({
       const transfered = await externalTransferModel.findOne({patientId: lastId});
          
       if(transfered){
+        const transferDoctor = await getUser(transfered?.userId as string);
         patientTransferred.push({
           id: patient?._id.toString() as string,
           processNumber: patient?.registerNumber as number,
           transferDate: transfered?.userCreatedAt as Date,
           fullname: patient.fullname as string,
-          responsibleDoctor: (await getUser(transfered?.userId as string)).fullname
+          responsibleDoctor: transferDoctor?.fullname ?? "Não identificado"
         });
       }
     }
@@ -1765,12 +1766,13 @@ async function getDeathHistories({
       if(!patient) 
         continue;
 
+      const deathDoctor = await getUser(deceasedpatient?.userId as string);
       _deceasedpatients.push({
         id: patient?._id.toString() as string,
         processNumber: patient?.registerNumber as number,
         dateOfDeath: deceasedpatient.dateOfDeath as Date,
         fullname: patient.fullname as string,
-        responsibleDoctor: (await getUser(deceasedpatient?.userId as string)).fullname
+        responsibleDoctor: deathDoctor?.fullname ?? "Não identificado"
       });
     }
 
@@ -1828,7 +1830,7 @@ async function getDeceasedPatient(id: string){
     admissionDate: deceasedPatient?.admissionDate && getDataAndHoursFormat(deceasedPatient?.admissionDate as Date),
     dateOfDeath: getDataAndHoursFormat(deceasedPatient?.dateOfDeath as Date),
     reasonOfDeath: deceasedPatient?.reasonOfDeath as string,
-    doctorResponsible: (await getUser(deceasedPatient?.userId as string)).fullname
+    doctorResponsible: (await getUser(deceasedPatient?.userId as string))?.fullname ?? "Não identificado"
   }
 }
 
