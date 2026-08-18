@@ -638,7 +638,7 @@ async function getExternalUnits({ name }:{ name?: string }){
       street: externalUnit.street?externalUnit.street:"Indefinido",
       municipality: externalUnit.municipality?externalUnit.municipality:"Indefinido",
       province: externalUnit.province?externalUnit.province:"Indefinido",
-      user: (await getUser(externalUnit?.userId?.toString() as string)).fullname,
+      user: (await getUser(externalUnit?.userId?.toString() as string))?.fullname ?? "Não identificado",
     });
   
   return name?formated.filter((props) => props.name.match(new RegExp(name, 'i'))):formated;
@@ -656,7 +656,7 @@ async function getExternalUnit(unitId: string){
       street: externalUnit.street,
       municipality: externalUnit.municipality,
       province: externalUnit.province,
-      user: (await getUser(externalUnit?.userId?.toString() as string)).fullname,
+      user: (await getUser(externalUnit?.userId?.toString() as string))?.fullname ?? "Não identificado",
     };
   }finally{}
 }
@@ -1664,7 +1664,7 @@ async function getPatientTransferHistories(id: string){
         transferDate: getDataAndHoursFormat(transferred?.userCreatedAt as Date),
         unitExternal: unit?.name as string,
         transferReason: transferred?.reason as string,
-        doctorResponsible: (await getUser(transferred?.userId as string)).fullname
+        doctorResponsible: (await getUser(transferred?.userId as string))?.fullname ?? "Não identificado"
       });
     }
   }
