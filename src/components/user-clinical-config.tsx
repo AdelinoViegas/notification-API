@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useActionState } from "react";
+import { useEffect, useActionState, useState } from "react";
 import Button from "@/components/ui/button";
 import InputField from "@/components/ui/input-field";
 import Selection, { SelectionOption } from "./ui/selection";
@@ -31,27 +31,57 @@ export default function UserClinicalConfig({
   internalServiceId: string;
   historicalAccessId: string[];
 }){
-  const [ state, action ] = useActionState(registerUser, { message: "", status: false });
+  const [ state, action, pending ] = useActionState(registerUser, {
+    message: "",
+    status: false,
+    saved: undefined,
+  });
 
-  useEffect(()=>{
-    if(state.message){
-      if(state.status)
-        toast.success(state.message);
-      else
-        toast.error(state.message);
+  // Estado controlado — inicializado com as props do servidor
+  const [form, setForm] = useState({
+    categoryId: categoryId ?? "",
+    serviceId: serviceId ?? "",
+    orderNumber: orderNumber ?? 0,
+    specialtyId: specialtyId ?? "",
+    internalServiceId: internalServiceId ?? "",
+    historicalAccessId: historicalAccessId ?? [],
+  });
+
+  useEffect(() => {
+    if (!state.message) return;
+
+    if (state.status) {
+      toast.success(state.message);
+      // Sincroniza o estado do form com os valores realmente guardados,
+      // evitando reset após o Next.js re-renderizar o Server Component
+      if (state.saved) {
+        setForm(state.saved);
+      }
+    } else {
+      toast.error(state.message);
     }
   }, [state]);
-  
+
+  function handleCheckbox(id: string, checked: boolean){
+    setForm(prev => ({
+      ...prev,
+      historicalAccessId: checked
+        ? [...prev.historicalAccessId, id]
+        : prev.historicalAccessId.filter(v => v !== id),
+    }));
+  }
 
   return(
     <div>
       <form action={action}>
         <input type="hidden" name="id" value={userId} />
+
         <Selection
           label="Categoria"
           name="categoryId"
           options={userCategory} 
-          defaultValue={categoryId}
+          value={form.categoryId}
+          onChange={e => setForm(prev => ({ ...prev, categoryId: e.target.value }))}
           required
         />
         
@@ -59,7 +89,8 @@ export default function UserClinicalConfig({
           label="Serviço"
           name="serviceId"
           options={services} 
-          defaultValue={serviceId}
+          value={form.serviceId}
+          onChange={e => setForm(prev => ({ ...prev, serviceId: e.target.value }))}
         />
 
         <InputField
@@ -67,7 +98,8 @@ export default function UserClinicalConfig({
           type="number"
           placeholder="Nº de Orgem"
           name="orderNumber"
-          defaultValue={orderNumber}
+          value={form.orderNumber}
+          onChange={e => setForm(prev => ({ ...prev, orderNumber: Number(e.target.value) }))}
           required
         />
 
@@ -75,7 +107,8 @@ export default function UserClinicalConfig({
           options={specialties}
           label="Especialidade"
           name="specialtyId"
-          defaultValue={specialtyId}
+          value={form.specialtyId}
+          onChange={e => setForm(prev => ({ ...prev, specialtyId: e.target.value }))}
           className='w-full'
         />
 
@@ -83,7 +116,8 @@ export default function UserClinicalConfig({
           options={internalServices}
           label="Serviço de Internamento"
           name="internalServiceId"
-          defaultValue={internalServiceId}
+          value={form.internalServiceId}
+          onChange={e => setForm(prev => ({ ...prev, internalServiceId: e.target.value }))}
           className='w-full'
         />
 
@@ -96,7 +130,8 @@ export default function UserClinicalConfig({
                   type="checkbox"
                   name="historicalAccessId"
                   value={option._id}
-                  defaultChecked={historicalAccessId.includes(option._id)}
+                  checked={form.historicalAccessId.includes(option._id)}
+                  onChange={e => handleCheckbox(option._id, e.target.checked)}
                   className="w-4 h-4 accent-primary"
                 />
                 <span className="text-sm">{option.label}</span>
@@ -105,7 +140,7 @@ export default function UserClinicalConfig({
           </div>
         </fieldset>
 
-        <Button className="mt-6" type="submit">Salvar</Button>
+        <Button className="mt-6" type="submit" disabled={pending}>Salvar</Button>
       </form>
     </div>
   )  

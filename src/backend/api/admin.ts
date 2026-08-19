@@ -23,10 +23,17 @@ export async function getUsers(): Promise<User[]>{
   return res.data.data;
 }
 
-export async function getUser(id: string){
-  systemService.defaults.headers.common.Authorization = `Bearer ${await getServiceToken()}`;
-  const res = await systemService.get<User>(`/users/${id}`);
-  return res.data;
+export async function getUser(id: string): Promise<User | null>{
+  try{
+    systemService.defaults.headers.common.Authorization = `Bearer ${await getServiceToken()}`;
+    const res = await systemService.get<User>(`/users/${id}`);
+    return res.data;
+  }catch(e: unknown){
+    const err = e as { response?: { status: number } };
+    if(err?.response?.status === 404)
+      return null;
+    throw e;
+  }
 }
 
 // chamadas do usuário

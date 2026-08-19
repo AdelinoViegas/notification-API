@@ -40,8 +40,9 @@ export async function openPatientProcess(patientId: string, location: WorkLocati
     } 
 
     if(existProcess?.isInUse && existProcess.userId?.toString() !== await getUserId()){      
-      const { fullname } = await getUser(existProcess.userId?.toString() as string);
-      throw new Error(`Processo ocupado pelo Sr(a).${getFirstAndLastName(fullname as string)}!`, { cause: "busy" });
+      const user = await getUser(existProcess.userId?.toString() as string);
+      const fullname = user?.fullname ?? "utilizador desconhecido";
+      throw new Error(`Processo ocupado pelo Sr(a).${getFirstAndLastName(fullname)}!`, { cause: "busy" });
     } 
     
   }catch(e: unknown){

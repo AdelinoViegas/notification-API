@@ -146,7 +146,7 @@ async function getPatients({
         id: service._id.toString() as string,
         patient: patient?.fullname as string,
         markedDataTime: getDataAndHoursFormat(scheduledService?.dateTime as Date),
-        user: user.fullname,
+        user: user?.fullname ?? "Não identificado",
         nameLaboratory: (await unitModel.findById({ _id: scheduledService?.phisicalUnitId }))?.name as string,
         unitId: scheduledService?.phisicalUnitId?.toString() as string
       });

@@ -13,6 +13,13 @@ export default async function dbConfigure(){
       await workplaceModel.create({ workplaceId: central._id });
       console.log("[SUCCESS] database was configured successful!");
     }
+
+    // Seed de configurações clínicas — apenas em ambientes não-produção
+    if (process.env.NODE_ENV !== "production") {
+      const { runSeed } = await import("./seed");
+      await runSeed();
+    }
+
     console.log("[INFO] database is configured!");
   }catch(e){
     console.error("[ERROR] failed setup database: ", e);
