@@ -3,6 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "dev": "tsx watch src/service.ts",
+    "build": "tsc",
+    "start": "node dist/service.js"
+  },
   "dependencies": {
     "fastify": "^5.12.1"
   },
