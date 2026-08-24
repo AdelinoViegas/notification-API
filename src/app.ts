@@ -1,4 +1,5 @@
 import Fastify from "fastify";
+import { randomUUID } from "node:crypto";
 
 import {
   sseConnectionManager,
@@ -50,7 +51,7 @@ export function buildApp() {
       }
 
       const notification: NotificationEvent = {
-        id: crypto.randomUUID(),
+        id: randomUUID(),
         source: "notification-api",
         senderId: "test-user",
         receiverId: body.receiverId,
