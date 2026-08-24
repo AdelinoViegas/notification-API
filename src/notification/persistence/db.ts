@@ -1,4 +1,4 @@
-import { prisma } from "../../database/prisma";
+import { prisma } from "../../lib/prisma";
 import { Notification } from "../../types";
 import { NotificationRepository } from "./repository";
 
