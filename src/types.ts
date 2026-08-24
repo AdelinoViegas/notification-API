@@ -1,3 +1,10 @@
+// src/types.ts
+
+/**
+ * Tipos de eventos que podem originar uma notificação.
+ *
+ * Podemos adicionar novos tipos à medida que o sistema crescer.
+ */
 export type NotificationType =
   | "APPOINTMENT_CREATED"
   | "APPOINTMENT_CANCELLED"
@@ -5,78 +12,150 @@ export type NotificationType =
   | "EXAM_RESULT_AVAILABLE"
   | "SYSTEM";
 
-export interface Notification {
-  id: string;
-  type: NotificationType;
-  title: string;
-  message: string;
-  recipient: string;
-  read: boolean;
-  createdAt: string;
-}
 
-export interface NotificationItemProps {
-  notification: Notification;
-  onRead: (id: string) => void;
-  onDelete: (id: string) => void;
-}
-
-///Testes
-
-//saida para esse tipo de tipagem DomainEvent
-/*
-{
-  "type": "APPOINTMENT_CREATED",
-  "source": "appointment-service",
-  "data": {
-    "patientId": "patient-123",
-    "doctorId": "doctor-456",
-    "appointmentId": "appointment-789"
-  },
-  "timestamp": "2026-08-15T11:30:00.000Z"
-}*/
-
-/*export type NotificationChannel =
-  | "sse"
-  | "websocket"
-  | "email"
-  | "sms";
-*/
-// src/notification/domain/notification-event.ts
+/**
+ * Canais através dos quais uma notificação pode ser entregue.
+ *
+ * Neste momento temos apenas SSE.
+ * Futuramente poderemos adicionar:
+ * - email
+ * - sms
+ * - push
+ */
+export type NotificationChannel = "sse";
 
 
-
+/**
+ * Evento recebido pela Notification API
+ * a partir de outro serviço do sistema.
+ *
+ * Exemplo:
+ *
+ * {
+ *   type: "APPOINTMENT_CREATED",
+ *   source: "appointment-service",
+ *   senderId: "doctor-123",
+ *   receiverId: "nurse-456",
+ *   data: {
+ *     patientId: "patient-789",
+ *     appointmentId: "appointment-001"
+ *   },
+ *   timestamp: "2026-08-24T10:00:00.000Z"
+ * }
+ */
 export interface DomainEvent {
-  type: string;
+  type: NotificationType;
+  /**
+   * Serviço que originou o evento.
+   *
+   * Exemplo:
+   * "appointment-service"
+   */
   source: string;
+
+  /**
+   * Utilizador que originou a ação.
+   */
+  senderId: string;
+
+  /**
+   * Utilizador que deve receber a notificação.
+   */
+  receiverId: string;
+
+  /**
+   * Dados específicos do evento.
+   *
+   * Exemplo:
+   * {
+   *   patientId: "patient-123"
+   * }
+   */
   data: Record<string, unknown>;
+
+  /**
+   * Momento em que o evento ocorreu.
+   */
   timestamp: string;
 }
 
-export type NotificationChannel = "sse";
 
-export interface NotificationEvent {
-  id?: string;
+/**
+ * Notificação criada pelo NotificationService.
+ *
+ * Esta é a entidade que será persistida
+ * no PostgreSQL.
+ */
+export interface Notification {
+  id: string;
+  type: NotificationType;
   source: string;
-  sender: string;
-  receiver: string;
+  senderId: string;
+  receiverId: string;
   channel: NotificationChannel;
-  message?: string;
-  type?: string;
-  title?: string;
+  title: string;
+  message: string;
   data?: Record<string, unknown>;
-  read?: boolean;
-  reatAt?: Date;
-  createdAt?: Date;
-  timestamp: string
+  status: "PENDING" | "SENT" | "FAILED";
+  read: boolean;
+  readAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
+
+/**
+ * Evento de notificação utilizado pelo Dispatcher
+ * para entregar a notificação através de um canal.
+ *
+ * Neste momento o Dispatcher utiliza SSE.
+ */
+export interface NotificationEvent {
+  id: string;
+  type: NotificationType;
+  source: string;
+  senderId: string;
+  receiverId: string;
+  channel: NotificationChannel;
+  title: string;
+  message: string;
+  data?: Record<string, unknown>;
+  read: boolean;
+  timestamp: string;
+}
+
+
+/**
+ * Contrato que qualquer mecanismo de entrega
+ * deve implementar.
+ *
+ * SSEAdapter implementará esta interface.
+ *
+ * Futuramente poderemos ter:
+ *
+ * EmailAdapter
+ * SmsAdapter
+ * PushAdapter
+ */
 export interface NotificationDelivery {
-  deliver(notification: NotificationEvent): Promise<void>;
+  deliver(
+    notification: NotificationEvent
+  ): Promise<void>;
 }
 
-//sse-connection
+
+/**
+ * Representa uma conexão SSE ativa.
+ */
 export interface SSEConnection {
+
+  /**
+   * Envia dados para o cliente conectado.
+   */
   send(data: string): Promise<void>;
+
+  /**
+   * Fecha a conexão.
+   */
   close(): void;
 }

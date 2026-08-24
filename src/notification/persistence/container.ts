@@ -1,2 +1,2 @@
-import { MongoNotificationRepository } from "./db";
-export const notificationRepository = new MongoNotificationRepository();
+import { PrismaNotificationRepository,} from "./db";
+export const notificationRepository = new PrismaNotificationRepository();

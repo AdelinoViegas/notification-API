@@ -1,54 +1,48 @@
-import { getDatabase } from "../../database/mongo";
+import { prisma } from "../../database/prisma";
+import { Notification } from "../../types";
 import { NotificationRepository } from "./repository";
-import { NotificationEvent } from "../../types";
 
-export class MongoNotificationRepository implements NotificationRepository {
-  private collectionName = "notifications";
+export class PrismaNotificationRepository implements NotificationRepository {
 
   async create(
-    notification: NotificationEvent
-  ): Promise<void> {
-    const db = await getDatabase();
+    notification: Notification
+  ): Promise<Notification> {
 
-    await db.collection(this.collectionName).insertOne({
-      ...notification,
-      read: false,
-      createdAt: new Date(),
-    });
-  }
-
-  async findUnreadByReceiver(
-    receiver: string
-  ): Promise<NotificationEvent[]> {
-    const db = await getDatabase();
-
-    return db
-      .collection<NotificationEvent>(this.collectionName)
-      .find({
-        receiver,
-        read: false,
-      })
-      .sort({
-        createdAt: -1,
-      })
-      .toArray();
-  }
-
-  async markAsRead(
-    notificationId: string
-  ): Promise<void> {
-    const db = await getDatabase();
-
-    await db.collection(this.collectionName).updateOne(
-      {
-        id: notificationId,
-      },
-      {
-        $set: {
-          read: true,
-          readAt: new Date(),
+    const created =
+      await prisma.notification.create({
+        data: {
+          id: notification.id,
+          type: notification.type,
+          source: notification.source,
+          senderId: notification.senderId,
+          receiverId: notification.receiverId,
+          channel: notification.channel,
+          title: notification.title as string,
+          message: notification.message as string,
+          data: notification.data as Record<string, unknown> | undefined,
+          status: notification.status as Notification["status"],
+          read: notification.read,
+          readAt: notification.readAt ?? undefined,
+          createdAt: notification.createdAt,
+          updatedAt: notification.updatedAt,
         },
-      }
-    );
+      });
+
+    return {
+      id: created.id,
+      type: created.type as Notification["type"],
+      source: created.source,
+      senderId: created.senderId,
+      receiverId: created.receiverId,
+      channel: created.channel as Notification["channel"],
+      title: created.title as string,
+      message: created.message,
+      data: created.data as | Record<string, unknown> | undefined,
+      status: created.status as Notification["status"],
+      read: created.read,
+      readAt: created.readAt ?? undefined,
+      createdAt: created.createdAt,
+      updatedAt: created.updatedAt,
+    };
   }
 }

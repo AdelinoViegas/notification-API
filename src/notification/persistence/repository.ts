@@ -1,4 +1,4 @@
-import { NotificationEvent } from "../../types";
+/*import { NotificationEvent } from "../../types";
 
 export interface NotificationRepository {
   create(notification: NotificationEvent): Promise<void>;
@@ -10,4 +10,14 @@ export interface NotificationRepository {
   markAsRead(
     notificationId: string
   ): Promise<void>;
+}*/
+
+import { Notification } from "../../types";
+
+export interface NotificationRepository {
+
+  create(
+    notification: Notification
+  ): Promise<Notification>;
+
 }
