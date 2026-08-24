@@ -16,6 +16,7 @@ model Notification {
   id         String   @id @default(uuid())
   senderId   String
   receiverId String
+  source     String
   type       String
   channel    String
   title      String?

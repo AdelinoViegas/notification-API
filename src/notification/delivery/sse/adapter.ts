@@ -36,6 +36,11 @@ export class SSEAdapter implements NotificationDelivery {
           `Erro ao enviar notificação para ${notification.receiverId}:`,
           error
         );
+
+        this.connectionManager.removeConnection(
+          notification.receiverId,
+          connection
+        );
       }
     }
   }

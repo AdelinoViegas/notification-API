@@ -19,7 +19,7 @@ export class PrismaNotificationRepository implements NotificationRepository {
           channel: notification.channel,
           title: notification.title as string,
           message: notification.message as string,
-          data: notification.data as Record<string, unknown> | undefined,
+          data: notification.data as Record<string, Date>,
           status: notification.status as Notification["status"],
           read: notification.read,
           readAt: notification.readAt ?? undefined,
