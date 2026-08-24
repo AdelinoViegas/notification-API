@@ -5,7 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.buildApp = buildApp;
 const fastify_1 = __importDefault(require("fastify"));
-const container_js_1 = require("./notification/delivery/sse/container.js");
+const container_1 = require("./notification/delivery/sse/container");
+const container_2 = require("./notification/container");
 function buildApp() {
     const app = (0, fastify_1.default)({
         logger: true,
@@ -16,38 +17,73 @@ function buildApp() {
             service: "notification-api",
         };
     });
-    /**
-     * SSE notification stream
-     *
-     * O cliente mantém esta conexão aberta
-     * para receber notificações em tempo real.
-     *
-     * Exemplo:
-     *
-     * GET /api/notifications/stream?receiverId=doctor-123
-     */
-    app.get("/api/notifications/stream", async (request, reply) => {
-        const { receiverId } = request.query;
-        if (!receiverId) {
-            return reply.code(400).send({
+    app.post("/api/notifications", async (request, reply) => {
+        const body = request.body;
+        if (!body.receiverId) {
+            return reply
+                .code(400)
+                .send({
                 error: "receiverId é obrigatório",
             });
         }
+        if (!body.message) {
+            return reply
+                .code(400)
+                .send({
+                error: "message é obrigatório",
+            });
+        }
+        const notification = {
+            id: crypto.randomUUID(),
+            source: "notification-api",
+            senderId: "test-user",
+            receiverId: body.receiverId,
+            channel: "sse",
+            message: body.message,
+            title: "Notificação",
+            type: "SYSTEM",
+            data: {},
+            read: false,
+            timestamp: new Date().toISOString(),
+        };
         /**
-         * Configuração necessária para SSE.
+         * Envia a notificação para o Dispatcher.
+         *
+         * Dispatcher
+         *      ↓
+         * SSEAdapter
+         *      ↓
+         * SSEConnectionManager
+         *      ↓
+         * receiverId
          */
+        await container_2.notificationDispatcher.dispatch(notification);
+        //Resposta do POST.
+        return reply.send({
+            success: true,
+            message: "Notification dispatched successfully",
+            notification,
+        });
+    });
+    app.get("/api/notifications/stream", async (request, reply) => {
+        const { receiverId, } = request.query;
+        //receiverId é obrigatório.
+        if (!receiverId) {
+            return reply
+                .code(400)
+                .send({
+                error: "receiverId é obrigatório",
+            });
+        }
+        //Configuração SSE.
         reply.raw.setHeader("Content-Type", "text/event-stream");
         reply.raw.setHeader("Cache-Control", "no-cache");
         reply.raw.setHeader("Connection", "keep-alive");
+        //Evita buffering em alguns proxies.
         reply.raw.setHeader("X-Accel-Buffering", "no");
-        /**
-         * Envia os headers imediatamente.
-         */
+        //Envia os headers imediatamente.
         reply.raw.flushHeaders();
-        /**
-         * Implementação da nossa abstração SSEConnection
-         * utilizando o response do Node/Fastify.
-         */
+        //* Adaptamos a resposta HTTP do Fastify para a abstração SSEConnection.
         const connection = {
             send: async (data) => {
                 reply.raw.write(`data: ${data}\n\n`);
@@ -58,38 +94,21 @@ function buildApp() {
                 }
             },
         };
-        /**
-         * Registra a conexão para este receiver.
-         */
-        container_js_1.sseConnectionManager.addConnection(receiverId, connection);
-        /**
-         * Evento inicial para confirmar
-         * que a conexão foi estabelecida.
-         */
+        //Registra a conexão para o receiver.
+        container_1.sseConnectionManager.addConnection(receiverId, connection);
+        app.log.info(`SSE connection opened for receiver: ${receiverId}`);
+        // Envia evento inicial.
         await connection.send(JSON.stringify({
             type: "CONNECTED",
             receiverId,
             message: "SSE connection established",
         }));
-        /**
-         * Detecta quando o cliente fecha a conexão.
-         *
-         * Pode acontecer quando:
-         * - fecha o browser;
-         * - faz refresh;
-         * - perde a conexão;
-         * - o frontend fecha o EventSource.
-         */
+        // Detecta quando o cliente fecha a conexão.
         request.raw.on("close", () => {
-            container_js_1.sseConnectionManager.removeConnection(receiverId, connection);
+            container_1.sseConnectionManager.removeConnection(receiverId, connection);
             app.log.info(`SSE connection closed for receiver: ${receiverId}`);
         });
-        /**
-         * Mantém a função pendente.
-         *
-         * O endpoint não deve terminar enquanto
-         * a conexão SSE estiver ativa.
-         */
+        // Mantém a conexão aberta.
         await new Promise(() => { });
     });
     return app;
