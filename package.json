@@ -9,15 +9,12 @@
     "start": "node dist/service.js"
   },
   "dependencies": {
-    "@prisma/adapter-pg": "^7.9.1",
-    "@prisma/client": "^7.9.1",
-    "fastify": "^5.12.1",
-    "pg": "^8.23.0"
+    "better-sqlite3": "^13.0.3",
+    "fastify": "^5.12.1"
   },
   "devDependencies": {
+    "@types/better-sqlite3": "^9.6.0",
     "@types/node": "^26.2.0",
-    "@types/pg": "^8.23.1",
-    "prisma": "^7.9.1",
     "tsx": "^4.23.12",
     "typescript": "^7.0.2"
   }
