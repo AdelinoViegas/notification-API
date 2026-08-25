@@ -71,6 +71,10 @@ export async function registerCreateNotificationRoute(
           "SENT"
         );
 
+        // Atualiza também o objeto em memória
+        notification.status = "SENT";
+        notification.updatedAt = new Date();
+
         app.log.info(
           `Notification ${notification.id} sent successfully`
         );
@@ -79,6 +83,10 @@ export async function registerCreateNotificationRoute(
           notification.id,
           "FAILED"
         );
+
+        // Mantém o objeto em memória consistente
+        notification.status = "FAILED";
+        notification.updatedAt = new Date();
 
         app.log.error(
           error,
@@ -92,10 +100,7 @@ export async function registerCreateNotificationRoute(
         success: true,
         message:
           "Notification dispatched successfully",
-        notification: {
-          ...notification,
-          status: "SENT",
-        },
+        notification,
       });
     }
   );
