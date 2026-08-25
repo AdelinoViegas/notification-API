@@ -1,11 +1,13 @@
 import {
   NotificationDelivery,
   NotificationEvent,
-} from "../../../types";
+} from "../../../services/types";
 
 import { SSEConnectionManager } from "./manager";
 
-export class SSEAdapter implements NotificationDelivery {
+export class SSEAdapter
+  implements NotificationDelivery
+{
   constructor(
     private readonly connectionManager: SSEConnectionManager
   ) {}
@@ -26,11 +28,15 @@ export class SSEAdapter implements NotificationDelivery {
       return;
     }
 
+    let delivered = false;
+
     for (const connection of connections) {
       try {
         await connection.send(
           JSON.stringify(notification)
         );
+
+        delivered = true;
       } catch (error) {
         console.error(
           `Erro ao enviar notificação para ${notification.receiverId}:`,
@@ -42,6 +48,12 @@ export class SSEAdapter implements NotificationDelivery {
           connection
         );
       }
+    }
+
+    if (!delivered) {
+      throw new Error(
+        `Falha ao entregar notificação para ${notification.receiverId}`
+      );
     }
   }
 }

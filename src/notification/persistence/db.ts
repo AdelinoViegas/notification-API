@@ -1,48 +1,97 @@
-import { prisma } from "../../lib/prisma";
-import { Notification } from "../../types";
+import { Notification } from "../../services/types";
+import { database } from "../../lib/database/connection";
 import { NotificationRepository } from "./repository";
 
-export class PrismaNotificationRepository implements NotificationRepository {
-
+export class SQLiteNotificationRepository
+  implements NotificationRepository
+{
   async create(
     notification: Notification
   ): Promise<Notification> {
+    const statement = database.prepare(`
+      INSERT INTO notifications (
+        id,
+        type,
+        source,
+        sender_id,
+        receiver_id,
+        channel,
+        title,
+        message,
+        data,
+        status,
+        read,
+        read_at,
+        created_at,
+        updated_at
+      )
+      VALUES (
+        @id,
+        @type,
+        @source,
+        @sender_id,
+        @receiver_id,
+        @channel,
+        @title,
+        @message,
+        @data,
+        @status,
+        @read,
+        @read_at,
+        @created_at,
+        @updated_at
+      )
+    `);
 
-    const created =
-      await prisma.notification.create({
-        data: {
-          id: notification.id,
-          type: notification.type,
-          source: notification.source,
-          senderId: notification.senderId,
-          receiverId: notification.receiverId,
-          channel: notification.channel,
-          title: notification.title as string,
-          message: notification.message as string,
-          data: notification.data as Record<string, Date>,
-          status: notification.status as Notification["status"],
-          read: notification.read,
-          readAt: notification.readAt ?? undefined,
-          createdAt: notification.createdAt,
-          updatedAt: notification.updatedAt,
-        },
-      });
+    statement.run({
+      id: notification.id,
+      type: notification.type,
+      source: notification.source,
+      sender_id: notification.senderId,
+      receiver_id: notification.receiverId,
+      channel: notification.channel,
+      title: notification.title ?? null,
+      message: notification.message ?? null,
+      data: notification.data
+        ? JSON.stringify(notification.data)
+        : null,
+      status: notification.status,
+      read: notification.read ? 1 : 0,
+      read_at: notification.readAt
+        ? notification.readAt.toISOString()
+        : null,
+      created_at:
+        notification.createdAt.toISOString(),
+      updated_at:
+        notification.updatedAt.toISOString(),
+    });
 
-    return {
-      id: created.id,
-      type: created.type as Notification["type"],
-      source: created.source,
-      senderId: created.senderId,
-      receiverId: created.receiverId,
-      channel: created.channel as Notification["channel"],
-      title: created.title as string,
-      message: created.message,
-      data: created.data as | Record<string, unknown> | undefined,
-      status: created.status as Notification["status"],
-      read: created.read,
-      readAt: created.readAt ?? undefined,
-      createdAt: created.createdAt,
-      updatedAt: created.updatedAt,
-    };
+    return notification;
+  }
+
+  /**
+   * Atualiza o status da notificação.
+   *
+   * PENDING → SENT
+   * PENDING → FAILED
+   */
+  async updateStatus(
+    id: string,
+    status: Notification["status"]
+  ): Promise<void> {
+    const statement = database.prepare(`
+      UPDATE notifications
+      SET
+        status = @status,
+        updated_at = @updated_at
+      WHERE id = @id
+    `);
+
+    statement.run({
+      id,
+      status,
+      updated_at:
+        new Date().toISOString(),
+    });
   }
 }

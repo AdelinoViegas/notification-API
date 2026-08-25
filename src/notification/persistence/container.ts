@@ -1,2 +1,2 @@
-import { PrismaNotificationRepository,} from "./db";
-export const notificationRepository = new PrismaNotificationRepository();
+import { SQLiteNotificationRepository } from "./db";
+export const notificationRepository = new SQLiteNotificationRepository();

@@ -1,4 +1,4 @@
-import { SSEConnection } from "../../../types";
+import { SSEConnection } from "../../../services/types";
 
 export class SSEConnectionManager {
   private connections = new Map<

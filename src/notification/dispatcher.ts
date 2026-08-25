@@ -1,4 +1,4 @@
-import { NotificationEvent, NotificationDelivery } from "../types";
+import { NotificationEvent, NotificationDelivery } from "../services/types";
 
 export class NotificationDispatcher {
   constructor(

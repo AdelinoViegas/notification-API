@@ -1,7 +1,7 @@
 import {
   DomainEvent,
   Notification,
-} from "../types";
+} from "../services/types";
 
 import {
   NotificationRepository,
@@ -80,11 +80,11 @@ export class NotificationService {
     return event.receiverId;
   }
 
+
   private createNotification(
     event: DomainEvent,
     receiverId: string
   ): Notification {
-
     const now = new Date();
 
     return {
@@ -94,13 +94,14 @@ export class NotificationService {
       senderId: event.senderId,
       receiverId,
       channel: "sse",
-      title: this.buildTitle(event),
-      message: this.buildMessage(event),
+      title: event.title ?? this.buildTitle(event),
+      message: event.message ?? this.buildMessage(event),
       data: event.data,
       status: "PENDING",
       read: false,
       createdAt: now,
       updatedAt: now,
+      timestamp: event.timestamp,
     };
   }
 
