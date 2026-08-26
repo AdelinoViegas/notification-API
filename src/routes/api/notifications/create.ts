@@ -1,33 +1,50 @@
-import {
-  FastifyInstance,
-} from "fastify";
+import { FastifyInstance } from "fastify";
+import { notificationService } from "../../../notification/container";
+import type { DomainEvent } from "../../../services/types";
 
-import {
-  notificationService,
-  notificationDispatcher,
-} from "../../../notification/container";
-
-import {
-  notificationRepository,
-} from "../../../notification/persistence/container";
-
-export async function registerCreateNotificationRoute(
-  app: FastifyInstance
-) {
-  app.post(
-    "/api/notifications",
+export async function registerCreateNotificationRoute(app: FastifyInstance) {
+  app.post("/api/notifications",
     async (request, reply) => {
-      const body = request.body as {
-        receiverId?: string;
-        message?: string;
-      };
+      const body =
+        request.body as Partial<DomainEvent>;
+
+      if (!body.type) {
+        return reply
+          .code(400)
+          .send({
+            error: "type é obrigatório",
+          });
+      }
+
+      if (!body.source) {
+        return reply
+          .code(400)
+          .send({
+            error: "source é obrigatório",
+          });
+      }
+
+      if (!body.senderId) {
+        return reply
+          .code(400)
+          .send({
+            error: "senderId é obrigatório",
+          });
+      }
 
       if (!body.receiverId) {
         return reply
           .code(400)
           .send({
-            error:
-              "receiverId é obrigatório",
+            error: "receiverId é obrigatório",
+          });
+      }
+
+      if (!body.timestamp) {
+        return reply
+          .code(400)
+          .send({
+            error: "timestamp é obrigatório",
           });
       }
 
@@ -35,73 +52,47 @@ export async function registerCreateNotificationRoute(
         return reply
           .code(400)
           .send({
-            error:
-              "message é obrigatório",
+            error: "message é obrigatório",
           });
       }
 
-      const event = {
-        type: "SYSTEM" as const,
-        source: "notification-api",
-        senderId: "test-user",
-        receiverId:
-          body.receiverId,
-        title: "Notificação",
+      const event: DomainEvent = {
+        type: body.type,
+        source: body.source,
+        senderId: body.senderId,
+        receiverId: body.receiverId,
+        title: body.title,
         message: body.message,
-        data: {},
-        timestamp:
-          new Date().toISOString(),
+        data: body.data,
+        timestamp: body.timestamp,
       };
 
-      const notifications =
-        await notificationService.process(
-          event
-        );
-
-      const notification =
-        notifications[0];
-
       try {
-        await notificationDispatcher.dispatch(
-          notification
-        );
+        const notifications =
+          await notificationService.process(event);
 
-        await notificationRepository.updateStatus(
-          notification.id,
-          "SENT"
-        );
+        const notification = notifications[0];
 
-        // Atualiza também o objeto em memória
-        notification.status = "SENT";
-        notification.updatedAt = new Date();
+        return reply
+          .code(201)
+          .send({
+            success: true,
+            message:
+              "Notification created successfully",
+            notification,
+          });
 
-        app.log.info(
-          `Notification ${notification.id} sent successfully`
-        );
       } catch (error) {
-        await notificationRepository.updateStatus(
-          notification.id,
-          "FAILED"
-        );
+        app.log.error(error, "Erro ao processar notificação");
 
-        // Mantém o objeto em memória consistente
-        notification.status = "FAILED";
-        notification.updatedAt = new Date();
-
-        app.log.error(
-          error,
-          `Failed to deliver notification ${notification.id}`
-        );
-
-        throw error;
+        return reply
+          .code(500)
+          .send({
+            success: false,
+            error:
+              "Não foi possível processar a notificação",
+          });
       }
-
-      return reply.send({
-        success: true,
-        message:
-          "Notification dispatched successfully",
-        notification,
-      });
     }
   );
 }

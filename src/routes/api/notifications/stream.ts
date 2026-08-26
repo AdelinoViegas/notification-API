@@ -1,20 +1,10 @@
-import {
-  FastifyInstance,
-} from "fastify";
+import { FastifyInstance } from "fastify";
+import { sseConnectionManager } from "../../../notification/delivery/sse/container";
+import { notificationService } from "../../../notification/container";
+import type { SSEConnection } from "../../../services/types";
 
-import {
-  sseConnectionManager,
-} from "../../../notification/delivery/sse/container";
-
-import type {
-  SSEConnection,
-} from "../../../services/types";
-
-export async function registerNotificationStreamRoute(
-  app: FastifyInstance
-) {
-  app.get(
-    "/api/notifications/stream",
+export async function registerNotificationStreamRoute(app: FastifyInstance) {
+  app.get("/api/notifications/stream",
     async (request, reply) => {
       const {
         receiverId,
@@ -71,14 +61,9 @@ export async function registerNotificationStreamRoute(
         },
       };
 
-      sseConnectionManager.addConnection(
-        receiverId,
-        connection
-      );
+      sseConnectionManager.addConnection(receiverId, connection);
 
-      app.log.info(
-        `SSE connection opened for receiver: ${receiverId}`
-      );
+      app.log.info(`SSE connection opened for receiver: ${receiverId}`);
 
       await connection.send(
         JSON.stringify({
@@ -88,6 +73,16 @@ export async function registerNotificationStreamRoute(
             "SSE connection established",
         })
       );
+
+      try {
+        // Entrega notificações que ficaram pendentes
+        // enquanto o receptor estava offline.
+        await notificationService.deliverPending(
+          receiverId
+        );
+      } catch (error) {
+        app.log.error(error, `Erro ao entregar notificações pendentes para ${receiverId}`);
+      }
 
       request.raw.on(
         "close",
@@ -103,9 +98,7 @@ export async function registerNotificationStreamRoute(
         }
       );
 
-      await new Promise<void>(
-        () => {}
-      );
+      await new Promise<void>(() => {});
     }
   );
 }

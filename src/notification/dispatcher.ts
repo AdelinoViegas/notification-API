@@ -8,16 +8,11 @@ export class NotificationDispatcher {
     >
   ) {}
 
-  async dispatch(
-    notification: NotificationEvent
-  ): Promise<void> {
-    const delivery =
-      this.deliveries.get(notification.channel);
+  async dispatch( notification: NotificationEvent ): Promise<void> {
+    const delivery = this.deliveries.get(notification.channel);
 
     if (!delivery) {
-      throw new Error(
-        `Nenhum delivery configurado para o canal: ${notification.channel}`
-      );
+      throw new Error(`Nenhum delivery configurado para o canal: ${notification.channel}`);
     }
 
     await delivery.deliver(notification);

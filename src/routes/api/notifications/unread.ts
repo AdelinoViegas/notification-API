@@ -1,16 +1,8 @@
-import {
-  FastifyInstance,
-} from "fastify";
+import { FastifyInstance } from "fastify";
+import { notificationRepository } from "../../../notification/persistence/container";
 
-import {
-  notificationRepository,
-} from "../../../notification/persistence/container";
-
-export async function registerUnreadNotificationsRoute(
-  app: FastifyInstance
-) {
-  app.get(
-    "/api/notifications/unread",
+export async function registerUnreadNotificationsRoute(app: FastifyInstance) {
+  app.get("/api/notifications/unread",
     async (request, reply) => {
       const query =
         request.query as {

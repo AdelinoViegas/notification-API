@@ -1,15 +1,6 @@
-import {
-  FastifyInstance,
-} from "fastify";
+import { FastifyInstance } from "fastify";
+import { registerNotificationRoutes } from "./notifications";
 
-import {
-  registerNotificationRoutes,
-} from "./notifications";
-
-export async function registerApiRoutes(
-  app: FastifyInstance
-) {
-  await registerNotificationRoutes(
-    app
-  );
+export async function registerApiRoutes(app: FastifyInstance) {
+  await registerNotificationRoutes(app);
 }
