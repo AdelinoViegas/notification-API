@@ -1,17 +1,22 @@
 import {
   DomainEvent,
   Notification,
-  NotificationEvent
+  NotificationEvent,
 } from "./types";
+
+import { SSEConnection } from "../notification/delivery/sse/types";
 
 import { NotificationRepository } from "./notificationRepository";
 
 import { NotificationDispatcher } from "./notificationDispatcher";
 
+import { SSEConnectionManager } from "../notification/delivery/sse/manager";
+
 export class NotificationService {
   constructor(
     private readonly notificationRepository: NotificationRepository,
-    private readonly notificationDispatcher: NotificationDispatcher
+    private readonly notificationDispatcher: NotificationDispatcher,
+    private readonly sseConnectionManager: SSEConnectionManager
   ) {}
 
   async process(
@@ -32,7 +37,9 @@ export class NotificationService {
       notification
     );
 
-    await this.tryDeliver(notification);
+    await this.tryDeliver(
+      notification
+    );
 
     const persistedNotification =
       await this.notificationRepository.findById(
@@ -53,14 +60,18 @@ export class NotificationService {
       );
 
     for (const notification of notifications) {
-      await this.tryDeliver(notification);
+      await this.tryDeliver(
+        notification
+      );
     }
   }
 
   async getById(
     id: string
   ): Promise<Notification | null> {
-    return this.notificationRepository.findById(id);
+    return this.notificationRepository.findById(
+      id
+    );
   }
 
   async listByReceiver(
@@ -82,7 +93,29 @@ export class NotificationService {
   async markAsRead(
     id: string
   ): Promise<Notification | null> {
-    return this.notificationRepository.markAsRead(id);
+    return this.notificationRepository.markAsRead(
+      id
+    );
+  }
+
+  addSSEConnection(
+    receiverId: string,
+    connection: SSEConnection
+  ): void {
+    this.sseConnectionManager.addConnection(
+      receiverId,
+      connection
+    );
+  }
+
+  removeSSEConnection(
+    receiverId: string,
+    connection: SSEConnection
+  ): void {
+    this.sseConnectionManager.removeConnection(
+      receiverId,
+      connection
+    );
   }
 
   private async tryDeliver(

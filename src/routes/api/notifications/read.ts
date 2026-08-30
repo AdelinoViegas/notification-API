@@ -1,5 +1,5 @@
 import { FastifyInstance } from "fastify";
-import { notificationService } from "../../../notification/container";
+import { notificationService } from "../../../services/container";
 
 export async function registerMarkNotificationAsReadRoute(
   app: FastifyInstance
@@ -8,9 +8,7 @@ export async function registerMarkNotificationAsReadRoute(
     "/api/notifications/:id/read",
     async (request, reply) => {
       const params =
-        request.params as {
-          id?: string;
-        };
+        request.params as { id?: string };
 
       if (!params.id) {
         return reply

@@ -1,7 +1,9 @@
 import { FastifyInstance } from "fastify";
-import { notificationService } from "../../../notification/container";
+import { notificationService } from "../../../services/container";
 
-export async function registerListNotificationsRoute(app: FastifyInstance) {
+export async function registerListNotificationsRoute(
+  app: FastifyInstance
+) {
   app.get(
     "/api/notifications",
     async (request, reply) => {

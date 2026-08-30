@@ -137,18 +137,3 @@ export interface NotificationDelivery {
     notification: NotificationEvent
   ): Promise<void>;
 }
-
-/**
- * Representa uma conexão SSE ativa.
- */
-export interface SSEConnection {
-  /**
-   * Envia dados para o cliente conectado.
-   */
-  send(data: string): Promise<void>;
-
-  /**
-   * Fecha a conexão.
-   */
-  close(): void;
-}

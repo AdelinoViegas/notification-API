@@ -1,10 +1,12 @@
 import { FastifyInstance } from "fastify";
-import { sseConnectionManager } from "../../../notification/delivery/sse/container";
-import { notificationService } from "../../../notification/container";
-import type { SSEConnection } from "../../../services/types";
+import { notificationService } from "../../../services/container";
+import type { SSEConnection } from "../../../notification/delivery/sse/types";
 
-export async function registerNotificationStreamRoute(app: FastifyInstance) {
-  app.get("/api/notifications/stream",
+export async function registerNotificationStreamRoute(
+  app: FastifyInstance
+) {
+  app.get(
+    "/api/notifications/stream",
     async (request, reply) => {
       const {
         receiverId,
@@ -61,9 +63,14 @@ export async function registerNotificationStreamRoute(app: FastifyInstance) {
         },
       };
 
-      sseConnectionManager.addConnection(receiverId, connection);
+      notificationService.addSSEConnection(
+        receiverId,
+        connection
+      );
 
-      app.log.info(`SSE connection opened for receiver: ${receiverId}`);
+      app.log.info(
+        `SSE connection opened for receiver: ${receiverId}`
+      );
 
       await connection.send(
         JSON.stringify({
@@ -75,19 +82,20 @@ export async function registerNotificationStreamRoute(app: FastifyInstance) {
       );
 
       try {
-        // Entrega notificações que ficaram pendentes
-        // enquanto o receptor estava offline.
         await notificationService.deliverPending(
           receiverId
         );
       } catch (error) {
-        app.log.error(error, `Erro ao entregar notificações pendentes para ${receiverId}`);
+        app.log.error(
+          error,
+          `Erro ao entregar notificações pendentes para ${receiverId}`
+        );
       }
 
       request.raw.on(
         "close",
         () => {
-          sseConnectionManager.removeConnection(
+          notificationService.removeSSEConnection(
             receiverId,
             connection
           );
@@ -98,7 +106,9 @@ export async function registerNotificationStreamRoute(app: FastifyInstance) {
         }
       );
 
-      await new Promise<void>(() => {});
+      await new Promise<void>(
+        () => {}
+      );
     }
   );
 }

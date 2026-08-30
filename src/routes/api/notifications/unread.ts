@@ -1,5 +1,5 @@
 import { FastifyInstance } from "fastify";
-import { notificationService } from "../../../notification/container";
+import { notificationService } from "../../../services/container";
 
 export async function registerUnreadNotificationsRoute(
   app: FastifyInstance

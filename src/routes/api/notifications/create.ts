@@ -1,9 +1,12 @@
 import { FastifyInstance } from "fastify";
-import { notificationService } from "../../../notification/container";
+import { notificationService } from "../../../services/container";
 import type { DomainEvent } from "../../../services/types";
 
-export async function registerCreateNotificationRoute(app: FastifyInstance) {
-  app.post("/api/notifications",
+export async function registerCreateNotificationRoute(
+  app: FastifyInstance
+) {
+  app.post(
+    "/api/notifications",
     async (request, reply) => {
       const body =
         request.body as Partial<DomainEvent>;
@@ -71,7 +74,8 @@ export async function registerCreateNotificationRoute(app: FastifyInstance) {
         const notifications =
           await notificationService.process(event);
 
-        const notification = notifications[0];
+        const notification =
+          notifications[0];
 
         return reply
           .code(201)
@@ -81,9 +85,11 @@ export async function registerCreateNotificationRoute(app: FastifyInstance) {
               "Notification created successfully",
             notification,
           });
-
       } catch (error) {
-        app.log.error(error, "Erro ao processar notificação");
+        app.log.error(
+          error,
+          "Erro ao processar notificação"
+        );
 
         return reply
           .code(500)
