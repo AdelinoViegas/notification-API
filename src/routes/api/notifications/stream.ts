@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
 import { notificationService } from "../../../services/container";
-import type { SSEConnection } from "../../../notification/delivery/sse/types";
+import { NotificationConnection } from "../../../services/types";
 
 export async function registerNotificationStreamRoute(
   app: FastifyInstance
@@ -45,7 +45,7 @@ export async function registerNotificationStreamRoute(
 
       reply.raw.flushHeaders();
 
-      const connection: SSEConnection = {
+      const connection: NotificationConnection = {
         send: async (
           data: string
         ) => {

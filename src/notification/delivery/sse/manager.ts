@@ -1,12 +1,14 @@
-import { SSEConnection } from "./types";
+import { NotificationConnection } from "../../../services/types";
+import { NotificationConnectionManager } from "../../../services/notificationConnectionManager";
 
-export class SSEConnectionManager {
+export class SSEConnectionManager
+  implements NotificationConnectionManager {
   private connections =
-    new Map<string, Set<SSEConnection>>();
+    new Map<string, Set<NotificationConnection>>();
 
   addConnection(
     receiver: string,
-    connection: SSEConnection
+    connection: NotificationConnection
   ): void {
     const receiverConnections =
       this.connections.get(receiver) ??
@@ -22,7 +24,7 @@ export class SSEConnectionManager {
 
   removeConnection(
     receiver: string,
-    connection: SSEConnection
+    connection: NotificationConnection
   ): void {
     const receiverConnections =
       this.connections.get(receiver);
@@ -40,7 +42,7 @@ export class SSEConnectionManager {
 
   getConnections(
     receiver: string
-  ): Set<SSEConnection> {
+  ): Set<NotificationConnection> {
     return (
       this.connections.get(receiver) ??
       new Set()

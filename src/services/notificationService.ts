@@ -2,21 +2,20 @@ import {
   DomainEvent,
   Notification,
   NotificationEvent,
+  NotificationConnection
 } from "./types";
 
-import { SSEConnection } from "../notification/delivery/sse/types";
+import { NotificationConnectionManager } from "./notificationConnectionManager";
 
 import { NotificationRepository } from "./notificationRepository";
 
 import { NotificationDispatcher } from "./notificationDispatcher";
 
-import { SSEConnectionManager } from "../notification/delivery/sse/manager";
-
 export class NotificationService {
   constructor(
     private readonly notificationRepository: NotificationRepository,
     private readonly notificationDispatcher: NotificationDispatcher,
-    private readonly sseConnectionManager: SSEConnectionManager
+    private readonly notificationConnectionManager: NotificationConnectionManager
   ) {}
 
   async process(
@@ -100,9 +99,9 @@ export class NotificationService {
 
   addSSEConnection(
     receiverId: string,
-    connection: SSEConnection
+    connection: NotificationConnection
   ): void {
-    this.sseConnectionManager.addConnection(
+    this.notificationConnectionManager.addConnection(
       receiverId,
       connection
     );
@@ -110,9 +109,9 @@ export class NotificationService {
 
   removeSSEConnection(
     receiverId: string,
-    connection: SSEConnection
+    connection: NotificationConnection
   ): void {
-    this.sseConnectionManager.removeConnection(
+    this.notificationConnectionManager.removeConnection(
       receiverId,
       connection
     );

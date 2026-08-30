@@ -132,8 +132,15 @@ export interface NotificationEvent {
  * SmsAdapter
  * PushAdapter
  */
+
 export interface NotificationDelivery {
   deliver(
     notification: NotificationEvent
   ): Promise<void>;
+}
+
+export interface NotificationConnection {
+  send(data: string): Promise<void>;
+
+  close(): void;
 }
