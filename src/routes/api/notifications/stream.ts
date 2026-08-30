@@ -1,12 +1,16 @@
 import { FastifyInstance } from "fastify";
 import { notificationService } from "../../../services/container";
 import { NotificationConnection } from "../../../services/types";
+import { authenticate } from "../../../plugins/auth/hooks";
 
 export async function registerNotificationStreamRoute(
   app: FastifyInstance
 ) {
   app.get(
     "/api/notifications/stream",
+    {
+      preHandler: authenticate,
+    },
     async (request, reply) => {
       const {
         receiverId,
@@ -20,6 +24,17 @@ export async function registerNotificationStreamRoute(
           .send({
             error:
               "receiverId é obrigatório",
+          });
+      }
+
+      if (request.user.id !== receiverId) {
+        return reply
+          .code(403)
+          .send({
+            statusCode: 403,
+            error: "Forbidden",
+            message:
+              "Você não tem permissão para acessar este stream",
           });
       }
 
@@ -55,9 +70,7 @@ export async function registerNotificationStreamRoute(
         },
 
         close: () => {
-          if (
-            !reply.raw.destroyed
-          ) {
+          if (!reply.raw.destroyed) {
             reply.raw.end();
           }
         },
@@ -69,7 +82,11 @@ export async function registerNotificationStreamRoute(
       );
 
       app.log.info(
-        `SSE connection opened for receiver: ${receiverId}`
+        {
+          userId: request.user.id,
+          receiverId,
+        },
+        "SSE connection opened"
       );
 
       await connection.send(
@@ -101,7 +118,11 @@ export async function registerNotificationStreamRoute(
           );
 
           app.log.info(
-            `SSE connection closed for receiver: ${receiverId}`
+            {
+              userId: request.user.id,
+              receiverId,
+            },
+            "SSE connection closed"
           );
         }
       );

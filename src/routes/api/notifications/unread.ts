@@ -7,23 +7,11 @@ export async function registerUnreadNotificationsRoute(
   app.get(
     "/api/notifications/unread",
     async (request, reply) => {
-      const query =
-        request.query as {
-          receiverId?: string;
-        };
-
-      if (!query.receiverId) {
-        return reply
-          .code(400)
-          .send({
-            error:
-              "receiverId é obrigatório",
-          });
-      }
+      const receiverId = request.user.id;
 
       const notifications =
         await notificationService.listUnreadByReceiver(
-          query.receiverId
+          receiverId
         );
 
       return reply.send({
