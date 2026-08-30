@@ -1,5 +1,5 @@
 import { FastifyInstance } from "fastify";
-import { notificationRepository } from "../../../notification/persistence/container";
+import { notificationService } from "../../../notification/container";
 
 export async function registerGetNotificationRoute(app: FastifyInstance) {
   app.get("/api/notifications/:id",
@@ -14,7 +14,8 @@ export async function registerGetNotificationRoute(app: FastifyInstance) {
           });
       }
 
-      const notification = await notificationRepository.findById(params.id);
+      const notification =
+        await notificationService.getById(params.id);
 
       if (!notification) {
         return reply

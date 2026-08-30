@@ -1,8 +1,13 @@
-import { Notification, NotificationRepository } from "../../services/types";
+import { Notification } from "../../services/types";
+import { NotificationRepository } from "../../services/notificationRepository";
 import { database } from "../../lib/database/connection";
 
-export class SQLiteNotificationRepository implements NotificationRepository {
-  async create( notification: Notification ): Promise<Notification> {
+export class SQLiteNotificationRepository
+  implements NotificationRepository
+{
+  async create(
+    notification: Notification
+  ): Promise<Notification> {
     const statement = database.prepare(`
       INSERT INTO notifications (
         id,
@@ -51,20 +56,31 @@ export class SQLiteNotificationRepository implements NotificationRepository {
       channel: notification.channel,
       title: notification.title,
       message: notification.message,
-      data: notification.data ? JSON.stringify(notification.data) : null,
+      data: notification.data
+        ? JSON.stringify(notification.data)
+        : null,
       status: notification.status,
       read: notification.read ? 1 : 0,
-      read_at: notification.readAt ? notification.readAt.toISOString() : null,
+      read_at: notification.readAt
+        ? notification.readAt.toISOString()
+        : null,
       timestamp: notification.timestamp,
-      created_at: notification.createdAt.toISOString(),
-      updated_at: notification.updatedAt.toISOString(),
-      delivered_at: notification.deliveredAt ? notification.deliveredAt.toISOString() : null,
+      created_at:
+        notification.createdAt.toISOString(),
+      updated_at:
+        notification.updatedAt.toISOString(),
+      delivered_at:
+        notification.deliveredAt
+          ? notification.deliveredAt.toISOString()
+          : null,
     });
 
     return notification;
   }
 
-  private mapRowToNotification( row: any ): Notification {
+  private mapRowToNotification(
+    row: any
+  ): Notification {
     return {
       id: row.id,
       type: row.type,
@@ -74,28 +90,29 @@ export class SQLiteNotificationRepository implements NotificationRepository {
       channel: row.channel,
       title: row.title,
       message: row.message,
-      data: row.data ? JSON.parse(row.data) : undefined,
+      data: row.data
+        ? JSON.parse(row.data)
+        : undefined,
       status: row.status,
       read: Boolean(row.read),
-      readAt: row.read_at ? new Date(row.read_at): undefined,
+      readAt: row.read_at
+        ? new Date(row.read_at)
+        : undefined,
       timestamp: row.timestamp,
       createdAt: new Date(row.created_at),
       updatedAt: new Date(row.updated_at),
-      deliveredAt: row.delivered_at ? new Date(row.delivered_at) : undefined,
+      deliveredAt: row.delivered_at
+        ? new Date(row.delivered_at)
+        : undefined,
     };
   }
 
-  /**
-   * Atualiza o status da notificação.
-   *
-   * PENDING → SENT
-   * PENDING → FAILED
-   *
-   * Quando a notificação é enviada com sucesso,
-   * delivered_at registra o momento da entrega.
-   */
-  async updateStatus( id: string, status: Notification["status"] ): Promise<void> {
-    const now = new Date().toISOString();
+  async updateStatus(
+    id: string,
+    status: Notification["status"]
+  ): Promise<void> {
+    const now =
+      new Date().toISOString();
 
     const statement = database.prepare(`
       UPDATE notifications
@@ -122,7 +139,9 @@ export class SQLiteNotificationRepository implements NotificationRepository {
     });
   }
 
-  async findById( id: string ): Promise<Notification | null> {
+  async findById(
+    id: string
+  ): Promise<Notification | null> {
     const statement = database.prepare(`
       SELECT
         id,
@@ -145,15 +164,19 @@ export class SQLiteNotificationRepository implements NotificationRepository {
       WHERE id = @id
     `);
 
-    const row = statement.get({ id }) as any;
+    const row =
+      statement.get({ id }) as any;
 
-    if (!row) 
+    if (!row) {
       return null;
+    }
 
     return this.mapRowToNotification(row);
   }
 
-  async findByReceiver( receiverId: string ): Promise<Notification[]> {
+  async findByReceiver(
+    receiverId: string
+  ): Promise<Notification[]> {
     const statement = database.prepare(`
       SELECT
         id,
@@ -177,21 +200,30 @@ export class SQLiteNotificationRepository implements NotificationRepository {
       ORDER BY created_at DESC
     `);
 
-    const rows = statement.all({ receiverId }) as any[];
+    const rows =
+      statement.all({ receiverId }) as any[];
 
-    return rows.map((row) => this.mapRowToNotification(row));
+    return rows.map((row) =>
+      this.mapRowToNotification(row)
+    );
   }
 
-  async markAsRead( id: string ): Promise<Notification | null> {
-    const notification = await this.findById(id);
+  async markAsRead(
+    id: string
+  ): Promise<Notification | null> {
+    const notification =
+      await this.findById(id);
 
-    if (!notification) 
+    if (!notification) {
       return null;
-    
-    if (notification.read) 
-      return notification;
+    }
 
-    const now = new Date().toISOString();
+    if (notification.read) {
+      return notification;
+    }
+
+    const now =
+      new Date().toISOString();
 
     const statement = database.prepare(`
       UPDATE notifications
@@ -211,7 +243,9 @@ export class SQLiteNotificationRepository implements NotificationRepository {
     return this.findById(id);
   }
 
-  async findUnreadByReceiver( receiverId: string ): Promise<Notification[]> {
+  async findUnreadByReceiver(
+    receiverId: string
+  ): Promise<Notification[]> {
     const statement = database.prepare(`
       SELECT
         id,
@@ -236,12 +270,17 @@ export class SQLiteNotificationRepository implements NotificationRepository {
       ORDER BY created_at DESC
     `);
 
-    const rows = statement.all({ receiverId }) as any[];
+    const rows =
+      statement.all({ receiverId }) as any[];
 
-    return rows.map((row) => this.mapRowToNotification(row));
+    return rows.map((row) =>
+      this.mapRowToNotification(row)
+    );
   }
 
-  async findPendingByReceiver( receiverId: string ): Promise<Notification[]> {
+  async findPendingByReceiver(
+    receiverId: string
+  ): Promise<Notification[]> {
     const statement = database.prepare(`
       SELECT
         id,
@@ -267,8 +306,11 @@ export class SQLiteNotificationRepository implements NotificationRepository {
       ORDER BY created_at ASC
     `);
 
-    const rows = statement.all({ receiverId }) as any[];
+    const rows =
+      statement.all({ receiverId }) as any[];
 
-    return rows.map((row) => this.mapRowToNotification(row));
+    return rows.map((row) =>
+      this.mapRowToNotification(row)
+    );
   }
 }

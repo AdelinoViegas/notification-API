@@ -1,8 +1,11 @@
 import { FastifyInstance } from "fastify";
-import { notificationRepository } from "../../../notification/persistence/container";
+import { notificationService } from "../../../notification/container";
 
-export async function registerUnreadNotificationsRoute(app: FastifyInstance) {
-  app.get("/api/notifications/unread",
+export async function registerUnreadNotificationsRoute(
+  app: FastifyInstance
+) {
+  app.get(
+    "/api/notifications/unread",
     async (request, reply) => {
       const query =
         request.query as {
@@ -19,7 +22,7 @@ export async function registerUnreadNotificationsRoute(app: FastifyInstance) {
       }
 
       const notifications =
-        await notificationRepository.findUnreadByReceiver(
+        await notificationService.listUnreadByReceiver(
           query.receiverId
         );
 
