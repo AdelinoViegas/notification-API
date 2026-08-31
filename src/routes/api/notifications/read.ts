@@ -1,4 +1,5 @@
 import { FastifyInstance } from "fastify";
+
 import { notificationService } from "../../../services/container";
 
 export async function registerMarkNotificationAsReadRoute(
@@ -19,7 +20,7 @@ export async function registerMarkNotificationAsReadRoute(
       }
 
       const notification =
-        await notificationService.markAsRead(
+        await notificationService.getById(
           params.id
         );
 
@@ -32,11 +33,39 @@ export async function registerMarkNotificationAsReadRoute(
           });
       }
 
+      if (
+        notification.receiverId !==
+        request.user.id
+      ) {
+        return reply
+          .code(403)
+          .send({
+            statusCode: 403,
+            error: "Forbidden",
+            message:
+              "Você não tem permissão para alterar esta notificação",
+          });
+      }
+
+      const updatedNotification =
+        await notificationService.markAsRead(
+          params.id
+        );
+
+      if (!updatedNotification) {
+        return reply
+          .code(404)
+          .send({
+            error:
+              "Notificação não encontrada",
+          });
+      }
+
       return reply.send({
         success: true,
         message:
           "Notificação marcada como lida",
-        notification,
+        notification: updatedNotification,
       });
     }
   );

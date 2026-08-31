@@ -1,4 +1,5 @@
 import { FastifyInstance } from "fastify";
+
 import { notificationService } from "../../../services/container";
 
 export async function registerListNotificationsRoute(

@@ -3,7 +3,7 @@ import fastifyEnv from "@fastify/env";
 
 import { registerApiRoutes } from "./routes/api";
 import { runMigrations } from "./lib/database/migrations";
-import authPlugin from "./plugins/auth/auth";
+import authPlugin from "./plugins/auth/plugin-auth";
 
 export async function buildApp() {
   const app = Fastify({ logger: true });

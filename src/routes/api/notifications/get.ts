@@ -1,4 +1,5 @@
 import { FastifyInstance } from "fastify";
+
 import { notificationService } from "../../../services/container";
 
 export async function registerGetNotificationRoute(
@@ -29,6 +30,20 @@ export async function registerGetNotificationRoute(
           .send({
             error:
               "Notificação não encontrada",
+          });
+      }
+
+      if (
+        notification.receiverId !==
+        request.user.id
+      ) {
+        return reply
+          .code(403)
+          .send({
+            statusCode: 403,
+            error: "Forbidden",
+            message:
+              "Você não tem permissão para acessar esta notificação",
           });
       }
 
