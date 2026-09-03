@@ -1,23 +1,19 @@
 import { FastifyInstance } from "fastify";
-import { notificationService } from "../../../services/container";
+import { JsonSchemaToTsProvider } from "@fastify/type-provider-json-schema-to-ts";
 
-export async function registerUnreadNotificationsRoute(
-  app: FastifyInstance
-) {
-  app.get(
-    "/api/notifications/unread",
-    async (request, reply) => {
-      const receiverId = request.user.id;
+export default function unread(app: FastifyInstance) {
+  const fastify = app.withTypeProvider<JsonSchemaToTsProvider>();
+  const {notificationService } = fastify.services;
 
-      const notifications =
-        await notificationService.listUnreadByReceiver(
-          receiverId
-        );
+  fastify.get("/api/notifications/unread", {
+    schema: {}
+  }, async function (req, res) {
+    const receiverId = req.user.id;
+    const notifications = await notificationService.listUnreadByReceiver(receiverId);
 
-      return reply.send({
-        success: true,
-        notifications,
-      });
-    }
-  );
+    return res.send({
+      success: true,
+      notifications
+    });
+  });
 }

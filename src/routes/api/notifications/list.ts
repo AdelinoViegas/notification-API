@@ -1,24 +1,19 @@
 import { FastifyInstance } from "fastify";
+import { JsonSchemaToTsProvider } from "@fastify/type-provider-json-schema-to-ts";
 
-import { notificationService } from "../../../services/container";
+export default function list(app: FastifyInstance) {
+  const fastify = app.withTypeProvider<JsonSchemaToTsProvider>();
+  const { notificationService } = fastify.services;
 
-export async function registerListNotificationsRoute(
-  app: FastifyInstance
-) {
-  app.get(
-    "/api/notifications",
-    async (request, reply) => {
-      const receiverId = request.user.id;
+  fastify.get("/api/notifications", {
+    schema: {}
+  }, async function (req, res) {
+    const receiverId = req.user.id;
+    const notifications = await notificationService.listByReceiver(receiverId);
 
-      const notifications =
-        await notificationService.listByReceiver(
-          receiverId
-        );
-
-      return reply.send({
-        success: true,
-        notifications,
-      });
-    }
-  );
+    return res.send({
+      success: true,
+      notifications
+    });
+  });
 }

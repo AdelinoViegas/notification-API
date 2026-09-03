@@ -1,13 +1,10 @@
 import { FastifyInstance } from "fastify";
-
 import { authenticate } from "../../../plugins/auth/hooks";
-
-import { registerCreateNotificationRoute } from "./create";
-import { registerNotificationStreamRoute } from "./stream";
-import { registerListNotificationsRoute } from "./list";
-import { registerGetNotificationRoute } from "./get";
-import { registerMarkNotificationAsReadRoute } from "./read";
-import { registerUnreadNotificationsRoute } from "./unread";
+import create from "./create";
+import stream from "./stream";
+import list from "./list";import get from "./get";
+import read from "./read";
+import unread from "./unread";
 
 export async function registerNotificationRoutes(
   app: FastifyInstance
@@ -17,10 +14,10 @@ export async function registerNotificationRoutes(
     authenticate
   );
 
-  await registerCreateNotificationRoute(app);
-  await registerNotificationStreamRoute(app);
-  await registerListNotificationsRoute(app);
-  await registerUnreadNotificationsRoute(app);
-  await registerGetNotificationRoute(app);
-  await registerMarkNotificationAsReadRoute(app);
+  create(app);
+  stream(app);
+  unread(app);
+  list(app);
+  read(app);
+  get(app);
 }
