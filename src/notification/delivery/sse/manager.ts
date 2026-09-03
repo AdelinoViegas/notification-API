@@ -1,5 +1,5 @@
 import { NotificationConnection } from "../../../services/types";
-import { NotificationConnectionManager } from "../../../services/notificationConnectionManager";
+import { NotificationConnectionManager } from "../../notificationConnectionManager";
 
 export class SSEConnectionManager
   implements NotificationConnectionManager {

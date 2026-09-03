@@ -1,5 +1,5 @@
 import { Notification } from "../../services/types";
-import { NotificationRepository } from "../../services/notificationRepository";
+import { NotificationRepository } from "../notificationRepository";
 import { database } from "../../lib/database/connection";
 
 export class SQLiteNotificationRepository
