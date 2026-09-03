@@ -25,7 +25,18 @@ export class NotificationService {
     const notification =
       await this.createNotification.execute(event);
 
-    return [notification];
+    await this.deliverPendingNotifications.execute(
+      notification.receiverId
+    );
+
+    const persistedNotification =
+      await this.getNotification.execute(
+        notification.id
+      );
+
+    return [
+      persistedNotification ?? notification
+    ];
   }
 
   async deliverPending(
