@@ -1,33 +1,46 @@
-import Fastify from "fastify";
-import fastifyEnv from "@fastify/env";
-import servicesPlugin from "./plugins/services";
-import { registerApiRoutes } from "./routes/api";
-import { runMigrations } from "./lib/database/migrations";
-import authPlugin from "./plugins/auth/plugin-auth";
+import * as path from 'node:path'
+import AutoLoad, { AutoloadPluginOptions } from '@fastify/autoload'
+import { FastifyPluginAsync } from 'fastify'
+import { fileURLToPath } from 'node:url'
 
-export async function buildApp() {
-  const app = Fastify({ logger: true });
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
-  await app.register(fastifyEnv, {
-    schema: {
-      type: "object",
-      required: ["AUTH_API_URL"],
-      properties: {
-        AUTH_API_URL: {
-          type: "string",
-        },
-      },
-    },
-    dotenv: true,
-  });
+export type AppOptions = {
+  // Place your custom options for app below here.
+} & Partial<AutoloadPluginOptions>
 
-  await app.register(authPlugin);
-  await app.register(servicesPlugin);
-  
-  runMigrations();
-
-  await registerApiRoutes(app);
-
-  return app;
-
+// Pass --options via CLI arguments in command to enable these options.
+const options: AppOptions = {
 }
+
+const app: FastifyPluginAsync<AppOptions> = async (
+  fastify,
+  opts
+): Promise<void> => {
+  // Place here your custom code!
+
+  // Do not touch the following lines
+
+  // This loads all plugins defined in plugins
+  // those should be support plugins that are reused
+  // through your application
+  // eslint-disable-next-line no-void
+  void fastify.register(AutoLoad, {
+    dir: path.join(__dirname, 'plugins'),
+    options: opts,
+    forceESM: true
+  })
+
+  // This loads all plugins defined in routes
+  // define your routes in one of these
+  // eslint-disable-next-line no-void
+  void fastify.register(AutoLoad, {
+    dir: path.join(__dirname, 'routes'),
+    options: opts,
+    forceESM: true
+  })
+}
+
+export default app
+export { app, options }

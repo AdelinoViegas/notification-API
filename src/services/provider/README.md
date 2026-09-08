@@ -1,0 +1,1 @@
+Usar abstrações com responsabilidade, quando realmente se precisa 

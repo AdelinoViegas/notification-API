@@ -1,0 +1,18 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Sample {
+  id String @id @default(uuid())
+}
+
+model HelloWorld {
+  id String @id @default(uuid())
+  msg String 
+  createdAt DateTime @default(now()) @map("created_at")
+}
