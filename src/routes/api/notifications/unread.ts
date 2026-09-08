@@ -3,17 +3,25 @@ import { JsonSchemaToTsProvider } from "@fastify/type-provider-json-schema-to-ts
 
 export default function unread(app: FastifyInstance) {
   const fastify = app.withTypeProvider<JsonSchemaToTsProvider>();
-  const {notificationService } = fastify.services;
+  const { listUnreadNotifications } = fastify.services;
 
-  fastify.get("/api/notifications/unread", {
-    schema: {}
-  }, async function (req, res) {
-    const receiverId = req.user.id;
-    const notifications = await notificationService.listUnreadByReceiver(receiverId);
+  fastify.get(
+    "/api/notifications/unread",
+    {
+      schema: {}
+    },
+    async function (req, res) {
+      const receiverId = req.user.id;
 
-    return res.send({
-      success: true,
-      notifications
-    });
-  });
+      const notifications =
+        await listUnreadNotifications.execute(
+          receiverId
+        );
+
+      return res.send({
+        success: true,
+        notifications
+      });
+    }
+  );
 }

@@ -7,7 +7,7 @@ export default function stream(
   app: FastifyInstance
 ) {
   const fastify = app.withTypeProvider<JsonSchemaToTsProvider>();
-  const {notificationService } = fastify.services;
+const { deliverPendingNotifications } = fastify.services;
 
   fastify.get("/api/notifications/stream", {
     schema: {
@@ -132,7 +132,7 @@ export default function stream(
      * pendentes.
      */
     try {
-      await notificationService.deliverPending(receiverId);
+      await deliverPendingNotifications.execute(receiverId);
     } catch (error) {
       app.log.error(
         {

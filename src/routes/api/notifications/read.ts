@@ -3,59 +3,58 @@ import { JsonSchemaToTsProvider } from "@fastify/type-provider-json-schema-to-ts
 
 export default function read(app: FastifyInstance) {
   const fastify = app.withTypeProvider<JsonSchemaToTsProvider>();
-  const { notificationService } = fastify.services;
+  const { markNotificationAsRead } = fastify.services;
 
-  fastify.patch("/api/notifications/:id/read", {
-    schema: {
-      params: {
-        type: "object",
-        properties: {
-          id: {
-            type: "string"
-          }
-        },
-        required: ["id"]
+  fastify.patch(
+    "/api/notifications/:id/read",
+    {
+      schema: {
+        params: {
+          type: "object",
+          properties: {
+            id: {
+              type: "string"
+            }
+          },
+          required: ["id"],
+          additionalProperties: false
+        }
       }
-    }
-  }, async function (req, res) {
-    const notification = await notificationService.getById(req.params.id);
+    },
+    async function (req, res) {
+      try {
+        const notification =
+          await markNotificationAsRead.execute(
+            req.params.id,
+            req.user.id
+          );
 
-    if (!notification) {
-      return res
-        .code(404)
-        .send({
-          error:
-            "Notificação não encontrada"
+        if (!notification) {
+          return res.code(404).send({
+            success: false,
+            error: "Notificação não encontrada"
+          });
+        }
+
+        return res.send({
+          success: true,
+          message: "Notificação marcada como lida",
+          notification
         });
-    }
+      } catch (error) {
+        app.log.error(
+          error,
+          "Erro ao marcar notificação como lida"
+        );
 
-    if (notification.receiverId !== req.user.id) {
-      return res
-        .code(403)
-        .send({
+        return res.code(403).send({
+          success: false,
           statusCode: 403,
           error: "Forbidden",
           message:
             "Você não tem permissão para alterar esta notificação"
         });
+      }
     }
-
-    const updatedNotification = await notificationService.markAsRead(req.params.id);
-
-    if (!updatedNotification) {
-      return res
-        .code(404)
-        .send({
-          error:
-            "Notificação não encontrada"
-        });
-    }
-
-    return res.send({
-      success: true,
-      message:
-        "Notificação marcada como lida",
-      notification: updatedNotification
-    });
-  });
+  );
 }
