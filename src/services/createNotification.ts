@@ -14,19 +14,10 @@ export class CreateNotification {
   ): Promise<Notification> {
     this.validate(event);
 
-    const receiverId =
-      this.determineReceiver(event);
+    const receiverId = this.determineReceiver(event);
+    const notification = this.buildNotification(event, receiverId);
 
-    const notification =
-      this.buildNotification(
-        event,
-        receiverId
-      );
-
-    await this.notificationRepository.create(
-      notification
-    );
-
+    await this.notificationRepository.create(notification);
     return notification;
   }
 

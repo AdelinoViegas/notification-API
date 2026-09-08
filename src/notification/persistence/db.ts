@@ -2,9 +2,7 @@ import { Notification } from "../../services/types";
 import { NotificationRepository } from "../notificationRepository";
 import { database } from "../../lib/database/connection";
 
-export class SQLiteNotificationRepository
-  implements NotificationRepository
-{
+export class SQLiteNotificationRepository implements NotificationRepository {
   async create(
     notification: Notification
   ): Promise<Notification> {
@@ -56,20 +54,14 @@ export class SQLiteNotificationRepository
       channel: notification.channel,
       title: notification.title,
       message: notification.message,
-      data: notification.data
-        ? JSON.stringify(notification.data)
-        : null,
+      data: notification.data? JSON.stringify(notification.data) : null,
       status: notification.status,
       read: notification.read ? 1 : 0,
-      read_at: notification.readAt
-        ? notification.readAt.toISOString()
-        : null,
+      read_at: notification.readAt? notification.readAt.toISOString() : null,
       timestamp: notification.timestamp,
-      created_at:
-        notification.createdAt.toISOString(),
-      updated_at:
-        notification.updatedAt.toISOString(),
-      delivered_at:
+      created_at: notification.createdAt.toISOString(),
+      updated_at: notification.updatedAt.toISOString(),
+      delivered_at: 
         notification.deliveredAt
           ? notification.deliveredAt.toISOString()
           : null,
@@ -90,20 +82,14 @@ export class SQLiteNotificationRepository
       channel: row.channel,
       title: row.title,
       message: row.message,
-      data: row.data
-        ? JSON.parse(row.data)
-        : undefined,
+      data: row.data? JSON.parse(row.data) : undefined,
       status: row.status,
       read: Boolean(row.read),
-      readAt: row.read_at
-        ? new Date(row.read_at)
-        : undefined,
+      readAt: row.read_at? new Date(row.read_at) : undefined,
       timestamp: row.timestamp,
       createdAt: new Date(row.created_at),
       updatedAt: new Date(row.updated_at),
-      deliveredAt: row.delivered_at
-        ? new Date(row.delivered_at)
-        : undefined,
+      deliveredAt: row.delivered_at? new Date(row.delivered_at): undefined,
     };
   }
 
@@ -111,8 +97,7 @@ export class SQLiteNotificationRepository
     id: string,
     status: Notification["status"]
   ): Promise<void> {
-    const now =
-      new Date().toISOString();
+    const now = new Date().toISOString();
 
     const statement = database.prepare(`
       UPDATE notifications
@@ -131,10 +116,7 @@ export class SQLiteNotificationRepository
     statement.run({
       id,
       status,
-      delivered_at:
-        status === "SENT"
-          ? now
-          : null,
+      delivered_at: status === "SENT"? now : null,
       updated_at: now,
     });
   }
@@ -164,12 +146,10 @@ export class SQLiteNotificationRepository
       WHERE id = @id
     `);
 
-    const row =
-      statement.get({ id }) as any;
+    const row = statement.get({ id }) as any;
 
-    if (!row) {
+    if (!row) 
       return null;
-    }
 
     return this.mapRowToNotification(row);
   }
@@ -200,30 +180,23 @@ export class SQLiteNotificationRepository
       ORDER BY created_at DESC
     `);
 
-    const rows =
-      statement.all({ receiverId }) as any[];
+    const rows = statement.all({ receiverId }) as any[];
 
-    return rows.map((row) =>
-      this.mapRowToNotification(row)
-    );
+    return rows.map((row) => this.mapRowToNotification(row));
   }
 
   async markAsRead(
     id: string
   ): Promise<Notification | null> {
-    const notification =
-      await this.findById(id);
+    const notification = await this.findById(id);
 
-    if (!notification) {
+    if (!notification) 
       return null;
-    }
 
-    if (notification.read) {
+    if (notification.read) 
       return notification;
-    }
 
-    const now =
-      new Date().toISOString();
+    const now = new Date().toISOString();
 
     const statement = database.prepare(`
       UPDATE notifications
@@ -270,12 +243,9 @@ export class SQLiteNotificationRepository
       ORDER BY created_at DESC
     `);
 
-    const rows =
-      statement.all({ receiverId }) as any[];
+    const rows = statement.all({ receiverId }) as any[];
 
-    return rows.map((row) =>
-      this.mapRowToNotification(row)
-    );
+    return rows.map((row) => this.mapRowToNotification(row));
   }
 
   async findPendingByReceiver(
@@ -306,11 +276,8 @@ export class SQLiteNotificationRepository
       ORDER BY created_at ASC
     `);
 
-    const rows =
-      statement.all({ receiverId }) as any[];
+    const rows = statement.all({ receiverId }) as any[];
 
-    return rows.map((row) =>
-      this.mapRowToNotification(row)
-    );
+    return rows.map((row) => this.mapRowToNotification(row));
   }
 }

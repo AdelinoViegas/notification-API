@@ -1,7 +1,24 @@
 import fp from "fastify-plugin";
-import { notificationService } from "../services/container";
 
-const services = { notificationService };
+import {
+  createNotification,
+  createAndDeliverNotification,
+  getNotification,
+  listNotifications,
+  listUnreadNotifications,
+  markNotificationAsRead,
+  deliverPendingNotifications,
+} from "../services/container";
+
+const services = {
+  createNotification,
+  createAndDeliverNotification,
+  getNotification,
+  listNotifications,
+  listUnreadNotifications,
+  markNotificationAsRead,
+  deliverPendingNotifications,
+};
 
 export default fp(async function (fastify) {
   fastify.decorate("services", services);

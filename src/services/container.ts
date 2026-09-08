@@ -1,10 +1,11 @@
-import { NotificationService } from "./notificationService";
+import { CreateAndDeliverNotification } from "./createAndDeliveryNotification";
 import { CreateNotification } from "./createNotification";
 import { GetNotification } from "./getNotification";
 import { ListNotifications } from "./listNotifications";
 import { ListUnreadNotifications } from "./listUnreadNotifications";
 import { MarkNotificationAsRead } from "./markNotificationAsRead";
 import { DeliverPendingNotifications } from "./deliverPendingNotifications";
+
 import { NotificationDispatcher } from "../notification/notificationDispatcher";
 import { SSEAdapter } from "../notification/delivery/sse/adapter";
 import { sseConnectionManager } from "../notification/delivery/sse/container";
@@ -53,12 +54,9 @@ export const deliverPendingNotifications =
     notificationDispatcher
   );
 
-export const notificationService =
-  new NotificationService(
+export const createAndDeliverNotification =
+  new CreateAndDeliverNotification(
     createNotification,
-    getNotification,
-    listNotifications,
-    listUnreadNotifications,
-    markNotificationAsRead,
     deliverPendingNotifications,
+    getNotification
   );

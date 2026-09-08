@@ -1,5 +1,4 @@
 import type { Notification } from "./types";
-
 import { NotificationRepository } from "../notification/notificationRepository";
 
 export class MarkNotificationAsRead {
@@ -8,8 +7,19 @@ export class MarkNotificationAsRead {
   ) {}
 
   async execute(
-    id: string
+    notificationId: string,
+    receiverId: string
   ): Promise<Notification | null> {
-    return this.notificationRepository.markAsRead(id);
+    const notification =
+      await this.notificationRepository.findById(notificationId);
+
+    if (!notification) 
+      return null;
+
+    if (notification.receiverId !== receiverId) {
+      throw new Error("Usuário não tem permissão para marcar esta notificação como lida");
+    }
+
+    return this.notificationRepository.markAsRead(notificationId);
   }
 }
