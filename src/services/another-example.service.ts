@@ -16,6 +16,8 @@ export class AnotherExampleService {
 
   constructor({ provider }: { provider: ExampleProvider }) {
     this.#provider = provider;
+
+    console.log({ data: this.#provider });
   }
 
   /*

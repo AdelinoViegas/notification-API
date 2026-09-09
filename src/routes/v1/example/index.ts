@@ -6,8 +6,8 @@ export default function index(app: FastifyInstance){
   const { helloWorld } = fastify.services;
 
   fastify.get("/", async function(req, res){
-    const data =  await helloWorld.listWithAsync();
-    res.send({ data });
+    const data =  await helloWorld.list();
+    res.send({ items: data });
   });
 
   fastify.get("/:msg", {
@@ -16,13 +16,13 @@ export default function index(app: FastifyInstance){
         type: "object",
         required: ["msg"],
         properties: { 
-          id: { type: "string" }
+          msg: { type: "string" }
         }
       } as const
     }
   }, async function(req, res){
     const data = helloWorld.find(req.params.msg);
-    res.send({ data });
+    res.send({ items: data });
   });
 
   fastify.post("/", {
@@ -37,7 +37,11 @@ export default function index(app: FastifyInstance){
     }}, async function(req, res) {
     const { msg } = req.body;
 
-    helloWorld.save(msg);
+    const data = await helloWorld.save(msg);
 
-    res.code(201).send({ message: "mensagem criada com sucesso!" });
+    res.code(201).send({ 
+      message: "mensagem criada com sucesso!",
+      data
+    });
   });
+}

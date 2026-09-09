@@ -9,7 +9,6 @@
   * testes e futuras alterações na implementação.
   */
 export class ExampleService {
-  constructor() {}
 
   /**
    * Exemplo de método responsável por executar uma funcionalidade

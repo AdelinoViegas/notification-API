@@ -11,8 +11,6 @@
  * a interface necessária para o restante da aplicação.
  */
 export class ExampleProvider {
-  constructor() {}
-
   /**
    * Exemplo de método disponibilizado pelo provider.
    *

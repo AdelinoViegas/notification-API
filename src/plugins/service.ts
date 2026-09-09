@@ -3,8 +3,6 @@ import { prisma } from "../lib/prisma.js";
 import { ExampleProvider } from "../services/provider";
 import { 
   AnotherExampleService, 
-  ExampleService, 
-  ExampleServiceWithDependenciesService, 
   HelloWorldService 
 } from "../services";
 

@@ -16,25 +16,38 @@ export class HelloWorldService extends BaseService {
   /**
    * Armazena uma nova mensagem.
    */
-  save(msg: string) {
+  async save(msg: string) {
     this.#db.push(msg);
+    const data = await this.db.helloWorld.create({ data: { msg }});
+    return data.id;
   }
 
   /**
    * Retorna todas as mensagens armazenadas.
    */
-  list() {
-    return this.#db;
+  async list() {
+    const data = await this.db.helloWorld.findMany();
+    const dataInMemory = this.#db;
+
+    return {
+      sqlite: data,
+      inMemory: dataInMemory
+    }
   }
 
   /**
    * Localiza a primeira mensagem que começa com o valor informado.
    */
-  find(msg: string) {
-    return this.#db.find((v) => v.startsWith(msg)) ?? "";
-  }
+  async find(msg: string) {
+    const data = await this.db.helloWorld.findMany({
+      where: { msg }
+    });
 
-  listWithAsync() {
-    return Promise.resolve(this.#db);
+    const filter = this.#db.find((v) => v.startsWith(msg)) ?? "";
+
+    return {
+      searchDb: data,
+      searchInMemory: filter
+    }
   }
 }

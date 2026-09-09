@@ -22,10 +22,15 @@ export class ExampleServiceWithDependenciesService {
     };
   }) {
     this.#example = deps.example;
+    this.#internalValidator();
   }
 
   /*
     métodos que podem utilizar outros services para compor
     ou orquestrar diferentes regras de negócio
   */
+
+  #internalValidator(){
+    console.log(this.#example);
+  }
 }
