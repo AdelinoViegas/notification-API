@@ -8,25 +8,14 @@ export default fp(function(fastify){
   fastify.register(swagger, {
     openapi: {
       info: {
-        title: "erp storage service",
-        description: "File Storage Service",
-        version: "1.0.1"
+        title: "notify",
+        description: "Serviço de Notificações",
+        version: "1.0.0"
       },
       servers: [
         {
           url: "http://localhost:3000",
         }
-      ],
-      components: {
-        securitySchemes: {
-          bearerAuth: {
-            type: "http",
-            scheme: "bearer"
-          }
-        }
-      },
-      security: [
-        { bearerAuth: [] }
       ]
     }
   });
