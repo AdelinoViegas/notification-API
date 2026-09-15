@@ -1,24 +1,34 @@
 import fp from "fastify-plugin";
 import { prisma } from "../lib/prisma.js";
-import { ExampleProvider } from "../services/provider";
-import { 
-  AnotherExampleService, 
-  HelloWorldService 
-} from "../services";
+import { NotificationService } from "../services/index.js";
 
-const provider = new ExampleProvider();
+import { NotificationDispatcher } from "../notification/notificationDispatcher.js";
+import { SSEAdapter } from "../notification/delivery/sse/adapter.js";
+import { SSEConnectionManager } from "../notification/delivery/sse/manager.js";
+
+const sseConnectionManager = new SSEConnectionManager();
+
+const notificationDispatcher = new NotificationDispatcher(
+  new Map([
+    ["sse", new SSEAdapter(sseConnectionManager)]
+  ])
+);
 
 const services = {
-  helloWorld: new HelloWorldService(prisma),
-  anotherExample: new AnotherExampleService({ provider })
-};
+  notificationService: new NotificationService({
+    database: prisma,
+    notificationDispatcher,
+  }),
+}
 
-export default fp(async function(fastify){
-  fastify.decorate("services", services);
-}, {
-  dependencies: ["env"]
-});
-
+export default fp(
+  async function (fastify) {
+    fastify.decorate("services", services);
+  },
+  {
+    dependencies: ["env"],
+  }
+);
 
 declare module "fastify" {
   export interface FastifyInstance {
