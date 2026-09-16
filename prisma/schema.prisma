@@ -1,19 +1,32 @@
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../src/generated/prisma"
-  moduleFormat = "cjs"
 }
 
 datasource db {
   provider = "sqlite"
 }
 
-model Sample {
-  id String @id @default(uuid())
-}
+model Notification {
+  id          String   @id
+  type        String
+  source      String
+  senderId    String   @map("sender_id")
+  receiverId  String   @map("receiver_id")
+  channel     String
+  title       String?
+  message     String?
+  data        String?
+  status      String
+  read        Boolean   @default(false)
+  readAt      String?  @map("read_at")
+  timestamp   String
+  createdAt   String   @map("created_at")
+  updatedAt   String   @map("updated_at")
+  deliveredAt String?  @map("delivered_at")
 
-model HelloWorld {
-  id String @id @default(uuid())
-  msg String 
-  createdAt DateTime @default(now()) @map("created_at")
+  @@index([receiverId], name: "idx_notifications_receiver")
+  @@index([receiverId, read], name: "idx_notifications_receiver_read")
+  @@index([createdAt], name: "idx_notifications_created_at")
+  @@index([status], name: "idx_notifications_status")
 }
