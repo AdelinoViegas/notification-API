@@ -3,8 +3,8 @@ import { JsonSchemaToTsProvider } from "@fastify/type-provider-json-schema-to-ts
 import type {
   DomainEvent,
   NotificationConnection
-} from "../../../services/types.js";
-import { sseConnectionManager } from "../../../notification/containers.js";
+} from "../../../services/types";
+import { sseConnectionManager } from "../../../services/provider/index";
 
 export default function index(app: FastifyInstance) {
   const fastify =

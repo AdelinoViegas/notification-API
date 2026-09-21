@@ -3,10 +3,10 @@ import type {
   Notification,
   NotificationEvent,
   Database,
-} from "./types.js";
+} from "./types";
 
-import { NotificationDispatcher } from "../notification/notificationDispatcher.js";
-import BaseService from "./base.service.js";
+import { NotificationDispatcher } from "./provider/index";
+import BaseService from "./base.service";
 
 export class NotificationService extends BaseService {
   #notificationDispatcher: NotificationDispatcher;
