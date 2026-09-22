@@ -1,7 +1,7 @@
 import {
   NotificationEvent,
   NotificationDelivery
-} from "../services/types.js";
+} from "../../services/types";
 
 export class NotificationDispatcher {
   constructor(
@@ -14,10 +14,9 @@ export class NotificationDispatcher {
   async dispatch(
     notification: NotificationEvent
   ): Promise<void> {
-    const delivery =
-      this.deliveries.get(
-        notification.channel
-      );
+    const delivery = this.deliveries.get(
+      notification.channel
+    );
 
     if (!delivery) {
       throw new Error(

@@ -1,4 +1,4 @@
-import { Database } from "./types.js";
+import { Database } from "./types";
 
 export default class BaseService {
   db: Database;

@@ -1,4 +1,4 @@
-import { NotificationConnection, NotificationConnectionManager } from "../../../services/types.js";
+import { NotificationConnection, NotificationConnectionManager } from "../../services/types";
 
 export class SSEConnectionManager implements NotificationConnectionManager {
   private connections = new Map<string, Set<NotificationConnection>>();

@@ -1,2 +1,2 @@
-export * from "./base.service.js";
-export * from "./notificationService.js";
+export * from "./base.service";
+export * from "./notificationService";

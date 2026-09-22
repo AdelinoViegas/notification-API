@@ -1,17 +1,15 @@
-import { NotificationDelivery, NotificationEvent } from "../../../services/types.js";
-import { SSEConnectionManager } from "./manager.js";
+import { NotificationDelivery, NotificationEvent } from "../../services/types";
+import { SSEConnectionManager } from "./sseConnectionManager";
 
 export class SSEAdapter implements NotificationDelivery {
   constructor( private readonly connectionManager: SSEConnectionManager ) {}
 
   async deliver( notification: NotificationEvent ): Promise<void> {
-
+    let delivered = false;
     const connections = this.connectionManager.getConnections( notification.receiverId );
 
     if (connections.size === 0) 
       throw new Error( `Nenhuma conexão SSE encontrada para: ${notification.receiverId}`);
-
-    let delivered = false;
 
     for (const connection of connections) {
       try {

@@ -1,8 +1,8 @@
-import { SSEConnectionManager } from "./delivery/sse/manager.js";
-import { NotificationService } from "../services/notificationService.js";
-import { NotificationDispatcher } from "../notification/notificationDispatcher.js";
-import { SSEAdapter } from "../notification/delivery/sse/adapter.js";
-import { prisma } from "../lib/prisma.js";
+import { SSEConnectionManager } from "./sseConnectionManager";
+import { NotificationService } from "../notificationService";
+import { NotificationDispatcher } from "./notificationDispatcher";
+import { SSEAdapter } from "./sseAdapter";
+import { prisma } from "../../lib/prisma";
 
 export const sseConnectionManager = new SSEConnectionManager();
 const sseAdapter = new SSEAdapter(sseConnectionManager);
